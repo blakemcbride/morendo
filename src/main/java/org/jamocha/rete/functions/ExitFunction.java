@@ -28,7 +28,8 @@ import org.jamocha.rete.ValueType;
 /**
  * @author Peter Lin
  * 
- * ExitFunction is used to call Rete.close() and then it calls System.exit(0).
+ * ExitFunction closes the engine. The shell ends when it sees the engine closed, and an
+ * application can register a close hook on the engine if it wants to end as well.
  */
 public class ExitFunction implements Function {
 
@@ -51,7 +52,6 @@ public class ExitFunction implements Function {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		if (engine != null) {
 			engine.close();
-			System.exit(0);
 		}
 		return null;
 	}

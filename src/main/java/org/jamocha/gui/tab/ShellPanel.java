@@ -220,8 +220,7 @@ public final class ShellPanel extends AbstractJamochaPanel implements ActionList
 		try {
 			inStream.connect(outStream);
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
+			throw new IllegalStateException("cannot connect the shell pipe", e);
 		}
 		channel = gui.getEngine().getMessageRouter().openChannel("JamochaGui",
 				inStream);
@@ -399,7 +398,7 @@ public final class ShellPanel extends AbstractJamochaPanel implements ActionList
 	 * 
 	 */
 	private void initChannelListener() {
-		channelListener = new Thread() {
+		channelListener = new Thread("morendo-gui-shell") {
 
 			/**
 			 * Simply runs the ChannelListener and lets it process Events.
@@ -489,6 +488,7 @@ public final class ShellPanel extends AbstractJamochaPanel implements ActionList
 				return res.toString();
 			}
 		};
+		channelListener.setDaemon(true);
 		channelListener.start();
 	}
 
@@ -506,7 +506,7 @@ public final class ShellPanel extends AbstractJamochaPanel implements ActionList
 		addKeyListener(adapter);
 		outputArea.addKeyListener(adapter);
 
-		Thread eventThread = new Thread() {
+		Thread eventThread = new Thread("morendo-gui-keys") {
 
 			public void run() {
 				while (running) {
@@ -642,6 +642,7 @@ public final class ShellPanel extends AbstractJamochaPanel implements ActionList
 				}
 			}
 		};
+		eventThread.setDaemon(true);
 		eventThread.start();
 	}
 

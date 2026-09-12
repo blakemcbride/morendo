@@ -17,16 +17,13 @@
 package org.jamocha.rete.functions.time;
 
 
-import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
-import org.jamocha.rete.FunctionParam2;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import org.jamocha.rete.ValueParam;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import org.jamocha.rete.ValueType;
@@ -53,22 +50,8 @@ public class WithinSecondsFunction extends AbstractTimeFunction implements Funct
 		Boolean eval = Boolean.FALSE;
 		if (params != null && params.length == 3) {
 			int interval = params[0].getIntValue();
-			Instant date1 = null;
-			if (params[1] instanceof ValueParam) {
-				date1 = this.toInstant(params[1].getValue());
-			} else if (params[1] instanceof BoundParam) {
-				date1 = this.toInstant(engine.getBinding( ((BoundParam)params[1]).getVariableName()));
-			} else if (params[1] instanceof FunctionParam2) {
-				date1 = this.toInstant( ((FunctionParam2)params[1]).getValue(engine, ValueType.DATE));
-			}
-			Instant date2 = null;
-			if (params[2] instanceof ValueParam) {
-				date2 = this.toInstant(params[2].getValue());
-			} else if (params[2] instanceof BoundParam) {
-				date2 = this.toInstant(engine.getBinding( ((BoundParam)params[2]).getVariableName()));
-			} else if (params[2] instanceof FunctionParam2) {
-				date2 = this.toInstant( ((FunctionParam2)params[2]).getValue(engine, ValueType.DATE));
-			}
+			Instant date1 = this.toInstant(params[1].getValue(engine, ValueType.OBJECT));
+			Instant date2 = this.toInstant(params[2].getValue(engine, ValueType.OBJECT));
 			if (date1 != null && date2 != null) {
 				Instant end = date1.plus(interval, ChronoUnit.SECONDS);
 				if (!date2.isBefore(date1) && !date2.isAfter(end)) {

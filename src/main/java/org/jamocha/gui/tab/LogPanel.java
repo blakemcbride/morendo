@@ -77,7 +77,7 @@ public final class LogPanel extends AbstractJamochaPanel implements ActionListen
 				"log.dividerlocation", 300));
 		add(pane, BorderLayout.CENTER);
 
-		Thread logThread = new Thread() {
+		Thread logThread = new Thread("morendo-gui-log") {
 			public void run() {
 				List<MessageEvent> msgEvents = new LinkedList<>();
 				while (running) {
@@ -97,6 +97,7 @@ public final class LogPanel extends AbstractJamochaPanel implements ActionListen
 						logChannel);
 			}
 		};
+		logThread.setDaemon(true);
 		logThread.start();
 		clearButton = new JButton("Clear Log", IconLoader
 				.getImageIcon("monitor"));

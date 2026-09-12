@@ -1,45 +1,46 @@
 package org.jamocha;
 
+import javax.swing.SwingUtilities;
+
 import org.jamocha.gui.JamochaGui;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.Shell;
 
+/**
+ * Command-line entry point: "-shell" runs the interactive shell on the calling thread,
+ * "-gui" opens the Swing GUI on the event dispatch thread; both may be given.
+ */
 public class Morendo {
 
 	private JamochaGui jamochaGui;
 
 	private Shell shell;
 
-	private Rete engine;
+	private final Rete engine;
 
-	/**
-	 * @param args
-	 *            In args can be one or more of the following Strings: -shell:
-	 *            start the normal Shell with System.in and System.out -gui :
-	 *            start the graphical user interface for Jamocha with different
-	 *            tabs and nice, included Shell.
-	 */
 	public static void main(String[] args) {
 		boolean guiStarted = false;
 		boolean shellStarted = false;
-		Morendo jamocha = new Morendo(new Rete());
-		if (null != args) {
-			for (int i = 0; i < args.length; ++i) {
-				if (args[i].equalsIgnoreCase("-gui")) {
-					jamocha.startGui();
+		Morendo morendo = new Morendo(new Rete());
+		if (args != null) {
+			for (String arg : args) {
+				if (arg.equalsIgnoreCase("-gui")) {
+					morendo.startGui();
 					guiStarted = true;
-				} else if (args[i].equalsIgnoreCase("-shell")) {
-					jamocha.startShell();
+				} else if (arg.equalsIgnoreCase("-shell")) {
 					shellStarted = true;
 				}
 			}
 		}
-		// if no arguments were given or by another cause neither gui nor shell
-		// were started, we show a usage guide.
 		if (!shellStarted && !guiStarted) {
-			jamocha.showUsage();
-		} else if (!shellStarted) {
-			jamocha.getJamochaGui().setExitOnClose(true);
+			morendo.showUsage();
+			return;
+		}
+		if (guiStarted && !shellStarted) {
+			morendo.getJamochaGui().setExitOnClose(true);
+		}
+		if (shellStarted) {
+			morendo.runShell();
 		}
 	}
 
@@ -47,44 +48,26 @@ public class Morendo {
 		this.engine = engine;
 	}
 
-	public void startShell() {
+	/** Runs the shell on the calling thread until the input ends or the engine is closed. */
+	public void runShell() {
 		if (shell == null) {
-			Thread shellThread = new Thread() {
-
-				public void run() {
-					shell = new Shell(engine);
-					shell.run();
-				}
-
-			};
-			shellThread.start();
+			shell = new Shell(engine);
+			shell.run();
 		}
 	}
 
 	public void startGui() {
 		if (jamochaGui == null) {
 			jamochaGui = new JamochaGui(engine);
-			Thread guiThread = new Thread() {
-
-				public void run() {
-					jamochaGui.showGui();
-				}
-
-			};
-			guiThread.start();
+			SwingUtilities.invokeLater(jamochaGui::showGui);
 		}
 	}
 
 	public void showUsage() {
-		String sep = System.getProperty("line.separator");
-		System.out
-				.println("You have to pass one or more of the following arguments:"
-						+ sep
-						+ sep
-						+ "-gui:   starts a graphical user interface."
-						+ sep
-						+ "-shell: starts a simple Shell.");
-		System.exit(0);
+		String sep = System.lineSeparator();
+		System.out.println("You have to pass one or more of the following arguments:" + sep + sep
+				+ "-gui:   starts a graphical user interface." + sep
+				+ "-shell: starts a simple Shell.");
 	}
 
 	public JamochaGui getJamochaGui() {

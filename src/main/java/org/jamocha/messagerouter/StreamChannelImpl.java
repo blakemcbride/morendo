@@ -34,6 +34,11 @@ class StreamChannelImpl extends AbstractCommunicationChannel implements
 
 	private class StreamChannelThread extends Thread {
 
+		StreamChannelThread() {
+			setName("morendo-stream-channel");
+			setDaemon(true);
+		}
+
 		private boolean stopped = false;
 
 		@Override

@@ -33,8 +33,8 @@ public class ReadFunction implements Function {
 				engine.writeMessage(e.getMessage());
 			}
 		}
-		if (command.getCommand() != null) {
-			returnObject = command.getCommand();
+		if (command.command() != null) {
+			returnObject = command.command();
 		}
 		// Create the DefaultReturnVector to return the result
 		DefaultReturnVector ret = new DefaultReturnVector();

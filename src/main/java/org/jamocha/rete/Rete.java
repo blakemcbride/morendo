@@ -83,6 +83,13 @@ import java.time.Instant;
  * This is the main Rete engine class. For now it's called Rete, but I may
  * change it to Engine to be more generic.
  */
+/**
+ * The rule engine: working memory, RETE network, agenda, templates and functions.
+ *
+ * Threading: an instance is not thread-safe. All calls must come from one thread, or be
+ * serialized through the MessageRouter's command thread, which is how the shell and the
+ * GUI drive it.
+ */
 @SuppressWarnings("this-escape") // the router, root node and compilers are created with a reference to the engine
 public class Rete implements PropertyChangeListener, CompilerListener {
 
@@ -145,6 +152,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
     private GraphQueryCompiler graphQueryCompiler = null;
     private Map<String, Query> queries = new HashMap<>();
     private Map<String, GraphQuery> graphQueries = new HashMap<>();
+    private final List<Runnable> closeHooks = new ArrayList<>();
+    private volatile boolean closed = false;
 
 	/**
 	 * 
@@ -374,7 +383,22 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	/**
 	 * Method will clear the engine of all rules, facts and objects.
 	 */
+	/**
+	 * Registers code to run when the engine is closed, for example to end an
+	 * application when (exit) is evaluated.
+	 */
+	public void addCloseHook(Runnable hook) {
+		this.closeHooks.add(hook);
+	}
+
+	/** True once close() has run; the shell stops reading when it sees this. */
+	public boolean isClosed() {
+		return this.closed;
+	}
+
+	/** Releases the engine: clears working memory and registries, stops the router, runs the close hooks. */
 	public void close() {
+		this.closed = true;
 		this.workingMem.clear();
 		this.defclass.clear();
 		this.workingMem.getDeffactMap().clear();
@@ -383,6 +407,10 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 		this.workingMem.getInitialFacts().clear();
 		this.listeners.clear();
         this.workingMem.getStaticFacts().clear();
+		this.router.shutdown();
+		for (Runnable hook : this.closeHooks) {
+			hook.run();
+		}
 	}
 
 	protected void addRuleFired(Rule r) {

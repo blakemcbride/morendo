@@ -84,11 +84,11 @@ public class PrintFunction implements Function {
             			rv.addReturnValue(new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,
             					Boolean.FALSE));
             		}
-            	} else if (params[idx].getValue() != null &&
-                		params[idx].getValue().equals(Constants.CRLF)) {
+            	} else if (params[idx].getValue(engine, ValueType.OBJECT) != null &&
+                		params[idx].getValue(engine, ValueType.OBJECT).equals(Constants.CRLF)) {
                     engine.writeMessage(Constants.LINEBREAK,output);
                 } else {
-                	Object val = params[idx].getValue();
+                	Object val = params[idx].getValue(engine, ValueType.OBJECT);
                 	if (val instanceof String string) {
                         engine.writeMessage(string,output);
                 	} else if (val.getClass().isArray()) {

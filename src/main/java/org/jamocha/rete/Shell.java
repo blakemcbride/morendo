@@ -39,7 +39,8 @@ import org.jline.terminal.TerminalBuilder;
  * when the input is a pipe) and collected until the parentheses balance, so a construct
  * such as a defrule can be typed over several lines. Each complete expression goes to the
  * engine through a StringChannel and everything the engine sends back is printed.
- * End of input (Ctrl-D, or the end of piped input) ends the process like (exit) does.
+ * The shell returns when the input ends (Ctrl-D, or the end of piped input) or when the
+ * engine has been closed, which is what (exit) does.
  */
 public class Shell {
 
@@ -47,9 +48,12 @@ public class Shell {
 
 	private static final String CONTINUATION_PROMPT = "... ";
 
+	private final Rete engine;
+
 	private final StringChannel channel;
 
 	public Shell(Rete engine) {
+		this.engine = engine;
 		MessageRouter router = engine.getMessageRouter();
 		channel = router.openChannel(CHANNELNAME);
 		router.setCurrentChannelId(channel.getChannelId());
@@ -78,13 +82,14 @@ public class Shell {
 				if (isComplete(pending)) {
 					execute(pending.toString());
 					pending.setLength(0);
+					if (engine.isClosed()) {
+						break;
+					}
 				}
 			}
 		} catch (IOException e) {
 			System.err.println("cannot open the terminal: " + e.getMessage());
 		}
-		// The engine's message router runs a non-daemon thread, so end the process explicitly.
-		System.exit(0);
 	}
 
 	/** Parses and executes the text, waiting for each expression's result, and prints the events. */

@@ -21,10 +21,10 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
@@ -36,131 +36,83 @@ import org.jamocha.rete.ReturnVector;
  * 
  * @author Alexander Wilden, Christoph Emonds, Sebastian Reinartz
  */
-public class MessageRouter {
+/**
+ * Serializes commands from any number of channels onto one command thread and delivers
+ * the engine's messages back to the channels that are interested in them. The command
+ * thread is the only thread that touches the engine on behalf of the shell and the GUI,
+ * which is what makes a single-threaded Rete instance safe to drive from them.
+ */
+public final class MessageRouter {
 
-	/**
-	 * The List of MessageListeners
-	 */
-	private Map<String, CommunicationChannel> idToChannel = new HashMap<>();
+	private final Map<String, CommunicationChannel> idToChannel = new HashMap<>();
 
-	private Map<String, List<MessageEvent>> idToMessages = new LinkedHashMap<>();
+	private final Map<String, List<MessageEvent>> idToMessages = new LinkedHashMap<>();
 
 	private volatile String currentChannelId = "";
 
-	/**
-	 * The Rete-engine we work with
-	 */
-	private Rete engine;
+	private final Rete engine;
 
-	// TODO is this threadsafe?
-	private Queue<CommandObject> commandQueue = new LinkedList<>();
+	private final BlockingQueue<CommandObject> commandQueue = new LinkedBlockingQueue<>();
 
-	private Queue<MessageEvent> messageQueue = new LinkedList<>();
-
-	private CLIPSInterpreter interpreter;
+	private final CLIPSInterpreter interpreter;
 
 	private int idCounter = 0;
 
-	private CommandThread commandThread;
+	private final Thread commandThread;
 
-	private final class CommandThread extends Thread {
-
-		@Override
-		public void run() {
-			while (true) {
-				if (commandQueue.isEmpty()) {
-					try {
-						sleep(10);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					CommandObject schabau = commandQueue.poll();
-					if (schabau != null) {
-						currentChannelId = schabau.channelId;
-						try {
-							messageQueue.offer(new MessageEvent(MessageEvent.Type.COMMAND, schabau.command,
-									currentChannelId));
-							
-							ReturnVector result = interpreter.executeCommand(schabau.command);
-							
-							messageQueue.offer(new MessageEvent(MessageEvent.Type.RESULT, result,
-									currentChannelId));
-						} catch (Exception e) {
-							postMessageEvent(new MessageEvent(
-									MessageEvent.Type.ERROR, e, currentChannelId));
-						} finally {
-							currentChannelId = null;
-						}
-					}
-				}
-				List<MessageEvent> allMessages = new ArrayList<>(
-						messageQueue);
-				messageQueue.clear();
-				for (int i = 0; i < allMessages.size(); ++i) {
-					MessageEvent event = allMessages.get(i);
-					synchronized (idToChannel) {
-						for (CommunicationChannel channel : idToChannel
-								.values()) {
-							if (InterestType.ALL.equals(channel.getInterest())
-									|| (InterestType.MINE.equals(channel
-											.getInterest()) && channel
-											.getChannelId().equals(
-													event.getChannelId()))) {
-								List<MessageEvent> messageList = idToMessages
-										.get(channel.getChannelId());
-								if (messageList != null) {
-									messageList.add(event);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+	/** A parsed command waiting to be executed, and the channel it came from. */
+	public record CommandObject(Object command, String channelId) {
 	}
 
-	public final class CommandObject {
-
-		private Object command;
-
-		private String channelId;
-
-		private CommandObject(Object command, String channelId) {
-			super();
-			this.command = command;
-			this.channelId = channelId;
-		}
-
-		public Object getCommand() {
-			return command;
-		}
-	}
-
-	/**
-	 * The constructor for a message router.
-	 * 
-	 * @param engine
-	 *            The Rete-engine that should be used.
-	 */
 	public MessageRouter(Rete engine) {
 		this.engine = engine;
 		this.interpreter = new CLIPSInterpreter(engine);
-		commandThread = new CommandThread();
-		commandThread.start();
+		this.commandThread = Thread.ofPlatform().name("morendo-router").daemon(true).unstarted(this::runCommands);
+		this.commandThread.start();
 	}
 
-	/**
-	 * returns the underlying Rete-engine.
-	 * 
-	 * @return The Rete-engine used in this MessageRouter-instance.
-	 */
+	private void runCommands() {
+		try {
+			while (!Thread.currentThread().isInterrupted()) {
+				CommandObject next = commandQueue.take();
+				currentChannelId = next.channelId();
+				try {
+					postMessageEvent(new MessageEvent(MessageEvent.Type.COMMAND, next.command(), currentChannelId));
+					ReturnVector result = interpreter.executeCommand(next.command());
+					postMessageEvent(new MessageEvent(MessageEvent.Type.RESULT, result, currentChannelId));
+				} catch (Exception e) {
+					postMessageEvent(new MessageEvent(MessageEvent.Type.ERROR, e, currentChannelId));
+				} finally {
+					currentChannelId = null;
+				}
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	/** Stops the command thread. Called when the engine is closed. */
+	public void shutdown() {
+		commandThread.interrupt();
+	}
+
 	public Rete getReteEngine() {
 		return engine;
 	}
 
+	/** Delivers an event to every channel interested in it. May be called from any thread. */
 	public void postMessageEvent(MessageEvent event) {
-		messageQueue.offer(event);
+		synchronized (idToChannel) {
+			for (CommunicationChannel channel : idToChannel.values()) {
+				if (InterestType.ALL.equals(channel.getInterest()) || (InterestType.MINE.equals(channel.getInterest())
+						&& channel.getChannelId().equals(event.getChannelId()))) {
+					List<MessageEvent> messageList = idToMessages.get(channel.getChannelId());
+					if (messageList != null) {
+						messageList.add(event);
+					}
+				}
+			}
+		}
 	}
 
 	public void enqueueCommand(Object command, String channelId) {
@@ -170,7 +122,6 @@ public class MessageRouter {
 	public CommandObject dequeueCommand() {
 		return commandQueue.poll();
 	}
-	
 	public StreamChannel openChannel(String channelName, InputStream inputStream) {
 		return openChannel(channelName, inputStream, InterestType.MINE);
 	}
@@ -248,10 +199,15 @@ public class MessageRouter {
 		this.currentChannelId = id;
 	}
 	
+	/** The channel whose command is executing, or the first registered channel when none is. */
 	public String getCurrentChannelId() {
-		if (this.currentChannelId == null) {
-			this.currentChannelId = this.idToMessages.keySet().iterator().next();
+		String id = this.currentChannelId;
+		if (id == null) {
+			synchronized (idToChannel) {
+				id = idToMessages.isEmpty() ? "" : idToMessages.keySet().iterator().next();
+			}
+			this.currentChannelId = id;
 		}
-		return currentChannelId;
+		return id;
 	}
 }

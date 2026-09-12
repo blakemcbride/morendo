@@ -44,7 +44,7 @@ public class AddHoursFunction extends AbstractTimeFunction implements
 		Instant date = null;
 		if (params != null && params.length == 2) {
 			int minutes = params[0].getIntValue();
-			date = this.toInstant(params[1].getValue());
+			date = this.toInstant(params[1].getValue(engine, ValueType.OBJECT));
 			if (date != null) {
 				date = date.plus(minutes, ChronoUnit.HOURS);
 			}

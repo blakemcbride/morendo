@@ -17,7 +17,6 @@
 package org.jamocha.rete.functions.time;
 
 
-import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
@@ -25,7 +24,6 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import org.jamocha.rete.ValueParam;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import org.jamocha.rete.ValueType;
@@ -51,18 +49,8 @@ public class EqSecondFunction extends AbstractTimeFunction implements Function {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		Boolean eval = Boolean.FALSE;
 		if (params != null && params.length == 2) {
-			Instant date1 = null;
-			if (params[0] instanceof ValueParam) {
-				date1 = this.toInstant(params[0].getValue());
-			} else if (params[0] instanceof BoundParam) {
-				date1 = this.toInstant(engine.getBinding( ((BoundParam)params[0]).getVariableName()));
-			}
-			Instant date2 = null;
-			if (params[1] instanceof ValueParam) {
-				date2 = this.toInstant(params[1].getValue());
-			} else if (params[1] instanceof BoundParam) {
-				date2 = this.toInstant(engine.getBinding( ((BoundParam)params[1]).getVariableName()));
-			}
+			Instant date1 = this.toInstant(params[0].getValue(engine, ValueType.OBJECT));
+			Instant date2 = this.toInstant(params[1].getValue(engine, ValueType.OBJECT));
 			if (date1 != null && date2 != null) {
 				ZonedDateTime zoned1 = zoned(date1);
 				ZonedDateTime zoned2 = zoned(date2);
