@@ -74,6 +74,7 @@ public class Tasks {
 		println("jar                      build target/morendo-<version>.jar");
 		println("dist                     build target/morendo-<version>.zip (jar, libs, launcher, samples)");
 		println("javadoc                  build target/javadoc");
+		println("lint                     compile src/main/java with -Xlint:all; summary on the console, details in target/lint.txt");
 		println("libs                     download the jar files into libs/");
 		println("");
 		println("clean                    remove target/ and the generated parser sources");
@@ -139,6 +140,10 @@ public class Tasks {
 
 	public static void javadoc() {
 		guard(Tasks::doJavadoc);
+	}
+
+	public static void lint() {
+		guard(Tasks::doLint);
 	}
 
 	public static void clean() {
@@ -218,6 +223,52 @@ public class Tasks {
 			rm(argsFile.getPath());
 		} catch (IOException e) {
 			throw new RuntimeException("javadoc: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Compiles the main sources with every javac lint category enabled, writes the full
+	 * output to target/lint.txt and prints a count per category. A separate compilation
+	 * (into target/lint) so the normal incremental build is not affected.
+	 */
+	private static void doLint() {
+		downloadAll(foreignLibs);
+		doParser();
+		String dest = BUILDDIR + "/lint";
+		rmTree(dest);
+		mkdir(dest);
+		try {
+			java.util.List<String> sources;
+			try (java.util.stream.Stream<java.nio.file.Path> walk = Files.walk(Paths.get(MAIN_SRC))) {
+				sources = walk.filter(f -> f.toString().endsWith(".java")).map(java.nio.file.Path::toString).sorted()
+						.collect(java.util.stream.Collectors.toList());
+			}
+			File argsFile = File.createTempFile("lint-", ".args");
+			Files.write(argsFile.toPath(), (String.join("\n", sources) + "\n").getBytes(StandardCharsets.UTF_8));
+			StringBuilder cp = new StringBuilder();
+			for (int i = 0; i < foreignLibs.size(); i++)
+				cp.append(i == 0 ? "" : File.pathSeparator).append(foreignLibs.get(i));
+			java.util.List<String> cmd = Arrays.asList("javac", "-Xlint:all", "-Xmaxwarns", "100000", "-proc:none",
+					"-encoding", "UTF-8", "-d", dest, "-cp", cp.toString(), "@" + argsFile);
+			Process proc = new ProcessBuilder(cmd).redirectErrorStream(true).start();
+			String output = new String(proc.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+			int status = proc.waitFor();
+			rm(argsFile.getPath());
+			Files.write(Paths.get(BUILDDIR, "lint.txt"), output.getBytes(StandardCharsets.UTF_8));
+			java.util.Map<String, Integer> counts = new java.util.TreeMap<>();
+			Matcher m = Pattern.compile("warning: \\[([a-z-]+)\\]").matcher(output);
+			while (m.find())
+				counts.merge(m.group(1), 1, Integer::sum);
+			int total = 0;
+			for (java.util.Map.Entry<String, Integer> e : counts.entrySet()) {
+				println(String.format("%6d  %s", e.getValue(), e.getKey()));
+				total += e.getValue();
+			}
+			println(String.format("%6d  total warnings (details in %s/lint.txt)", total, BUILDDIR));
+			if (status != 0)
+				throw new RuntimeException("javac reported errors; see " + BUILDDIR + "/lint.txt");
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException("lint: " + e.getMessage());
 		}
 	}
 
