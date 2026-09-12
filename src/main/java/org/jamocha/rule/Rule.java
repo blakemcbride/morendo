@@ -222,7 +222,7 @@ public interface Rule extends Scope {
     Action[] getActions();
     Action[] getModificationActions();
     void addJoinNode(BaseJoin node);
-	List<?> getJoins();
+	List<BaseJoin> getJoins();
     /**
      * The method should return the last node in the rule, not counting
      * the terminal node.

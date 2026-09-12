@@ -23,12 +23,8 @@ public class ListCubesFunction implements Function {
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		List<?> cubes = engine.getCubes();
-		Iterator<?> iterator = cubes.iterator();
-		while (iterator.hasNext()) {
-			String cubeName = (String)iterator.next();
-			engine.writeMessage(cubeName + Constants.LINEBREAK,
-			"t");
+		for (String cubeName : engine.getCubes()) {
+			engine.writeMessage(cubeName + Constants.LINEBREAK, "t");
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		return ret;

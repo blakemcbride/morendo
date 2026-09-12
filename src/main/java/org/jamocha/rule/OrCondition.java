@@ -112,7 +112,7 @@ public class OrCondition implements Condition {
 		return null;
 	}
 	
-	public List<?> getBindConstraints() {
+	public List<Object> getBindConstraints() {
 		// TODO Auto-generated method stub
 		return null;
 	}

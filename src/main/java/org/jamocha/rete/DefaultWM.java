@@ -92,14 +92,14 @@ public class DefaultWM implements WorkingMemory {
     /**
      * The initial facts the rule engine needs at startup
      */
-    protected ArrayList<?> initialFacts = new ArrayList<>();
+    protected ArrayList<Fact> initialFacts = new ArrayList<>();
 
     private Agenda agenda = null;
     /**
      * The ArrayList for the modules.
      */
     protected Map<Object, Module> modules = null;
-    protected Map<Object, Object> cubes = null;
+    protected Map<String, Cube> cubes = null;
     protected HashMap<Object, Object> contexts = new HashMap<>();
     protected ArrayList<?> focusStack = new ArrayList<>();
     private Module main = null;
@@ -171,14 +171,14 @@ public class DefaultWM implements WorkingMemory {
     }
     
     public Cube getCube(String name) {
-    	return (Cube)cubes.get(name);
+    	return cubes.get(name);
     }
     
     public Cube removeCube(String name) {
-    	return (Cube)cubes.remove(name);
+    	return cubes.remove(name);
     }
     
-	public List<?> getCubes() {
+	public List<String> getCubes() {
     	return new ArrayList<>(this.cubes.keySet());
     }
     
@@ -666,7 +666,7 @@ public class DefaultWM implements WorkingMemory {
         }
     }
 
-    	public Map<?, Object> getDeffactMap() {
+    	public Map<Object, Object> getDeffactMap() {
         return this.deffactMap;
     }
 
@@ -741,7 +741,7 @@ public class DefaultWM implements WorkingMemory {
         return objects;
     }
     
-	public List<?> getInitialFacts() {
+	public List<Fact> getInitialFacts() {
         return this.initialFacts;
     }
     

@@ -39,5 +39,5 @@ public interface FunctionGroup {
 	 * A convienance method for listing the functions in a given group.
 	 * @return
 	 */
-	List<?> listFunctions();
+	List<Function> listFunctions();
 }

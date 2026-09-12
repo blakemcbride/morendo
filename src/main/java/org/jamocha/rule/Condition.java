@@ -72,7 +72,7 @@ public interface Condition extends Print {
      * and PredicateConstraint (isPredicateJoin==true)
      * @return
      */
-	List<?> getBindConstraints();
+	List<Object> getBindConstraints();
     /**
      * obtain the compiler this condition
      * @return

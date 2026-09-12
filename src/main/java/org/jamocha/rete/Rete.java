@@ -578,7 +578,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
     	return this.workingMem.removeCube(name);
     }
 	
-    public List<?> getCubes() {
+    public List<String> getCubes() {
     	return this.workingMem.getCubes();
     }
     
@@ -831,7 +831,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * 
 	 * @return
 	 */
-	public Set<?> getDefclasses() {
+	public Set<Map.Entry<Object, Defclass>> getDefclasses() {
 		return this.defclass.entrySet();
 	}
 
@@ -1314,7 +1314,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * 
 	 * @return
 	 */
-	public List<?> getObjects() {
+	public List<Object> getObjects() {
         return this.workingMem.getObjects();
 	}
 

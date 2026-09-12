@@ -55,7 +55,7 @@ public interface WorkingMemory {
     
     public Agenda getAgenda();
     
-    public Map<?, ?> getDeffactMap();
+    public Map<Object, Object> getDeffactMap();
     
     public DefglobalMap getDefglobals();
     
@@ -65,9 +65,9 @@ public interface WorkingMemory {
     
     public Fact getFactById(long id);
     
-    public List<?> getObjects();
+    public List<Object> getObjects();
     
-    public List<?> getInitialFacts();
+    List<Fact> getInitialFacts();
     
     public boolean profileAssert();
 
@@ -98,14 +98,14 @@ public interface WorkingMemory {
     void popScope();
     
     /// ----- methods for getting the Fact map  ----- ///
-    Map<?, ?> getDynamicFacts();
-    Map<?, ?> getStaticFacts();
+    Map<Object, Object> getDynamicFacts();
+    Map<Object, Object> getStaticFacts();
     
     /// ----- methods related to cube ----- ///
     void addCube(Cube cube);
     Cube getCube(String name);
     Cube removeCube(String name);
-    List<?> getCubes();
+    List<String> getCubes();
     
     /// ----- methods related to module ----- ///
     public Module addModule(String name);

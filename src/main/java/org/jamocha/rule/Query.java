@@ -82,9 +82,9 @@ public interface Query {
     void addCondition(Condition cond);
     Condition[] getConditions();
     void addJoinNode(QueryBaseJoin node);
-   	List<?> getJoins();
+   	List<QueryBaseJoin> getJoins();
     void addNotNode(QueryBaseNot node);
-	List<?> getNotNodes();
+	List<QueryBaseJoin> getNotNodes();
     /**
      * The method should return the last node in the rule, not counting
      * the terminal node.

@@ -129,7 +129,7 @@ public class AndCondition implements Condition {
 		return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
 	}
 	
-	public List<?> getBindConstraints() {
+	public List<Object> getBindConstraints() {
 		return null;
 	}
 }

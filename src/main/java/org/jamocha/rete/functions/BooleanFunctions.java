@@ -59,7 +59,7 @@ public class BooleanFunctions implements FunctionGroup {
 		funcs.add(falseFunc);
 	}
 
-	public List<?> listFunctions() {
+	public List<Function> listFunctions() {
 		return funcs;
 	}
 
