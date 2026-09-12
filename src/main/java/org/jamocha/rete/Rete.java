@@ -24,7 +24,6 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -76,6 +75,7 @@ import org.jamocha.rule.Defquery;
 import org.jamocha.rule.GraphQuery;
 import org.jamocha.rule.Query;
 import org.jamocha.rule.Rule;
+import java.time.Instant;
 
 /**
  * @author Peter Lin
@@ -1447,8 +1447,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param statc
 	 * @throws AssertException
 	 */
-	public void assertTemporalObject(Object data, String template, Date effective, 
-    		Date expiration, boolean statc) throws AssertException {
+	public void assertTemporalObject(Object data, String template, Instant effective, 
+    		Instant expiration, boolean statc) throws AssertException {
 		this.workingMem.assertTemporalObject(data, template, effective, expiration, statc);
 	}
 	
@@ -1499,7 +1499,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param expirationTime
 	 * @throws AssertException
 	 */
-	public void assertFact(TemporalFact fact, Date effectiveTime, Date expirationTime) throws AssertException {
+	public void assertFact(TemporalFact fact, Instant effectiveTime, Instant expirationTime) throws AssertException {
 		this.workingMem.assertFact(fact, effectiveTime, expirationTime);
 	}
 

@@ -17,12 +17,12 @@
 package org.jamocha.rete;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
+import java.time.Instant;
 
 /**
  * @author Peter Lin
@@ -36,13 +36,13 @@ public interface WorkingMemory {
     /// ----- assert and retract methods ----- ///
 	void assertFact(Fact fact) throws AssertException;
 	
-	public void assertFact(TemporalFact fact, Date effectiveTime, Date expirationTime) throws AssertException;
+	public void assertFact(TemporalFact fact, Instant effectiveTime, Instant expirationTime) throws AssertException;
 
     public void assertObject(Object data, String template, boolean statc,
             boolean shadow) throws AssertException;
     
-    public void assertTemporalObject(Object data, String template, Date effective, 
-    		Date expiration, boolean statc) throws AssertException;
+    public void assertTemporalObject(Object data, String template, Instant effective, 
+    		Instant expiration, boolean statc) throws AssertException;
     
    	void assertObjects(List<?> objs) throws AssertException;
     

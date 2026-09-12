@@ -28,7 +28,7 @@ import org.jamocha.rete.ReturnVector;
 /**
  * @author Peter Lin
  * 
- * Now will create a new Date object and return it.
+ * Between checks that a time lies strictly between two others.
  */
 public class BetweenFunction extends AbstractTimeFunction implements Function {
 
@@ -83,6 +83,6 @@ public class BetweenFunction extends AbstractTimeFunction implements Function {
 	}
 
 	public String toPPString(Parameter[] params, int indents) {
-		return "(between <begin> <end> <time>) \r\n the parameters can be Date, Calendar or long value.";
+		return "(between <begin> <end> <time>) \r\n the parameters can be Instant, Date, Calendar or epoch milliseconds.";
 	}
 }

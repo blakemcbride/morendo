@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.util.Date;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -25,12 +24,13 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import java.time.Instant;
 
 
 /**
  * @author Peter Lin
  * 
- * Now will create a new Date object and return it.
+ * Now returns the current time as a java.time.Instant.
  */
 public class NowFunction implements Function {
 
@@ -56,7 +56,7 @@ public class NowFunction implements Function {
 	 * line.
 	 */
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Date now = new Date();
+		Instant now = Instant.now();
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
 			new DefaultReturnValue(Constants.OBJECT_TYPE,now);

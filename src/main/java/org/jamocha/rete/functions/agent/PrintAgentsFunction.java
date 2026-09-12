@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.agent;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import java.time.Instant;
 
 public class PrintAgentsFunction implements Function {
 
@@ -49,7 +49,7 @@ public class PrintAgentsFunction implements Function {
 			"  Application: " + agent.getApplication() + Constants.LINEBREAK +
 			"  Agent Application Name: " + agent.getAgentApplicationName() + Constants.LINEBREAK +
 			"  Agent Application Version: " + agent.getAgentApplicationVersion() + Constants.LINEBREAK +
-			"  Timestamp: " + new Date(agent.getTimestamp()) + Constants.LINEBREAK;
+			"  Timestamp: " + Instant.ofEpochMilli(agent.getTimestamp()) + Constants.LINEBREAK;
 			engine.writeMessage(message, "t");
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();

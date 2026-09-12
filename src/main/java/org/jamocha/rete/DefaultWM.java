@@ -19,7 +19,6 @@ package org.jamocha.rete;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +40,7 @@ import org.jamocha.rete.query.QueryOnlyJoin;
 import org.jamocha.rete.query.QueryOnlyNeqJoin;
 import org.jamocha.rete.strategies.Strategies;
 import org.jamocha.rete.util.ProfileStats;
+import java.time.Instant;
 
 /**
  * @author Peter Lin
@@ -201,10 +201,10 @@ public class DefaultWM implements WorkingMemory {
         }
     }
     
-    public void assertFact(TemporalFact fact, Date effectiveTime, Date expirationTime) throws AssertException {
+    public void assertFact(TemporalFact fact, Instant effectiveTime, Instant expirationTime) throws AssertException {
     	if (expirationTime != null) {
-    		fact.setEffectiveTime(effectiveTime.getTime());
-    		fact.setExpirationTime(expirationTime.getTime());
+    		fact.setEffectiveTime(effectiveTime.toEpochMilli());
+    		fact.setExpirationTime(expirationTime.toEpochMilli());
     	}
     	assertFact(fact);
     }
@@ -274,8 +274,8 @@ public class DefaultWM implements WorkingMemory {
     /**
      * Method is used to assert temporal facts, which have effective and expiration time
      */
-	public void assertTemporalObject(Object data, String template, Date effective, 
-    		Date expiration, boolean statc) throws AssertException {
+	public void assertTemporalObject(Object data, String template, Instant effective, 
+    		Instant expiration, boolean statc) throws AssertException {
         Defclass dc = null;
         if (template == null) {
             dc = this.engine.findDefclass(data);
@@ -305,8 +305,8 @@ public class DefaultWM implements WorkingMemory {
                 TemporalFact shadowfact = (TemporalFact)createFact(data, dc, template,
                         engine.nextFactId(), true);
                 // add it to the dynamic fact map
-                shadowfact.setEffectiveTime(effective.getTime());
-                shadowfact.setExpirationTime(expiration.getTime());
+                shadowfact.setEffectiveTime(effective.toEpochMilli());
+                shadowfact.setExpirationTime(expiration.toEpochMilli());
                 this.getDynamicFacts().put(data, shadowfact);
                 this.assertFact(shadowfact);
             }

@@ -19,6 +19,7 @@ package org.jamocha.rete;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.time.Instant;
 
 /**
  * @author Peter Lin
@@ -251,7 +252,7 @@ public class ConversionUtils {
             } else {
                 return Constants.OBJECT_TYPE;
             }
-        } else if (clzz == Date.class) {
+        } else if (clzz == Date.class || clzz == Instant.class) {
         	return Constants.DATE_TYPE;
         } else if (clzz == String.class){
             return Constants.STRING_TYPE;

@@ -201,12 +201,14 @@ public class GoldenSampleTest {
 
 	/**
 	 * Strips the parts of the output that legitimately differ between runs: platform line
-	 * endings, the activation aggregate time (built from fact timestamps) and printed dates.
+	 * endings, the activation aggregate time (built from fact timestamps) and printed
+	 * dates (java.util.Date and ISO-8601 Instant forms).
 	 */
 	static String normalize(String output) {
 		String s = output.replace("\r\n", "\n").replace('\r', '\n');
 		s = s.replaceAll("AggrTime--?\\d+", "AggrTime-*");
 		s = s.replaceAll("[A-Z][a-z]{2} [A-Z][a-z]{2} \\d{2} \\d{2}:\\d{2}:\\d{2} [A-Z]{2,5} \\d{4}", "<DATE>");
+		s = s.replaceAll("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?Z", "<DATE>");
 		return s;
 	}
 }

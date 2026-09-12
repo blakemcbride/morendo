@@ -19,6 +19,8 @@ package org.jamocha.rete;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.time.Instant;
+import java.util.Calendar;
 
 /**
  * @author Peter Lin
@@ -91,8 +93,8 @@ public class Evaluate {
     		return evaluateLongEqual((Long)left,right);
     	} else if (left instanceof BigDecimal) {
     		return evaluateBigDecimalEqual((BigDecimal)left,right);
-    	} else if (left instanceof Date) {
-    		return evaluateDateEqual((Date)left,right);
+    	} else if (isTemporal(left)) {
+    		return evaluateDateEqual(temporalMillis(left), right);
         } else if (left instanceof Object && right instanceof Object) {
         	return left.equals(right);
         } else {
@@ -252,16 +254,31 @@ public class Evaluate {
         }
     }
 
-    public static boolean evaluateDateEqual(Date left, Object right) {
-        if (right instanceof Date) {
-            return left.getTime() == ((Date)right).getTime();
-        } else if (right instanceof Long) {
-            return left.getTime() == ((Long)right).longValue();
-        } else if (right instanceof BigDecimal) {
-            return left.getTime() == ((BigDecimal)right).longValue();
-        } else {
-            return false;
+    /** True for the values a DATE slot or a time function may hold: an Instant, or a legacy Date or Calendar from a bean. */
+    public static boolean isTemporal(Object value) {
+        return value instanceof Instant || value instanceof Date || value instanceof Calendar;
+    }
+
+    /** Epoch milliseconds of a temporal value or a number; Long.MIN_VALUE for anything else. */
+    public static long temporalMillis(Object value) {
+        if (value instanceof Instant) {
+            return ((Instant) value).toEpochMilli();
+        } else if (value instanceof Date) {
+            return ((Date) value).getTime();
+        } else if (value instanceof Calendar) {
+            return ((Calendar) value).getTimeInMillis();
+        } else if (value instanceof Number) {
+            return ((Number) value).longValue();
         }
+        return Long.MIN_VALUE;
+    }
+
+    private static boolean temporalOrNumber(Object value) {
+        return isTemporal(value) || value instanceof Number;
+    }
+
+    public static boolean evaluateDateEqual(long left, Object right) {
+        return temporalOrNumber(right) && left == temporalMillis(right);
     }
     
     /**
@@ -290,8 +307,8 @@ public class Evaluate {
         	return evaluateDoubleNotEqual((Double)left,right);
         } else if (left instanceof BigDecimal) {
         	return evaluateBigDecimalNotEqual((BigDecimal)left,right);
-        } else if (left instanceof Date) {
-        	return evaluateDateNotEqual((Date)left, right);
+        } else if (isTemporal(left)) {
+        	return evaluateDateNotEqual(temporalMillis(left), right);
         } else if (left instanceof Object && right instanceof Object) {
         	return !left.equals(right);
         } else {
@@ -437,16 +454,8 @@ public class Evaluate {
         }
     }
     
-    public static boolean evaluateDateNotEqual(Date left, Object right) {
-        if (right instanceof Date) {
-            return left.getTime() != ((Date)right).getTime();
-        } else if (right instanceof Long) {
-            return left.getTime() != ((Long)right).longValue();
-        } else if (right instanceof BigDecimal) {
-            return left.getTime() != ((BigDecimal)right).longValue();
-        } else {
-            return false;
-        }
+    public static boolean evaluateDateNotEqual(long left, Object right) {
+        return temporalOrNumber(right) && left != temporalMillis(right);
     }
     
     public static boolean evaluateLess(Object left, Object right){
@@ -462,8 +471,8 @@ public class Evaluate {
             return evaluateFloatLess((Float)left,right);
         } else if (left instanceof Double){
             return evaluateDoubleLess((Double)left,right);
-        } else if (left instanceof Date) {
-        	return evaluateDateLess((Date)left, right);
+        } else if (isTemporal(left)) {
+        	return evaluateDateLess(temporalMillis(left), right);
         } else {
             return false;
         }
@@ -482,8 +491,8 @@ public class Evaluate {
             return evaluateFloatLessEqual((Float)left,right);
         } else if (left instanceof Double){
             return evaluateDoubleLessEqual((Double)left,right);
-        } else if (left instanceof Date) {
-        	return evaluateDateLessEqual((Date)left, right);
+        } else if (isTemporal(left)) {
+        	return evaluateDateLessEqual(temporalMillis(left), right);
         } else {
             return false;
         }
@@ -502,8 +511,8 @@ public class Evaluate {
             return evaluateFloatGreater((Float)left,right);
         } else if (left instanceof Double){
             return evaluateDoubleGreater((Double)left,right);
-        } else if (left instanceof Date) {
-        	return evaluateDateGreater((Date)left, right);
+        } else if (isTemporal(left)) {
+        	return evaluateDateGreater(temporalMillis(left), right);
         } else {
             return false;
         }
@@ -522,8 +531,8 @@ public class Evaluate {
             return evaluateFloatGreaterEqual((Float)left,right);
         } else if (left instanceof Double){
             return evaluateDoubleGreaterEqual((Double)left,right);
-        } else if (left instanceof Date) {
-        	return evaluateDateGreaterEqual((Date)left, right);
+        } else if (isTemporal(left)) {
+        	return evaluateDateGreaterEqual(temporalMillis(left), right);
         } else {
             return false;
         }
@@ -982,60 +991,20 @@ public class Evaluate {
     }
  
     /// ------- Date comparison methods ------- ///
-    public static boolean evaluateDateLess(Date left, Object right){
-    	if (right instanceof Date) {
-    		return left.getTime() < ((Date)right).getTime();
-    	} else if (right instanceof BigDecimal) {
-            return left.getTime() < ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.getTime() < ((Long)right).longValue();
-        } else if (right instanceof BigInteger) {
-            return left.getTime() < ((BigInteger)right).intValue();
-        } else {
-            return false;
-        }
+    public static boolean evaluateDateLess(long left, Object right) {
+        return temporalOrNumber(right) && left < temporalMillis(right);
     }
     
-    public static boolean evaluateDateLessEqual(Date left, Object right){
-    	if (right instanceof Date) {
-    		return left.getTime() <= ((Date)right).getTime();
-    	} else if (right instanceof BigDecimal) {
-            return left.getTime() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.getTime() <= ((Long)right).longValue();
-        } else if (right instanceof BigInteger) {
-            return left.getTime() <= ((BigInteger)right).intValue();
-        } else {
-            return false;
-        }
+    public static boolean evaluateDateLessEqual(long left, Object right) {
+        return temporalOrNumber(right) && left <= temporalMillis(right);
     }
     
-    public static boolean evaluateDateGreater(Date left, Object right){
-    	if (right instanceof Date) {
-    		return left.getTime() > ((Date)right).getTime();
-    	} else if (right instanceof BigDecimal) {
-            return left.getTime() > ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.getTime() > ((Long)right).longValue();
-        } else if (right instanceof BigInteger) {
-            return left.getTime() > ((BigInteger)right).intValue();
-        } else {
-            return false;
-        }
+    public static boolean evaluateDateGreater(long left, Object right) {
+        return temporalOrNumber(right) && left > temporalMillis(right);
     }
     
-    public static boolean evaluateDateGreaterEqual(Date left, Object right){
-    	if (right instanceof Date) {
-    		return left.getTime() >= ((Date)right).getTime();
-    	} else if (right instanceof BigDecimal) {
-            return left.getTime() >= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.getTime() >= ((Long)right).longValue();
-        } else if (right instanceof BigInteger) {
-            return left.getTime() >= ((BigInteger)right).intValue();
-        } else {
-            return false;
-        }
+    public static boolean evaluateDateGreaterEqual(long left, Object right) {
+        return temporalOrNumber(right) && left >= temporalMillis(right);
     }
     
     public static boolean factsEqual(Fact[] left, Fact[] right) {

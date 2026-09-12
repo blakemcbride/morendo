@@ -16,9 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -27,6 +24,8 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class AddHoursFunction extends AbstractTimeFunction implements
 		Function {
@@ -35,21 +34,18 @@ public class AddHoursFunction extends AbstractTimeFunction implements
 	 * 
 	 */
 	public static final String ADD_HOURS = "add-hours";
-	protected GregorianCalendar calendar = new GregorianCalendar();
 
 	public AddHoursFunction() {
 		super();
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Date date = null;
+		Instant date = null;
 		if (params != null && params.length == 2) {
 			int minutes = params[0].getIntValue();
-			date = this.getDate(params[1].getValue());
+			date = this.toInstant(params[1].getValue());
 			if (date != null) {
-				calendar.setTime(date);
-				calendar.add(Calendar.HOUR, minutes);
-				date = calendar.getTime();
+				date = date.plus(minutes, ChronoUnit.HOURS);
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
@@ -64,7 +60,7 @@ public class AddHoursFunction extends AbstractTimeFunction implements
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class<?>[]{Date.class};
+		return new Class<?>[]{Instant.class};
 	}
 
 	public int getReturnType() {

@@ -16,9 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -30,6 +27,8 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Function will compare two dates. The second date must be within x minutes of
@@ -44,9 +43,6 @@ public class WithinMinutesFunction extends AbstractTimeFunction implements Funct
 	 * 
 	 */
 	public static final String WITHIN_MINUTES = "within-minutes";
-	protected GregorianCalendar calendar1 = new GregorianCalendar();
-	protected GregorianCalendar calendar2 = new GregorianCalendar();
-	protected GregorianCalendar calendar3 = new GregorianCalendar();
 	
 	public WithinMinutesFunction() {
 		super();
@@ -56,28 +52,25 @@ public class WithinMinutesFunction extends AbstractTimeFunction implements Funct
 		Boolean eval = Boolean.FALSE;
 		if (params != null && params.length == 3) {
 			int interval = params[0].getIntValue();
-			Date date1 = null;
+			Instant date1 = null;
 			if (params[1] instanceof ValueParam) {
-				date1 = this.getDate(params[1].getValue());
+				date1 = this.toInstant(params[1].getValue());
 			} else if (params[1] instanceof BoundParam) {
-				date1 = this.getDate(engine.getBinding( ((BoundParam)params[1]).getVariableName()));
+				date1 = this.toInstant(engine.getBinding( ((BoundParam)params[1]).getVariableName()));
 			} else if (params[1] instanceof FunctionParam2) {
-				date1 = this.getDate( ((FunctionParam2)params[1]).getValue(engine, Constants.DATE_TYPE));
+				date1 = this.toInstant( ((FunctionParam2)params[1]).getValue(engine, Constants.DATE_TYPE));
 			}
-			Date date2 = null;
+			Instant date2 = null;
 			if (params[2] instanceof ValueParam) {
-				date2 = this.getDate(params[2].getValue());
+				date2 = this.toInstant(params[2].getValue());
 			} else if (params[2] instanceof BoundParam) {
-				date2 = this.getDate(engine.getBinding( ((BoundParam)params[2]).getVariableName()));
+				date2 = this.toInstant(engine.getBinding( ((BoundParam)params[2]).getVariableName()));
 			} else if (params[2] instanceof FunctionParam2) {
-				date2 = this.getDate( ((FunctionParam2)params[2]).getValue(engine, Constants.DATE_TYPE));
+				date2 = this.toInstant( ((FunctionParam2)params[2]).getValue(engine, Constants.DATE_TYPE));
 			}
 			if (date1 != null && date2 != null) {
-				calendar1.setTime(date1);
-				calendar2.setTime(date2);
-				calendar3.setTime(date1);
-				calendar3.add(Calendar.MINUTE, interval);
-				if (calendar2.compareTo(calendar1) >= 0 && calendar2.compareTo(calendar3) <= 0) {
+				Instant end = date1.plus(interval, ChronoUnit.MINUTES);
+				if (!date2.isBefore(date1) && !date2.isAfter(end)) {
 					eval = Boolean.TRUE;
 				}
 			}
@@ -94,7 +87,7 @@ public class WithinMinutesFunction extends AbstractTimeFunction implements Funct
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class<?>[]{Date.class, Date.class};
+		return new Class<?>[]{Instant.class, Instant.class};
 	}
 
 	public int getReturnType() {

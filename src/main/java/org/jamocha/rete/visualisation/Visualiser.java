@@ -20,8 +20,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,6 +48,9 @@ import org.jamocha.rete.ObjectTypeNode;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.RootNode;
 import org.jamocha.rete.TerminalNode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
  * @author Josef Alexander Hahn
@@ -292,7 +293,7 @@ public final class Visualiser implements ActionListener, MouseListener, EngineEv
 	 * and shows that window.
 	 */
 	public void show(){
-		JFrame frame = new JFrame(getCaption(new Date()));
+		JFrame frame = new JFrame(getCaption(LocalDateTime.now()));
 		frame.getContentPane().add(getVisualiserPanel(),BorderLayout.CENTER);
 		frame.pack();
 		frame.setLocationByPlatform(true);
@@ -324,8 +325,8 @@ public final class Visualiser implements ActionListener, MouseListener, EngineEv
 		
 	}
 
-	protected String getCaption(Date date){
-		return "Jamocha - Rete Network - "+DateFormat.getInstance().format(date);
+	protected String getCaption(LocalDateTime date) {
+		return "Jamocha - Rete Network - " + date.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
 	}
 	
 	protected void reloadView() {
@@ -337,7 +338,7 @@ public final class Visualiser implements ActionListener, MouseListener, EngineEv
 		radar.removeAllPrimitives();
 		createPrimitives(t);
 		if (myFrame!=null) {
-			myFrame.setTitle(getCaption(new Date()));
+			myFrame.setTitle(getCaption(LocalDateTime.now()));
 		}
 
 	}

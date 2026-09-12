@@ -16,9 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -29,6 +26,8 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  * Function will compare two dates down to the minute. That means it will lop off the seconds
@@ -43,8 +42,6 @@ public class EqYearFunction extends AbstractTimeFunction implements Function {
 	 * 
 	 */
 	public static final String EQ_YEAR = "eq-year";
-	protected GregorianCalendar calendar1 = new GregorianCalendar();
-	protected GregorianCalendar calendar2 = new GregorianCalendar();
 	
 	public EqYearFunction() {
 		super();
@@ -53,22 +50,22 @@ public class EqYearFunction extends AbstractTimeFunction implements Function {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		Boolean eval = Boolean.FALSE;
 		if (params != null && params.length == 2) {
-			Date date1 = null;
+			Instant date1 = null;
 			if (params[0] instanceof ValueParam) {
-				date1 = this.getDate(params[0].getValue());
+				date1 = this.toInstant(params[0].getValue());
 			} else if (params[0] instanceof BoundParam) {
-				date1 = this.getDate(engine.getBinding( ((BoundParam)params[0]).getVariableName()));
+				date1 = this.toInstant(engine.getBinding( ((BoundParam)params[0]).getVariableName()));
 			}
-			Date date2 = null;
+			Instant date2 = null;
 			if (params[1] instanceof ValueParam) {
-				date2 = this.getDate(params[1].getValue());
+				date2 = this.toInstant(params[1].getValue());
 			} else if (params[1] instanceof BoundParam) {
-				date2 = this.getDate(engine.getBinding( ((BoundParam)params[1]).getVariableName()));
+				date2 = this.toInstant(engine.getBinding( ((BoundParam)params[1]).getVariableName()));
 			}
 			if (date1 != null && date2 != null) {
-				calendar1.setTime(date1);
-				calendar2.setTime(date2);
-				if (calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)) {
+				ZonedDateTime zoned1 = zoned(date1);
+				ZonedDateTime zoned2 = zoned(date2);
+				if (zoned1.getYear() == zoned2.getYear()) {
 					eval = Boolean.TRUE;
 				}
 			}
@@ -85,7 +82,7 @@ public class EqYearFunction extends AbstractTimeFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class<?>[]{Date.class, Date.class};
+		return new Class<?>[]{Instant.class, Instant.class};
 	}
 
 	public int getReturnType() {
