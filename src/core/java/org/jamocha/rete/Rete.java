@@ -35,6 +35,8 @@ import org.jamocha.rule.Defquery;
 import org.jamocha.rule.GraphQuery;
 import org.jamocha.rule.Query;
 import org.jamocha.rule.Rule;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -62,10 +64,15 @@ import java.util.Set;
  * <p>Threading: an instance is not thread-safe. All calls must come from one thread, or be
  * serialized through the MessageRouter's command thread, which is how the shell and the GUI drive
  * it.
+ *
+ * <p>The class is {@code @NullMarked} (jspecify): parameters and return values are non-null unless
+ * annotated {@code @Nullable}, which marks the lookups that answer null for an unknown name and the
+ * optional template, parent and expiration arguments.
  */
 @SuppressWarnings(
         "this-escape") // the router, root node and compilers are created with a reference to the
 // engine
+@NullMarked
 public class Rete implements PropertyChangeListener, CompilerListener {
 
     /** */
@@ -450,11 +457,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         return mod;
     }
 
-    public Module removeModule(String name) {
+    public @Nullable Module removeModule(String name) {
         return this.workingMem.removeModule(name);
     }
 
-    public Module findModule(String name) {
+    public @Nullable Module findModule(String name) {
         return this.workingMem.findModule(name);
     }
 
@@ -474,7 +481,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param name
      * @return
      */
-    public Cube getCube(String name) {
+    public @Nullable Cube getCube(String name) {
         return this.workingMem.getCube(name);
     }
 
@@ -484,7 +491,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param name
      * @return
      */
-    public Cube removeCube(String name) {
+    public @Nullable Cube removeCube(String name) {
         return this.workingMem.removeCube(name);
     }
 
@@ -499,7 +506,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param name
      * @return
      */
-    public Function findFunction(String name) {
+    public @Nullable Function findFunction(String name) {
         return this.functionRegistry.find(name);
     }
 
@@ -509,7 +516,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param name
      * @return
      */
-    public Template findTemplate(String name) {
+    public @Nullable Template findTemplate(String name) {
         return this.templates.findTemplate(name);
     }
 
@@ -519,7 +526,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * declare an object using the qualified class name, template and parent. The method will lookup
      * the class. If it fails to find the class, it will throw a ClassNotFoundException.
      */
-    public void declareObject(String className, String templateName, String parent)
+    public void declareObject(
+            String className, @Nullable String templateName, @Nullable String parent)
             throws ClassNotFoundException {
         this.templates.declareObject(className, templateName, parent);
     }
@@ -539,7 +547,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param obj
      * @param templateName
      */
-    public void declareObject(Class<?> obj, String templateName) {
+    public void declareObject(Class<?> obj, @Nullable String templateName) {
         declareObject(obj, templateName, null);
     }
 
@@ -548,7 +556,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param templateName
      * @param parent - the parent template
      */
-    public void declareObject(Class<?> obj, String templateName, String parent) {
+    public void declareObject(
+            Class<?> obj, @Nullable String templateName, @Nullable String parent) {
         this.templates.declareObject(obj, templateName, parent);
     }
 
@@ -579,11 +588,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param clazz
      * @return
      */
-    public Deftemplate findDeftemplate(Class<?> clazz) {
+    public @Nullable Deftemplate findDeftemplate(Class<?> clazz) {
         return this.templates.findDeftemplate(clazz);
     }
 
-    public Defclass findDeclassByTemplate(String templateName) {
+    public @Nullable Defclass findDeclassByTemplate(String templateName) {
         return this.templates.findDefclassByTemplate(templateName);
     }
 
@@ -620,7 +629,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param clazz
      * @return
      */
-    public Defclass findDefclass(Class<?> clazz) {
+    public @Nullable Defclass findDefclass(Class<?> clazz) {
         return this.templates.findDefclass(clazz);
     }
 
@@ -631,7 +640,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param templateName
      * @return
      */
-    public Defclass findDefclassByTemplate(String templateName) {
+    public @Nullable Defclass findDefclassByTemplate(String templateName) {
         return this.templates.findDefclassByTemplate(templateName);
     }
 
@@ -650,11 +659,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param key
      * @return
      */
-    public Defclass findDefclass(Object key) {
+    public @Nullable Defclass findDefclass(Object key) {
         return this.templates.findDefclass(key);
     }
 
-    public Defclass findDefclassByName(String key) {
+    public @Nullable Defclass findDefclassByName(String key) {
         return this.templates.findDefclassByName(key);
     }
 
@@ -694,7 +703,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      *
      * @param name
      */
-    public Function declareFunction(String name) throws ClassNotFoundException {
+    public @Nullable Function declareFunction(String name) throws ClassNotFoundException {
         return this.functionRegistry.declare(name);
     }
 
@@ -760,19 +769,20 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         }
     }
 
-    public Query getDefquery(String name) {
-        return ((Defquery) this.queries.get(name)).clone(this);
+    public @Nullable Query getDefquery(String name) {
+        Defquery query = (Defquery) this.queries.get(name);
+        return query == null ? null : query.clone(this);
     }
 
-    public Query removeDefquery(String name) {
+    public @Nullable Query removeDefquery(String name) {
         return this.queries.remove(name);
     }
 
-    public GraphQuery getGraphQuery(String name) {
+    public @Nullable GraphQuery getGraphQuery(String name) {
         return this.graphQueries.get(name);
     }
 
-    public GraphQuery removeGraphQuery(String name) {
+    public @Nullable GraphQuery removeGraphQuery(String name) {
         return this.graphQueries.remove(name);
     }
 
@@ -780,7 +790,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         return this.functionRegistry.allMeasures();
     }
 
-    public Measure findMeasure(String name) {
+    public @Nullable Measure findMeasure(String name) {
         return this.functionRegistry.findMeasure(name);
     }
 
@@ -826,7 +836,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         this.workingMem.getDefglobals().declareDefglobal(name, value);
     }
 
-    public Object getDefglobalValue(String name) {
+    public @Nullable Object getDefglobalValue(String name) {
         return this.workingMem.getDefglobals().getValue(name);
     }
 
@@ -860,7 +870,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param name
      * @return
      */
-    public Object getBinding(String name) {
+    public @Nullable Object getBinding(String name) {
         return this.workingMem.getBinding(name);
     }
 
@@ -873,7 +883,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param key
      * @param value
      */
-    public void setBindingValue(String key, Object value) {
+    public void setBindingValue(String key, @Nullable Object value) {
         this.workingMem.setBindingValue(key, value);
     }
 
@@ -1063,7 +1073,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param key
      * @return
      */
-    public Fact getShadowFact(Object key) {
+    public @Nullable Fact getShadowFact(Object key) {
         Fact f = (Fact) this.workingMem.getDynamicFacts().get(key);
         if (f == null) {
             f = (Fact) this.workingMem.getStaticFacts().get(key);
@@ -1078,7 +1088,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param id
      * @return
      */
-    public Fact getFactById(long id) {
+    public @Nullable Fact getFactById(long id) {
         return this.workingMem.getFactById(id);
     }
 
@@ -1097,7 +1107,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param name
      * @return
      */
-    public PrintWriter removePrintWriter(String name) {
+    public @Nullable PrintWriter removePrintWriter(String name) {
         return this.output.removePrintWriter(name);
     }
 
@@ -1143,7 +1153,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param shadow
      * @throws AssertException
      */
-    public void assertObject(Object data, String template, boolean statc, boolean shadow)
+    public void assertObject(Object data, @Nullable String template, boolean statc, boolean shadow)
             throws AssertException {
         this.workingMem.assertObject(data, template, statc, shadow);
     }
@@ -1160,7 +1170,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @throws AssertException
      */
     public void assertTemporalObject(
-            Object data, String template, Instant effective, Instant expiration, boolean statc)
+            Object data,
+            @Nullable String template,
+            Instant effective,
+            Instant expiration,
+            boolean statc)
             throws AssertException {
         this.workingMem.assertTemporalObject(data, template, effective, expiration, statc);
     }
@@ -1210,7 +1224,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @param expirationTime
      * @throws AssertException
      */
-    public void assertFact(TemporalFact fact, Instant effectiveTime, Instant expirationTime)
+    public void assertFact(
+            TemporalFact fact, Instant effectiveTime, @Nullable Instant expirationTime)
             throws AssertException {
         this.workingMem.assertFact(fact, effectiveTime, expirationTime);
     }

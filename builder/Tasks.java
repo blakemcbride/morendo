@@ -54,6 +54,7 @@ public class Tasks {
     static final String[][] CATALOG = {
         {"log4j-api", MAVEN + "org/apache/logging/log4j/log4j-api/2.26.1/log4j-api-2.26.1.jar"},
         {"log4j-core", MAVEN + "org/apache/logging/log4j/log4j-core/2.26.1/log4j-core-2.26.1.jar"},
+        {"jspecify", MAVEN + "org/jspecify/jspecify/1.0.1/jspecify-1.0.1.jar"},
         {
             "jackson-core",
             MAVEN + "com/fasterxml/jackson/core/jackson-core/2.22.2/jackson-core-2.22.2.jar"
@@ -97,22 +98,28 @@ public class Tasks {
     }
 
     static final Module[] MODULES = {
-        new Module("core", new String[0], new String[] {"log4j-api", "log4j-core"}),
-        new Module("examples", new String[] {"core"}, new String[] {"log4j-api"}),
+        new Module("core", new String[0], new String[] {"jspecify", "log4j-api", "log4j-core"}),
+        new Module("examples", new String[] {"core"}, new String[] {"jspecify", "log4j-api"}),
         new Module(
-                "messaging", new String[] {"core"}, new String[] {"log4j-api", "jakarta.jms-api"}),
-        new Module("gui", new String[] {"core"}, new String[] {"log4j-api"}),
+                "messaging",
+                new String[] {"core"},
+                new String[] {"jspecify", "log4j-api", "jakarta.jms-api"}),
+        new Module("gui", new String[] {"core"}, new String[] {"jspecify", "log4j-api"}),
         new Module(
                 "service",
                 new String[] {"core"},
                 new String[] {
+                    "jspecify",
                     "log4j-api",
                     "jackson-core",
                     "jackson-databind",
                     "jackson-annotations",
                     "jakarta.servlet-api"
                 }),
-        new Module("shell", new String[] {"core", "gui"}, new String[] {"log4j-api", "jline"}),
+        new Module(
+                "shell",
+                new String[] {"core", "gui"},
+                new String[] {"jspecify", "log4j-api", "jline"}),
     };
 
     static final ForeignDependencies foreignLibs =
