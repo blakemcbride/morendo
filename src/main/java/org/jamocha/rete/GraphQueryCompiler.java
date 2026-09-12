@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.model.Edge;
 import org.jamocha.model.Graph;
 import org.jamocha.model.Node;
@@ -68,7 +68,7 @@ public class GraphQueryCompiler implements QueryCompiler {
     public static final String INVALID_FUNCTION = 
         Messages.getString("CompilerProperties.invalid.function"); //$NON-NLS-1$
     
-    protected Logger log = LogFactory.createLogger(GraphQueryCompiler.class);
+    protected Logger log = LogManager.getLogger(GraphQueryCompiler.class);
     protected GraphQuery currentQuery = null;
 
     /**
@@ -162,7 +162,7 @@ public class GraphQueryCompiler implements QueryCompiler {
 				CompileEvent ce = new CompileEvent(this.currentQuery, CompileEvent.INVALID_RULE);
 				ce.setMessage(Messages.getString("RuleCompiler.assert.error"));
 				this.notifyListener(ce);
-				log.debug(e);
+				log.debug(e.toString(), e);
 				this.currentQuery = null;
 				return false;
 			}

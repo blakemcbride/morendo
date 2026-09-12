@@ -1,7 +1,7 @@
 package org.jamocha.service;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.parser.clips.CLIPSParser;
 import org.jamocha.rete.Deftemplate;
 import org.jamocha.rete.Function;
@@ -15,7 +15,7 @@ public class ClipsRuleset implements Ruleset {
 	
 	public ClipsRuleset() {
 		super();
-		log = LogFactory.createLogger(ClipsRuleset.class);
+		log = LogManager.getLogger(ClipsRuleset.class);
 	}
 
 	public String getContents() {
@@ -44,7 +44,7 @@ public class ClipsRuleset implements Ruleset {
 	 */
 	public boolean loadRuleset(org.jamocha.rete.Rete engine) {
 		if (log == null) {
-			log = LogFactory.createLogger(ClipsRuleset.class);
+			log = LogManager.getLogger(ClipsRuleset.class);
 		}
 		boolean loaded = false;
 		if (this.URL != null) {
@@ -53,7 +53,7 @@ public class ClipsRuleset implements Ruleset {
 				loaded = true;
 			} catch (Exception e) {
 				// we should log this
-				log.fatal(e);
+				log.fatal(e.toString(), e);
 			}
 		} else if (this.contents != null) {
 			java.io.StringReader reader = new java.io.StringReader(this.contents);
@@ -75,7 +75,7 @@ public class ClipsRuleset implements Ruleset {
 				}
 			} catch (Exception e) {
 				// we need to log the error
-				log.fatal(e);
+				log.fatal(e.toString(), e);
 			}
 			loaded = true;
 		}

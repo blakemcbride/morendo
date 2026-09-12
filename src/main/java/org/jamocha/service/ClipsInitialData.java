@@ -5,8 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
@@ -33,7 +33,7 @@ public class ClipsInitialData implements InitialData {
 	
 	public ClipsInitialData() {
 		super();
-		log = LogFactory.createLogger(ClipsInitialData.class);
+		log = LogManager.getLogger(ClipsInitialData.class);
 	}
 	
 	public Object getData() {
@@ -67,7 +67,7 @@ public class ClipsInitialData implements InitialData {
 	 */
 	public boolean loadData(Rete engine) {
 		if (log == null) {
-			log = LogFactory.createLogger(ClipsInitialData.class);
+			log = LogManager.getLogger(ClipsInitialData.class);
 		}
 		boolean loaded = true;
 		try {
@@ -100,9 +100,9 @@ public class ClipsInitialData implements InitialData {
 			output.close();
 			data = null;
 		} catch (FileNotFoundException e) {
-			log.info(e);
+			log.info(e.toString(), e);
 		} catch (IOException e) {
-			log.info(e);
+			log.info(e.toString(), e);
 		}
 	}
 }

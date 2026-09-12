@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.query.QueryAlphaNode;
 import org.jamocha.rete.query.QueryAndAlphaNode;
@@ -66,7 +66,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
     public static final String INVALID_FUNCTION = 
         Messages.getString("CompilerProperties.invalid.function"); //$NON-NLS-1$
     
-    protected Logger log = LogFactory.createLogger(DefaultQueryCompiler.class);
+    protected Logger log = LogManager.getLogger(DefaultQueryCompiler.class);
     protected Defquery currentQuery = null;
 
     /**
@@ -139,7 +139,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
 				CompileEvent ce = new CompileEvent(query, CompileEvent.INVALID_RULE);
 				ce.setMessage(Messages.getString("RuleCompiler.assert.error"));
 				this.notifyListener(ce);
-				log.debug(e);
+				log.debug(e.toString(), e);
 				this.currentQuery = null;
 				return false;
 			}

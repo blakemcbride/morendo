@@ -3,13 +3,13 @@ package org.jamocha.service;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Rete;
 
 public class ServiceAdministrationImpl implements ServiceAdministration {
 
-	private Logger log = LogFactory.createLogger(ServiceAdministrationImpl.class);
+	private Logger log = LogManager.getLogger(ServiceAdministrationImpl.class);
 	private RuleServiceImpl ruleService = null;
 	
 	public ServiceAdministrationImpl(RuleServiceImpl service) {

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.*;
 
@@ -55,7 +55,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
     public static final String ASSERT_ON_PROPOGATE = 
         Messages.getString("CompilerProperties.assert.on.add"); //$NON-NLS-1$
     
-    protected Logger log = LogFactory.createLogger(DefaultRuleCompiler.class);
+    protected Logger log = LogManager.getLogger(DefaultRuleCompiler.class);
 
     
 	public DefaultRuleCompiler(Rete engine, Map<Template, ObjectTypeNode> inputNodes) {
@@ -158,7 +158,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
 	                CompileEvent ce = new CompileEvent(rule,CompileEvent.INVALID_RULE);
 	                ce.setMessage(Messages.getString("RuleCompiler.assert.error")); //$NON-NLS-1$
 	                this.notifyListener(ce);
-	                log.debug(e);
+	                log.debug(e.toString(), e);
 	                return false;
 	            }
 	        } else if (rule.getConditions().length == 0){

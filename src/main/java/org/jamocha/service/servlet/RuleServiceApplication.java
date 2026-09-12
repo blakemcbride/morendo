@@ -26,8 +26,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Rete;
 import org.jamocha.service.ClipsInitialData;
@@ -51,7 +51,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class RuleServiceApplication implements RuleApplication {
 
-	private transient Logger log = LogFactory.createLogger(RuleServiceApplication.class);
+	private transient Logger log = LogManager.getLogger(RuleServiceApplication.class);
 	private String applicationName = null;
 	private String version = null;
 	private List<ObjectModel> models = null;
@@ -126,7 +126,7 @@ public class RuleServiceApplication implements RuleApplication {
 		try {
 			return this.classloader.loadClass(className);
 		} catch (ClassNotFoundException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 			return null;
 		}
 	}
@@ -200,31 +200,31 @@ public class RuleServiceApplication implements RuleApplication {
 						functionInstances.add(data);
 					}
 				} catch (ClassNotFoundException e) {
-					log.fatal(e);
+					log.fatal(e.toString(), e);
 					success = false;
 					break;
 				} catch (InstantiationException e) {
-					log.fatal(e);
+					log.fatal(e.toString(), e);
 					success = false;
 					break;
 				} catch (IllegalAccessException e) {
-					log.fatal(e);
+					log.fatal(e.toString(), e);
 					success = false;
 					break;
 				} catch (IllegalArgumentException e) {
-					log.fatal(e);
+					log.fatal(e.toString(), e);
 					success = false;
 					break;
 				} catch (InvocationTargetException e) {
-					log.fatal(e);
+					log.fatal(e.toString(), e);
 					success = false;
 					break;
 				} catch (NoSuchMethodException e) {
-					log.fatal(e);
+					log.fatal(e.toString(), e);
 					success = false;
 					break;
 				} catch (SecurityException e) {
-					log.fatal(e);
+					log.fatal(e.toString(), e);
 					success = false;
 					break;
 				}
@@ -410,8 +410,8 @@ public class RuleServiceApplication implements RuleApplication {
 			mapper.writeValue(writer, app);
 			writer.close();
 		} catch (IOException e) {
-			Logger log = LogFactory.createLogger(RuleServiceApplication.class);
-			log.fatal(e);
+			Logger log = LogManager.getLogger(RuleServiceApplication.class);
+			log.fatal(e.toString(), e);
 		}
 	}
 	
@@ -422,8 +422,8 @@ public class RuleServiceApplication implements RuleApplication {
 			RuleApplication app = mapper.readValue(reader, RuleApplication.class);
 			return app;
 		} catch (Exception e) {
-			Logger log = LogFactory.createLogger(RuleServiceApplication.class);
-			log.fatal(e);
+			Logger log = LogManager.getLogger(RuleServiceApplication.class);
+			log.fatal(e.toString(), e);
 		}
 		return null;
 	}

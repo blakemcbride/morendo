@@ -5,15 +5,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Defclass;
 import org.jamocha.rete.Module;
 
 public class MacroGenerator {
 
-    protected Logger log = LogFactory.createLogger(MacroGenerator.class);
+    protected Logger log = LogManager.getLogger(MacroGenerator.class);
 	protected int tabs = 0;
 	public static final String READ_PREFIX = "Read";
 	public static final String WRITE_PREFIX = "Write";
@@ -159,7 +159,7 @@ public class MacroGenerator {
 			writer.write(buf.toString());
 			writer.close();
 		} catch (IOException e) {
-			log.fatal(e);
+			log.fatal(e.toString(), e);
 		}
 		return true;
 	}

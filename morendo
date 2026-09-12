@@ -2,8 +2,7 @@
 # Starts Morendo:  ./morendo -shell   (interactive CLIPS shell)
 #                  ./morendo -gui     (Swing GUI)
 # Works from a checkout after "./bld build" (target/classes) and from an unpacked
-# distribution (morendo.jar). Run it from this directory: log4j.properties is read
-# from the current directory.
+# distribution (morendo.jar). Logging options: see log4j2.xml in the jar / src/main/resources.
 DIR="$(cd "$(dirname "$0")" && pwd)"
 if [ -f "$DIR/morendo.jar" ]; then
     CP="$DIR/morendo.jar:$DIR/libs/*"

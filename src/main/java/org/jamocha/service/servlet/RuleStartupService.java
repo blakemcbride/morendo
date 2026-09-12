@@ -29,7 +29,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.jamocha.logging.ServletLogger;
 import org.jamocha.rete.Rete;
 import org.jamocha.service.EngineContext;
 import org.jamocha.service.RuleApplication;
@@ -71,7 +70,6 @@ public class RuleStartupService implements ServletContextListener, RuleService {
 
 	public void contextInitialized(ServletContextEvent context) {
 		this.servletContext = context.getServletContext();
-		org.jamocha.logging.LogFactory.setServletContext(this.servletContext);
 		administration.setServletContext(this.servletContext);
 		this.serviceConfiguration = this.loadConfiguration();
 		servletContext.log("--- configuration loaded from Ruleconfig.json ---");
@@ -183,7 +181,7 @@ public class RuleStartupService implements ServletContextListener, RuleService {
 			this.engineMap.put(key, queue);
 			int initialCount = application.getInitialPool();
 			for (int c=0; c < initialCount; c++) {
-				org.jamocha.rete.Rete engine = new org.jamocha.rete.Rete(new ServletLogger(this.servletContext));
+				org.jamocha.rete.Rete engine = new org.jamocha.rete.Rete();
 				engine.setWatch(Rete.WATCH_ALL);
 				application.initializeEngine(engine);
 				application.setCurrentPoolCount(c + 1);

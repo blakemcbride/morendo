@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Fact;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.exception.AssertException;
@@ -13,7 +13,7 @@ import org.jamocha.rete.exception.RetractException;
 
 public class EngineContextImpl implements EngineContext {
 
-	private Logger log = LogFactory.createLogger(EngineContextImpl.class);
+	private Logger log = LogManager.getLogger(EngineContextImpl.class);
 	private RuleServiceImpl ruleService = null;
 	private org.jamocha.rete.Rete engine = null;
 	private String applicationName = null;
@@ -40,7 +40,7 @@ public class EngineContextImpl implements EngineContext {
 		try {
 			engine.assertObject(data, null, isStatic, isShadowed);
 		} catch (AssertException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 			throw e;
 		}
 	}
@@ -51,7 +51,7 @@ public class EngineContextImpl implements EngineContext {
 			try {
 				engine.assertObject(itr.next(), null, isStatic, isShadowed);
 			} catch (AssertException e) {
-				log.debug(e);
+				log.debug(e.toString(), e);
 				throw e;
 			}
 		}
@@ -67,7 +67,7 @@ public class EngineContextImpl implements EngineContext {
 			try {
 				this.engine.retractObject(itr.next());
 			} catch (Exception e) {
-				log.debug(e);
+				log.debug(e.toString(), e);
 			}
 		}
 		this.ruleService.queueEngine(this.applicationName, this.version, this.engine);
@@ -90,10 +90,10 @@ public class EngineContextImpl implements EngineContext {
 		try {
 			engine.modifyObject(data);
 		} catch (AssertException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 			throw e;
 		} catch (RetractException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 			throw e;
 		}
 	}
@@ -104,10 +104,10 @@ public class EngineContextImpl implements EngineContext {
 			try {
 				engine.modifyObject(itr.next());
 			} catch (AssertException e) {
-				log.debug(e);
+				log.debug(e.toString(), e);
 				throw e;
 			} catch (RetractException e) {
-				log.debug(e);
+				log.debug(e.toString(), e);
 				throw e;
 			}
 		}
@@ -117,7 +117,7 @@ public class EngineContextImpl implements EngineContext {
 		try {
 			engine.retractObject(data);
 		} catch (RetractException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 			throw e;
 		}
 	}
@@ -128,7 +128,7 @@ public class EngineContextImpl implements EngineContext {
 			try {
 				engine.retractObject(itr.next());
 			} catch (RetractException e) {
-				log.debug(e);
+				log.debug(e.toString(), e);
 				throw e;
 			}
 		}

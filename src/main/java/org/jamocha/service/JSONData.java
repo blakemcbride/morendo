@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JSONData<T> implements InitialData {
 
 	@JsonIgnore
-	private transient Logger log = LogFactory.createLogger(JSONData.class);
+	private transient Logger log = LogManager.getLogger(JSONData.class);
 	private String name = null;
 	private String url;
 	private List<Object> data = null;
@@ -101,7 +101,7 @@ public class JSONData<T> implements InitialData {
 				engine.assertObjects(data);
 				return true;
 			} catch (AssertException e) {
-				log.info(e);
+				log.info(e.toString(), e);
 				return false;
 			}
 		}
@@ -122,7 +122,7 @@ public class JSONData<T> implements InitialData {
 				engine.assertObjects(data);
 				return true;
 			} catch (AssertException e) {
-				log.info(e);
+				log.info(e.toString(), e);
 				return false;
 			}
 		}
@@ -142,11 +142,11 @@ public class JSONData<T> implements InitialData {
 					List<Object> data = (List<Object>) mapper.readValue(input, new TypeReference<List<T>>(){});
 					return data;
 				} catch (MalformedURLException e) {
-					Logger log = LogFactory.createLogger(JSONData.class);
-					log.fatal(e);
+					Logger log = LogManager.getLogger(JSONData.class);
+					log.fatal(e.toString(), e);
 				} catch (IOException e) {
-					Logger log = LogFactory.createLogger(JSONData.class);
-					log.fatal(e);
+					Logger log = LogManager.getLogger(JSONData.class);
+					log.fatal(e.toString(), e);
 				}
 			} else if (url.startsWith("/WEB-INF")) {
 				InputStream input = this.servletCtx.getResourceAsStream(url);
@@ -158,8 +158,8 @@ public class JSONData<T> implements InitialData {
 				return data;
 			}
 		} catch (Exception e) {
-			Logger log = LogFactory.createLogger(JSONData.class);
-			log.fatal(e);
+			Logger log = LogManager.getLogger(JSONData.class);
+			log.fatal(e.toString(), e);
 		}
 		return null;
 	}

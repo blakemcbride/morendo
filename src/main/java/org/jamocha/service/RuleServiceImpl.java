@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Rete;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RuleServiceImpl implements RuleService {
 
-	private Logger log = LogFactory.createLogger(RuleServiceImpl.class);
+	private Logger log = LogManager.getLogger(RuleServiceImpl.class);
 	private long totalResponseTime = 0;
 	private long averageResponseTime = 0;
 	private long averageRulesFired = 0;
@@ -193,8 +193,8 @@ public class RuleServiceImpl implements RuleService {
 			ruleService.serviceConfiguration = config;
 			return ruleService;
 		} catch (Exception e) {
-			Logger log = LogFactory.createLogger(RuleApplicationImpl.class);
-			log.fatal(e);
+			Logger log = LogManager.getLogger(RuleApplicationImpl.class);
+			log.fatal(e.toString(), e);
 		}
 		return null;
 	}
@@ -208,8 +208,8 @@ public class RuleServiceImpl implements RuleService {
 			mapper.writeValue(writer, configuration);
 			writer.close();
 		} catch (IOException e) {
-			Logger log = LogFactory.createLogger(RuleApplicationImpl.class);
-			log.fatal(e);
+			Logger log = LogManager.getLogger(RuleApplicationImpl.class);
+			log.fatal(e.toString(), e);
 		}
 	}
 	

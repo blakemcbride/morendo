@@ -241,7 +241,7 @@ public class Tasks {
 			if (!lib.endsWith(JUNIT))
 				copyForce(lib, stage + "/libs/" + new File(lib).getName());
 		}
-		for (String f : new String[] { "morendo", "morendo.cmd", "log4j.properties", "README.md", "LICENSE" })
+		for (String f : new String[] { "morendo", "morendo.cmd", "README.md", "LICENSE" })
 			copyForce(f, stage + "/" + f);
 		makeExecutable(stage + "/morendo");
 		copyTree("samples", stage + "/samples");
@@ -330,7 +330,8 @@ public class Tasks {
 	private static ForeignDependencies buildForeignDependencies() {
 		final ForeignDependencies dep = new ForeignDependencies();
 		// runtime
-		dep.add(LIBS, MAVEN + "log4j/log4j/1.2.14/log4j-1.2.14.jar");
+		dep.add(LIBS, MAVEN + "org/apache/logging/log4j/log4j-api/2.26.1/log4j-api-2.26.1.jar");
+		dep.add(LIBS, MAVEN + "org/apache/logging/log4j/log4j-core/2.26.1/log4j-core-2.26.1.jar");
 		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-core/2.12.3/jackson-core-2.12.3.jar");
 		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-databind/2.12.3/jackson-databind-2.12.3.jar");
 		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-annotations/2.12.3/jackson-annotations-2.12.3.jar");

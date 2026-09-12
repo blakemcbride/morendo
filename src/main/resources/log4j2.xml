@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Morendo logging (Log4j 2): WARN and above to the console (stderr), nothing else.
+    -Dmorendo.log.level=DEBUG                              more detail on the console
+    -Dlog4j2.configurationFile=classpath:log4j2-file.xml   also write logs/morendo.log (see that file)
+  Embedders can point -Dlog4j2.configurationFile at their own configuration instead.
+-->
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_ERR">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{1} - %msg%n%throwable"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="${sys:morendo.log.level:-WARN}">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>

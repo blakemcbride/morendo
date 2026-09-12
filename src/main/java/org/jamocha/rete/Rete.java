@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.messagerouter.MessageEvent;
 import org.jamocha.messagerouter.MessageRouter;
 import org.jamocha.rete.exception.AssertException;
@@ -159,7 +159,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 	@SuppressWarnings("unchecked")
 	public Rete() {
 		super();
-		log = LogFactory.createLogger(Rete.class);
+		log = LogManager.getLogger(Rete.class);
         this.compiler = new DefaultRuleCompiler(this, (Map<Template, ObjectTypeNode>) this.root.getObjectTypeNodes());
         this.queryCompiler = new DefaultQueryCompiler(this, (Map<Template, QueryObjTypeNode>) this.root.getObjectTypeNodes());
         this.graphQueryCompiler = new GraphQueryCompiler(this);
@@ -289,7 +289,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 			this.assertFact(ifact);
 		} catch (AssertException e) {
 			// an error should not occur
-			log.info(e);
+			log.info(e.toString(), e);
 		}
 	}
 	
@@ -425,7 +425,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
                     this.addRuleFired(actv.getRule());
 				} catch (ExecuteException e) {
 					// we need to report the exception
-					log.debug(e);
+					log.debug(e.toString(), e);
 					// we break out of the for loop
 					break;
 				}
@@ -465,7 +465,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
                     this.firingcount++;
                     this.addRuleFired(actv.getRule());
 				} catch (ExecuteException e) {
-					log.debug(e);
+					log.debug(e.toString(), e);
 				}
 			}
 			if (this.workingMem.profileFire()) {
@@ -496,7 +496,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
                 this.firingcount++;
                 this.addRuleFired(act.getRule());
 			} catch (ExecuteException e) {
-				log.debug(e);
+				log.debug(e.toString(), e);
 			}
 		}
 	}
@@ -634,7 +634,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 			declareObject(clzz, templateName, parent);
 		} catch (ClassNotFoundException e) {
 			// for now do nothing, but we should report the error for real
-			log.debug(e);
+			log.debug(e.toString(), e);
             throw e;
 		}
 	}
@@ -907,21 +907,21 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 			declareFunction(func);
 			return func;
 		} catch (ClassNotFoundException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
             throw e;
 		} catch (IllegalAccessException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (InstantiationException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (IllegalArgumentException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (InvocationTargetException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (SecurityException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		}
 		return null;
 	}
@@ -946,20 +946,20 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 			FunctionGroup group = (FunctionGroup) fclaz.getDeclaredConstructor().newInstance();
 			declareFunctionGroup(group);
 		} catch (ClassNotFoundException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 			throw e;
 		} catch (IllegalAccessException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (InstantiationException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (IllegalArgumentException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (InvocationTargetException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (NoSuchMethodException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (SecurityException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		}
 	}
 
@@ -1593,9 +1593,9 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 				this.workingMem.assertFact(ft);
 			}
 		} catch (RetractException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (AssertException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		}
 	}
 
@@ -1624,9 +1624,9 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 				this.workingMem.assertFact(ft);
 			}
 		} catch (RetractException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (AssertException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		}
 	}
 
@@ -1743,9 +1743,9 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 		try {
 			this.modifyObject(source);
 		} catch (RetractException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		} catch (AssertException e) {
-			log.debug(e);
+			log.debug(e.toString(), e);
 		}
 	}
 

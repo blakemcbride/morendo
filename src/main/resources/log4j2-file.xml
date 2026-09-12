@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Morendo logging with a log file. Select it with
+    -Dlog4j2.configurationFile=classpath:log4j2-file.xml
+  Options:
+    -Dmorendo.log.level=DEBUG        overall level (default DEBUG here)
+    -Dmorendo.log.file=path          log file (default logs/morendo.log, created on first use)
+    -Dmorendo.log.console.level=WARN console threshold (default WARN)
+-->
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_ERR">
+      <ThresholdFilter level="${sys:morendo.log.console.level:-WARN}" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{1} - %msg%n%throwable"/>
+    </Console>
+    <File name="File" fileName="${sys:morendo.log.file:-logs/morendo.log}">
+      <PatternLayout pattern="%d %-5level [%t] %logger - %msg%n%throwable"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="${sys:morendo.log.level:-DEBUG}">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Root>
+  </Loggers>
+</Configuration>

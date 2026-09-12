@@ -21,8 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -49,7 +49,7 @@ public class DefinstanceFunction implements Function, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final String DEFINSTANCE = "definstance";
-	private Logger log = LogFactory.createLogger(DefinstanceFunction.class);
+	private Logger log = LogManager.getLogger(DefinstanceFunction.class);
 
 	public DefinstanceFunction() {
 		super();
@@ -84,7 +84,7 @@ public class DefinstanceFunction implements Function, Serializable {
 					}
 				} catch (InstantiationException|IllegalAccessException|IllegalArgumentException
 						|InvocationTargetException|NoSuchMethodException|SecurityException e) {
-					log.debug(e);
+					log.debug(e.toString(), e);
 				}
 			} else if (params[0] instanceof BoundParam) {
 				instance = ((BoundParam)params[0]).getValue(engine, Constants.OBJECT_TYPE);
@@ -96,7 +96,7 @@ public class DefinstanceFunction implements Function, Serializable {
 						instance = defclass.getClassObject().getDeclaredConstructor().newInstance();
 					} catch (InstantiationException|IllegalAccessException|IllegalArgumentException
 							|InvocationTargetException|NoSuchMethodException|SecurityException e) {
-						log.debug(e);					}
+						log.debug(e.toString(), e);					}
 				}
 			}
 			String template = null;

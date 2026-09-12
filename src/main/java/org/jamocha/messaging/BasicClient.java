@@ -34,8 +34,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Rete;
 
 /**
@@ -65,7 +65,7 @@ public class BasicClient implements MessageClient {
 	private String CLIENTNAME = null;
     private Thread CLIENTTHREAD = null;
     
-    protected Logger log = LogFactory.createLogger(BasicClient.class);
+    protected Logger log = LogManager.getLogger(BasicClient.class);
 
     /**
 	 * 
@@ -95,7 +95,7 @@ public class BasicClient implements MessageClient {
 		try {
 			this.CTX = new InitialContext(prop);
 		} catch (NamingException e) {
-			log.warn(e);
+			log.warn(e.toString(), e);
 		}
 		this.connect();
 		try {
@@ -134,7 +134,7 @@ public class BasicClient implements MessageClient {
 			this.CLIENTTHREAD.interrupt();
 			this.CLIENTTHREAD = null;
 		} catch (Exception e){
-			log.warn(e);
+			log.warn(e.toString(), e);
 		} 
 	}
 
@@ -152,11 +152,11 @@ public class BasicClient implements MessageClient {
 			this.TOPIC = (Topic) this.CTX.lookup(this.TOPICNAME);
 			log.info("created topic " + this.TOPICNAME);
 		} catch (JMSException e){
-			log.warn(e);
+			log.warn(e.toString(), e);
 		} catch (NamingException e){
-			log.warn(e);
+			log.warn(e.toString(), e);
 		} catch (Exception e) {
-			log.warn(e);
+			log.warn(e.toString(), e);
 		}
 	}
 
@@ -205,7 +205,7 @@ public class BasicClient implements MessageClient {
 				this.PUBLISHER.publish(resp);
 			}
 		} catch (JMSException e){
-			log.warn(e);
+			log.warn(e.toString(), e);
 		}
 	}
 
@@ -219,7 +219,7 @@ public class BasicClient implements MessageClient {
 				this.PUBLISHER.publish(resp);
 			}
         } catch (JMSException e){
-            log.warn(e);
+            log.warn(e.toString(), e);
         }
 	}
 
@@ -261,7 +261,7 @@ public class BasicClient implements MessageClient {
 			this.CLIENTTHREAD = new Thread(this);
 			this.CLIENTTHREAD.start();
 		} catch (JMSException e) {
-			log.warn(e);
+			log.warn(e.toString(), e);
 		}
 	}
 	

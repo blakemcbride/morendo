@@ -20,8 +20,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Rete;
 
 /**
@@ -39,7 +39,7 @@ public class TextHandler implements ContentHandler {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	protected Logger log = LogFactory.createLogger(TextHandler.class);
+	protected Logger log = LogManager.getLogger(TextHandler.class);
 
 	protected String[] types = new String[]{MessageConstants.TEXT_MSG};
 	protected Message last = null;
@@ -63,7 +63,7 @@ public class TextHandler implements ContentHandler {
 			try {
 				engine.build(txtmsg.getText());
 			} catch (JMSException e) {
-				log.info(e);
+				log.info(e.toString(), e);
 			}
 		}
 	}

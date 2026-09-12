@@ -9,8 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import org.jamocha.logging.LogFactory;
-import org.jamocha.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ObjectData implements InitialData {
 
 	@JsonIgnore
-	private transient Logger log = LogFactory.createLogger(ObjectData.class);
+	private transient Logger log = LogManager.getLogger(ObjectData.class);
 	private String name;
 	private transient List<Object> data = null;
 	private String url;
@@ -63,7 +63,7 @@ public class ObjectData implements InitialData {
 				engine.assertObjects(data);
 				return true;
 			} catch (AssertException e) {
-				log.info(e);
+				log.info(e.toString(), e);
 				return false;
 			}
 		}
@@ -84,7 +84,7 @@ public class ObjectData implements InitialData {
 				engine.assertObjects(data);
 				return true;
 			} catch (AssertException e) {
-				log.info(e);
+				log.info(e.toString(), e);
 				return false;
 			}
 		}
@@ -130,11 +130,11 @@ public class ObjectData implements InitialData {
 					List<Object> data = mapper.readValue(input, List.class);
 					return data;
 				} catch (MalformedURLException e) {
-					Logger log = LogFactory.createLogger(ObjectData.class);
-					log.fatal(e);
+					Logger log = LogManager.getLogger(ObjectData.class);
+					log.fatal(e.toString(), e);
 				} catch (IOException e) {
-					Logger log = LogFactory.createLogger(ObjectData.class);
-					log.fatal(e);
+					Logger log = LogManager.getLogger(ObjectData.class);
+					log.fatal(e.toString(), e);
 				}
 			} else {
 				reader = new FileReader(url);
@@ -142,8 +142,8 @@ public class ObjectData implements InitialData {
 				return data;
 			}
 		} catch (Exception e) {
-			Logger log = LogFactory.createLogger(ObjectData.class);
-			log.fatal(e);
+			Logger log = LogManager.getLogger(ObjectData.class);
+			log.fatal(e.toString(), e);
 		}
 		return null;
 	}
@@ -162,8 +162,8 @@ public class ObjectData implements InitialData {
 			mapper.writeValue(writer, data);
 			writer.close();
 		} catch (IOException e) {
-			Logger log = LogFactory.createLogger(ObjectData.class);
-			log.fatal(e);
+			Logger log = LogManager.getLogger(ObjectData.class);
+			log.fatal(e.toString(), e);
 		}
 	}
 }
