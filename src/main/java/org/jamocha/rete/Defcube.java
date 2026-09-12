@@ -56,7 +56,6 @@ public class Defcube implements Cube {
 	private boolean profile = false;
 	private boolean profileIndex = false;
 	
-	@SuppressWarnings("unchecked")
 	public Defcube(Rete engine) {
 		super();
 		bindings = engine.newLocalMap();

@@ -91,7 +91,7 @@ public class AlphaNode extends BaseAlpha2 {
     throws AssertException
     {
 		if (evaluate(fact)) {
-            AlphaMemory alpha = (AlphaMemory) mem.getAlphaMemory(this);
+            AlphaMemory alpha = mem.getAlphaMemory(this);
 			alpha.addPartialMatch(fact);
 			// if watch is on, we notify the engine. Rather than
 			// create an event class here, we let Rete do that.
@@ -108,7 +108,7 @@ public class AlphaNode extends BaseAlpha2 {
 	public void retractFact(Fact fact, Rete engine, WorkingMemory mem) 
     throws RetractException
     {
-        AlphaMemory alpha = (AlphaMemory)mem.getAlphaMemory(this);
+        AlphaMemory alpha = mem.getAlphaMemory(this);
         if (alpha.removePartialMatch(fact) != null) {
             // if watch is on, we notify the engine. Rather than
             // create an event class here, we let Rete do that.

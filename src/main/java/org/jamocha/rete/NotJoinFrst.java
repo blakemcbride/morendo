@@ -42,8 +42,8 @@ public class NotJoinFrst extends BaseJoin {
      * clear will clear the lists
      */
 	public void clear(WorkingMemory mem){
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getBetaRightMemory(this);
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
+        Map<?, ?> leftmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -63,16 +63,15 @@ public class NotJoinFrst extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings({ "unchecked" })
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem) 
     throws AssertException
     {
-        Map<Index, BetaMemory> leftmem = (Map<Index, BetaMemory>)mem.getBetaLeftMemory(this);
+        Map<Index, BetaMemory> leftmem = mem.getBetaLeftMemory(this);
         // we create a new list for storing the matches.
         // any fact that isn't in the list will be evaluated.
         BetaMemory bmem = new BetaMemoryImpl(linx, engine);
         leftmem.put(bmem.getIndex(),bmem);
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         // int prevCount = bmem.matchCount(); Unused
         Iterator<?> itr = rightmem.values().iterator();
         while (itr.hasNext()){
@@ -98,18 +97,17 @@ public class NotJoinFrst extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings({ "unchecked" })
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
     throws AssertException
     {
         // we only proceed if the fact hasn't already entered
         // the join node
         Index linx = new Index(new Fact[0]);
-        Map<Fact, Fact> rightmem = (Map<Fact, Fact>)mem.getBetaRightMemory(this);
+        Map<Fact, Fact> rightmem = mem.getBetaRightMemory(this);
         rightmem.put(rfact,rfact);
         // now that we've added the facts to the list, we
         // proceed with evaluating the fact
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()){
             BetaMemory bmem = (BetaMemory)itr.next();
@@ -145,7 +143,7 @@ public class NotJoinFrst extends BaseJoin {
     public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
     throws RetractException
     {
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         // the left memory contains the fact array, so we 
         // retract it.
         BetaMemory bmem = (BetaMemory)leftmem.remove(linx);
@@ -164,15 +162,15 @@ public class NotJoinFrst extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings("unused")
 	public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
     throws RetractException
     {
         Index linx = new Index(new Fact[0]);
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         if (rightmem.remove(rfact) != null){
             // now we see the left memory matched and remove it also
-            Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+            Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
             Iterator<?> itr = leftmem.values().iterator();
             while (itr.hasNext()){
                 BetaMemory bmem = (BetaMemory)itr.next();
@@ -248,7 +246,7 @@ public class NotJoinFrst extends BaseJoin {
     throws AssertException {
         if (addNode(node)) {
             // first, we get the memory for this node
-            Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+            Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
             // now we iterate over the entry set
             Iterator<?> itr = leftmem.values().iterator();
             while (itr.hasNext()) {

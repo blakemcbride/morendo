@@ -84,7 +84,6 @@ public class Defmodule implements Module {
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public Defmodule(String name, Rete engine) {
 		super();
 		this.name = name;

@@ -66,7 +66,7 @@ public class AlphaNodePredConstr extends BaseAlpha {
 	public void assertFact(Fact fact, Rete engine, WorkingMemory mem)
 			throws AssertException {
 		if (evaluate(fact, engine)) {
-            AlphaMemory alpha = (AlphaMemory) mem.getAlphaMemory(this);
+            AlphaMemory alpha = mem.getAlphaMemory(this);
 			alpha.addPartialMatch(fact);
 			propogateAssert(fact, engine, mem);
 		}
@@ -80,7 +80,7 @@ public class AlphaNodePredConstr extends BaseAlpha {
 	 */
 	public void retractFact(Fact fact, Rete engine, WorkingMemory mem)
 			throws RetractException {
-		AlphaMemory alpha = (AlphaMemory) mem.getAlphaMemory(this);
+		AlphaMemory alpha = mem.getAlphaMemory(this);
 		if (alpha.removePartialMatch(fact) != null) {
 			propogateRetract(fact, engine, mem);
 		}

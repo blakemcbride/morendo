@@ -482,7 +482,6 @@ public final class Defclass {
 	 * Method classes are not cloned. Instead, just the HashMap is cloned.
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public Defclass cloneDefclass(Rete engine) {
 		Defclass dcl = new Defclass(this.OBJECT_CLASS);
 		dcl.addListener = this.addListener;

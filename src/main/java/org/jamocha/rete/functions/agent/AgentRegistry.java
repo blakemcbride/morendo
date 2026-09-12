@@ -61,9 +61,8 @@ public class AgentRegistry {
 		return agentRegistry.remove(agent.getKey());
 	}
 	
-	@SuppressWarnings({ "unchecked" })
 	public static void addSummary(AgentPerformanceSummary summary) {
-		Queue<AgentPerformanceSummary> queue = (Queue<AgentPerformanceSummary>) agentSummaries.get(summary.getKey());
+		@SuppressWarnings("unchecked") Queue<AgentPerformanceSummary> queue = (Queue<AgentPerformanceSummary>) agentSummaries.get(summary.getKey());
 		if (queue == null) {
 			queue = new PriorityQueue<>(50);
 			agentSummaries.put(summary.getKey(), queue);

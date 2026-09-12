@@ -50,9 +50,9 @@ public class QueryHashedNeqNot extends QueryBaseNot {
      * clear will clear the lists
      */
     	public void clear(WorkingMemory mem){
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getQueryBetaMemory(this);
+        Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         HashedNeqAlphaMemory rightmem = 
-        	(HashedNeqAlphaMemory)mem.getQueryRightMemory(this);
+        	mem.getQueryRightMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -73,11 +73,10 @@ public class QueryHashedNeqNot extends QueryBaseNot {
      * @param factInstance
      * @param engine
      */
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem) 
     throws AssertException
     {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getQueryBetaMemory(this);
+        Map<Index, Index> leftmem = mem.getQueryBetaMemory(this);
 		leftmem.put(linx, linx);
     }
 
@@ -91,7 +90,7 @@ public class QueryHashedNeqNot extends QueryBaseNot {
     throws AssertException
     {
         // get the memory for the node
-		HashedNeqAlphaMemory rightmem = (HashedNeqAlphaMemory) mem.getQueryRightMemory(this);
+		HashedNeqAlphaMemory rightmem = mem.getQueryRightMemory(this);
 		NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds,rfact));
 		rightmem.addPartialMatch(inx, rfact, engine);
     }
@@ -101,12 +100,12 @@ public class QueryHashedNeqNot extends QueryBaseNot {
      * down the query network.
      */
 	public void executeJoin(Rete engine, WorkingMemory mem) throws AssertException {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getQueryBetaMemory(this);
+        Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         Iterator<?> iterator = leftmem.values().iterator();
         while (iterator.hasNext()) {
     		Index index = (Index)iterator.next();
     		NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds,index.getFacts()));
-    		HashedNeqAlphaMemory rightmem = (HashedNeqAlphaMemory) mem.getQueryRightMemory(this);
+    		HashedNeqAlphaMemory rightmem = mem.getQueryRightMemory(this);
     		if (rightmem.zeroMatch(inx)) {
                 this.propogateAssert(index, engine, mem);
     		}

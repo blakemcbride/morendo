@@ -42,14 +42,13 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
      * addPartialMatch stores the fact with the factId as the
      * key.
 	 */
-	@SuppressWarnings("unchecked")
 	public int addPartialMatch(NotEqHashIndex index, Fact fact, Rete engine) {
 		Map<Object, Object> matches = this.memory.get(index);
         int count = 0;
 		if (matches == null) {
 			count = this.addNewPartialMatch(index,fact, engine);
 		} else {
-			Map<Object, Object> submatch = (Map<Object, Object>) matches.get(index.getSubIndex());
+			@SuppressWarnings("unchecked") Map<Object, Object> submatch = (Map<Object, Object>) matches.get(index.getSubIndex());
 			if (submatch == null) {
 				submatch = engine.newMap();
 				submatch.put(fact,fact);
@@ -64,7 +63,6 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
         return count;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public int addNewPartialMatch(NotEqHashIndex index, Fact fact, Rete engine) {
 		Map<Object, Object> matches = engine.newMap();
 		Map<Object, Object> submatch = engine.newMap();
@@ -94,7 +92,6 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
 	}
 
 	public boolean isPartialMatch(NotEqHashIndex index, Fact fact) {
-		@SuppressWarnings("unchecked")
 		Map<Object, Object> match = this.memory.get(index);
 		if (match != null) {
 			Map<?, ?> submatch = (Map<?, ?>)match.get(index.getSubIndex());
@@ -111,7 +108,6 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
 	/**
      * remove a partial match from the memory
 	 */
-	@SuppressWarnings("unchecked")
 	public int removePartialMatch(NotEqHashIndex index, Fact fact) {
 		Map<Object, Object> match = this.memory.get(index);
 		if (match != null) {
@@ -129,7 +125,6 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
     /**
      * Return the number of memories of all hash buckets
      */
-	@SuppressWarnings("unchecked")
 	public int size() {
     	Iterator<HashIndex> itr = this.memory.keySet().iterator();
     	int count = 0;
@@ -152,7 +147,6 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
     /**
      * Return an iterator of the values
      */
-   	@SuppressWarnings("unchecked")
 	public Object[] iterator(NotEqHashIndex index) {
     	Map<Object, Object> matches = this.memory.get(index);
     	Object[] list = new Object[this.counter];
@@ -190,7 +184,6 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
      * @param index
      * @return
      */
-   	@SuppressWarnings("unchecked")
 	public boolean zeroMatch(NotEqHashIndex index) {
     	Map<Object, Object> matches = this.memory.get(index);
         int idz = 0;
@@ -218,7 +211,6 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
      * return an arraylist with all the facts
      * @return
      */
-    @SuppressWarnings("unchecked")
 	public Object[] iterateAll() {
     	Object[] facts = new Object[this.counter];
     	Iterator<HashIndex> itr = this.memory.keySet().iterator();

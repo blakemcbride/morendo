@@ -122,7 +122,7 @@ public abstract class BaseAlpha extends BaseNode {
         if (addNode(node)) {
             // if there are matches, we propogate the facts to 
             // the new successor only
-            AlphaMemory alpha = (AlphaMemory)mem.getAlphaMemory(this);
+            AlphaMemory alpha = mem.getAlphaMemory(this);
             if (alpha.size() > 0){
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()){
@@ -154,7 +154,7 @@ public abstract class BaseAlpha extends BaseNode {
     {
         if (removeNode(node)) {
             // we retract the memories first, before removing the node
-            AlphaMemory alpha = (AlphaMemory)mem.getAlphaMemory(this);
+            AlphaMemory alpha = mem.getAlphaMemory(this);
             if (alpha.size() > 0) {
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()) {
@@ -175,7 +175,7 @@ public abstract class BaseAlpha extends BaseNode {
      * @return
      */
     public AlphaMemory getMemory(WorkingMemory mem){
-        return (AlphaMemory)mem.getAlphaMemory(this);
+        return mem.getAlphaMemory(this);
     }
     
     /**

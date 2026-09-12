@@ -43,8 +43,8 @@ public class OnlyJoin extends BaseJoin {
 	 * clear will clear the lists
 	 */
 	public void clear(WorkingMemory mem) {
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
+		Map<?, ?> leftmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -63,14 +63,13 @@ public class OnlyJoin extends BaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Index, BetaMemory> leftmem = (Map<Index, BetaMemory>) mem.getBetaLeftMemory(this);
+        Map<Index, BetaMemory> leftmem = mem.getBetaLeftMemory(this);
         BetaMemory bmem = new BetaMemoryImpl(linx, engine);
         leftmem.put(bmem.getIndex(), bmem);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+        HashedAlphaMemoryImpl rightmem = mem
                 .getBetaRightMemory(this);
         if (rightmem.count(inx) == 1) {
         	Iterator<?> iterator = rightmem.iterator(inx);
@@ -88,11 +87,11 @@ public class OnlyJoin extends BaseJoin {
 	 */
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+        HashedAlphaMemoryImpl rightmem = mem
                 .getBetaRightMemory(this);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
         int after = rightmem.addPartialMatch(inx, rfact, engine);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         if (after == 1) {
         	// we propagate assert
             Iterator<?> itr = leftmem.values().iterator();
@@ -134,7 +133,7 @@ public class OnlyJoin extends BaseJoin {
 	 */
 	public void retractLeft(Index inx, Rete engine, WorkingMemory mem)
 			throws RetractException {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         BetaMemory bmem = (BetaMemory)leftmem.remove(inx);
         if (bmem.matchCount() == 1) {
         	Iterator<?> rightItr = bmem.iterateRightFacts();
@@ -151,11 +150,11 @@ public class OnlyJoin extends BaseJoin {
 	public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws RetractException {
         HashedAlphaMemoryImpl rightmem = 
-            (HashedAlphaMemoryImpl)mem.getBetaRightMemory(this);
+            mem.getBetaRightMemory(this);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
         // remove the fact from the right
         int after = rightmem.removePartialMatch(inx,rfact);
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         // first we check to see if the fact is the single match for any partial matches on the left
         Iterator<?> leftItr = leftmem.values().iterator();
         while (leftItr.hasNext()) {

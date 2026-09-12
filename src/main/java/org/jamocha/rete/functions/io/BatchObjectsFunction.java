@@ -96,11 +96,10 @@ public class BatchObjectsFunction implements Function {
 	 * @param ins
 	 * @param rv
 	 */
-	@SuppressWarnings("unchecked")
 	public void parse(Rete engine, InputStream ins, DefaultReturnVector rv) {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(ins);
-			List<Object> data = (List<Object>)ois.readObject();
+			@SuppressWarnings("unchecked") List<Object> data = (List<Object>)ois.readObject();
 			for (Object obj: data) {
 				Deftemplate templ = engine.findDeftemplate(obj.getClass());
 				engine.assertObject(obj, templ.getName(), false, true);

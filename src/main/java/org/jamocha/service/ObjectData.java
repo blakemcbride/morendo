@@ -118,7 +118,6 @@ public class ObjectData implements InitialData {
 	 * @param url
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	//@SuppressWarnings("unchecked")
 	@JsonIgnore
 	public static List<Object> loadObjectData(String url) {
@@ -128,7 +127,7 @@ public class ObjectData implements InitialData {
 				try {
 					URL urlObject = IOUtilities.toURL(url);
 					InputStream input = urlObject.openStream();
-					List<Object> data = mapper.readValue(input, List.class);
+					@SuppressWarnings("unchecked") List<Object> data = mapper.readValue(input, List.class);
 					return data;
 				} catch (MalformedURLException e) {
 					Logger log = LogManager.getLogger(ObjectData.class);
@@ -139,7 +138,7 @@ public class ObjectData implements InitialData {
 				}
 			} else {
 				reader = new FileReader(url);
-				List<Object> data = mapper.readValue(reader, List.class);
+				@SuppressWarnings("unchecked") List<Object> data = mapper.readValue(reader, List.class);
 				return data;
 			}
 		} catch (Exception e) {

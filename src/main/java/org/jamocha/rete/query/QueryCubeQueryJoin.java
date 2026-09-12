@@ -94,13 +94,12 @@ public class QueryCubeQueryJoin extends QueryBaseJoin {
      * @param factInstance
      * @param engine
      */
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
             throws AssertException {
-    	Map<EqHashIndex, Map<?, ?>> leftmem = (Map<EqHashIndex, Map<?, ?>>) mem.getQueryBetaMemory(this);
+    	Map<EqHashIndex, Map<?, ?>> leftmem = mem.getQueryBetaMemory(this);
     	// first we create the hashIndex and put it in the left memory
         EqHashIndex eqIndex = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        Map<Index,Index> values = (Map<Index, Index>) leftmem.get(eqIndex);
+        @SuppressWarnings("unchecked") Map<Index,Index> values = (Map<Index, Index>) leftmem.get(eqIndex);
         if (values == null) {
         	values = engine.newMap();
         	leftmem.put(eqIndex, values);
@@ -111,7 +110,7 @@ public class QueryCubeQueryJoin extends QueryBaseJoin {
         if (cubeFact != null) {
         	// if the CubeFact has propagated down, we need to check for cached
         	// value before querying the cube
-        	CubeHashMemoryImpl rightmem = (CubeHashMemoryImpl) mem.getQueryRightMemory(this);
+        	CubeHashMemoryImpl rightmem = mem.getQueryRightMemory(this);
         	if (rightmem.count(eqIndex) > 0) {
         		// cached version already exists, so just propagate
         		Iterator<?> itr = rightmem.iterator(eqIndex);
@@ -147,12 +146,12 @@ public class QueryCubeQueryJoin extends QueryBaseJoin {
             throws AssertException {
     	// first set the reference to CubeFact
     	this.cubeFact = (CubeFact)rfact;
-    	CubeHashMemoryImpl rightmem = (CubeHashMemoryImpl) mem.getQueryRightMemory(this);
+    	CubeHashMemoryImpl rightmem = mem.getQueryRightMemory(this);
 
         // query the cube for the data
         Cube cube = (Cube)cubeFact.getObjectInstance();
 
-    	Map<?, ?> leftmem = (Map<?, ?>) mem.getQueryBetaMemory(this);
+    	Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         // Get the partial matches on the side side using the EqHashIndex as the key
         Iterator<?> indexItr = leftmem.keySet().iterator();
         while (indexItr.hasNext()) {

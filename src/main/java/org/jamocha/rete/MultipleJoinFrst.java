@@ -45,8 +45,8 @@ public class MultipleJoinFrst extends BaseJoin {
 	 * clear will clear the lists
 	 */
 	public void clear(WorkingMemory mem) {
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
+		Map<?, ?> leftmem = mem.getBetaRightMemory(this);
 		Iterator<?> itr = leftmem.keySet().iterator();
 		// first we iterate over the list for each fact
 		// and clear it.
@@ -76,13 +76,12 @@ public class MultipleJoinFrst extends BaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws AssertException {
 		// we only proceed if the fact hasn't already entered
 		// the join node
 		Index inx = new Index(new Fact[] { rfact });
-		Map<Index, Fact> rightmem = (Map<Index, Fact>) mem.getBetaRightMemory(this);
+		Map<Index, Fact> rightmem = mem.getBetaRightMemory(this);
 		if (!rightmem.containsKey(inx)) {
 			int count = rightmem.size();
 			rightmem.put(inx, rfact);
@@ -119,7 +118,7 @@ public class MultipleJoinFrst extends BaseJoin {
 	public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws RetractException {
 		Index inx = new Index(new Fact[] { rfact });
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
 		if (rightmem.containsKey(inx)) {
 			int count = rightmem.size();
 			rightmem.remove(inx);

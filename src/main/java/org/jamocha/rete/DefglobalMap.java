@@ -37,7 +37,6 @@ public class DefglobalMap {
 	 */
 	private Map<String, Object> variables = null;
 	
-	@SuppressWarnings("unchecked")
 	public DefglobalMap(Rete engine) {
 		super();
 		variables = engine.newMap();

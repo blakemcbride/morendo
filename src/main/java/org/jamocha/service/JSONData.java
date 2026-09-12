@@ -131,7 +131,6 @@ public class JSONData<T> implements InitialData {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@JsonIgnore
 	public List<Object> loadJsonData(String url, Class<?> T) {
 		Reader reader;
@@ -140,7 +139,7 @@ public class JSONData<T> implements InitialData {
 				try {
 					URL urlObject = IOUtilities.toURL(url);
 					InputStream input = urlObject.openStream();
-					List<Object> data = (List<Object>) mapper.readValue(input, new TypeReference<List<T>>(){});
+					@SuppressWarnings("unchecked") List<Object> data = (List<Object>) mapper.readValue(input, new TypeReference<List<T>>(){});
 					return data;
 				} catch (MalformedURLException e) {
 					Logger log = LogManager.getLogger(JSONData.class);
@@ -151,11 +150,11 @@ public class JSONData<T> implements InitialData {
 				}
 			} else if (url.startsWith("/WEB-INF")) {
 				InputStream input = this.servletCtx.getResourceAsStream(url);
-				List<Object> data = (List<Object>) mapper.readValue(input, new TypeReference<List<T>>(){});
+				@SuppressWarnings("unchecked") List<Object> data = (List<Object>) mapper.readValue(input, new TypeReference<List<T>>(){});
 				return data;
 			} else {
 				reader = new FileReader(url);
-				List<Object> data = (List<Object>) mapper.readValue(reader, new TypeReference<List<T>>(){});
+				@SuppressWarnings("unchecked") List<Object> data = (List<Object>) mapper.readValue(reader, new TypeReference<List<T>>(){});
 				return data;
 			}
 		} catch (Exception e) {

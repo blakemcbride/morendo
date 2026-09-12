@@ -53,7 +53,6 @@ public class ServletServiceAdmin implements ServiceAdministration {
 		return ruleService.getServiceConfiguration();
 	}
 
-	@SuppressWarnings("unchecked")
 	public void reinitialize(String ruleApplication, String version) {
 		servletContext.log("--- Start reinitializing rule application: " + ruleApplication + " " + version);
 		String key = ruleApplication + "::" + version;

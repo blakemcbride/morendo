@@ -127,7 +127,7 @@ public interface WorkingMemory {
 	 * @param key
 	 * @return
 	 */
-	Object getAlphaMemory(Object key);
+	<T> T getAlphaMemory(Object key);
 
 	/**
 	 * In the case of AlphaMemory, during the compilation process,
@@ -144,7 +144,7 @@ public interface WorkingMemory {
 	 * @param key
 	 * @return
 	 */
-	Object getBetaLeftMemory(Object key);
+	<T> T getBetaLeftMemory(Object key);
 
 	/**
 	 * The key for the lookup should be the node. Each BetaNode has
@@ -153,7 +153,7 @@ public interface WorkingMemory {
 	 * @param key
 	 * @return
 	 */
-	Object getBetaRightMemory(Object key);
+	<T> T getBetaRightMemory(Object key);
 
 	/**
 	 * The for the lookup is the terminalNode. Depending on the terminal
@@ -167,13 +167,13 @@ public interface WorkingMemory {
 	 * @param key
 	 * @return
 	 */
-	Object getQueryBetaMemory(Object key);
+	<T> T getQueryBetaMemory(Object key);
 	/**
 	 * Returns the right memory for query join nodes
 	 * @param key
 	 * @return
 	 */
-	Object getQueryRightMemory(Object key);
+	<T> T getQueryRightMemory(Object key);
 	
 	/**
 	 * Return the RuleCompiler for this working memory

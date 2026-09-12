@@ -46,7 +46,6 @@ public class RootNode {
     /**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public RootNode(Rete engine) {
 		super();
 		inputNodes = engine.newMap();

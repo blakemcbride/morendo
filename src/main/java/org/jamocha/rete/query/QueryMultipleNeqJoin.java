@@ -52,8 +52,8 @@ public class QueryMultipleNeqJoin extends QueryBaseJoin {
 	 * clear will clear the lists
 	 */
 	public void clear(WorkingMemory mem) {
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
+		Map<?, ?> leftmem = mem.getBetaRightMemory(this);
 		Iterator<?> itr = leftmem.keySet().iterator();
 		// first we iterate over the list for each fact
 		// and clear it.
@@ -74,13 +74,12 @@ public class QueryMultipleNeqJoin extends QueryBaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
         leftmem.put(linx, linx);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds,linx.getFacts()));
-        HashedNeqAlphaMemory rightmem = (HashedNeqAlphaMemory) mem.getBetaRightMemory(this);
+        HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         Object[] objs = rightmem.iterator(inx);
         // if the right side has 1 match, we propogate the original
         // index down the network. We don't add any facts to the index
@@ -97,11 +96,11 @@ public class QueryMultipleNeqJoin extends QueryBaseJoin {
 	 */
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        HashedNeqAlphaMemory rightmem = (HashedNeqAlphaMemory) mem.getBetaRightMemory(this);
+        HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds,rfact));
 
         rightmem.addPartialMatch(inx, rfact, engine);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         int after = rightmem.count(inx);
         while (itr.hasNext()) {

@@ -76,7 +76,6 @@ public class ObjectTypeNode extends BaseAlpha {
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public ObjectTypeNode(int id, Template deftemp, Rete engine) {
 		super(id);
         this.deftemplate = deftemp;
@@ -92,7 +91,7 @@ public class ObjectTypeNode extends BaseAlpha {
      * remove all the successor nodes. need to think it over a bit.
      */
     public void clear(WorkingMemory mem){
-    	AlphaMemory am = (AlphaMemory) mem.getAlphaMemory(this);
+    	AlphaMemory am = mem.getAlphaMemory(this);
     	am.clear();
     }
 
@@ -120,7 +119,7 @@ public class ObjectTypeNode extends BaseAlpha {
     throws AssertException
     {
         // ObjectTypeNode doesn't bother checking the deftemplate.
-        ((AlphaMemory) mem.getAlphaMemory(this)).addPartialMatch(fact);
+        mem.<AlphaMemory>getAlphaMemory(this).addPartialMatch(fact);
 		// if the number of succesor nodes is less than (slot count * opCount)
     	if (useNodeHash) {
     		this.assertWithHash(fact, engine, mem);
@@ -213,7 +212,7 @@ public class ObjectTypeNode extends BaseAlpha {
     throws RetractException
     {
         if (fact.getDeftemplate() == this.deftemplate){
-            ((AlphaMemory)mem.getAlphaMemory(this)).removePartialMatch(fact);
+            mem.<AlphaMemory>getAlphaMemory(this).removePartialMatch(fact);
             for (int idx=0; idx < this.successorNodes.length; idx++) {
                 Object node = this.successorNodes[idx];
                 if (node instanceof BaseAlpha){
@@ -294,7 +293,7 @@ public class ObjectTypeNode extends BaseAlpha {
         }
         // if there are matches, we propogate the facts to 
         // the new successor only
-        AlphaMemory alpha = (AlphaMemory)mem.getAlphaMemory(this);
+        AlphaMemory alpha = mem.getAlphaMemory(this);
         if (alpha.size() > 0){
             Iterator<?> itr = alpha.iterator();
             while (itr.hasNext()){

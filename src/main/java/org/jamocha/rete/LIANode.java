@@ -113,7 +113,7 @@ public class LIANode extends BaseAlpha {
         if (addNode(node)) {
             // if there are matches, we propogate the facts to 
             // the new successor only
-            AlphaMemory alpha = (AlphaMemory)mem.getAlphaMemory(this);
+            AlphaMemory alpha = mem.getAlphaMemory(this);
             if (alpha.size() > 0){
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()){

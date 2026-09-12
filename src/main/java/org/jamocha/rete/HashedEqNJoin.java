@@ -50,14 +50,13 @@ public class HashedEqNJoin extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem) 
     throws AssertException
     {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
         leftmem.put(linx, linx);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+        HashedAlphaMemoryImpl rightmem = mem
                 .getBetaRightMemory(this);
         // we don't bother adding the right fact to the left, since
         // the right side is already Hashed
@@ -76,12 +75,12 @@ public class HashedEqNJoin extends BaseJoin {
     throws AssertException
     {
         // get the memory for the node
-		HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+		HashedAlphaMemoryImpl rightmem = mem
 				.getBetaRightMemory(this);
 		EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
 		rightmem.addPartialMatch(inx, rfact, engine);
 		int after = rightmem.count(inx);
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+		Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
 		Iterator<?> itr = leftmem.values().iterator();
 		while (itr.hasNext()) {
 			Index linx = (Index) itr.next();
@@ -113,7 +112,7 @@ public class HashedEqNJoin extends BaseJoin {
 	public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
     throws RetractException
     {
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
         this.propagateRetract(linx,engine,mem);
     }
@@ -130,13 +129,13 @@ public class HashedEqNJoin extends BaseJoin {
     throws RetractException
     {
         HashedAlphaMemoryImpl rightmem = 
-            (HashedAlphaMemoryImpl)mem.getBetaRightMemory(this);
+            mem.getBetaRightMemory(this);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
         // remove the fact from the right
         int after = rightmem.removePartialMatch(inx,rfact);
         if (after == 0){
             // now we see the left memory matched and remove it also
-            Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+            Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
             Iterator<?> itr = leftmem.values().iterator();
             while (itr.hasNext()){
                 Index linx = (Index)itr.next();
@@ -183,7 +182,7 @@ public class HashedEqNJoin extends BaseJoin {
             WorkingMemory mem) throws AssertException {
         if (addNode(node)) {
             // first, we get the memory for this node
-            Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+            Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
             // now we iterate over the entry set
             Iterator<?> itr = leftmem.values().iterator();
             while (itr.hasNext()) {
@@ -192,7 +191,7 @@ public class HashedEqNJoin extends BaseJoin {
                     BetaMemory bmem = (BetaMemory) omem;
                     EqHashIndex inx = 
                         new EqHashIndex(NodeUtils.getLeftValues(this.binds,bmem.getLeftFacts()));
-                    HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+                    HashedAlphaMemoryImpl rightmem = mem
                             .getBetaRightMemory(this);
                     // we don't bother adding the right fact to the left, since
                     // the right side is already Hashed

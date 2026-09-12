@@ -50,8 +50,8 @@ public class PredicateBNode extends BaseJoin {
      * clear will clear the lists
      */
 	public void clear(WorkingMemory mem) {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
-        HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+        HashedAlphaMemoryImpl rightmem = mem
                 .getBetaRightMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
@@ -74,13 +74,12 @@ public class PredicateBNode extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings({ "unchecked" })
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
             throws AssertException {
-        Map<Index, BetaMemory> leftmem = (Map<Index, BetaMemory>) mem.getBetaLeftMemory(this);
+        Map<Index, BetaMemory> leftmem = mem.getBetaLeftMemory(this);
         BetaMemory bmem = new BetaMemoryImpl(linx, engine);
         leftmem.put(linx, bmem);
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.keySet().iterator();
         if (itr != null) {
             while (itr.hasNext()) {
@@ -100,12 +99,11 @@ public class PredicateBNode extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings({ "unchecked" })
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
             throws AssertException {
-        Map<Fact, Fact> rightmem = (Map<Fact, Fact>)mem.getBetaRightMemory(this);
+        Map<Fact, Fact> rightmem = mem.getBetaRightMemory(this);
         rightmem.put(rfact, rfact);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             BetaMemory bmem = (BetaMemory) itr.next();
@@ -125,9 +123,9 @@ public class PredicateBNode extends BaseJoin {
      */
     public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
             throws RetractException {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.keySet().iterator();
         if (itr != null) {
             while (itr.hasNext()) {
@@ -146,9 +144,9 @@ public class PredicateBNode extends BaseJoin {
      */
     public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
             throws RetractException {
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         rightmem.remove(rfact);
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()){
             BetaMemory bmem = (BetaMemory)itr.next();

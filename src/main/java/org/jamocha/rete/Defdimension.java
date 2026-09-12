@@ -35,7 +35,6 @@ public class Defdimension implements CubeDimension {
 	private Map<Object, Object> tokenIndex = null;
 	private boolean profile = false;
 	
-	@SuppressWarnings("unchecked")
 	public Defdimension(Rete engine) {
 		super();
 		tokenIndex = engine.newLocalMap();
@@ -93,12 +92,11 @@ public class Defdimension implements CubeDimension {
 	 * Current implementation gets the value for the left row + column and creates a
 	 * token index. This is inspired by sybase IQ, which is a column based database.
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void indexData(Index index, Rete engine) {
 		if (profile) {
 			ProfileStats.startCubeIndex();
 			Object key = index.getFacts()[this.binding.leftrow].getSlotValue(this.binding.leftIndex);
-			Map<Object, Object> value = (Map<Object, Object>)this.tokenIndex.get(key);
+			@SuppressWarnings("unchecked") Map<Object, Object> value = (Map<Object, Object>)this.tokenIndex.get(key);
 			if (value == null) {
 				value = engine.newLocalMap();
 				this.tokenIndex.put(key, value);
@@ -107,7 +105,7 @@ public class Defdimension implements CubeDimension {
 			ProfileStats.endCubeIndex();
 		} else {
 			Object key = index.getFacts()[this.binding.leftrow].getSlotValue(this.binding.leftIndex);
-			Map<Object, Object> value = (Map<Object, Object>)this.tokenIndex.get(key);
+			@SuppressWarnings("unchecked") Map<Object, Object> value = (Map<Object, Object>)this.tokenIndex.get(key);
 			if (value == null) {
 				value = engine.newLocalMap();
 				this.tokenIndex.put(key, value);
@@ -168,7 +166,6 @@ public class Defdimension implements CubeDimension {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	protected Map<Object, Object> queryGreater(Number value) {
 		Map<Object, Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
@@ -177,7 +174,7 @@ public class Defdimension implements CubeDimension {
 			if (key instanceof Number) {
 				Number v = (Number)key;
 				if (Evaluate.evaluateGreater(v, value)) {
-					Map<Object, Object> data = (Map<Object, Object>) tokenIndex.get(key);
+					@SuppressWarnings("unchecked") Map<Object, Object> data = (Map<Object, Object>) tokenIndex.get(key);
 					matches.putAll(data);
 				}
 			}
@@ -189,7 +186,6 @@ public class Defdimension implements CubeDimension {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	protected Map<Object, Object> queryLesser(Number value) {
 		Map<Object, Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
@@ -198,7 +194,7 @@ public class Defdimension implements CubeDimension {
 			if (key instanceof Number) {
 				Number v = (Number)key;
 				if (Evaluate.evaluateLess(v, value)) {
-					Map<Object, Object> data = (Map<Object, Object>)tokenIndex.get(key);
+					@SuppressWarnings("unchecked") Map<Object, Object> data = (Map<Object, Object>)tokenIndex.get(key);
 					matches.putAll(data);
 				}
 			}
@@ -210,7 +206,6 @@ public class Defdimension implements CubeDimension {
 		}
 	}
 	
-	@SuppressWarnings({ "unchecked" })
 	protected Map<Object, Object> queryGreaterEqual(Number value) {
 		Map<Object, Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
@@ -219,7 +214,7 @@ public class Defdimension implements CubeDimension {
 			if (key instanceof Number) {
 				Number v = (Number)key;
 				if (Evaluate.evaluateGreaterEqual(v, value)) {
-					Map<Object, Object> data = (Map<Object, Object>)tokenIndex.get(key);
+					@SuppressWarnings("unchecked") Map<Object, Object> data = (Map<Object, Object>)tokenIndex.get(key);
 					matches.putAll(data);
 				}
 			}
@@ -231,7 +226,6 @@ public class Defdimension implements CubeDimension {
 		}
 	}
 	
-	@SuppressWarnings({ "unchecked" })
 	protected Map<Object,Object> queryLesserEqual(Number value) {
 		Map<Object,Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
@@ -240,7 +234,7 @@ public class Defdimension implements CubeDimension {
 			if (key instanceof Number) {
 				Number v = (Number)key;
 				if (Evaluate.evaluateLessEqual(v, value)) {
-					Map<Object,Object> data = (Map<Object,Object>)tokenIndex.get(key);
+					@SuppressWarnings("unchecked") Map<Object,Object> data = (Map<Object,Object>)tokenIndex.get(key);
 					matches.putAll(data);
 				}
 			}

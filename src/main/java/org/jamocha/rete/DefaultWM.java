@@ -113,7 +113,7 @@ public class DefaultWM implements WorkingMemory {
     private boolean profileAssert = false;
     private boolean profileRetract = false;
     
-    @SuppressWarnings({ "unchecked", "this-escape" }) // the compiler needs its working memory from the start
+    @SuppressWarnings("this-escape") // the compiler needs its working memory from the start
 	public DefaultWM(Rete engine, RootNode node, RuleCompiler compiler) {
         this.engine = engine;
         alphaMemories = engine.newMap();
@@ -523,14 +523,15 @@ public class DefaultWM implements WorkingMemory {
      * The current implementation will try to find the memory for the node.
      * If it doesn't find it, it will create a new one.
      */
-    public Object getAlphaMemory(Object key) {
+    @SuppressWarnings("unchecked") // the node that created the memory knows its type
+    public <T> T getAlphaMemory(Object key) {
         Object m = this.alphaMemories.get(key);
         if (m == null) {
             String mname = "alphamem" + ((BaseNode) key).nodeID;
             m = new AlphaMemoryImpl(mname, engine);
             this.alphaMemories.put(key, m);
         }
-        return m;
+        return (T) m;
     }
 
     /**
@@ -547,25 +548,26 @@ public class DefaultWM implements WorkingMemory {
      * If it doesn't find it, it will create a new Left memory, which is
      * HashMap.
      */
-    @SuppressWarnings("unchecked")
-	public Map<Index, Index> getBetaLeftMemory(Object key) {
+    @SuppressWarnings("unchecked") // the node that created the memory knows its type
+	public <T> T getBetaLeftMemory(Object key) {
         Object m = this.betaLeftMemories.get(key);
         if (m == null) {
             String mname = "blmem" + ((BaseNode) key).nodeID;
             m = engine.newBetaMemoryMap(mname);
             this.betaLeftMemories.put(key, m);
         }
-        return (Map<Index, Index>) m;
+        return (T) m;
     }
     
-    public Object getQueryBetaMemory(Object key) {
+    @SuppressWarnings("unchecked") // the node that created the memory knows its type
+    public <T> T getQueryBetaMemory(Object key) {
     	Object m = this.queryLeftMemories.get(key);
     	if (m == null) {
     		String mname = "query" + ((BaseNode) key).nodeID;
     		m = engine.newBetaMemoryMap(mname);
     		this.queryLeftMemories.put(key, m);
     	}
-    	return m;
+    	return (T) m;
     }
 
     public Map<?, ?> getAllBetaRightMemories() {
@@ -578,10 +580,11 @@ public class DefaultWM implements WorkingMemory {
      * appropriate AlphaMemory for the node. Since right memories are
      * hashed, it creates the appropriate type of Hashed memory.
      */
-	public Object getBetaRightMemory(Object key) {
+	@SuppressWarnings("unchecked") // the node that created the memory knows its type
+	public <T> T getBetaRightMemory(Object key) {
         Object val = this.betaRightMemories.get(key);
         if (val != null) {
-            return val;
+            return (T) val;
         } else {
             if (key instanceof HashedEqBNode || key instanceof HashedEqNJoin ||
                     key instanceof ExistJoin || key instanceof OnlyJoin ||
@@ -589,37 +592,38 @@ public class DefaultWM implements WorkingMemory {
                 String mname = "hnode" + ((BaseNode) key).nodeID;
                 HashedAlphaMemoryImpl alpha = new HashedAlphaMemoryImpl(mname, engine);
                 this.betaRightMemories.put(key, alpha);
-                return alpha;
+                return (T) alpha;
             } else if (key instanceof HashedNotEqBNode || key instanceof HashedNotEqNJoin ||
                     key instanceof ExistNeqJoin || key instanceof OnlyNeqJoin || 
                     key instanceof MultipleNeqJoin) {
                 String mname = "hneq" + ((BaseNode) key).nodeID;
                 HashedNeqAlphaMemory alpha = new HashedNeqAlphaMemory(mname, engine);
                 this.betaRightMemories.put(key, alpha);
-                return alpha;
+                return (T) alpha;
             } else if (key instanceof TemporalEqNode || key instanceof TemporalIntervalNode) {
                 String mname = "hnode" + ((BaseNode) key).nodeID;
                 TemporalHashedAlphaMem alpha = new TemporalHashedAlphaMem(mname, engine);
                 this.betaRightMemories.put(key, alpha);
-                return alpha;
+                return (T) alpha;
             } else if (key instanceof CubeQueryBNode) {
             	String mname = "cqbnode" + ((BaseNode)key).nodeID;
             	CubeHashMemoryImpl alpha = new CubeHashMemoryImpl(mname, engine);
             	this.betaRightMemories.put(key, alpha);
-            	return alpha;
+            	return (T) alpha;
             } else {
                 String mname = "brmem" + ((BaseNode) key).nodeID;
                 Map<?, ?> right = engine.newAlphaMemoryMap(mname);
                 this.betaRightMemories.put(key, right);
-                return right;
+                return (T) right;
             }
         }
     }
 
-	public Object getQueryRightMemory(Object key) {
+	@SuppressWarnings("unchecked") // the node that created the memory knows its type
+	public <T> T getQueryRightMemory(Object key) {
     	Object val = this.queryRightMemories.get(key);
     	if (val != null) {
-    		return val;
+    		return (T) val;
     	} else {
         	if (key instanceof QueryHashedEqJoin || key instanceof QueryHashedEqNot ||
         			key instanceof QueryExistJoin || key instanceof QueryOnlyJoin ||
@@ -627,24 +631,24 @@ public class DefaultWM implements WorkingMemory {
                 String mname = "hnode" + ((BaseNode) key).nodeID;
                 HashedAlphaMemoryImpl alpha = new HashedAlphaMemoryImpl(mname, engine);
                 this.queryRightMemories.put(key, alpha);
-                return alpha;
+                return (T) alpha;
         	} else if (key instanceof QueryHashedNeqJoin || key instanceof QueryHashedNeqNot ||
         			key instanceof QueryExistNeqJoin || key instanceof QueryOnlyNeqJoin ||
         			key instanceof QueryMultipleNeqJoin) {
                 String mname = "hneq" + ((BaseNode) key).nodeID;
                 HashedNeqAlphaMemory alpha = new HashedNeqAlphaMemory(mname, engine);
                 this.queryRightMemories.put(key, alpha);
-                return alpha;
+                return (T) alpha;
             } else if (key instanceof QueryCubeQueryJoin) {
             	String mname = "cqbnode" + ((BaseNode)key).nodeID;
             	CubeHashMemoryImpl alpha = new CubeHashMemoryImpl(mname, engine);
             	this.queryRightMemories.put(key, alpha);
-            	return alpha;
+            	return (T) alpha;
             } else {
                 String mname = "brmem" + ((BaseNode) key).nodeID;
                 Map<?, ?> right = engine.newAlphaMemoryMap(mname);
                 this.queryRightMemories.put(key, right);
-                return right;
+                return (T) right;
         	}
     	}
     }
@@ -765,7 +769,7 @@ public class DefaultWM implements WorkingMemory {
         return this.theStrat;
     }
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public Map<Index, Activation> getTerminalMemory(Object key) {
         Object m = this.terminalMemories.get(key);
         if (m == null) {

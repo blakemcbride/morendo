@@ -54,8 +54,8 @@ public class QueryNotJoinFrst extends QueryBaseNot {
      * clear will clear the lists
      */
 	public void clear(WorkingMemory mem){
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getQueryRightMemory(this);
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getQueryBetaMemory(this);
+        Map<?, ?> rightmem = mem.getQueryRightMemory(this);
+        Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -77,11 +77,10 @@ public class QueryNotJoinFrst extends QueryBaseNot {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings({ "unchecked" })
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem) 
     throws AssertException
     {
-        Map<Index, BetaMemory> leftmem = (Map<Index, BetaMemory>)mem.getQueryBetaMemory(this);
+        Map<Index, BetaMemory> leftmem = mem.getQueryBetaMemory(this);
         BetaMemory bmem = new BetaMemoryImpl(linx, engine);
         leftmem.put(bmem.getIndex(),bmem);
     }
@@ -92,13 +91,12 @@ public class QueryNotJoinFrst extends QueryBaseNot {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings({ "unchecked" })
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
     throws AssertException
     {
         // we only proceed if the fact hasn't already entered
         // the join node
-        Map<Fact, Fact> rightmem = (Map<Fact, Fact>)mem.getQueryRightMemory(this);
+        Map<Fact, Fact> rightmem = mem.getQueryRightMemory(this);
         rightmem.put(rfact,rfact);
     }
     
@@ -112,7 +110,7 @@ public class QueryNotJoinFrst extends QueryBaseNot {
      * @throws AssertException
      */
     public void executeJoin(Rete engine, WorkingMemory mem) throws AssertException {
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getQueryRightMemory(this);
+        Map<?, ?> rightmem = mem.getQueryRightMemory(this);
         if (rightmem.size() == 0){
             Index index = new Index(new Fact[0]);
             this.propogateAssert(index,engine,mem);

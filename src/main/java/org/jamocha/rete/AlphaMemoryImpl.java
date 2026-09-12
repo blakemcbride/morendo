@@ -35,7 +35,6 @@ public class AlphaMemoryImpl implements AlphaMemory {
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public AlphaMemoryImpl(String name, Rete engine) {
 		super();
 		memory = engine.newAlphaMemoryMap(name);

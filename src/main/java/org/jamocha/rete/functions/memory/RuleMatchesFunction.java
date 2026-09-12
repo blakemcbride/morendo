@@ -73,7 +73,7 @@ public class RuleMatchesFunction extends BaseMatchFunction implements Function {
             while (itr.hasNext()) {
                 BaseAlpha n = (BaseAlpha)itr.next();
                 if ( !(n instanceof LIANode) ) {
-                    Map<?, ?> rmem = (Map<?, ?>)wm.getBetaRightMemory(n);
+                    Map<?, ?> rmem = wm.getBetaRightMemory(n);
                     buf.append(n.toPPString() + " - right memories:" + rmem.size() + Constants.LINEBREAK);
                     Iterator<?> memItr = rmem.keySet().iterator();
                     while (memItr.hasNext()) {
@@ -88,7 +88,7 @@ public class RuleMatchesFunction extends BaseMatchFunction implements Function {
         while (bnItr.hasNext()) {
             BaseJoin betaNode = (BaseJoin)bnItr.next();
             buf.append(betaNode.toPPString() + Constants.LINEBREAK);
-            Map<?, ?> lmem = (Map<?, ?>)wm.getBetaLeftMemory(betaNode);
+            Map<?, ?> lmem = wm.getBetaLeftMemory(betaNode);
             Object rmem = wm.getBetaRightMemory(betaNode);
             if (lmem.size() > 0) {
                 buf.append(" - left memories:" + Constants.LINEBREAK);

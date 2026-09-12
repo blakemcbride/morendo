@@ -23,7 +23,6 @@ public class BottomFunction implements Function {
 		super();
 	}
 
-	@SuppressWarnings("unchecked")
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector rv = new DefaultReturnVector();
 		Object rl = null;
@@ -31,7 +30,7 @@ public class BottomFunction implements Function {
 			int count = params[0].getBigIntegerValue().intValue();
 			rl = params[1].getValue(engine, Constants.OBJECT_TYPE);
 			if (rl instanceof List) {
-				List<Object> list = (List<Object>)rl;
+				@SuppressWarnings("unchecked") List<Object> list = (List<Object>)rl;
 				if (list.size() > count) {
 					List<Object> newlist = new ArrayList<>();
 					int s = list.size();

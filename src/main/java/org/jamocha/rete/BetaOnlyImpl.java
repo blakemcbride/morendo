@@ -39,7 +39,6 @@ public class BetaOnlyImpl implements BetaMemory {
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public BetaOnlyImpl(Index index, Rete engine) {
 		super();
 		this.index = index;

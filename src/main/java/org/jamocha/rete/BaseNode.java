@@ -137,9 +137,9 @@ public abstract class BaseNode implements Print {
 	 * memories are cleared properly.
 	 */
 		public void clear(WorkingMemory mem) {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.clear();
-        HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl)mem.getBetaRightMemory(this);
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
         rightmem.clear();
     }
 

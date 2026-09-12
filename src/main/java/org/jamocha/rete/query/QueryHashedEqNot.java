@@ -57,11 +57,10 @@ public class QueryHashedEqNot extends QueryBaseNot {
      * @param factInstance
      * @param engine
      */
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem) 
     throws AssertException
     {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getQueryBetaMemory(this);
+        Map<Index, Index> leftmem = mem.getQueryBetaMemory(this);
         leftmem.put(linx, linx);
     }
 
@@ -75,7 +74,7 @@ public class QueryHashedEqNot extends QueryBaseNot {
     throws AssertException
     {
         // get the memory for the node
-		HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem.getQueryRightMemory(this);
+		HashedAlphaMemoryImpl rightmem = mem.getQueryRightMemory(this);
 		EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
 		rightmem.addPartialMatch(inx, rfact, engine);
     }
@@ -85,12 +84,12 @@ public class QueryHashedEqNot extends QueryBaseNot {
      * matches down the query network.
      */
 	public void executeJoin(Rete engine, WorkingMemory mem) throws AssertException {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getQueryBetaMemory(this);
+        Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
     	Iterator<?> iterator = leftmem.values().iterator();
     	while (iterator.hasNext()) {
     		Index index = (Index)iterator.next();
             EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,index.getFacts()));
-            HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem.getQueryRightMemory(this);
+            HashedAlphaMemoryImpl rightmem = mem.getQueryRightMemory(this);
             if (rightmem.count(inx) == 0) {
                 this.propogateAssert(index, engine, mem);
             }

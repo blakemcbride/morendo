@@ -101,7 +101,7 @@ public class AlphaNodeOr extends BaseAlpha2 {
     throws AssertException
     {
 		if (evaluate(fact)) {
-            AlphaMemory alpha = (AlphaMemory) mem.getAlphaMemory(this);
+            AlphaMemory alpha = mem.getAlphaMemory(this);
 			// we set the time of the last match
 			alpha.addPartialMatch(fact);
 			// if watch is on, we notify the engine. Rather than
@@ -119,7 +119,7 @@ public class AlphaNodeOr extends BaseAlpha2 {
     public void retractFact(Fact fact, Rete engine, WorkingMemory mem) 
     throws RetractException
     {
-        AlphaMemory alpha = (AlphaMemory)mem.getAlphaMemory(this);
+        AlphaMemory alpha = mem.getAlphaMemory(this);
         if (alpha.removePartialMatch(fact) != null) {
             propogateRetract(fact,engine,mem);
         }

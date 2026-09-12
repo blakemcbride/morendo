@@ -57,8 +57,8 @@ public class QueryZeroJoin extends QueryBaseJoin {
 	 * clear will clear the lists
 	 */
 	public void clear(WorkingMemory mem) {
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getQueryBetaMemory(this);
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getQueryRightMemory(this);
+		Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
+		Map<?, ?> rightmem = mem.getQueryRightMemory(this);
 		Iterator<?> itr = leftmem.keySet().iterator();
 		// first we iterate over the list for each fact
 		// and clear it.
@@ -79,13 +79,12 @@ public class QueryZeroJoin extends QueryBaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
 
         leftmem.put(linx, linx);
-        Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.values().iterator();
         while (itr.hasNext()) {
             Fact rfcts = (Fact) itr.next();
@@ -100,12 +99,11 @@ public class QueryZeroJoin extends QueryBaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Fact, Fact> rightmem = (Map<Fact, Fact>) mem.getBetaRightMemory(this);
+        Map<Fact, Fact> rightmem = mem.getBetaRightMemory(this);
         rightmem.put(rfact, rfact);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index bmem = (Index) itr.next();

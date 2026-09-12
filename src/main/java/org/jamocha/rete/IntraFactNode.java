@@ -65,7 +65,7 @@ public class IntraFactNode extends BaseAlpha2 {
     public void assertFact(Fact factInstance, Rete engine, WorkingMemory mem)
             throws AssertException {
         if (evaluate(factInstance)) {
-            AlphaMemory alpha = (AlphaMemory) mem.getAlphaMemory(this);
+            AlphaMemory alpha = mem.getAlphaMemory(this);
             alpha.addPartialMatch(factInstance);
             // if watch is on, we notify the engine. Rather than
             // create an event class here, we let Rete do that.
@@ -89,7 +89,7 @@ public class IntraFactNode extends BaseAlpha2 {
 
     public void retractFact(Fact factInstance, Rete engine, WorkingMemory mem)
             throws RetractException {
-        AlphaMemory alpha = (AlphaMemory)mem.getAlphaMemory(this);
+        AlphaMemory alpha = mem.getAlphaMemory(this);
         if (alpha.removePartialMatch(factInstance) != null) {
             // if watch is on, we notify the engine. Rather than
             // create an event class here, we let Rete do that.

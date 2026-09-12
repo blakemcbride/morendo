@@ -110,14 +110,14 @@ public abstract class BaseJoin extends BaseNode {
 			throws AssertException {
         if (addNode(node)) {
 			// first, we get the memory for this node
-			Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+			Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
 			// now we iterate over the entry set
 			Iterator<?> itr = leftmem.entrySet().iterator();
 			while (itr.hasNext()) {
 				BetaMemory bmem = (BetaMemory) itr.next();
 				Index left = bmem.getIndex();
 				// iterate over the matches
-                Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+                Map<?, ?> rightmem = mem.getBetaRightMemory(this);
 				Iterator<?> ritr = rightmem.keySet().iterator();
 				while (ritr.hasNext()) {
 					Fact rfcts = (Fact) ritr.next();
@@ -142,7 +142,7 @@ public abstract class BaseJoin extends BaseNode {
 			WorkingMemory mem) throws AssertException {
         if (addNode(node)) {
 			// first, we get the memory for this node
-			Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+			Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
 			// now we iterate over the entry set
 			Iterator<?> itr = leftmem.values().iterator();
 			while (itr.hasNext()) {
@@ -151,7 +151,7 @@ public abstract class BaseJoin extends BaseNode {
 					BetaMemory bmem = (BetaMemory) omem;
 					Index left = bmem.getIndex();
 					// iterate over the matches
-                    Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+                    Map<?, ?> rightmem = mem.getBetaRightMemory(this);
                     Iterator<?> ritr = rightmem.keySet().iterator();
 					while (ritr.hasNext()) {
 						Fact rfcts = (Fact) ritr.next();

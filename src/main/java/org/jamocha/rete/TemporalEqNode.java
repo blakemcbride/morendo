@@ -16,14 +16,13 @@ public class TemporalEqNode extends AbstractTemporalNode {
 	public TemporalEqNode(int id) {
         super(id);
     }
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
             throws AssertException {
         long time = getRightTime();
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
         leftmem.put(linx, linx);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        TemporalHashedAlphaMem rightmem = (TemporalHashedAlphaMem) mem
+        TemporalHashedAlphaMem rightmem = mem
                 .getBetaRightMemory(this);
         Iterator<?> itr = rightmem.iterator(inx);
         if (itr != null) {
@@ -49,13 +48,13 @@ public class TemporalEqNode extends AbstractTemporalNode {
     public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
             throws AssertException {
         long time = getLeftTime();
-        TemporalHashedAlphaMem rightmem = (TemporalHashedAlphaMem) mem.getBetaRightMemory(this);
+        TemporalHashedAlphaMem rightmem = mem.getBetaRightMemory(this);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,
                 rfact));
         rightmem.addPartialMatch(inx, rfact, engine);
         // now that we've added the facts to the list, we
         // proceed with evaluating the fact
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         // since there may be key collisions, we iterate over the
         // values of the HashMap. If we used keySet to iterate,
         // we could encounter a ClassCastException in the case of
@@ -78,10 +77,10 @@ public class TemporalEqNode extends AbstractTemporalNode {
 
     public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
             throws RetractException {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
         EqHashIndex eqinx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        TemporalHashedAlphaMem rightmem = (TemporalHashedAlphaMem) mem
+        TemporalHashedAlphaMem rightmem = mem
                 .getBetaRightMemory(this);
 
         // now we propogate the retract. To do that, we have
@@ -99,12 +98,12 @@ public class TemporalEqNode extends AbstractTemporalNode {
             throws RetractException {
         long time = getLeftTime();
         EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
-        TemporalHashedAlphaMem rightmem = (TemporalHashedAlphaMem) mem
+        TemporalHashedAlphaMem rightmem = mem
                 .getBetaRightMemory(this);
         // first we remove the fact from the right
         rightmem.removePartialMatch(inx, rfact);
         // now we see the left memory matched and remove it also
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();

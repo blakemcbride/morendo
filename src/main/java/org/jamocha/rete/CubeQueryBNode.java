@@ -80,13 +80,12 @@ public class CubeQueryBNode extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
             throws AssertException {
-    	Map<EqHashIndex, Map<?, ?>> leftmem = (Map<EqHashIndex, Map<?, ?>>) mem.getBetaLeftMemory(this);
+    	Map<EqHashIndex, Map<?, ?>> leftmem = mem.getBetaLeftMemory(this);
     	// first we create the hashIndex and put it in the left memory
         EqHashIndex eqIndex = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        Map<Object, Object> values = (Map<Object, Object>) leftmem.get(eqIndex);
+        @SuppressWarnings("unchecked") Map<Object, Object> values = (Map<Object, Object>) leftmem.get(eqIndex);
         if (values == null) {
         	values = engine.newMap();
         	leftmem.put(eqIndex, values);
@@ -97,7 +96,7 @@ public class CubeQueryBNode extends BaseJoin {
         if (cubeFact != null) {
         	// if the CubeFact has propagated down, we need to check for cached
         	// value before querying the cube
-        	CubeHashMemoryImpl rightmem = (CubeHashMemoryImpl) mem.getBetaRightMemory(this);
+        	CubeHashMemoryImpl rightmem = mem.getBetaRightMemory(this);
         	if (rightmem.count(eqIndex) > 0) {
         		// cached version already exists, so just propagate
         		Iterator<?> itr = rightmem.iterator(eqIndex);
@@ -133,12 +132,12 @@ public class CubeQueryBNode extends BaseJoin {
             throws AssertException {
     	// first set the reference to CubeFact
     	this.cubeFact = (CubeFact)rfact;
-    	CubeHashMemoryImpl rightmem = (CubeHashMemoryImpl) mem.getBetaRightMemory(this);
+    	CubeHashMemoryImpl rightmem = mem.getBetaRightMemory(this);
 
         // query the cube for the data
         Cube cube = (Cube)cubeFact.getObjectInstance();
 
-    	Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+    	Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         // Get the partial matches on the side side using the EqHashIndex as the key
         Iterator<?> indexItr = leftmem.keySet().iterator();
         while (indexItr.hasNext()) {
@@ -181,7 +180,7 @@ public class CubeQueryBNode extends BaseJoin {
 	public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
             throws RetractException {
     	// Get the Left memory, which is a Map
-    	Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+    	Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
     	// Create the EqHashIndex
         EqHashIndex eqIndex = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
         // Get the entries matching the EqHashIndex from the Map
@@ -189,7 +188,7 @@ public class CubeQueryBNode extends BaseJoin {
         // remove the Index from the entries
         entries.remove(linx);
         // Get the CubeHashMemory for the right side
-        CubeHashMemoryImpl rightmem = (CubeHashMemoryImpl) mem.getBetaRightMemory(this);
+        CubeHashMemoryImpl rightmem = mem.getBetaRightMemory(this);
         // get Iterator for the cached ResultsetFact
         Iterator<?> itr = rightmem.iterator(eqIndex);
         if (itr != null) {
@@ -207,8 +206,8 @@ public class CubeQueryBNode extends BaseJoin {
      */
 	public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
             throws RetractException {
-    	CubeHashMemoryImpl rightmem = (CubeHashMemoryImpl) mem.getBetaRightMemory(this);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+    	CubeHashMemoryImpl rightmem = mem.getBetaRightMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
     	// we iterate over the cache right memories
     	Object[] cachedResults = rightmem.iterateAll();
     	for (int idx=0; idx < cachedResults.length; idx++) {
@@ -223,7 +222,7 @@ public class CubeQueryBNode extends BaseJoin {
     	}
     }
 
-    @SuppressWarnings({ "unchecked" })
+	@SuppressWarnings("unchecked")
 	protected Object[] queryCube(Index linx, Cube c, Rete engine, WorkingMemory mem, ResultsetFact resultFact) {
 		java.util.Set<Object> result = new java.util.HashSet<Object>();
 		Map<Object, Object> firstResult = null;

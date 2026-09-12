@@ -56,7 +56,6 @@ public class QueryRootNode {
     /**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public QueryRootNode(Rete engine, RootNode root) {
 		super();
 		queryObjTypeNodeMap = engine.newMap();

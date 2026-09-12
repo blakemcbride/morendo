@@ -39,7 +39,6 @@ public class TokenMatchFunction implements Function {
 		return Constants.INTEGER_OBJECT;
 	}
 
-	@SuppressWarnings("unchecked")
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		Integer total = 0;
 		if (params != null && params.length == 2) {
@@ -54,7 +53,7 @@ public class TokenMatchFunction implements Function {
 					resolvedValue = bp.getValue();
 				}
 				if (resolvedValue instanceof Set) {
-					Set<String> stop = (Set<String>)resolvedValue;
+					@SuppressWarnings("unchecked") Set<String> stop = (Set<String>)resolvedValue;
 					Iterator<String> itr = stop.iterator();
 					while (itr.hasNext()) {
 						String word = itr.next();

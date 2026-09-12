@@ -49,8 +49,8 @@ public class QueryMultipleFuncJoin extends QueryBaseJoin {
 	 * clear will clear the lists
 	 */
 	public void clear(WorkingMemory mem) {
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
+		Map<?, ?> leftmem = mem.getBetaRightMemory(this);
 		Iterator<?> itr = leftmem.keySet().iterator();
 		// first we iterate over the list for each fact
 		// and clear it.
@@ -71,13 +71,12 @@ public class QueryMultipleFuncJoin extends QueryBaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Index, BetaMemory> leftmem = (Map<Index, BetaMemory>) mem.getBetaLeftMemory(this);
+        Map<Index, BetaMemory> leftmem = mem.getBetaLeftMemory(this);
         BetaMemory bmem = new BetaMemoryImpl(linx, engine);
         leftmem.put(linx, bmem);
-        Map<?, ?> rightmem = (Map<?, ?>)mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.keySet().iterator();
         if (itr != null) {
             while (itr.hasNext()) {
@@ -99,12 +98,11 @@ public class QueryMultipleFuncJoin extends QueryBaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings("unchecked")
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Fact, Fact> rightmem = (Map<Fact, Fact>)mem.getBetaRightMemory(this);
+        Map<Fact, Fact> rightmem = mem.getBetaRightMemory(this);
         rightmem.put(rfact, rfact);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             BetaMemory bmem = (BetaMemory) itr.next();

@@ -82,7 +82,7 @@ public class QueryObjTypeNode extends QueryBaseAlpha {
     throws AssertException
     {
     	if (fact == null) {
-        	AlphaMemory alphaMemory = (AlphaMemory)mem.getAlphaMemory(this.objectTypeNode);
+        	AlphaMemory alphaMemory = mem.getAlphaMemory(this.objectTypeNode);
         	factCount = alphaMemory.size();
         	Iterator<?> iterator = alphaMemory.iterator();
         	while (iterator.hasNext()) {

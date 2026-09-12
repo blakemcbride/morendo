@@ -54,8 +54,8 @@ public class ZJBetaNode extends BaseJoin {
 	 * clear will clear the lists
 	 */
 	public void clear(WorkingMemory mem) {
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+		Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
 		Iterator<?> itr = leftmem.keySet().iterator();
 		// first we iterate over the list for each fact
 		// and clear it.
@@ -76,13 +76,12 @@ public class ZJBetaNode extends BaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
 
         leftmem.put(linx, linx);
-        Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.values().iterator();
         while (itr.hasNext()) {
             Fact rfcts = (Fact) itr.next();
@@ -97,12 +96,11 @@ public class ZJBetaNode extends BaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Fact, Fact> rightmem = (Map<Fact, Fact>) mem.getBetaRightMemory(this);
+        Map<Fact, Fact> rightmem = mem.getBetaRightMemory(this);
         rightmem.put(rfact, rfact);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index bmem = (Index) itr.next();
@@ -118,9 +116,9 @@ public class ZJBetaNode extends BaseJoin {
 	 */
 	public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws RetractException {
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
-        Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.values().iterator();
         while (itr.hasNext()) {
             propagateRetract(linx.add((Fact) itr
@@ -138,9 +136,9 @@ public class ZJBetaNode extends BaseJoin {
 	 */
 	public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws RetractException {
-        Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         rightmem.remove(rfact);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index bmem = (Index) itr.next();

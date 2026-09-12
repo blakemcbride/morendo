@@ -391,7 +391,6 @@ public final class FactEditor extends AbstractJamochaEditor implements
 
 		private JMenuItem deleteMenuItem;
 
-		@SuppressWarnings({ })
 		private MultiSlotEditor() {
 			popupMenu = new JPopupMenu();
 			addMenuItem = new JMenuItem("add value", IconLoader

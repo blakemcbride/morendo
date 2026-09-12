@@ -51,8 +51,8 @@ public class QueryMultipleJoin extends QueryBaseJoin {
 	 * clear will clear the lists
 	 */
 		public void clear(WorkingMemory mem) {
-		Map<?, ?> rightmem = (Map<?, ?>) mem.getBetaRightMemory(this);
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaRightMemory(this);
+		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
+		Map<?, ?> leftmem = mem.getBetaRightMemory(this);
 		Iterator<?> itr = leftmem.keySet().iterator();
 		// first we iterate over the list for each fact
 		// and clear it.
@@ -73,13 +73,12 @@ public class QueryMultipleJoin extends QueryBaseJoin {
 	 * @param factInstance
 	 * @param engine
 	 */
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
         leftmem.put(linx, linx);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+        HashedAlphaMemoryImpl rightmem = mem
                 .getBetaRightMemory(this);
         if (rightmem.count(inx) > 1) {
             this.propogateAssert(linx, engine, mem);
@@ -94,11 +93,11 @@ public class QueryMultipleJoin extends QueryBaseJoin {
 	 */
 	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
 			throws AssertException {
-        HashedAlphaMemoryImpl rightmem = (HashedAlphaMemoryImpl) mem
+        HashedAlphaMemoryImpl rightmem = mem
                 .getBetaRightMemory(this);
         EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
         int after = rightmem.addPartialMatch(inx, rfact, engine);
-        Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();

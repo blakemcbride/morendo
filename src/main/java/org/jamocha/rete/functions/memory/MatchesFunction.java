@@ -91,7 +91,7 @@ public class MatchesFunction extends BaseMatchFunction implements Function {
         if (!(alphaNode instanceof ObjectTypeNode) && !(alphaNode instanceof LIANode) && !(alphaNode instanceof IFLIANode)) {
             StringBuilder buf = new StringBuilder();
             buf.append(alphaNode.toPPString());
-            AlphaMemory alphaMem = (AlphaMemory)wm.getAlphaMemory(alphaNode);
+            AlphaMemory alphaMem = wm.getAlphaMemory(alphaNode);
             buf.append(" - Total Memories: " + alphaMem.size());
             buf.append(Constants.LINEBREAK);
             engine.writeMessage(buf.toString());
@@ -101,7 +101,7 @@ public class MatchesFunction extends BaseMatchFunction implements Function {
     protected void printBetaNodeInfo(BaseJoin betaNode, Rete engine, DefaultWM wm) {
         StringBuilder buf = new StringBuilder();
         buf.append(betaNode.toPPString());
-        Map<?, ?> lmem = (Map<?, ?>)wm.getBetaLeftMemory(betaNode);
+        Map<?, ?> lmem = wm.getBetaLeftMemory(betaNode);
         Object rmem = wm.getBetaRightMemory(betaNode);
         buf.append(" - left memory count:" + lmem.size());
         // we need to check which type of node it is

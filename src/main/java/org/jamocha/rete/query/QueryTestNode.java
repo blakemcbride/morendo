@@ -90,10 +90,9 @@ public class QueryTestNode extends QueryBaseJoin {
 	 * Assert will first pass the facts to the parameters. Once the
 	 * parameters are set, it should call execute to get the result.
 	 */
-	@SuppressWarnings({ "unchecked" })
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
 			throws AssertException {
-		Map<Index, BetaMemory> leftmem = (Map<Index, BetaMemory>) mem.getQueryBetaMemory(this);
+		Map<Index, BetaMemory> leftmem = mem.getQueryBetaMemory(this);
 		if (!leftmem.containsKey(linx)) {
 			this.setParameters(linx.getFacts());
 			ReturnVector rv = this.func.executeFunction(engine, this.params);
@@ -121,7 +120,7 @@ public class QueryTestNode extends QueryBaseJoin {
 	 * clear the memory
 	 */
 	public void clear(WorkingMemory mem) {
-		((Map<?, ?>) mem.getBetaLeftMemory(this)).clear();
+		mem.<Map<?, ?>>getBetaLeftMemory(this).clear();
 	}
 
 	protected void setParameters(Fact[] facts) {

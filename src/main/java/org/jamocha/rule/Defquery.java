@@ -296,7 +296,6 @@ public class Defquery implements Query {
         }
     }
 	
-	@SuppressWarnings({ })
 	public void setQueryParameters(List<?> props) {
 		Iterator<?> itr = props.iterator();
 		while (itr.hasNext()) {
@@ -313,7 +312,6 @@ public class Defquery implements Query {
 	 * This method is only used by clone(Rete) method.
 	 * @param variables
 	 */
-	@SuppressWarnings({ })
 	protected void setQueryParameters(Map<String, QueryBaseAlphaCondition> variables) {
 		Iterator<String> itr = variables.keySet().iterator();
 		while (itr.hasNext()) {
@@ -390,7 +388,6 @@ public class Defquery implements Query {
 		this.elapsedTime = time;
 	}
 	
-	@SuppressWarnings({ })
 	public List<?> executeQuery(Rete engine, WorkingMemory memory, Parameter[] parameters) {
 		if (watch) {
 			startTime = System.currentTimeMillis();

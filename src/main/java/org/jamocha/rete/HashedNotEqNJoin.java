@@ -44,9 +44,9 @@ public class HashedNotEqNJoin extends BaseJoin {
      * clear will clear the lists
      */
 	public void clear(WorkingMemory mem){
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         HashedNeqAlphaMemory rightmem = 
-        	(HashedNeqAlphaMemory)mem.getBetaRightMemory(this);
+        	mem.getBetaRightMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -67,17 +67,16 @@ public class HashedNotEqNJoin extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-	@SuppressWarnings("unchecked")
 	public void assertLeft(Index linx, Rete engine, WorkingMemory mem) 
     throws AssertException
     {
-        Map<Index, Index> leftmem = (Map<Index, Index>) mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
 
 		leftmem.put(linx, linx);
 		// need to think the getLeftValues through better to
 		// account for cases when a join has no bindings
 		NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds,linx.getFacts()));
-		HashedNeqAlphaMemory rightmem = (HashedNeqAlphaMemory) mem
+		HashedNeqAlphaMemory rightmem = mem
 				.getBetaRightMemory(this);
 		if (rightmem.zeroMatch(inx)) {
             this.propagateAssert(linx, engine, mem);
@@ -94,13 +93,13 @@ public class HashedNotEqNJoin extends BaseJoin {
     throws AssertException
     {
         // get the memory for the node
-		HashedNeqAlphaMemory rightmem = (HashedNeqAlphaMemory) mem
+		HashedNeqAlphaMemory rightmem = mem
 				.getBetaRightMemory(this);
 		NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds,rfact));
 
 		rightmem.addPartialMatch(inx, rfact, engine);
         boolean zm = rightmem.zeroMatch(inx);
-		Map<?, ?> leftmem = (Map<?, ?>) mem.getBetaLeftMemory(this);
+		Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
 		Iterator<?> itr = leftmem.values().iterator();
 		while (itr.hasNext()) {
 			Index linx = (Index) itr.next();
@@ -125,7 +124,7 @@ public class HashedNotEqNJoin extends BaseJoin {
 	public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
     throws RetractException
     {
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
         propagateRetract(linx,engine,mem);
     }
@@ -142,12 +141,12 @@ public class HashedNotEqNJoin extends BaseJoin {
     throws RetractException
     {
     	NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds,rfact));
-        HashedNeqAlphaMemory rightmem = (HashedNeqAlphaMemory)mem.getBetaRightMemory(this);
+        HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         // first we remove the fact from the right
         rightmem.removePartialMatch(inx,rfact);
         boolean zm = rightmem.zeroMatch(inx);
         // now we see the left memory matched and remove it also
-        Map<?, ?> leftmem = (Map<?, ?>)mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()){
             Index linx = (Index)itr.next();
