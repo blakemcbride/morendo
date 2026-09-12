@@ -233,7 +233,9 @@ public class AssertRetractTest {
         objects.clear();
         rt.gc();
         System.out.println("elapsed time to retract " + retractET + " ms");
-        // the retract should be atleast 3 times shorter than the assert
-        assertTrue((assertET > (retractET * 4)));
+        // the timings are printed for information only: a ratio between them is
+        // not a stable assertion on a shared CI machine
+        assertEquals(0, engine.getObjectCount());
+        engine.close();
     }
 }

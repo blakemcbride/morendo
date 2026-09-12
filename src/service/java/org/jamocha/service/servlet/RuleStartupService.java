@@ -148,7 +148,7 @@ public class RuleStartupService implements ServletContextListener, RuleService {
                 } else {
                     this.servletContext.log(
                             "The Rule service has reached the maximum pool number. Try increasing"
-                                + " the configuration.");
+                                    + " the configuration.");
                 }
                 return null;
             }
