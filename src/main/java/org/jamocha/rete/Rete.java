@@ -21,7 +21,6 @@ import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,39 +32,14 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jamocha.messagerouter.MessageEvent;
 import org.jamocha.messagerouter.MessageRouter;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.ExecuteException;
 import org.jamocha.rete.exception.FunctionException;
 import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rete.exception.TemplateAssociationException;
-import org.jamocha.rete.functions.BooleanFunctions;
-import org.jamocha.rete.functions.DeffunctionGroup;
-import org.jamocha.rete.functions.IfFunction;
-import org.jamocha.rete.functions.InterpretedFunction;
-import org.jamocha.rete.functions.LoadFunctionsFunction;
-import org.jamocha.rete.functions.RuleEngineFunctions;
-import org.jamocha.rete.functions.UserDefinedFunctions;
-import org.jamocha.rete.functions.agent.AgentFunctions;
-import org.jamocha.rete.functions.analysis.AnalysisFunctions;
-import org.jamocha.rete.functions.bit.BitFunctions;
-import org.jamocha.rete.functions.cube.CubeFunctions;
 import org.jamocha.rete.functions.io.BatchFunction;
 import org.jamocha.rete.functions.io.BuildFunction;
-import org.jamocha.rete.functions.io.IOFunctions;
-import org.jamocha.rete.functions.java.JavaFunctions;
-import org.jamocha.rete.functions.list.ListFunctions;
-import org.jamocha.rete.functions.macro.MacroFunctions;
-import org.jamocha.rete.functions.math.MathFunctions;
-import org.jamocha.rete.functions.memory.MemoryFunctions;
-import org.jamocha.rete.functions.messaging.MessagingFunctions;
-import org.jamocha.rete.functions.query.QueryFunctions;
-import org.jamocha.rete.functions.string.StringFunctions;
-import org.jamocha.rete.functions.temporal.TemporalFunctions;
-import org.jamocha.rete.functions.text.TextFunctions;
-import org.jamocha.rete.functions.time.TimeFunctions;
-import org.jamocha.rete.measures.AggregateGroup;
 import org.jamocha.rete.measures.Measure;
 import org.jamocha.rete.measures.MeasureGroup;
 import org.jamocha.rete.query.QueryObjTypeNode;
@@ -105,36 +79,30 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	protected int firingcount = 0;
 	protected boolean prettyPrint = false;
 	protected WorkingMemory workingMem = null;
+	private final TemplateRegistry templates = new TemplateRegistry(this);
+	private final FunctionRegistry functionRegistry = new FunctionRegistry(this);
+	private final EngineOutput output = new EngineOutput(this);
     
 	/**
 	 * the key is the Class object. The value is the defclass. the defclass is
 	 * then used to lookup the deftemplate in the current Module.
 	 */
-	protected Map<Object, Defclass> defclass = new HashMap<>();
-	protected Map<String, Defclass> defclassByName = new HashMap<>();
-	protected Map<String, Defclass> templateToDefclass = new HashMap<>();
-	protected Map<Object, Template> classToTemplate = new HashMap<>();
 
 	/**
 	 * this is the HashMap for all functions. This means all function names are
 	 * unique.
 	 */
-	protected Map<String, Function> functions = new HashMap<>();
 
 	/**
 	 * The HashMap for all measures
 	 */
-	protected Map<String, Measure> measures = new HashMap<>();
 	
-	protected Map<String, Writer> outputStreams = new HashMap<>();
 
 	/**
 	 * an ArrayList for the listeners
 	 */
 	protected ArrayList<EngineEventListener> listeners = new ArrayList<>();
 
-	private ArrayList<FunctionGroup> functionGroups = new ArrayList<>();
-	private ArrayList<MeasureGroup> measureGroups = new ArrayList<>();
 
 	private long lastFactId = 1;
 
@@ -144,7 +112,6 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	private Logger log = null;
 	private MessageRouter router = new MessageRouter(this);
 	protected Deftemplate initFact = new InitialFact();
-    private DeffunctionGroup deffunctions = new DeffunctionGroup();
     private RootNode root = new RootNode(this);
     private RuleCompiler compiler = null;
     private Map<Rule, Object> rulesFired = new HashMap<>();
@@ -192,92 +159,20 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	}
 
 	protected void loadBuiltInFunctions() {
-		AgentFunctions agentfuncs = new AgentFunctions();
-		declareFunctionGroup(agentfuncs);
-		
-        AnalysisFunctions analysis = new AnalysisFunctions();
-        declareFunctionGroup(analysis);
-        
-        BitFunctions bitfs = new BitFunctions();
-        declareFunctionGroup(bitfs);
-        
-		BooleanFunctions boolfs = new BooleanFunctions();
-		declareFunctionGroup(boolfs);
-
-		CubeFunctions cubefunctions = new CubeFunctions();
-		declareFunctionGroup(cubefunctions);
-
-		IOFunctions iof = new IOFunctions();
-		declareFunctionGroup(iof);
-
-		// load list functions
-		ListFunctions listf = new ListFunctions();
-		declareFunctionGroup(listf);
-
-		// load the text functions
-		TextFunctions textf = new TextFunctions();
-		declareFunctionGroup(textf);
-		
-		// load the java functions
-		JavaFunctions jfuncs = new JavaFunctions();
-		declareFunctionGroup(jfuncs);
-
-		// load the math functions
-		MathFunctions mathf = new MathFunctions();
-		declareFunctionGroup(mathf);
-
-		MemoryFunctions memfuncs = new MemoryFunctions();
-		declareFunctionGroup(memfuncs);
-
-		MessagingFunctions msgfuncs = new MessagingFunctions();
-		declareFunctionGroup(msgfuncs);
-		
-		// load the engine relate functions like declaring rules, templates, etc
-		RuleEngineFunctions rulefs = new RuleEngineFunctions();
-		declareFunctionGroup(rulefs);
-
-		QueryFunctions queryfs = new QueryFunctions();
-		declareFunctionGroup(queryfs);
-		
-		// load string functions
-		StringFunctions strfs = new StringFunctions();
-		declareFunctionGroup(strfs);
-
-		// load temporal functions
-		TemporalFunctions tempfuncs = new TemporalFunctions();
-		declareFunctionGroup(tempfuncs);
-
-		// load boolean functions
-        TimeFunctions timefs = new TimeFunctions();
-        declareFunctionGroup(timefs);
-        
-        MacroFunctions macros = new MacroFunctions();
-        declareFunctionGroup(macros);
-		
-		declareFunction(new IfFunction());
-        functionGroups.add(deffunctions);
-        // load function group for user defined functions
-        UserDefinedFunctions udfs = new UserDefinedFunctions();
-        functionGroups.add(udfs);
-        LoadFunctionsFunction lff = (LoadFunctionsFunction)this.functions.get(LoadFunctionsFunction.LOAD_FUNCTION);
-        lff.setUserDefinedFunctions(udfs);
-	}
+	this.functionRegistry.loadBuiltIns();
+}
 	
 	protected void loadBuiltInMeasures() {
-		AggregateGroup aggrGrp = new AggregateGroup();
-		aggrGrp.loadMeasures(this);
-		measureGroups.add(aggrGrp);
-	}
+	this.functionRegistry.loadBuiltInMeasures();
+}
 
 	protected void clearBuiltInFunctions() {
-		this.functionGroups.clear();
-		this.functions.clear();
-	}
+	this.functionRegistry.clear();
+}
 	
 	protected void clearBuiltInMeasures() {
-		this.measureGroups.clear();
-		this.measures.clear();
-	}
+	this.functionRegistry.clearMeasures();
+}
 	
 	protected void startLog() {
 		log.info("Morendo started");
@@ -371,14 +266,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	}
 
 	public void clearDefclass() {
-		Iterator<Defclass> iterator = this.defclass.values().iterator();
-		while (iterator.hasNext()) {
-			Defclass dclass = iterator.next();
-			dclass.clear();
-		}
-		this.defclass.clear();
-		this.defclassByName.clear();
-	}
+	this.templates.clear();
+}
 	
 	/**
 	 * Method will clear the engine of all rules, facts and objects.
@@ -400,10 +289,10 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	public void close() {
 		this.closed = true;
 		this.workingMem.clear();
-		this.defclass.clear();
+		this.templates.clear();
 		this.workingMem.getDeffactMap().clear();
         this.workingMem.getDynamicFacts().clear();
-		this.functions.clear();
+		this.functionRegistry.clear();
 		this.workingMem.getInitialFacts().clear();
 		this.listeners.clear();
         this.workingMem.getStaticFacts().clear();
@@ -612,8 +501,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public Function findFunction(String name) {
-		return this.functions.get(name);
-	}
+	return this.functionRegistry.find(name);
+}
 
 	/**
 	 * find the template starting with other modules and ending with the main
@@ -623,23 +512,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public Template findTemplate(String name) {
-		Template tmpl = null;
-		Iterator<?> itr = this.workingMem.getAgenda().modules.values().iterator();
-		while (itr.hasNext()) {
-			Object val = itr.next();
-			if (val != this.workingMem.getMain()) {
-				tmpl = ((Defmodule) val).getTemplate(name);
-			}
-			if (tmpl != null) {
-				break;
-			}
-		}
-		// if it wasn't found in any other module, check main
-		if (tmpl == null) {
-			tmpl = this.workingMem.getMain().getTemplate(name);
-		}
-		return tmpl;
-	}
+	return this.templates.findTemplate(name);
+}
 
     // -------- method for declaring an object ------------------ //
 
@@ -648,17 +522,9 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * parent. The method will lookup the class. If it fails to find
 	 * the class, it will throw a ClassNotFoundException.
 	 */
-	public void declareObject(String className, String templateName,
-			String parent) throws ClassNotFoundException {
-		try {
-			Class<?> clzz = Class.forName(className);
-			declareObject(clzz, templateName, parent);
-		} catch (ClassNotFoundException e) {
-			// for now do nothing, but we should report the error for real
-			log.debug(e.toString(), e);
-            throw e;
-		}
-	}
+	public void declareObject(String className, String templateName, String parent) throws ClassNotFoundException {
+	this.templates.declareObject(className, templateName, parent);
+}
 
 	/**
 	 * Declare the object using the fully qualified class name for the
@@ -686,47 +552,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 *            the parent template
 	 */
 	public void declareObject(Class<?> obj, String templateName, String parent) {
-		// if the class hasn't already been declared, we create a defclass
-		// and deftemplate for the class.
-		if (!this.defclass.containsKey(obj)) {
-			Defclass dclass = new Defclass(obj);
-			this.defclassByName.put(obj.getName(), dclass);
-			// the Class is the key and the Defclass is the value
-			this.defclass.put(obj, dclass);
-			if (templateName == null) {
-				templateName = obj.getName();
-			}
-			// we map the template name to Defclass for convienant lookup
-			this.templateToDefclass.put(templateName, dclass);
-			if (!getCurrentFocus().containsTemplate(dclass)) {
-				Template dtemp = null;
-				// if the parent is found, we set it
-				if (parent != null) {
-					Template ptemp = this.workingMem.getCurrentFocus()
-							.findParentTemplate(parent);
-					if (ptemp != null) {
-						dtemp = dclass.createDeftemplate(templateName, ptemp);
-						dtemp.setParent(ptemp);
-					} else {
-						// we need to throw an exception to let users know the
-						// parent template wasn't found
-					}
-				} else {
-					dtemp = dclass.createDeftemplate(templateName);
-				}
-				// we map the Class object to Deftemplate for convienant lookup
-				this.classToTemplate.put(obj, dtemp);
-				// the key for the deftemplate is the declass, this means
-				// that when we assert an object instance to the engine,
-				// we need to use the Class to lookup defclass and then
-				// use the defclass to lookup the deftemplate. Once we
-				// have the deftemplate, we can use it to create the shadow
-				// fact for the object instance.
-				getCurrentFocus().addTemplate(dtemp, this, this.workingMem);
-				writeMessage(dtemp.getName() + Constants.LINEBREAK, "t");
-			}
-		}
-	}
+	this.templates.declareObject(obj, templateName, parent);
+}
     
 	/**
 	 * Method removes class declaration from the engine. First it checks to see
@@ -735,16 +562,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param clzz
 	 */
 	public boolean removeObjectType(Class<?> clzz) {
-		Template template = this.classToTemplate.get(clzz);
-		if (template.getSlotsUsed() == 0) {
-			this.defclass.remove(clzz);
-			this.defclassByName.remove(clzz.getName());
-			this.templateToDefclass.remove(clzz.getName());
-			this.classToTemplate.remove(clzz);
-			return true;
-		}
-		return false;
-	}
+	return this.templates.removeObjectType(clzz);
+}
 	
 	/**
 	 * Declare a cube, so the rule engine can assert cubes and pattern
@@ -752,26 +571,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param cube
 	 */
 	public void declareCube(Cube cube) {
-		if (!this.defclass.containsKey(cube)) {
-			Defclass dclass = new Defclass(cube.getClass());
-			// the Class is the key and the Defclass is the value
-			// note that all Cubes are associated to a different instance of Defclass
-			this.defclass.put(cube, dclass);
-			// we map the template name to Defclass for convienant lookup
-			this.templateToDefclass.put(cube.getName(), dclass);
-			Template dtemp = dclass.createCubeTemplate(cube);
-			// we map the Cube instance to Deftemplate for convienant lookup
-			this.classToTemplate.put(cube, dtemp);
-			// the key for the deftemplate is the declass, this means
-			// that when we assert an object instance to the engine,
-			// we need to use the Class to lookup defclass and then
-			// use the defclass to lookup the deftemplate. Once we
-			// have the deftemplate, we can use it to create the shadow
-			// fact for the object instance.
-			getCurrentFocus().addTemplate(dtemp, this, this.workingMem);
-			writeMessage(dtemp.getName() + Constants.LINEBREAK, "t");
-		}
-	}
+	this.templates.declareCube(cube);
+}
 	
 	/**
 	 * Convienance method for looking up the Deftemplate for a given
@@ -781,16 +582,12 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public Deftemplate findDeftemplate(Class<?> clazz) {
-		Defclass dclass = this.defclass.get(clazz);
-		if (dclass != null) {
-			return (Deftemplate)this.classToTemplate.get(clazz);
-		}
-		return null;
-	}
+	return this.templates.findDeftemplate(clazz);
+}
 	
 	public Defclass findDeclassByTemplate(String templateName) {
-		return this.templateToDefclass.get(templateName);
-	}
+	return this.templates.findDefclassByTemplate(templateName);
+}
 	
 	/**
 	 * In situations where the domain model uses JAXB style objects,
@@ -801,15 +598,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param template
 	 */
 	public void addAssociation(Class<?> clazz, Deftemplate template) throws TemplateAssociationException {
-		if (this.defclass.containsKey(clazz)) {
-			throw new TemplateAssociationException(clazz.getName() + 
-					" has already been declared. Cannot add association");
-		} else {
-			Defclass dclass = this.templateToDefclass.get(template.getName());
-			this.defclass.put(clazz, dclass);
-			this.classToTemplate.put(clazz, template);
-		}
-	}
+	this.templates.addAssociation(clazz, template);
+}
 
 	/**
 	 * method will try to find the defclass using the Template name.
@@ -821,13 +611,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @throws TemplateAssociationException
 	 */
 	public void addAssociation(Class<?> clazz, String templateName) throws TemplateAssociationException {
-		Defclass dclass = this.templateToDefclass.get(templateName);
-		if (dclass != null) {
-			addAssociation(clazz, findDeftemplate(dclass.getClassObject()) ); 
-		} else {
-			throw new TemplateAssociationException(templateName + " not found. Cound not add association");
-		}
-	}
+	this.templates.addAssociation(clazz, templateName);
+}
 	
 	/**
 	 * Lookup the Defclass in the defclass HashMap.
@@ -835,8 +620,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
     public Defclass findDefclass(Class<?> clazz) {
-        return this.defclass.get(clazz);
-    }
+	return this.templates.findDefclass(clazz);
+}
 
     /**
      * Convienance method for looking up the Defclass by the
@@ -846,8 +631,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @return
      */
     public Defclass findDefclassByTemplate(String templateName) {
-        return this.templateToDefclass.get(templateName);
-    }
+	return this.templates.findDefclassByTemplate(templateName);
+}
 
 	/**
 	 * Return a Set of the declass instances
@@ -855,8 +640,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public Set<Map.Entry<Object, Defclass>> getDefclasses() {
-		return this.defclass.entrySet();
-	}
+	return this.templates.getDefclasses();
+}
 
 	/**
 	 * Implementation will lookup the defclass for a given object by using the
@@ -866,12 +651,12 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public Defclass findDefclass(Object key) {
-		return this.defclass.get(key.getClass());
-	}
+	return this.templates.findDefclass(key);
+}
 
 	public Defclass findDefclassByName(String key) {
-		return this.defclassByName.get(key);
-	}
+	return this.templates.findDefclassByName(key);
+}
 	
 	/**
 	 * method is specifically for templates that are declared in the shell and
@@ -880,11 +665,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param temp
 	 */
 	public void declareTemplate(Template temp) {
-		if (!getCurrentFocus().containsTemplate(temp.getName())) {
-			// the module doesn't contain it, so we add it
-			getCurrentFocus().addTemplate(temp, this, this.workingMem);
-		}
-	}
+	this.templates.declareTemplate(temp);
+}
 
 	/**
 	 * To explicitly deploy a custom function, call the method with an instance
@@ -893,11 +675,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param func
 	 */
 	public void declareFunction(Function func) {
-		this.functions.put(func.getName(), func);
-        if (func instanceof InterpretedFunction) {
-            this.deffunctions.addFunction(func);
-        }
-	}
+	this.functionRegistry.declare(func);
+}
 
 	/**
 	 * In some cases, we may want to declare a function under an alias. For
@@ -907,12 +686,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param func
 	 */
 	public void declareFunction(String alias, Function func) throws FunctionException {
-		if (this.functions.containsKey(alias)) {
-			throw new FunctionException(alias + " is already in use. Please use a different alias for the function.");
-		} else {
-			this.functions.put(alias, func);
-		}
-	}
+	this.functionRegistry.declare(alias, func);
+}
 
 	/**
 	 * Method will create an instance of the function and declare it. Once a
@@ -922,38 +697,16 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param name
 	 */
 	public Function declareFunction(String name) throws ClassNotFoundException {
-		try {
-			Class<?> fclaz = Class.forName(name);
-			Function func = (Function) fclaz.getDeclaredConstructor().newInstance();
-			declareFunction(func);
-			return func;
-		} catch (ClassNotFoundException e) {
-			log.debug(e.toString(), e);
-            throw e;
-		} catch (IllegalAccessException e) {
-			log.debug(e.toString(), e);
-		} catch (InstantiationException e) {
-			log.debug(e.toString(), e);
-		} catch (IllegalArgumentException e) {
-			log.debug(e.toString(), e);
-		} catch (InvocationTargetException e) {
-			log.debug(e.toString(), e);
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			log.debug(e.toString(), e);
-		} catch (SecurityException e) {
-			log.debug(e.toString(), e);
-		}
-		return null;
-	}
+	return this.functionRegistry.declare(name);
+}
 	
 	/**
 	 * Remove a function using the Function class
 	 * @param function
 	 */
 	public void removeFunction(Function function) {
-		this.functions.remove(function.getName());
-	}
+	this.functionRegistry.remove(function);
+}
 
 	/**
 	 * Method will create in instance of the FunctionGroup class and load the
@@ -962,27 +715,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param name
 	 */
 	public void declareFunctionGroup(String name) throws ClassNotFoundException {
-		try {
-			Class<?> fclaz = Class.forName(name);
-			FunctionGroup group = (FunctionGroup) fclaz.getDeclaredConstructor().newInstance();
-			declareFunctionGroup(group);
-		} catch (ClassNotFoundException e) {
-			log.debug(e.toString(), e);
-			throw e;
-		} catch (IllegalAccessException e) {
-			log.debug(e.toString(), e);
-		} catch (InstantiationException e) {
-			log.debug(e.toString(), e);
-		} catch (IllegalArgumentException e) {
-			log.debug(e.toString(), e);
-		} catch (InvocationTargetException e) {
-			log.debug(e.toString(), e);
-		} catch (NoSuchMethodException e) {
-			log.debug(e.toString(), e);
-		} catch (SecurityException e) {
-			log.debug(e.toString(), e);
-		}
-	}
+	this.functionRegistry.declareGroup(name);
+}
 
 	/**
 	 * Method will register the function of the FunctionGroup .
@@ -990,18 +724,12 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param functionGroup FunctionGroup with the functions to register.
 	 */
 	public void declareFunctionGroup(FunctionGroup functionGroup) {
-		functionGroup.loadFunctions(this);
-		this.functionGroups.add(functionGroup);
-	}
+	this.functionRegistry.declareGroup(functionGroup);
+}
 
 	public void removeFunctionGroup(FunctionGroup functionGroup) {
-		Iterator<?> itr = functionGroup.listFunctions().iterator();
-		while (itr.hasNext()) {
-			Function func = (Function)itr.next();
-			this.functions.remove(func.getName());
-		}
-		this.functionGroups.remove(functionGroup);
-	}
+	this.functionRegistry.removeGroup(functionGroup);
+}
 	
 	/**
 	 * Returns a list of the function groups. If a function is not in a group,
@@ -1010,8 +738,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public List<FunctionGroup> getFunctionGroups() {
-		return this.functionGroups;
-	}
+	return this.functionRegistry.groups();
+}
 
 	/**
 	 * Returns a collection of the function instances
@@ -1019,8 +747,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public Collection<Function> getAllFunctions() {
-		return this.functions.values();
-	}
+	return this.functionRegistry.all();
+}
 	
 	public void declareDefquery(Query query) {
 		if (!this.queries.containsKey(query.getName())) {
@@ -1051,25 +779,20 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	}
 	
 	public List<Measure> getAllMeasures() {
-		return new ArrayList<>(this.measures.values());
-	}
+	return this.functionRegistry.allMeasures();
+}
 	
 	public Measure findMeasure(String name) {
-		return measures.get(name);
-	}
+	return this.functionRegistry.findMeasure(name);
+}
 	
 	public void declareMeasure(Measure measure) {
-		if (!this.measures.containsKey(measure.getMeasureName())) {
-			this.measures.put(measure.getMeasureName(), measure);
-		}
-	}
+	this.functionRegistry.declareMeasure(measure);
+}
 
 	public void declareMeasureGroup(MeasureGroup measureGroup) {
-		if (!this.measureGroups.contains(measureGroup)) {
-			this.measureGroups.add(measureGroup);
-			measureGroup.loadMeasures(this);
-		}
-	}
+	this.functionRegistry.declareMeasureGroup(measureGroup);
+}
 	// ------------- Methods for loading the ruleset ------------------ //
 	
 	/**
@@ -1079,8 +802,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param filename
 	 */
 	public void loadRuleset(String filename) {
-		BatchFunction bf = (BatchFunction) this.functions
-				.get(BatchFunction.BATCH);
+		BatchFunction bf = (BatchFunction) findFunction(BatchFunction.BATCH);
 		Parameter[] params = new Parameter[] { new ValueParam(
 				ValueType.STRING, filename) };
 		bf.executeFunction(this, params);
@@ -1094,8 +816,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 */
 	public void loadRuleset(InputStream ins) {
 		if (ins != null) {
-			BatchFunction bf = (BatchFunction) this.functions
-			.get(BatchFunction.BATCH);
+			BatchFunction bf = (BatchFunction) findFunction(BatchFunction.BATCH);
 			bf.parse(this, ins, null);
 		}
 	}
@@ -1366,8 +1087,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * the spool function is to dump everything out to a file.
 	 */
 	public void addPrintWriter(String name, Writer writer) {
-		this.outputStreams.put(name,writer);
-	}
+	this.output.addPrintWriter(name, writer);
+}
 	
 	/**
 	 * It is up to spool function to make sure it removes the printer
@@ -1376,8 +1097,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @return
 	 */
 	public PrintWriter removePrintWriter(String name) {
-		return (PrintWriter)this.outputStreams.remove(name);
-	}
+	return this.output.removePrintWriter(name);
+}
 	
 	// ----- method for writing messages out ----- //
 	/**
@@ -1399,18 +1120,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * @param output
 	 */
 	public void writeMessage(String msg, String output) {
-		MessageRouter router = getMessageRouter();
-		router.postMessageEvent(new MessageEvent(MessageEvent.Type.ENGINE, msg, "t"
-				.equals(output) ? router.getCurrentChannelId() : output));
-		if (this.outputStreams.size() > 0) {
-			Iterator<Writer> itr = this.outputStreams.values().iterator();
-			while (itr.hasNext()) {
-				PrintWriter wr = (PrintWriter)itr.next();
-				wr.write(msg);
-				wr.flush();
-			}
-		}
-	}
+	this.output.write(msg, output);
+}
 
 	/**
 	 * The method will print out the node. It is up to the method to check if
