@@ -75,7 +75,7 @@ public class Constants {
     public static final String SHELL_PROMPT = "Morendo> ";
     public static final String DEFAULT_OUTPUT = "t";
     public static final String VERSION =
-            "2.0.0-SNAPSHOT"; // the single source of the version; builder/Tasks.java reads it
+            "2.0.0"; // the single source of the version; builder/Tasks.java reads it
     public static final String INITIAL_FACT = "_initialFact";
     public static final String COUNT_FACT = "_countFact";
     public static final String COUNT_SLOT = "count";

@@ -25,6 +25,7 @@ downloads the dependencies into `libs/`.
 ```
 ./bld build      # generate the CLIPS parser, compile every module (bld.cmd on Windows)
 ./bld test       # run the test suite
+./bld lint | format-check | spotbugs   # the checks CI runs (javac -Xlint, google-java-format, SpotBugs)
 ./bld dist       # target/morendo-<version>.zip with the module jars, libraries, launcher and samples
 ./morendo -shell # interactive shell from a checkout; ./morendo -gui for the Swing GUI
 ```
@@ -33,12 +34,13 @@ The build produces one jar per module: `morendo-core` (the engine, needs only Lo
 `morendo-shell` (the launcher and interactive shell, JLine), `morendo-gui` (Swing GUI and
 network viewer), `morendo-service` (embedding service and servlet, Jackson and Jakarta Servlet),
 `morendo-messaging` (JMS client and agent functions, Jakarta Messaging) and `morendo-examples`
-(the sample beans). Embedders need only `morendo-core` plus Log4j; the optional jars add their
-functions to the engine automatically when they are on the classpath.
+(the sample beans). Embedders need only `morendo-core` plus Log4j and create an
+`org.morendo.rete.Rete` (the package root was `org.jamocha` before 2.0.0); the optional jars add
+their functions to the engine automatically when they are on the classpath.
 
 Inside the shell: `(batch samples/only/only_1.clp)`, `(facts)`, `(fire)`, `(exit)`. The shell has
 line editing and history (JLine); constructs can be typed over several lines. Logging goes to
-stderr at WARN; see `src/main/resources/log4j2.xml` for the options.
+stderr at WARN; see `src/core/resources/log4j2.xml` for the options.
 
 ## Acknowledgements
 Morendo wouldn't be possible without the work by Dr. Forgy, Paul Haley, Gary Riley and Ernest Friedman-Hill. Even though morendo is a clean room implementation of RETE, the lessons learned from OPS5, CLIPS, JESS and half dozen other RETE rule engines influenced the implementation. The rule engine is open source, so that anyone can learn from it.

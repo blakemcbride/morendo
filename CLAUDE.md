@@ -23,7 +23,9 @@ in `Tasks.java` from Maven Central into `libs/` (git-ignored). Everything built 
 ./bld test woolfel.rete.SimpleJoinTest      # one test class
 ./bld golden-update [only_1,manners16]      # regenerate golden files (all, or some)
 ./bld jar | dist | javadoc  # target/morendo-<version>.jar / .zip / javadoc
-./bld lint                  # javac -Xlint:all on src/main/java; must stay at 0 warnings (details in target/lint.txt)
+./bld lint                  # javac -Xlint:all on every module; must stay at 0 warnings (details in target/lint.txt)
+./bld format | format-check # google-java-format (AOSP style) over all sources / fail if anything differs
+./bld spotbugs              # SpotBugs over the module classes; fails on high-priority findings (target/spotbugs.txt)
 ./bld clean | realclean     # remove target/ (+ generated parser); + libs/
 ./bld list-tasks
 ./morendo -shell            # interactive shell from a checkout (or -gui); needs a prior build
@@ -55,7 +57,17 @@ warnings, so a change that introduces one should fix it rather than suppress it.
 (the `guard` wrapper in `Tasks.java`; bld itself would exit 0). `run` and `test` spawn the JVM
 without a console, so the interactive shell must be started with `./morendo`, not `bld run`.
 
-CI (`.github/workflows/ci.yml`) runs `./bld test` on JDK 21. Tests are JUnit 6 (Jupiter),
+Formatting is google-java-format 1.36.1 in AOSP style (4-space indent), enforced by
+`./bld format-check`; run `./bld format` before committing rather than formatting by hand.
+`./bld spotbugs` runs SpotBugs 4.10.4 over every module except `examples`; the filter
+`spotbugs-exclude.xml` skips the generated parser, the deliberate deep-copy `clone()` methods and
+the `gc` function, and each exclusion says why. High-priority findings fail the task (CI), medium
+and low ones are a backlog listed in `target/spotbugs.txt`. `Rete` is `@NullMarked` (jspecify):
+its `find*`/`get*`/`remove*` lookups that answer null for an unknown name and its optional
+template, parent and expiration arguments are `@Nullable`; nothing else on it is.
+
+CI (`.github/workflows/ci.yml`) runs `./bld format-check`, `./bld test` and `./bld spotbugs` on
+JDK 21. Tests are JUnit 6 (Jupiter),
 discovered by scanning `target/test-classes`: a class is a test when it has `@Test` methods
 **and** its name matches the launcher's default filter (`*Test`, `*Tests` or `Test*`), so name
 new test classes that way. The rest of `src/test` (`*Benchmark*`, `rulebenchmark`, `hashtest`,
