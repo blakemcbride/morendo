@@ -1,0 +1,8 @@
+== stats ==
+templates: 7
+rules: 1
+facts: 5
+next-node-id: 12
+== output ==
+==> fire: Activation: car_is_not_impounded, id-2, id-3 AggrTime-*
+winning2 should be impounded but currently isn't. citation number: 456

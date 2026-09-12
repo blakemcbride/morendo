@@ -1,0 +1,7 @@
+== stats ==
+templates: 11
+rules: 8
+facts: 46
+next-node-id: 55
+== output ==
+==> fire: Activation: assign_first_seat, id-2, id-43, id-3 AggrTime-*

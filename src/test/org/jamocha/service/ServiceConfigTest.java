@@ -11,6 +11,20 @@ public class ServiceConfigTest extends TestCase {
 	public ServiceConfigTest() {
 		super();
 	}
+
+	/**
+	 * Files written by these tests go to a temporary directory so that running the
+	 * suite never modifies the checked-in samples.
+	 */
+	private static String tempFile(String name) {
+		try {
+			java.nio.file.Path dir = java.nio.file.Files.createTempDirectory("morendo-service-test");
+			dir.toFile().deleteOnExit();
+			return dir.resolve(name).toString();
+		} catch (java.io.IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 	public void testSaveServiceConfig() {
 		ServiceConfiguration config = new ServiceConfiguration();
@@ -37,7 +51,7 @@ public class ServiceConfigTest extends TestCase {
 		
 		FunctionPackage functionGroup = new FunctionPackage();
 		app1.getFunctionGroups().add(functionGroup);
-		String[] functionList = new String[]{"woolfel.examples.function.HellFunction"};
+		String[] functionList = new String[]{"woolfel.examples.function.HelloFunction"};
 		functionGroup.setClassNames(functionList);
 		
 		ClipsRuleset ruleset1 = new ClipsRuleset();
@@ -56,7 +70,7 @@ public class ServiceConfigTest extends TestCase {
 		jsondata1.add(jdata);
 		app1.setJsonData(jsondata1);
 		
-		RuleServiceImpl.saveConfiguration("./samples/configuration/test_config.json", config);
+		RuleServiceImpl.saveConfiguration(tempFile("test_config.json"), config);
 	}
 	
 	public void testSaveServiceConfig2() {
@@ -84,7 +98,7 @@ public class ServiceConfigTest extends TestCase {
 		
 		FunctionPackage functionGroup = new FunctionPackage();
 		app1.getFunctionGroups().add(functionGroup);
-		String[] functionList = new String[]{"woolfel.examples.function.HellFunction"};
+		String[] functionList = new String[]{"woolfel.examples.function.HelloFunction"};
 		functionGroup.setClassNames(functionList);
 		
 		ClipsRuleset ruleset1 = new ClipsRuleset();
@@ -100,7 +114,7 @@ public class ServiceConfigTest extends TestCase {
 		app1.getObjectData().add(objectData1);
 		objectData1.setUrl("./samples/data/hobbies.xml");
 		
-		RuleServiceImpl.saveConfiguration("./samples/configuration/test_config2.json", config);
+		RuleServiceImpl.saveConfiguration(tempFile("test_config2.json"), config);
 	}
 	
 	public void testSaveObjectData() {
@@ -125,7 +139,7 @@ public class ServiceConfigTest extends TestCase {
 		hobby3.setCategory("Sport");
 		hobby3.setSubCategory("Indoor/Outdoor");
 		
-		ObjectData.saveObjectData("./samples/data/data1.json", list);
+		ObjectData.saveObjectData(tempFile("data1.json"), list);
 	}
 	
 	public void testCreateServiceInstance() {

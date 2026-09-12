@@ -1,0 +1,8 @@
+== stats ==
+templates: 8
+rules: 1
+facts: 10
+next-node-id: 18
+== output ==
+==> fire: Activation: nominate_good_teacher, id-2, id-10 AggrTime-*
+octavia butler will be nominated

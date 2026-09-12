@@ -18,8 +18,11 @@ public class ReflectionTest extends TestCase {
 		params[1] = java.lang.String.class;
 		Class account4 = Account4.class;
 		try {
+			// Account4 declares both setCashCountry(double, String) and
+			// setCashCountry(Double, String); the boxed lookup finds the boxed overload.
 			Method m = account4.getMethod(methd, params);
-			assertNull(m);
+			assertNotNull(m);
+			assertEquals(java.lang.Double.class, m.getParameterTypes()[0]);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

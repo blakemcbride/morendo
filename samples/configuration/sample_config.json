@@ -17,7 +17,7 @@
       "functionGroups": [
         {
           "classNames": [
-            "woolfel.examples.function.HellFunction"
+            "woolfel.examples.function.HelloFunction"
           ],
           "url": null
         }

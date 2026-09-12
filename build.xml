@@ -91,6 +91,18 @@
 		</junit>
 	</target>
 
+	<target name="test" depends="compile-tests" description="Run the JUnit suite (org.jamocha.AllTests) with JUnitCore">
+		<java classname="org.junit.runner.JUnitCore" fork="true" failonerror="true" dir="${basedir}">
+			<classpath>
+				<pathelement path="${bin}" />
+				<fileset dir="${lib.home}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="org.jamocha.AllTests" />
+		</java>
+	</target>
+
 	<target name="compile-debug" depends="init,clean" description="Clean and compile with debug symbols and extra checks">
 		<javac srcdir="${src}" destdir="${bin-dbg}" encoding="UTF-8" debug="on" deprecation="on">
 			<compilerarg value="-Xlint" />

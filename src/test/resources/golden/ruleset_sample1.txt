@@ -1,0 +1,19 @@
+== stats ==
+templates: 7
+rules: 2
+facts: 9
+next-node-id: 15
+== output ==
+woolfel.examples.model.Account
+woolfel.examples.model.AccountHobby
+woolfel.examples.model.Hobby
+==> fire: Activation: Hobby_List, id-4, id-7, id-8 AggrTime-*
+sam poe has hobby hiking
+==> fire: Activation: Hobby_List, id-3, id-6, id-9 AggrTime-*
+jane roe has hobby chess
+==> fire: Activation: Hobby_List, id-2, id-5, id-8 AggrTime-*
+john doe has hobby hiking
+==> fire: Activation: Over_30, id-4 AggrTime-*
+sam poe is over 30
+==> fire: Activation: Over_30, id-2 AggrTime-*
+john doe is over 30

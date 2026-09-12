@@ -119,18 +119,15 @@ public class AndCondition implements Condition {
 	}
 
 	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.andConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
 	}
 
 	public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.andConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
 	}
 	
 	public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.andConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
 	}
 	
 	public List<?> getBindConstraints() {

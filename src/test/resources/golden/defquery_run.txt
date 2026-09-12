@@ -1,0 +1,8 @@
+== stats ==
+templates: 6
+rules: 0
+facts: 20
+next-node-id: 42
+== output ==
+f-3 (ApplicationRequestLog (IPAddress "129.0.0.1") (Hostname "localhost") (ServerType "Tomcat") (PortNumber 8080) (Timestamp 1269285900120) (BytesSent 5443) (ElapsedTime 3600) (URL "/testing/index.jsp") (SessionID "abcdefb000000") (RequestHeaders "nil") (RequestParameters "nil") (RequestBody "nil") (StatusCode "200") (StatusMessage "nil") (LogType "nil") (TransactionID "1234baaa") (ThreadID "2") ) 
+f-3 (ApplicationRequestLog (IPAddress "129.0.0.1") (Hostname "localhost") (ServerType "Tomcat") (PortNumber 8080) (Timestamp 1269285900120) (BytesSent 5443) (ElapsedTime 3600) (URL "/testing/index.jsp") (SessionID "abcdefb000000") (RequestHeaders "nil") (RequestParameters "nil") (RequestBody "nil") (StatusCode "200") (StatusMessage "nil") (LogType "nil") (TransactionID "1234baaa") (ThreadID "2") ) 

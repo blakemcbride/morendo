@@ -1,77 +1,110 @@
+/*
+ * Copyright 2002-2008 Peter Lin
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
 package org.jamocha.rete.compiler;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
+import org.jamocha.rete.DefaultQueryCompiler;
+import org.jamocha.rete.DefaultRuleCompiler;
 import org.jamocha.rete.GraphQueryCompiler;
 import org.jamocha.rete.QueryCompiler;
+import org.jamocha.rete.Rete;
 import org.jamocha.rete.RuleCompiler;
 
 /**
- * 
- * @author HouZhanbin
- * Oct 12, 2007 10:24:19 AM
+ * Holds the condition compilers for one engine.
  *
+ * This used to be a JVM-wide singleton initialised by whichever rule, query or graph-query
+ * compiler asked for it first. Every further Rete instance in the same JVM then compiled
+ * its rules against the first engine's network (or failed with a NullPointerException), and
+ * within one engine only one of the three compiler references was ever set, so mixing
+ * defrule and defquery broke. Providers are now created per engine, and every condition
+ * compiler is wired to that engine's rule, query and graph-query compilers.
  */
 public class CompilerProvider {
-	
-	private static CompilerProvider compilerProvider;
-	
-	public static ConditionCompiler objectConditionCompiler;
-	
-	public static ConditionCompiler existConditionCompiler;
-    
-	public static ConditionCompiler temporalConditionCompiler;
-    
-	public static ConditionCompiler testConditionCompiler;
-    
-    public static ConditionCompiler andConditionCompiler;
-    
-    public static ConditionCompiler cubeQueryConditionCompiler;
-    
-    public static ConditionCompiler onlyConditionCompiler;
-    
-    public static ConditionCompiler multipleConditionCompiler;
-	
-	public static CompilerProvider getInstance(RuleCompiler ruleCompiler){
-		
-		if(compilerProvider==null){
-			objectConditionCompiler = new ObjectConditionCompiler(ruleCompiler);
-			existConditionCompiler = new ExistConditionCompiler(objectConditionCompiler);
-            temporalConditionCompiler = new TemporalConditionCompiler(ruleCompiler);
-            testConditionCompiler = new TestConditionCompiler(ruleCompiler);
-            andConditionCompiler = new AndConditionCompiler();
-            cubeQueryConditionCompiler = new CubeQueryConditionCompiler(ruleCompiler);
-			onlyConditionCompiler = new OnlyConditionCompiler(objectConditionCompiler);
-			multipleConditionCompiler = new MultipleConditionCompiler(objectConditionCompiler);
-			compilerProvider = new CompilerProvider();
-		}
-		return compilerProvider;
+
+	private static final Map<Rete, CompilerProvider> providers = new WeakHashMap<Rete, CompilerProvider>();
+
+	public final ConditionCompiler objectConditionCompiler;
+	public final ConditionCompiler existConditionCompiler;
+	public final ConditionCompiler temporalConditionCompiler;
+	public final ConditionCompiler testConditionCompiler;
+	public final ConditionCompiler andConditionCompiler;
+	public final ConditionCompiler cubeQueryConditionCompiler;
+	public final ConditionCompiler onlyConditionCompiler;
+	public final ConditionCompiler multipleConditionCompiler;
+
+	private CompilerProvider(Rete engine) {
+		DefaultRuleCompiler rc = (DefaultRuleCompiler) engine.getRuleCompiler();
+		DefaultQueryCompiler qc = (DefaultQueryCompiler) engine.getQueryCompiler();
+		GraphQueryCompiler gc = engine.getGraphQueryCompiler();
+		objectConditionCompiler = wire(new ObjectConditionCompiler(rc), rc, qc, gc);
+		existConditionCompiler = wire(new ExistConditionCompiler(objectConditionCompiler), rc, qc, gc);
+		temporalConditionCompiler = wire(new TemporalConditionCompiler(rc), rc, qc, gc);
+		testConditionCompiler = wire(new TestConditionCompiler(rc), rc, qc, gc);
+		andConditionCompiler = wire(new AndConditionCompiler(), rc, qc, gc);
+		cubeQueryConditionCompiler = wire(new CubeQueryConditionCompiler(rc), rc, qc, gc);
+		onlyConditionCompiler = wire(new OnlyConditionCompiler(objectConditionCompiler), rc, qc, gc);
+		multipleConditionCompiler = wire(new MultipleConditionCompiler(objectConditionCompiler), rc, qc, gc);
 	}
 
-	public static CompilerProvider getInstance(QueryCompiler queryCompiler){
-		
-		if(compilerProvider==null){
-			objectConditionCompiler = new ObjectConditionCompiler(queryCompiler);
-			existConditionCompiler = new ExistConditionCompiler(objectConditionCompiler);
-            temporalConditionCompiler = new TemporalConditionCompiler(queryCompiler);
-            testConditionCompiler = new TestConditionCompiler(queryCompiler);
-            andConditionCompiler = new AndConditionCompiler();
-            cubeQueryConditionCompiler = new CubeQueryConditionCompiler(queryCompiler);
-			onlyConditionCompiler = new OnlyConditionCompiler(objectConditionCompiler);
-			multipleConditionCompiler = new MultipleConditionCompiler(objectConditionCompiler);
-			compilerProvider = new CompilerProvider();
+	private static ConditionCompiler wire(ConditionCompiler compiler, DefaultRuleCompiler rc,
+			DefaultQueryCompiler qc, GraphQueryCompiler gc) {
+		if (compiler instanceof AbstractConditionCompiler) {
+			AbstractConditionCompiler acc = (AbstractConditionCompiler) compiler;
+			acc.ruleCompiler = rc;
+			acc.queryCompiler = qc;
+			acc.graphCompiler = gc;
+		} else if (compiler instanceof TestConditionCompiler) {
+			TestConditionCompiler tcc = (TestConditionCompiler) compiler;
+			tcc.ruleCompiler = rc;
+			tcc.queryCompiler = qc;
+			tcc.graphCompiler = gc;
+		} else {
+			throw new IllegalStateException("cannot wire " + compiler.getClass().getName());
 		}
-		return compilerProvider;
+		return compiler;
 	}
-	
-	public static CompilerProvider getInstance(GraphQueryCompiler queryCompiler){
-		
-		if(compilerProvider==null){
-			objectConditionCompiler = new ObjectConditionCompiler(queryCompiler);
-			existConditionCompiler = new ExistConditionCompiler(objectConditionCompiler);
-            temporalConditionCompiler = new TemporalConditionCompiler(queryCompiler);
-            testConditionCompiler = new TestConditionCompiler(queryCompiler);
-            andConditionCompiler = new AndConditionCompiler();
-			compilerProvider = new CompilerProvider();
+
+	public static synchronized CompilerProvider getInstance(Rete engine) {
+		CompilerProvider provider = providers.get(engine);
+		if (provider == null) {
+			provider = new CompilerProvider(engine);
+			providers.put(engine, provider);
 		}
-		return compilerProvider;
+		return provider;
+	}
+
+	public static CompilerProvider getInstance(RuleCompiler ruleCompiler) {
+		if (!(ruleCompiler instanceof DefaultRuleCompiler)) {
+			throw new IllegalArgumentException("unsupported rule compiler " + ruleCompiler.getClass().getName());
+		}
+		return getInstance(((DefaultRuleCompiler) ruleCompiler).getEngine());
+	}
+
+	public static CompilerProvider getInstance(QueryCompiler queryCompiler) {
+		if (!(queryCompiler instanceof DefaultQueryCompiler)) {
+			throw new IllegalArgumentException("unsupported query compiler " + queryCompiler.getClass().getName());
+		}
+		return getInstance(((DefaultQueryCompiler) queryCompiler).getEngine());
+	}
+
+	public static CompilerProvider getInstance(GraphQueryCompiler queryCompiler) {
+		return getInstance(queryCompiler.getEngine());
 	}
 }

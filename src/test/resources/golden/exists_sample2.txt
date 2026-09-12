@@ -1,0 +1,6 @@
+== stats ==
+templates: 6
+rules: 1
+facts: 2
+next-node-id: 13
+== output ==

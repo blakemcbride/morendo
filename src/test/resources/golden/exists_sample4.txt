@@ -1,0 +1,8 @@
+== stats ==
+templates: 5
+rules: 1
+facts: 3
+next-node-id: 12
+== output ==
+==> fire: Activation: nodechange, id-2 AggrTime-*
+child of node1 has been updated

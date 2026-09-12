@@ -40,9 +40,9 @@ public class LoadRulesetTest extends TestCase {
 	}
 
     @SuppressWarnings("rawtypes")
-	public void testLoadJoinSample13() {
+	public void testLoadOnlySample() {
         Rete engine = new Rete();
-        engine.loadRuleset("./benchmark_files/join_sample13.clp");
+        engine.loadRuleset("./samples/only/only_1.clp");
         Collection rules = engine.getCurrentFocus().getAllRules();
         int count = rules.size();
         Iterator itr = rules.iterator();
@@ -50,13 +50,13 @@ public class LoadRulesetTest extends TestCase {
             Defrule r = (Defrule)itr.next();
             System.out.println(r.toPPString());
         }
-        assertEquals(0,count);
+        assertEquals(1,count);
     }
 
     @SuppressWarnings("rawtypes")
-	public void testLoadTest() {
+	public void testLoadExistsSample() {
         Rete engine = new Rete();
-        engine.loadRuleset("./benchmark_files/test.clp");
+        engine.loadRuleset("./samples/exists/exists_sample10.clp");
         Collection rules = engine.getCurrentFocus().getAllRules();
         int count = rules.size();
         Iterator itr = rules.iterator();
@@ -64,6 +64,6 @@ public class LoadRulesetTest extends TestCase {
             Defrule r = (Defrule)itr.next();
             System.out.println(r.toPPString());
         }
-        assertEquals(0,count);
+        assertEquals(2,count);
     }
 }

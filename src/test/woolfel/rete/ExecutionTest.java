@@ -19,11 +19,13 @@ public class ExecutionTest extends TestCase {
 
 	public void testExecution() {
 		org.jamocha.rete.Rete engine = new org.jamocha.rete.Rete();
-		engine.loadRuleset("./test.clp");
+		// exists_sample15 defines one rule and asserts its facts; the batch function
+		// is exercised explicitly the way the original test did.
 		Function batch = engine.findFunction(BatchFunction.BATCH);
-		Parameter[] parameters = new Parameter[]{new ValueParam(Constants.STRING_TYPE,"./data.clp")};
+		Parameter[] parameters = new Parameter[]{new ValueParam(Constants.STRING_TYPE,"./samples/exists/exists_sample15.clp")};
 		batch.executeFunction(engine, parameters);
-		
-		engine.fire();
+		assertEquals(1, engine.getCurrentFocus().getRuleCount());
+		int fired = engine.fire();
+		assertEquals(1, fired);
 	}
 }

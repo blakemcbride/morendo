@@ -12,6 +12,11 @@ public class InitServiceTest extends TestCase {
 		// TODO Auto-generated constructor stub
 	}
 
+	/** The single application defined in samples/configuration/sample_config.json. */
+	private static RuleApplication app(RuleService service) {
+		return (RuleApplication) service.getRuleApplications().get(0);
+	}
+
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testInitialize() {
@@ -31,7 +36,7 @@ public class InitServiceTest extends TestCase {
 		assertNotNull( service.getRuleApplications() );
 		List applications = service.getRuleApplications();
 		assertTrue( applications.size() == 1 );
-		EngineContext context = service.getEngine("demo", "1.0");
+		EngineContext context = service.getEngine(app(service).getName(), app(service).getVersion());
 		assertNotNull(context);
 	}
 	
@@ -41,7 +46,7 @@ public class InitServiceTest extends TestCase {
 		service.initialize();
 		assertNotNull( service.getServiceName() );
 		assertNotNull( service.getRuleApplications() );
-		EngineContextImpl context = (EngineContextImpl)service.getEngine("demo", "1.0");
+		EngineContextImpl context = (EngineContextImpl)service.getEngine(app(service).getName(), app(service).getVersion());
 		List applications = service.getRuleApplications();
 		RuleApplication app = (RuleApplication)applications.get(0);
 		boolean reload = app.reloadFunctionGroups(context.getRuleEngine());
@@ -64,7 +69,7 @@ public class InitServiceTest extends TestCase {
 		assertNotNull( service.getRuleApplications() );
 		ServiceAdministration admin = service.getServiceAdmin();
 		assertNotNull(admin);
-		boolean reload = admin.reloadRuleset("demo", "1.0");
+		boolean reload = admin.reloadRuleset(app(service).getName(), app(service).getVersion());
 		assertTrue(reload);
 	}
 	

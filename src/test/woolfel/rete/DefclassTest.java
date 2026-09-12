@@ -155,8 +155,9 @@ public class DefclassTest extends TestCase {
 	public void testDeclareObject() {
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(Account.class);
         Collection templ = engine.getCurrentFocus().getTemplates();
-        assertEquals(2,templ.size());
+        assertEquals(baseTemplates + 1,templ.size());
     }
 }

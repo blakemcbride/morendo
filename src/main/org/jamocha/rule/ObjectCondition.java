@@ -167,18 +167,15 @@ public class ObjectCondition extends AbstractCondition {
     }
     
 	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.objectConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
 	}
 	
 	public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.objectConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
 	}
 	
 	public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.objectConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
 	}
 	
 	public boolean isHasNotEqual() {

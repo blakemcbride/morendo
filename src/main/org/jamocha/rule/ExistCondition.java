@@ -72,8 +72,7 @@ public class ExistCondition extends ObjectCondition {
 	}
 
 	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.existConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).existConditionCompiler;
 	}
     
     public static ExistCondition newExistCondition(ObjectCondition cond) {

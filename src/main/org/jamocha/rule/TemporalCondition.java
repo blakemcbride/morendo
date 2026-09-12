@@ -153,7 +153,6 @@ public class TemporalCondition extends ObjectCondition {
     }
 
 	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.temporalConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).temporalConditionCompiler;
 	}
 }

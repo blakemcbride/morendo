@@ -107,7 +107,9 @@ public class FunctionsViaMessageRouter extends TestCase{
 		MessageRouter router = engine.getMessageRouter();
 		StringChannel stringChannel = router.openChannel("TestChannel");
 		List<MessageEvent> messages = new ArrayList<MessageEvent>();
-		
+		// (templates) also lists the built-in templates (initial fact, Graph, Node, Edge)
+		int builtInTemplates = engine.getCurrentFocus().getTemplateCount();
+
 		int loop = 10;
 		for (int i = 1; i <= loop; ++i) {
 			stringChannel.executeCommand("(deftemplate tst" + i + "(slot name)(slot size))");
@@ -136,7 +138,7 @@ public class FunctionsViaMessageRouter extends TestCase{
 				    Pattern p = Pattern.compile ("(for a total of )([0-9]+)", Pattern.CASE_INSENSITIVE);
 				    Matcher m = p.matcher (output);
 				    while (m.find()) {
-				    	int facts = Integer.valueOf(m.group(2)) - 1;
+				    	int facts = Integer.valueOf(m.group(2)) - builtInTemplates;
 				    	System.out.println("Vergleich: Templates in RuleML = " + facts + ", Templates hinzugefügt = " + loop);
 				    	assertEquals(loop, facts);
 				     }

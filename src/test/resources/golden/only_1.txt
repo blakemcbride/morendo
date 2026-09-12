@@ -1,0 +1,8 @@
+== stats ==
+templates: 6
+rules: 1
+facts: 4
+next-node-id: 13
+== output ==
+==> fire: Activation: only_one_hero, id-2, id-4 AggrTime-*
+spiderman save the day 

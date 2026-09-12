@@ -64,14 +64,17 @@ public class ReteInitTest extends TestCase {
     public void testNodeId() {
         Rete engine = new Rete();
         assertNotNull(engine);
-        assertEquals(3,engine.peakNextNodeId());
-        assertEquals(3,engine.peakNextNodeId());
-        assertEquals(3,engine.peakNextNodeId());
-        assertEquals(3,engine.nextNodeId());
-        assertEquals(4,engine.nextNodeId());
-        assertEquals(5,engine.nextNodeId());
+        // A fresh engine has already allocated node ids for its built-in templates
+        // (initial fact plus the Graph, Node and Edge templates), so test relative to
+        // whatever the first peek returns.
+        int first = engine.peakNextNodeId();
+        assertEquals(first,engine.peakNextNodeId());
+        assertEquals(first,engine.peakNextNodeId());
+        assertEquals(first,engine.nextNodeId());
+        assertEquals(first + 1,engine.nextNodeId());
+        assertEquals(first + 2,engine.nextNodeId());
         int id = engine.nextNodeId();
-        assertEquals(6,id);
-        System.out.println("if the test passes, the last id should be 4. it is " + id);
+        assertEquals(first + 3,id);
+        System.out.println("first free node id on a fresh engine is " + first + ", last allocated is " + id);
     }
 }

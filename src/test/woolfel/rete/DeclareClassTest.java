@@ -56,12 +56,14 @@ public class DeclareClassTest extends TestCase {
 	public void testDeclareClass() {
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseClasses = engine.getDefclasses().size();
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(Account.class);
         int count = engine.getDefclasses().size();
-        assertEquals(1,count);
+        assertEquals(baseClasses + 1,count);
         System.out.println("number of Defclass is " + count);
         Collection templates = engine.getCurrentFocus().getTemplates();
-        assertEquals(2,templates.size());
+        assertEquals(baseTemplates + 1,templates.size());
         Iterator itr = templates.iterator();
         while (itr.hasNext()) {
             Deftemplate dtemp = (Deftemplate)itr.next();
@@ -74,13 +76,15 @@ public class DeclareClassTest extends TestCase {
 	public void testDeclareClass2() {
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseClasses = engine.getDefclasses().size();
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(Account.class);
         engine.declareObject(TestBean3.class);
         int count = engine.getDefclasses().size();
-        assertEquals(2,count);
+        assertEquals(baseClasses + 2,count);
         System.out.println("number of Defclass is " + count);
         Collection templates = engine.getCurrentFocus().getTemplates();
-        assertEquals(3,templates.size());
+        assertEquals(baseTemplates + 2,templates.size());
         Iterator itr = templates.iterator();
         while (itr.hasNext()) {
             Deftemplate dtemp = (Deftemplate)itr.next();
@@ -92,10 +96,12 @@ public class DeclareClassTest extends TestCase {
     public void testDeftemplate() {
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseClasses = engine.getDefclasses().size();
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(Account.class);
         assertNotNull(engine.getCurrentFocus().getTemplates());
         int count = engine.getCurrentFocus().getTemplateCount();
-        assertEquals(2,count);
+        assertEquals(baseTemplates + 1,count);
         System.out.println("number of Deftemplates is " + count);
     }
     
@@ -103,10 +109,12 @@ public class DeclareClassTest extends TestCase {
         System.out.println("\ntestDeclareClassInheritance");
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseClasses = engine.getDefclasses().size();
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(Account.class);
         engine.declareObject(BackupAccount.class);
         int count = engine.getDefclasses().size();
-        assertEquals(2,count);
+        assertEquals(baseClasses + 2,count);
         System.out.println("number of Defclass is " + count);
         Template acctemp = engine.getCurrentFocus().getTemplate(Account.class.getName());
         Template bkacc = engine.getCurrentFocus().getTemplate(BackupAccount.class.getName());
@@ -122,10 +130,12 @@ public class DeclareClassTest extends TestCase {
         System.out.println("\ntestDeclareClassInheritance2");
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseClasses = engine.getDefclasses().size();
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(BackupAccount.class);
         engine.declareObject(Account.class);
         int count = engine.getDefclasses().size();
-        assertEquals(2,count);
+        assertEquals(baseClasses + 2,count);
         System.out.println("number of Defclass is " + count);
         Template acctemp = engine.getCurrentFocus().getTemplate(Account.class.getName());
         Template bkacc = engine.getCurrentFocus().getTemplate(BackupAccount.class.getName());
@@ -141,10 +151,12 @@ public class DeclareClassTest extends TestCase {
         System.out.println("\ntestDeclareClassInheritance3");
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseClasses = engine.getDefclasses().size();
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(Account.class);
         engine.declareObject(Account2.class,null,Account.class.getName());
         int count = engine.getDefclasses().size();
-        assertEquals(2,count);
+        assertEquals(baseClasses + 2,count);
         System.out.println("number of Defclass is " + count);
         Template acctemp = engine.getCurrentFocus().getTemplate(Account.class.getName());
         Template acc2 = engine.getCurrentFocus().getTemplate(Account2.class.getName());
@@ -160,11 +172,13 @@ public class DeclareClassTest extends TestCase {
         System.out.println("\ntestDeclareClassInheritance3");
         Rete engine = new Rete();
         assertNotNull(engine);
+        int baseClasses = engine.getDefclasses().size();
+        int baseTemplates = engine.getCurrentFocus().getTemplateCount();
         engine.declareObject(Account.class);
         engine.declareObject(Account2.class,null,Account.class.getName());
         engine.declareObject(Account3.class,null,Account2.class.getName());
         int count = engine.getDefclasses().size();
-        assertEquals(3,count);
+        assertEquals(baseClasses + 3,count);
         System.out.println("number of Defclass is " + count);
         Template acctemp = engine.getCurrentFocus().getTemplate(Account.class.getName());
         Template acc3 = engine.getCurrentFocus().getTemplate(Account3.class.getName());

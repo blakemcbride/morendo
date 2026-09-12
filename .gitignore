@@ -1,0 +1,11 @@
+# Ant build output (bin/ keeps two historical .class files that are still tracked)
+/bin/
+/bin-dbg/
+/build/
+/test-reports/
+/jamocha.jar
+/morendo.jar
+
+# Written at runtime by log4j (log4j.properties) and the service package
+/logs/
+/cache/

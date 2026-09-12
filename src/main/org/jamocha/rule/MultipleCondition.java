@@ -73,8 +73,7 @@ public class MultipleCondition extends ObjectCondition {
 	}
 
 	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		CompilerProvider.getInstance(ruleCompiler);
-		return CompilerProvider.multipleConditionCompiler;
+		return CompilerProvider.getInstance(ruleCompiler).multipleConditionCompiler;
 	}
     
     public static MultipleCondition newMultipleCondition(ObjectCondition cond) {

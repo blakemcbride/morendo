@@ -2,7 +2,7 @@
     (woolfel.examples.model.Account
         (first ?first)
         (last ?last)
-        (age ?age&:(> ?age 30)
+        (age ?age&:(> ?age 30))
     )
 =>
     (printout t ?first " " ?last " is over 30" crlf)
@@ -16,11 +16,11 @@
     (woolfel.examples.model.AccountHobby
         (accountId ?accountId)
         (hobbyCode ?hobbyCode)
+        (rating ?hobbyRating)
     )
     (woolfel.examples.model.Hobby
         (hobbyCode ?hobbyCode)
         (name ?hobbyName)
-        (rating ?hobbyRating)
     )
 =>
     (printout t ?first " " ?last " has hobby " ?hobbyName crlf)

@@ -1,0 +1,8 @@
+== stats ==
+templates: 4
+rules: 0
+facts: 1
+next-node-id: 42
+== output ==
+first query results: f-2 (Node (id "1") (label "electric vehicle") (nodeType "concept") (reference "nil") (weight "nil") ) f-3 (Node (id "2") (label "autonomous vehicle") (nodeType "concept") (reference "nil") (weight "nil") ) 
+second query results: f-41 (Node (id "204") (label "RPG Game") (nodeType "project") (reference "ced18ba2-df2d-4cf6-bb43-5a715674c27c") (weight "nil") ) 

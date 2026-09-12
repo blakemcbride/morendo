@@ -1,0 +1,231 @@
+package org.jamocha.golden;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.junit.runner.RunWith;
+
+import org.jamocha.rete.Rete;
+
+import woolfel.examples.model.Account;
+import woolfel.examples.model.AccountHobby;
+import woolfel.examples.model.Hobby;
+
+/**
+ * Characterization ("golden master") tests for the rule engine.
+ *
+ * Each scenario loads one or more CLIPS files into a fresh engine with rule watching
+ * turned on, fires the agenda, and compares everything the engine printed plus a few
+ * working-memory and network statistics against the checked-in file
+ * src/test/resources/golden/&lt;scenario&gt;.txt.
+ *
+ * The tests must run from the repository root (all paths are relative to it).
+ *
+ * To regenerate the golden files after an intentional behaviour change:
+ *
+ *   java -Dgolden.update=true -cp "bin:lib/*" org.junit.runner.JUnitCore org.jamocha.golden.GoldenSampleTest
+ *
+ * then review the diff before committing it. Add -Dgolden.only=name1,name2 to restrict either
+ * mode to particular scenarios.
+ */
+@RunWith(org.junit.runners.AllTests.class)
+public class GoldenSampleTest {
+
+	static final Path GOLDEN_DIR = Paths.get("src", "test", "resources", "golden");
+	static final Path SCENARIO_DIR = Paths.get("src", "test", "resources", "scenarios");
+	static final boolean UPDATE = Boolean.getBoolean("golden.update");
+	/** Optional comma-separated list of scenario names to run (default: all). */
+	static final String ONLY = System.getProperty("golden.only", "");
+
+	/** Optional Java-side hooks for scenarios that need declared classes or asserted objects. */
+	interface Hook {
+		void apply(Rete engine) throws Exception;
+	}
+
+	static final class Scenario {
+		final String name;
+		final String[] files;
+		final Hook before;
+		final Hook after;
+
+		Scenario(String name, String[] files, Hook before, Hook after) {
+			this.name = name;
+			this.files = files;
+			this.before = before;
+			this.after = after;
+		}
+	}
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Golden samples");
+		List<String> only = ONLY.isEmpty() ? Collections.<String>emptyList() : Arrays.asList(ONLY.split(","));
+		for (Scenario scenario : scenarios()) {
+			if (only.isEmpty() || only.contains(scenario.name)) {
+				suite.addTest(new Case(scenario));
+			}
+		}
+		return suite;
+	}
+
+	static List<Scenario> scenarios() {
+		List<Scenario> list = new ArrayList<Scenario>();
+		for (int i = 1; i <= 5; i++) {
+			list.add(files("only_" + i, "samples/only/only_" + i + ".clp"));
+		}
+		list.add(files("exists_sample", "samples/exists/exists_sample.clp"));
+		for (int i = 2; i <= 15; i++) {
+			list.add(files("exists_sample" + i, "samples/exists/exists_sample" + i + ".clp"));
+		}
+		list.add(files("time_test_min_eq", "samples/time/test_min_eq.clp"));
+		list.add(files("time_test_second_eq", "samples/time/test_second_eq.clp"));
+		list.add(files("time_test_within_second", "samples/time/test_within_second.clp"));
+		list.add(files("defquery_run", "samples/defquery/run.clp"));
+		list.add(files("graphquery", SCENARIO_DIR.resolve("graphquery.clp").toString()));
+		list.add(files("molap", SCENARIO_DIR.resolve("molap.clp").toString()));
+		list.add(files("manners16", SCENARIO_DIR.resolve("manners16.clp").toString()));
+		list.add(new Scenario("ruleset_sample1", new String[] { "samples/ruleset/sample1.clp" },
+				new Hook() {
+					public void apply(Rete engine) {
+						engine.declareObject(Account.class);
+						engine.declareObject(AccountHobby.class);
+						engine.declareObject(Hobby.class);
+					}
+				},
+				new Hook() {
+					public void apply(Rete engine) throws Exception {
+						List<Object> objects = new ArrayList<Object>();
+						objects.add(account("1", "john", "doe", 35));
+						objects.add(account("2", "jane", "roe", 25));
+						objects.add(account("3", "sam", "poe", 31));
+						objects.add(accountHobby("1", "H1", 5));
+						objects.add(accountHobby("2", "H2", 3));
+						objects.add(accountHobby("3", "H1", 4));
+						objects.add(hobby("H1", "hiking"));
+						objects.add(hobby("H2", "chess"));
+						engine.assertObjects(objects);
+					}
+				}));
+		return list;
+	}
+
+	static Scenario files(String name, String... files) {
+		return new Scenario(name, files, null, null);
+	}
+
+	static Account account(String id, String first, String last, int age) {
+		Account a = new Account();
+		a.setAccountId(id);
+		a.setFirst(first);
+		a.setLast(last);
+		a.setAge(age);
+		return a;
+	}
+
+	static AccountHobby accountHobby(String accountId, String hobbyCode, int rating) {
+		AccountHobby h = new AccountHobby();
+		h.setAccountId(accountId);
+		h.setHobbyCode(hobbyCode);
+		h.setRating(rating);
+		return h;
+	}
+
+	static Hobby hobby(String code, String name) {
+		Hobby h = new Hobby();
+		h.setHobbyCode(code);
+		h.setName(name);
+		return h;
+	}
+
+	/** One scenario, run and compared as a single JUnit test named after the scenario. */
+	public static class Case extends TestCase {
+		private final Scenario scenario;
+
+		Case(Scenario scenario) {
+			super(scenario.name);
+			this.scenario = scenario;
+		}
+
+		@Override
+		protected void runTest() throws Throwable {
+			String actual = execute(scenario);
+			Path golden = GOLDEN_DIR.resolve(scenario.name + ".txt");
+			if (UPDATE) {
+				Files.createDirectories(golden.getParent());
+				Files.write(golden, actual.getBytes(StandardCharsets.UTF_8));
+				return;
+			}
+			assertTrue("missing golden file " + golden + "; generate it with -Dgolden.update=true",
+					Files.exists(golden));
+			String expected = new String(Files.readAllBytes(golden), StandardCharsets.UTF_8);
+			assertEquals("golden mismatch for " + scenario.name + " (" + golden
+					+ "); if the change is intended regenerate with -Dgolden.update=true", expected, actual);
+		}
+	}
+
+	static String execute(Scenario scenario) throws Exception {
+		Rete engine = new Rete();
+		StringWriter out = new StringWriter();
+		engine.addPrintWriter("golden", new PrintWriter(out));
+		engine.setWatch(Rete.WATCH_RULES);
+		try {
+			if (scenario.before != null) {
+				scenario.before.apply(engine);
+			}
+			for (String file : scenario.files) {
+				engine.loadRuleset(file);
+			}
+			if (scenario.after != null) {
+				scenario.after.apply(engine);
+			}
+			engine.fire();
+			return render(engine, out.toString());
+		} finally {
+			engine.close();
+		}
+	}
+
+	static String render(Rete engine, String output) {
+		// Which rules fired, and in what order, is captured by the "==> fire:" lines that
+		// (watch rules) writes to the output; Rete.getRulesFired() is not usable for this
+		// because fire() records the rule only after clearing the activation.
+		StringBuilder sb = new StringBuilder();
+		sb.append("== stats ==\n");
+		sb.append("templates: ").append(engine.getCurrentFocus().getTemplateCount()).append('\n');
+		sb.append("rules: ").append(engine.getCurrentFocus().getRuleCount()).append('\n');
+		sb.append("facts: ").append(engine.getAllFacts().size()).append('\n');
+		sb.append("next-node-id: ").append(engine.peakNextNodeId()).append('\n');
+		sb.append("== output ==\n");
+		sb.append(normalize(output));
+		if (sb.charAt(sb.length() - 1) != '\n') {
+			sb.append('\n');
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Strips the parts of the output that legitimately differ between runs: platform line
+	 * endings, the activation aggregate time (built from fact timestamps) and printed dates.
+	 */
+	static String normalize(String output) {
+		String s = output.replace("\r\n", "\n").replace('\r', '\n');
+		s = s.replaceAll("AggrTime--?\\d+", "AggrTime-*");
+		s = s.replaceAll("[A-Z][a-z]{2} [A-Z][a-z]{2} \\d{2} \\d{2}:\\d{2}:\\d{2} [A-Z]{2,5} \\d{4}", "<DATE>");
+		return s;
+	}
+
+	public static void main(String[] args) {
+		org.junit.runner.JUnitCore.main(new String[] { GoldenSampleTest.class.getName() });
+	}
+}

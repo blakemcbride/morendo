@@ -33,18 +33,21 @@ public class JavaObjectTest extends TestCase {
 		Rete engine = new Rete();
 		engine.declareObject(Account4.class);
 		engine.addPrintWriter("sysout", new java.io.PrintWriter(System.out));
-		engine.loadRuleset("./samples/java_example4.clp");
+		engine.loadRuleset("./samples/ruleset/java_example4.clp");
 		int rules = engine.getCurrentFocus().getRuleCount();
 		assertTrue(1 == rules);
 		Account4 acc = new Account4();
+		acc.setAccountId("acc1");
 		ArrayList objs = new ArrayList();
 		objs.add(acc);
 		try {
 			engine.assertObjects(objs);
 			int fired = engine.fire();
 			System.out.println("rules fired=" + fired);
+			assertEquals(1, fired);
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail(e.toString());
 		}
 	}
 }

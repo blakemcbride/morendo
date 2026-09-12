@@ -1,0 +1,8 @@
+== stats ==
+templates: 6
+rules: 1
+facts: 3
+next-node-id: 13
+== output ==
+==> fire: Activation: save_the_day, id-2 AggrTime-*
+save the day 

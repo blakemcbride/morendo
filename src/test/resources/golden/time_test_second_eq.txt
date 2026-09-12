@@ -1,0 +1,8 @@
+== stats ==
+templates: 4
+rules: 0
+facts: 1
+next-node-id: 6
+== output ==
+<DATE>
+<DATE> = <DATE>

@@ -1,0 +1,3 @@
+(woolfel.examples.model.Account (accountId "1001") (first "john") (last "doe") (age 35))
+(woolfel.examples.model.Account2 (accountId "1001") (first "john") (last "doe") (phoneline "555-0100"))
+(woolfel.examples.model.Account (accountId "1002") (first "jane") (last "roe") (age 28))
