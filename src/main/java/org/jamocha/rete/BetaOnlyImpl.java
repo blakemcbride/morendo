@@ -43,7 +43,7 @@ public class BetaOnlyImpl implements BetaMemory {
 	public BetaOnlyImpl(Index index, Rete engine) {
 		super();
 		this.index = index;
-		matches = (Map<Fact, ?>) engine.newLinkedHashmap(null);
+		matches = engine.newLinkedHashmap(null);
 	}
 
 	/**

@@ -41,7 +41,7 @@ public class BetaMemoryImpl implements BetaMemory {
 	public BetaMemoryImpl(Index index, Rete engine) {
 		super();
 		this.index = index;
-		matches = (Map<Fact, Fact>) engine.newMap();
+		matches = engine.newMap();
 	}
 
 	/**

@@ -88,7 +88,7 @@ public class CubeQueryBNode extends BaseJoin {
         EqHashIndex eqIndex = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
         Map<Object, Object> values = (Map<Object, Object>) leftmem.get(eqIndex);
         if (values == null) {
-        	values = (Map<Object, Object>) engine.newMap();
+        	values = engine.newMap();
         	leftmem.put(eqIndex, values);
         }
         values.put(linx, linx);

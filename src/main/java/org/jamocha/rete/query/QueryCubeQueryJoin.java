@@ -102,7 +102,7 @@ public class QueryCubeQueryJoin extends QueryBaseJoin {
         EqHashIndex eqIndex = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
         Map<Index,Index> values = (Map<Index, Index>) leftmem.get(eqIndex);
         if (values == null) {
-        	values = (Map<Index, Index>) engine.newMap();
+        	values = engine.newMap();
         	leftmem.put(eqIndex, values);
         }
         values.put(linx, linx);

@@ -490,7 +490,7 @@ public final class Defclass {
 		dcl.ISBEAN = this.ISBEAN;
 		dcl.PROPS = this.PROPS;
 		dcl.removeListener = this.removeListener;
-		dcl.methods = (Map<String, PropertyDescriptor>) engine.newLocalMap();
+		dcl.methods = engine.newLocalMap();
 		dcl.methods.putAll(this.methods);
 		return dcl;
 	}

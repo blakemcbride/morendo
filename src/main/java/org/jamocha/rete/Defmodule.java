@@ -88,9 +88,9 @@ public class Defmodule implements Module {
 	public Defmodule(String name, Rete engine) {
 		super();
 		this.name = name;
-		rules = (Map<String, Rule>) engine.newLocalMap();
-		deftemplates = (Map<String, Template>) engine.newLocalMap();
-		classToDeftemplates = (Map<String, Serializable>) engine.newLocalMap();
+		rules = engine.newLocalMap();
+		deftemplates = engine.newLocalMap();
+		classToDeftemplates = engine.newLocalMap();
 		// activations = new ArrayActivationList(strat);
 		activations = new LinkedActivationList();
 

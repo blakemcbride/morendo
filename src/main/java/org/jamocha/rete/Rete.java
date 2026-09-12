@@ -1698,31 +1698,31 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	}
 	
 	/// Map methods
-	public Map<?, ?> newMap() {
+	public <K, V> Map<K, V> newMap() {
 		return new HashMap<>();
 	}
 	
-	public Map<?, ?> newLocalMap() {
+	public <K, V> Map<K, V> newLocalMap() {
 		return new HashMap<>();
 	}
 	
-    public Map<?, ?> newAlphaMemoryMap(String name) {
+    public <K, V> Map<K, V> newAlphaMemoryMap(String name) {
         return new HashMap<>();
     }
     
-    public Map<?, ?> newLinkedHashmap(String name) {
+    public <K, V> Map<K, V> newLinkedHashmap(String name) {
         return new LinkedHashMap<>();
     }
     
-    public Map<?, ?> newBetaMemoryMap(String name) {
+    public <K, V> Map<K, V> newBetaMemoryMap(String name) {
         return new HashMap<>();
     }
     
-    public Map<?, ?> newTerminalMap() {
+    public <K, V> Map<K, V> newTerminalMap() {
     	return new HashMap<>();
     }
     
-    public Map<?, ?> newClusterableMap(String name) {
+    public <K, V> Map<K, V> newClusterableMap(String name) {
         return new HashMap<>();
     }
     

@@ -116,17 +116,17 @@ public class DefaultWM implements WorkingMemory {
     @SuppressWarnings({ "unchecked", "this-escape" }) // the compiler needs its working memory from the start
 	public DefaultWM(Rete engine, RootNode node, RuleCompiler compiler) {
         this.engine = engine;
-        alphaMemories = (Map<Object, Object>) engine.newMap();
-        betaLeftMemories = (Map<Object, Object>) engine.newMap();
-        betaRightMemories = (Map<Object, Object>) engine.newMap();
-        terminalMemories = (Map<Object, Object>) engine.newMap();
-        staticFacts = (Map<Object, Object>) engine.newLocalMap();
-        dynamicFacts = (Map<Object, Object>) engine.newLocalMap();
-        deffactMap = (Map<Object, Object>) engine.newLocalMap();
-        modules = (Map<Object, Module>) engine.newLocalMap();
-        cubes = (Map<Object, Object>) engine.newLocalMap();
-        queryRightMemories = (Map<Object, Object>) engine.newLocalMap();
-        queryLeftMemories = (Map<Object, Object>) engine.newLocalMap();
+        alphaMemories = engine.newMap();
+        betaLeftMemories = engine.newMap();
+        betaRightMemories = engine.newMap();
+        terminalMemories = engine.newMap();
+        staticFacts = engine.newLocalMap();
+        dynamicFacts = engine.newLocalMap();
+        deffactMap = engine.newLocalMap();
+        modules = engine.newLocalMap();
+        cubes = engine.newLocalMap();
+        queryRightMemories = engine.newLocalMap();
+        queryLeftMemories = engine.newLocalMap();
         this.defglobals = new DefglobalMap(engine);
         this.root = node;
         this.compiler = compiler;

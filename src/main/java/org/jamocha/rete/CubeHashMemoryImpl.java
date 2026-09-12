@@ -41,7 +41,7 @@ public class CubeHashMemoryImpl {
 	@SuppressWarnings("unchecked")
 	public CubeHashMemoryImpl(String name, Rete engine) {
 		super();
-		memory = (Map<HashIndex, Map<Object, Object>>) engine.newAlphaMemoryMap(name);
+		memory = engine.newAlphaMemoryMap(name);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class CubeHashMemoryImpl {
 	
 	@SuppressWarnings({ "unchecked" })
 	public int addNewPartialMatch(HashIndex index, Object data, Rete engine) {
-		Map<Object, Object> matches = (Map<Object, Object>) engine.newMap();
+		Map<Object, Object> matches = engine.newMap();
 		matches.put(data,data);
 		this.memory.put(index,matches);
         return 1;

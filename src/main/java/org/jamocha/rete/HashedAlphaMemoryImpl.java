@@ -31,7 +31,8 @@ public class HashedAlphaMemoryImpl {
      * 
      */
 
-    protected Map memory = null;
+    /** index -> (fact -> fact); HashedNeqAlphaMemory nests a second map level in the values. */
+    protected Map<HashIndex, Map<Object, Object>> memory = null;
     
     protected int counter = 0;
     
@@ -48,7 +49,7 @@ public class HashedAlphaMemoryImpl {
      * key.
 	 */
 	public int addPartialMatch(HashIndex index, Fact fact, Rete engine) {
-		Map matches = (Map)this.memory.get(index);
+		Map<Object, Object> matches = this.memory.get(index);
         int count = 0;
 		if (matches == null) {
 			count = this.addNewPartialMatch(index,fact,engine);
@@ -61,7 +62,7 @@ public class HashedAlphaMemoryImpl {
 	}
 	
 	public int addNewPartialMatch(HashIndex index, Fact fact, Rete engine) {
-		Map matches = engine.newMap();
+		Map<Object, Object> matches = engine.newMap();
 		matches.put(fact,fact);
 		this.memory.put(index,matches);
         return 1;
@@ -71,15 +72,14 @@ public class HashedAlphaMemoryImpl {
      * clear the memory.
 	 */
 	public void clear() {
-		Iterator itr = this.memory.values().iterator();
-		while (itr.hasNext()) {
-			((Map)itr.next()).clear();
+		for (Map<Object, Object> matches : this.memory.values()) {
+			matches.clear();
 		}
         this.memory.clear();
 	}
 
 	public boolean isPartialMatch(HashIndex index, Fact fact) {
-		Map list = (Map)this.memory.get(index);
+		Map<Object, Object> list = this.memory.get(index);
 		if (list != null) {
 			return list.containsKey(fact);
 		} else {
@@ -91,7 +91,7 @@ public class HashedAlphaMemoryImpl {
      * remove a partial match from the memory
 	 */
 	public int removePartialMatch(HashIndex index, Fact fact) {
-		Map list = (Map)this.memory.get(index);
+		Map<Object, Object> list = this.memory.get(index);
         if (list != null) {
             list.remove(fact);
             if (list.size() == 0) {
@@ -108,10 +108,8 @@ public class HashedAlphaMemoryImpl {
      * Return the number of memories of all hash buckets
      */
     public int size() {
-    	Iterator itr = this.memory.keySet().iterator();
     	int count = 0;
-    	while (itr.hasNext()) {
-    		Map matches = (Map)this.memory.get(itr.next());
+    	for (Map<Object, Object> matches : this.memory.values()) {
     		count += matches.size();
     	}
         return count;
@@ -124,8 +122,8 @@ public class HashedAlphaMemoryImpl {
     /**
      * Return an iterator of the values
      */
-    public Iterator iterator(HashIndex index) {
-    	Map list = (Map)this.memory.get(index);
+    public Iterator<Object> iterator(HashIndex index) {
+    	Map<Object, Object> list = this.memory.get(index);
 		if (list != null) {
 	        return list.values().iterator();
 		} else {
@@ -134,7 +132,7 @@ public class HashedAlphaMemoryImpl {
     }
     
     public int count(HashIndex index) {
-    	Map list = (Map)this.memory.get(index);
+    	Map<Object, Object> list = this.memory.get(index);
     	if (list != null) {
     		return list.size();
     	} else {
@@ -148,20 +146,17 @@ public class HashedAlphaMemoryImpl {
      */
     public Object[] iterateAll() {
     	Object[] all = new Object[this.counter];
-    	Iterator itr = this.memory.keySet().iterator();
     	int idx = 0;
-    	while (itr.hasNext()) {
-    		Map f = (Map)this.memory.get(itr.next());
-    		Iterator itr2 = f.values().iterator();
-    		while (itr2.hasNext()) {
-        		all[idx] = itr2.next();
+    	for (Map<Object, Object> f : this.memory.values()) {
+    		for (Object fact : f.values()) {
+        		all[idx] = fact;
         		idx++;
     		}
     	}
     	return all;
     }
     
-    public Iterator iterateIndexKeys() {
+    public Iterator<HashIndex> iterateIndexKeys() {
     	return this.memory.keySet().iterator();
     }
 }

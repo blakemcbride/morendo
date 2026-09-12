@@ -49,7 +49,7 @@ public class RootNode {
 	@SuppressWarnings("unchecked")
 	public RootNode(Rete engine) {
 		super();
-		inputNodes = (Map<Template, ObjectTypeNode>) engine.newMap();
+		inputNodes = engine.newMap();
 	}
     
     /**

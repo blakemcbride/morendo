@@ -59,12 +59,12 @@ public class Defcube implements Cube {
 	@SuppressWarnings("unchecked")
 	public Defcube(Rete engine) {
 		super();
-		bindings = (Map<String, Object>) engine.newLocalMap();
-		bindingsByName = (Map<String, Object>) engine.newLocalMap();
-		dataset = (Map<Index, Index>) engine.newMap();
-		dimensionMap = (Map<String, Object>) engine.newLocalMap();
-		dimensionMapByBinding = (Map<String, Object>) engine.newLocalMap();
-		measureMap = (Map<String, Object>) engine.newLocalMap();
+		bindings = engine.newLocalMap();
+		bindingsByName = engine.newLocalMap();
+		dataset = engine.newMap();
+		dimensionMap = engine.newLocalMap();
+		dimensionMapByBinding = engine.newLocalMap();
+		measureMap = engine.newLocalMap();
 	}
 	
 	public CubeDimension[] getDimensions() {

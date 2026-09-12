@@ -80,7 +80,7 @@ public class ObjectTypeNode extends BaseAlpha {
 	public ObjectTypeNode(int id, Template deftemp, Rete engine) {
 		super(id);
         this.deftemplate = deftemp;
-        nodeHashMap = (Map<CompositeIndex, AlphaNode>) engine.newLocalMap();
+        nodeHashMap = engine.newLocalMap();
 	}
 
     public Template getDeftemplate(){

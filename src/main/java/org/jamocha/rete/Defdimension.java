@@ -38,7 +38,7 @@ public class Defdimension implements CubeDimension {
 	@SuppressWarnings("unchecked")
 	public Defdimension(Rete engine) {
 		super();
-		tokenIndex = (Map<Object, Object>) engine.newLocalMap();
+		tokenIndex = engine.newLocalMap();
 	}
 	
 	public String getName() {
@@ -100,7 +100,7 @@ public class Defdimension implements CubeDimension {
 			Object key = index.getFacts()[this.binding.leftrow].getSlotValue(this.binding.leftIndex);
 			Map<Object, Object> value = (Map<Object, Object>)this.tokenIndex.get(key);
 			if (value == null) {
-				value = (Map<Object, Object>) engine.newLocalMap();
+				value = engine.newLocalMap();
 				this.tokenIndex.put(key, value);
 			}
 			value.put(index, index);
@@ -109,7 +109,7 @@ public class Defdimension implements CubeDimension {
 			Object key = index.getFacts()[this.binding.leftrow].getSlotValue(this.binding.leftIndex);
 			Map<Object, Object> value = (Map<Object, Object>)this.tokenIndex.get(key);
 			if (value == null) {
-				value = (Map<Object, Object>) engine.newLocalMap();
+				value = engine.newLocalMap();
 				this.tokenIndex.put(key, value);
 			}
 			value.put(index, index);

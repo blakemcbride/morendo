@@ -40,7 +40,7 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
     @SuppressWarnings("unchecked")
 	public TemporalIntervalNode(int id, Rete engine) {
         super(id);
-        partialMatches = (Map<Object, Object>) engine.newLinkedHashmap(String.valueOf(id));
+        partialMatches = engine.newLinkedHashmap(String.valueOf(id));
         this.lastTime = System.currentTimeMillis();
         this.nextTime = lastTime + interval;
     }

@@ -66,7 +66,7 @@ public class TemporalHashedAlphaMem {
 	@SuppressWarnings("unchecked")
 	public TemporalHashedAlphaMem(String name, Rete engine) {
 		super();
-		memory = (Map<HashIndex, Map<Object, Object>>) engine.newLinkedHashmap(name);
+		memory = engine.newLinkedHashmap(name);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class TemporalHashedAlphaMem {
 	
 	@SuppressWarnings("unchecked")
 	public void addNewPartialMatch(HashIndex index, Fact fact, Rete engine) {
-		Map<Object, Object> matches = (Map<Object, Object>) engine.newMap();
+		Map<Object, Object> matches = engine.newMap();
 		matches.put(fact,fact);
 		this.memory.put(index,matches);
 	}

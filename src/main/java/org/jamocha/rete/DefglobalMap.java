@@ -40,7 +40,7 @@ public class DefglobalMap {
 	@SuppressWarnings("unchecked")
 	public DefglobalMap(Rete engine) {
 		super();
-		variables = (Map<String, Object>) engine.newMap();
+		variables = engine.newMap();
 	}
 
 	/**
