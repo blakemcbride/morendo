@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.jamocha.rete.Rete;
 import org.jamocha.service.RuleApplication;

@@ -332,11 +332,11 @@ public class Tasks {
 		// runtime
 		dep.add(LIBS, MAVEN + "org/apache/logging/log4j/log4j-api/2.26.1/log4j-api-2.26.1.jar");
 		dep.add(LIBS, MAVEN + "org/apache/logging/log4j/log4j-core/2.26.1/log4j-core-2.26.1.jar");
-		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-core/2.12.3/jackson-core-2.12.3.jar");
-		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-databind/2.12.3/jackson-databind-2.12.3.jar");
-		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-annotations/2.12.3/jackson-annotations-2.12.3.jar");
-		dep.add(LIBS, MAVEN + "javax/jms/jms-api/1.1-rev-1/jms-api-1.1-rev-1.jar");
-		dep.add(LIBS, MAVEN + "javax/servlet/servlet-api/2.5/servlet-api-2.5.jar");
+		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-core/2.22.2/jackson-core-2.22.2.jar");
+		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-databind/2.22.2/jackson-databind-2.22.2.jar");
+		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar");
+		dep.add(LIBS, MAVEN + "jakarta/jms/jakarta.jms-api/3.1.0/jakarta.jms-api-3.1.0.jar");
+		dep.add(LIBS, MAVEN + "jakarta/servlet/jakarta.servlet-api/6.1.0/jakarta.servlet-api-6.1.0.jar");
 		// tests only; dist() leaves it out of the distribution
 		dep.add(LIBS, MAVEN + "junit/junit/4.1/" + JUNIT);
 		return dep;

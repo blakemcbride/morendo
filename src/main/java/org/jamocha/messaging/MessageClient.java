@@ -18,7 +18,7 @@ package org.jamocha.messaging;
 
 import java.io.Serializable;
 
-import javax.jms.MessageListener;
+import jakarta.jms.MessageListener;
 
 import org.jamocha.rete.Rete;
 

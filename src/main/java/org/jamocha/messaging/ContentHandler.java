@@ -49,6 +49,6 @@ public interface ContentHandler extends Serializable {
 	 * @param msg
 	 * @param engine
 	 */
-	void processMessage(javax.jms.Message msg, Rete engine, MessageClient client);
+	void processMessage(jakarta.jms.Message msg, Rete engine, MessageClient client);
 
 }
