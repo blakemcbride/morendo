@@ -33,13 +33,6 @@ public class QueryOrAlphaNode extends QueryBaseAlphaCondition {
 
     /** */
 
-    /**
-     * The useCount is used to keep track of how many times an Alpha node is shared. This is needed
-     * so that we can dynamically remove a rule at run time and remove the node from the network. If
-     * we didn't keep count, it would be harder to figure out if we can remove the node.
-     */
-    protected int useCount = 0;
-
     /** */
     public QueryOrAlphaNode(int id) {
         super(id);

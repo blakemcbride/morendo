@@ -27,9 +27,9 @@ import java.util.HashMap;
  * @author woolfel
  */
 public class Strategies {
-    public static Strategy DEPTH = new DepthStrategy();
-    public static Strategy BREADTH = new BreadthStrategy();
-    public static Strategy RECENCY = new RecencyStrategy();
+    public static final Strategy DEPTH = new DepthStrategy();
+    public static final Strategy BREADTH = new BreadthStrategy();
+    public static final Strategy RECENCY = new RecencyStrategy();
     private static HashMap<String, Strategy> registry = new HashMap<>();
 
     static {

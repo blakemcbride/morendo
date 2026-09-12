@@ -195,7 +195,7 @@ public final class PredicateConstraint implements Constraint {
                     + Constants.LINEBREAK;
         } else {
             StringBuilder buf = new StringBuilder();
-            if (this.parameters != null & this.parameters.size() > 0) {
+            if (this.parameters != null && this.parameters.size() > 0) {
                 buf.append("    (" + this.name + " ?" + this.varName + "&:(" + function + " ");
                 for (int idx = 0; idx < this.parameters.size(); idx++) {
                     Parameter p = (Parameter) parameters.get(idx);

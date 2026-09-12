@@ -22,8 +22,8 @@ public final class JMiniRadarShapeContainer extends JShapeContainer
     /** */
     protected JZoomableShapeContainer masterShapeContainer;
 
-    protected int offsetX;
-    protected int offsetY;
+    protected int viewportX;
+    protected int viewportY;
     protected int normalizedFontHeight; // that is the Font-Height in pixel
 
     // which should be used normalized by
@@ -33,7 +33,7 @@ public final class JMiniRadarShapeContainer extends JShapeContainer
         super();
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
-        offsetX = offsetY = 0;
+        viewportX = viewportY = 0;
     }
 
     /**
@@ -61,8 +61,8 @@ public final class JMiniRadarShapeContainer extends JShapeContainer
         double factor = Math.min(factorX, factorY);
         int rectwidth = (int) (masterShapeContainer.getWidth() * factor / zoomFactor) + 1;
         int rectheight = (int) (masterShapeContainer.getHeight() * factor / zoomFactor) + 1;
-        int rectx = (int) (offsetX * factor);
-        int recty = (int) (offsetY * factor);
+        int rectx = (int) (viewportX * factor);
+        int recty = (int) (viewportY * factor);
         g.fillRect(rectx, recty, rectwidth, rectheight);
     }
 
@@ -164,8 +164,8 @@ public final class JMiniRadarShapeContainer extends JShapeContainer
         if (y1 < 0) y1 = 0;
         masterShapeContainer.setOffsetX(x1);
         masterShapeContainer.setOffsetY(y1);
-        offsetX = x1;
-        offsetY = y1;
+        viewportX = x1;
+        viewportY = y1;
         masterShapeContainer.repaint();
         this.repaint();
     }
@@ -175,25 +175,25 @@ public final class JMiniRadarShapeContainer extends JShapeContainer
         double zoomFactor = masterShapeContainer.getZoomFactor();
         int offsetXmax = graphwidth + 10 - (int) (masterShapeContainer.getWidth() / zoomFactor);
         int offsetYmax = graphheight + 10 - (int) (masterShapeContainer.getHeight() / zoomFactor);
-        if (offsetX > offsetXmax) {
-            offsetX = offsetXmax;
+        if (viewportX > offsetXmax) {
+            viewportX = offsetXmax;
             weHadToChangeOffset = true;
         }
-        if (offsetY > offsetYmax) {
-            offsetY = offsetYmax;
+        if (viewportY > offsetYmax) {
+            viewportY = offsetYmax;
             weHadToChangeOffset = true;
         }
-        if (offsetX < 0) {
-            offsetX = 0;
+        if (viewportX < 0) {
+            viewportX = 0;
             weHadToChangeOffset = true;
         }
-        if (offsetY < 0) {
-            offsetY = 0;
+        if (viewportY < 0) {
+            viewportY = 0;
             weHadToChangeOffset = true;
         }
         if (weHadToChangeOffset) {
-            masterShapeContainer.setOffsetX(offsetX);
-            masterShapeContainer.setOffsetY(offsetY);
+            masterShapeContainer.setOffsetX(viewportX);
+            masterShapeContainer.setOffsetY(viewportY);
         }
 
         // calculate good font size

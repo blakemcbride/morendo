@@ -87,8 +87,10 @@ public final class Index implements HashIndex {
             return true;
         }
         // return Arrays.equals(this.facts, ((Index) val).facts);
+        if (!(val instanceof Index otherIndex)) {
+            return false;
+        }
         boolean equal = false;
-        Index otherIndex = (Index) val;
         Fact[] otherFact = otherIndex.facts;
         if (this.facts.length == otherIndex.facts.length) {
             equal = true;

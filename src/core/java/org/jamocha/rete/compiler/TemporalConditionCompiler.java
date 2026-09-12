@@ -115,9 +115,6 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
             }
         }
 
-        if (!cond.getNegated()) {
-            position++;
-        }
         if (switchMatch) {
             rule.setRememberMatch(true);
         }

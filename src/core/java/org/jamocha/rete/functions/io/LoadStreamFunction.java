@@ -62,14 +62,17 @@ public class LoadStreamFunction implements Function {
         if (params != null && params.length > 0) {
             for (int idx = 0; idx < params.length; idx++) {
                 String input = null;
-                if (params[idx] instanceof ValueParam) {
-                    input = ((ValueParam) params[idx]).getStringValue();
-                } else if (params[idx] instanceof BoundParam) {
-
+                if (params[idx] instanceof ValueParam vp) {
+                    input = vp.getStringValue();
+                } else if (params[idx] instanceof BoundParam bp) {
+                    Object value = bp.getValue(engine, ValueType.STRING);
+                    input = value == null ? null : value.toString();
                 }
-                if (input.indexOf('\\') > -1) {
-                    input.replaceAll("\\", "/");
+                if (input == null) {
+                    loaded = Boolean.FALSE;
+                    continue;
                 }
+                input = input.replace('\\', '/');
                 // check to see if the path is an absolute windows path
                 // or absolute unix path
                 if (input.indexOf(":") < 0 && !input.startsWith("/") && !input.startsWith("./")) {

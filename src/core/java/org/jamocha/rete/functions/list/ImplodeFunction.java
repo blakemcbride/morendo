@@ -45,7 +45,7 @@ public class ImplodeFunction implements Function {
                     retStr = retStr.concat(r[indx].toString().trim().concat(" "));
                 }
             } else {
-                retStr.concat(list.toString().trim().concat(" "));
+                retStr = retStr.concat(list.toString().trim().concat(" "));
             }
         }
         DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING, retStr.trim());

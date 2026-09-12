@@ -18,7 +18,6 @@ package org.jamocha.rete.query;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Fact;
-import org.jamocha.rete.ObjectTypeNode;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.RootNode;
 import org.jamocha.rete.Template;
@@ -175,10 +174,8 @@ public class QueryRootNode {
             Fact fact, Template template, Rete engine, WorkingMemory mem) throws RetractException {}
 
     public synchronized void clear() {
-        Iterator<?> itr = this.queryObjTypeNodeMap.values().iterator();
-        while (itr.hasNext()) {
-            ObjectTypeNode otn = (ObjectTypeNode) itr.next();
-            otn.clearSuccessors();
+        for (QueryObjTypeNode otn : this.queryObjTypeNodeMap.values()) {
+            otn.removeAllSuccessors();
         }
         this.queryObjTypeNodeMap.clear();
     }

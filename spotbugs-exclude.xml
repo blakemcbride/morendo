@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- SpotBugs filter for ./bld spotbugs. The generated CLIPS parser is not ours to fix. -->
+<!-- SpotBugs filter for ./bld spotbugs. -->
 <FindBugsFilter>
+  <!-- The generated CLIPS parser is not ours to fix. -->
   <Match>
     <Class name="~org\.jamocha\.parser\.clips\.(CLIPSParser.*|ParseException|SimpleCharStream|Token|TokenMgrError)"/>
+  </Match>
+  <!-- The engine's clone() methods are deliberate deep copies built with constructors and
+       setters (bindings, slots, parameters, activations, rules); none of them goes through
+       Object.clone(), so the Cloneable idiom does not apply. -->
+  <Match>
+    <Bug pattern="CN_IDIOM_NO_SUPER_CALL,CN_IMPLEMENTS_CLONE_BUT_NOT_CLONEABLE"/>
+  </Match>
+  <!-- (gc) exists to force a collection from the shell; that is its whole purpose. -->
+  <Match>
+    <Class name="org.jamocha.rete.functions.memory.GarbageCollectFunction"/>
+    <Bug pattern="DM_GC"/>
   </Match>
 </FindBugsFilter>

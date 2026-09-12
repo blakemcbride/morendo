@@ -446,7 +446,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
             } else {
                 // we need to notify listeners the function wasn't found
                 CompileEvent ce = new CompileEvent(this, CompileEvent.Kind.FUNCTION_NOT_FOUND);
-                ce.setMessage(FUNCTION_NOT_FOUND + " " + f.getReturnType()); // $NON-NLS-1$
+                ce.setMessage(FUNCTION_NOT_FOUND + " " + cnstr.getFunctionName());
                 this.notifyListener(ce);
             }
         }

@@ -22,5 +22,11 @@ jobs:
           path: libs
           key: libs-${{ hashFiles('builder/Tasks.java') }}
 
+      - name: Check formatting (google-java-format, AOSP style)
+        run: ./bld format-check
+
       - name: Build and run the test suite
         run: ./bld test
+
+      - name: SpotBugs (fails on high-priority findings)
+        run: ./bld spotbugs

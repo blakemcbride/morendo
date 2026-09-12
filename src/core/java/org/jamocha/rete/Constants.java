@@ -72,17 +72,17 @@ public class Constants {
     public static final String LINEBREAK = System.getProperty("line.separator");
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     public static final String CRLF = "crlf";
-    public static String SHELL_PROMPT = "Morendo> ";
-    public static String DEFAULT_OUTPUT = "t";
-    public static String VERSION =
+    public static final String SHELL_PROMPT = "Morendo> ";
+    public static final String DEFAULT_OUTPUT = "t";
+    public static final String VERSION =
             "2.0.0-SNAPSHOT"; // the single source of the version; builder/Tasks.java reads it
-    public static String INITIAL_FACT = "_initialFact";
-    public static String COUNT_FACT = "_countFact";
-    public static String COUNT_SLOT = "count";
-    public static String COUNT_VALUE = "value";
-    public static String PROJECT_MESSAGE =
+    public static final String INITIAL_FACT = "_initialFact";
+    public static final String COUNT_FACT = "_countFact";
+    public static final String COUNT_SLOT = "count";
+    public static final String COUNT_VALUE = "value";
+    public static final String PROJECT_MESSAGE =
             "Copyright Jamocha Project http://sourceforge.net/projects/jamocha";
-    public static String SHELL_MESSAGE = "Morendo Version " + VERSION;
+    public static final String SHELL_MESSAGE = "Morendo Version " + VERSION;
 
     /// --------------- working directory ----------------- ///
     public static final String WORKING_DIRECTORY = "./working_directory";

@@ -39,10 +39,6 @@ import org.jamocha.rule.Defquery;
 public class QueryParameterNode extends QueryBaseAlphaCondition {
 
     /** */
-
-    /** The use of Slot(s) is similar to CLIPS design */
-    protected Slot slot = null;
-
     protected CompositeIndex compIndex = null;
 
     protected String parameterName = null;

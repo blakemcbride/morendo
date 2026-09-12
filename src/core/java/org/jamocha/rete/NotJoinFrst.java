@@ -151,9 +151,7 @@ public class NotJoinFrst extends BaseJoin {
      * @param factInstance
      * @param engine
      */
-    @SuppressWarnings("unused")
     public void retractRight(Fact rfact, Rete engine, WorkingMemory mem) throws RetractException {
-        Index linx = new Index(new Fact[0]);
         Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         if (rightmem.remove(rfact) != null) {
             // now we see the left memory matched and remove it also

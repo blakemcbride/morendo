@@ -494,9 +494,8 @@ public class Tasks {
                     new java.util.ArrayList<>(
                             Arrays.asList(
                                     "java",
-                                    "-cp",
-                                    SPOTBUGS_HOME + "/lib/*",
-                                    "edu.umd.cs.findbugs.LaunchAppMain",
+                                    "-jar",
+                                    SPOTBUGS_HOME + "/lib/spotbugs.jar",
                                     "-textui",
                                     "-effort:default",
                                     "-low",
