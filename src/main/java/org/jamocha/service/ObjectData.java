@@ -17,6 +17,7 @@ import org.jamocha.rete.exception.RetractException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jamocha.rete.util.IOUtilities;
 
 public class ObjectData implements InitialData {
 
@@ -125,7 +126,7 @@ public class ObjectData implements InitialData {
 		try {
 			if (url.startsWith("http://")) {
 				try {
-					URL urlObject = new URL(url);
+					URL urlObject = IOUtilities.toURL(url);
 					InputStream input = urlObject.openStream();
 					List<Object> data = mapper.readValue(input, List.class);
 					return data;

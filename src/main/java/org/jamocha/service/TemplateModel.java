@@ -9,6 +9,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.functions.io.BatchFunction;
+import org.jamocha.rete.util.IOUtilities;
 
 /**
  * Template model defines the deftemplates for a rule application
@@ -51,7 +52,7 @@ public class TemplateModel implements Model {
 
 	public URL getURLObject() {
 		try {
-			return new URL(this.URL);
+			return IOUtilities.toURL(this.URL);
 		} catch (MalformedURLException e) {
 			return null;
 		}

@@ -2,6 +2,7 @@ package org.jamocha.service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.jamocha.rete.util.IOUtilities;
 
 /**
  * FunctionPackage encapsulates one or more functions and morendo
@@ -46,7 +47,7 @@ public class FunctionPackage {
 	
 	public URL getURLObject() {
 		try {
-			return new URL(this.URL);
+			return IOUtilities.toURL(this.URL);
 		} catch (MalformedURLException e) {
 			return null;
 		}

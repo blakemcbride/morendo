@@ -16,13 +16,10 @@
  */
 package org.jamocha.rete.functions.io;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,6 +37,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.AssertException;
+import org.jamocha.rete.util.IOUtilities;
 
 
 /**
@@ -136,13 +134,7 @@ public class LoadFactsFunction implements Function, Serializable {
 	public static InputStream getInputStream(String input) throws
 	FileNotFoundException, IOException {
         InputStream inStream = null;
-        if (input.matches("^[a-zA-Z]+://.*")) {
-            URL url = new URL(input);
-            inStream = url.openConnection().getInputStream();
-            // Otherwise treat it as normal file on the Filesystem
-        } else {
-            inStream = new FileInputStream(new File(input));
-        }
+        inStream = IOUtilities.open(input);
         return inStream;
 	}
 	

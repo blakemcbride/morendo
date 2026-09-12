@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jamocha.rete.Rete;
+import org.jamocha.rete.util.IOUtilities;
 
 /**
  * Schema model is defined by XML Schema. Concrete classes will need
@@ -30,7 +31,7 @@ public class SchemaModel implements Model {
 
 	public URL getURLObject() {
 		try {
-			return new URL(this.URL);
+			return IOUtilities.toURL(this.URL);
 		} catch (MalformedURLException e) {
 			return null;
 		}

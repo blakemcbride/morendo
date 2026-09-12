@@ -19,6 +19,7 @@ import org.jamocha.rete.exception.RetractException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jamocha.rete.util.IOUtilities;
 /**
  * 
  * JSON data expects an array of objects that match the name. If you have multiple types of initial
@@ -137,7 +138,7 @@ public class JSONData<T> implements InitialData {
 		try {
 			if (url.startsWith("http://")) {
 				try {
-					URL urlObject = new URL(url);
+					URL urlObject = IOUtilities.toURL(url);
 					InputStream input = urlObject.openStream();
 					List<Object> data = (List<Object>) mapper.readValue(input, new TypeReference<List<T>>(){});
 					return data;

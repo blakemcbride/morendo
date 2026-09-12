@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jamocha.rete.Defclass;
 import org.jamocha.rete.Rete;
+import org.jamocha.rete.util.IOUtilities;
 
 /**
  * Object model is only for compiled jar files containing
@@ -42,7 +43,7 @@ public class ObjectModel implements Model {
 
 	public URL getURLObject() {
 		try {
-			return new URL(this.URL);
+			return IOUtilities.toURL(this.URL);
 		} catch (MalformedURLException e) {
 			return null;
 		}

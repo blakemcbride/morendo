@@ -16,14 +16,11 @@
  */
 package org.jamocha.rete.functions.io;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.List;
 
 import org.jamocha.rete.BoundParam;
@@ -36,6 +33,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.util.IOUtilities;
 
 
 /**
@@ -75,15 +73,7 @@ public class BatchStaticObjectsFunction implements Function, Serializable {
 				try {
                     String input = params[idx].getStringValue();
                     InputStream inStream;
-                    // Check for a protocol indicator at the beginning of the
-                    // String. If we have one use a URL.
-                    if (input.matches("^[a-zA-Z]+://.*")) {
-                        URL url = new URL(input);
-                        inStream = url.openConnection().getInputStream();
-                        // Otherwise treat it as normal file on the Filesystem
-                    } else {
-                        inStream = new FileInputStream(new File(input));
-                    }
+                    inStream = IOUtilities.open(input);
                     this.parse(engine, inStream, rv);
                     inStream.close();
                 } catch (FileNotFoundException e) {
