@@ -78,8 +78,8 @@ public class DuplicateFunction implements RuleFunction {
                     SlotParam[] sp = new SlotParam[params.length - 1];
                     for (int idx=0; idx < sp.length; idx++) {
                     	Parameter p = params[idx + 1];
-                    	if (p instanceof SlotParam) {
-                    		sp[idx] = (SlotParam)p;
+                    	if (p instanceof SlotParam slotParam) {
+                    		sp[idx] = slotParam;
                     	}
                     }
                     clone.updateSlots(engine, 
@@ -141,8 +141,7 @@ public class DuplicateFunction implements RuleFunction {
     protected void updateObject(Rete engine, Deffact fact, Defclass defclass, Object instance, Parameter[] parameters) {
 		for (int idx = 1; idx < parameters.length; idx++) {
 			Parameter p = parameters[idx];
-			if (p instanceof SlotParam) {
-				SlotParam sp = (SlotParam)p;
+			if (p instanceof SlotParam sp) {
 				String field = sp.getSlotValue().getName();
 				Object value = sp.getSlotValue().getValue();
 				int col = fact.getDeftemplate().getSlot(field).getId();

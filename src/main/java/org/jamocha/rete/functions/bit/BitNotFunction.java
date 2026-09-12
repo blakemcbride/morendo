@@ -28,8 +28,8 @@ public class BitNotFunction implements Function {
 				value = ((ValueParam)params[0]).getIntValue();
 			} else if (params[0] instanceof BoundParam) {
 				Object v = ((BoundParam)params[0]).getValue(engine, Constants.OBJECT_TYPE);
-				if (v instanceof Number) {
-					value = ((Number)v).intValue();
+				if (v instanceof Number number) {
+					value = (number).intValue();
 				}
 			}
 			value = ~value;

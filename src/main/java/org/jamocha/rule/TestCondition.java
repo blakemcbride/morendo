@@ -106,8 +106,8 @@ public class TestCondition implements Condition {
      * it.
      */
     public void addNode(BaseNode node) {
-        if (node instanceof TestNode) {
-            this.node = (TestNode)node;
+        if (node instanceof TestNode testNode) {
+            this.node = testNode;
         }
     }
     
@@ -165,8 +165,8 @@ public class TestCondition implements Condition {
     	StringBuilder buf = new StringBuilder();
     	String pad = "  ";
     	buf.append(pad + "(test (" + this.func.getName());
-    	if (this.func instanceof ShellFunction) {
-        	Parameter[] p = ((ShellFunction)this.func).getParameters();
+    	if (this.func instanceof ShellFunction shellFunction) {
+        	Parameter[] p = (shellFunction).getParameters();
         	for (int idx=0; idx < p.length; idx++) {
         		if (p[idx] instanceof BoundParam) {
             		buf.append(" ?" + ((BoundParam)p[idx]).getVariableName() );

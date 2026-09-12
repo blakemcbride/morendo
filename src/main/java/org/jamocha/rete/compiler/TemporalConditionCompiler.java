@@ -87,20 +87,20 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
             Constraint[] constrs = cond.getConstraints();
             for (int idx=0; idx < constrs.length; idx++) {
                 Constraint cnstr = constrs[idx];
-                if (cnstr instanceof LiteralConstraint) {
+                if (cnstr instanceof LiteralConstraint literalConstraint) {
                     current = 
-                    	ruleCompiler.compileConstraint((LiteralConstraint)cnstr, templ, rule);
-                } else if (cnstr instanceof AndLiteralConstraint) {
+                    	ruleCompiler.compileConstraint(literalConstraint, templ, rule);
+                } else if (cnstr instanceof AndLiteralConstraint andLiteralConstraint) {
                     current = 
-                    	ruleCompiler.compileConstraint((AndLiteralConstraint)cnstr, templ, rule);
-                } else if (cnstr instanceof OrLiteralConstraint) {
+                    	ruleCompiler.compileConstraint(andLiteralConstraint, templ, rule);
+                } else if (cnstr instanceof OrLiteralConstraint orLiteralConstraint) {
                     current = 
-                    	ruleCompiler.compileConstraint((OrLiteralConstraint)cnstr, templ, rule);
-                } else if (cnstr instanceof BoundConstraint) {
-                	ruleCompiler.compileConstraint((BoundConstraint)cnstr, templ, rule, position);
-                } else if (cnstr instanceof PredicateConstraint) {
+                    	ruleCompiler.compileConstraint(orLiteralConstraint, templ, rule);
+                } else if (cnstr instanceof BoundConstraint boundConstraint) {
+                	ruleCompiler.compileConstraint(boundConstraint, templ, rule, position);
+                } else if (cnstr instanceof PredicateConstraint predicateConstraint) {
                     current = 
-                    	ruleCompiler.compileConstraint((PredicateConstraint)cnstr, templ, rule, position);
+                    	ruleCompiler.compileConstraint(predicateConstraint, templ, rule, position);
                 }
                 // we add the node to the previous
                 if (first == null) {

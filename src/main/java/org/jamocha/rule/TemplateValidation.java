@@ -80,8 +80,7 @@ public class TemplateValidation implements Analysis {
 		Condition[] cnds = rule.getConditions();
 		for (int idx=0; idx < cnds.length; idx++) {
 			Condition cnd = cnds[idx];
-			if (cnd instanceof ObjectCondition) {
-				ObjectCondition oc = (ObjectCondition)cnd;
+			if (cnd instanceof ObjectCondition oc) {
 				Template dft = oc.getTemplate();
 				if (dft != null) {
 					Constraint[] cntrs = oc.getConstraints();
@@ -94,8 +93,7 @@ public class TemplateValidation implements Analysis {
 										cons.getName() + " slot does not exist.");
 								result = Analysis.VALIDATION_FAILED;
 							}
-						} else if (cons instanceof BoundConstraint) {
-							BoundConstraint bc = (BoundConstraint)cons;
+						} else if (cons instanceof BoundConstraint bc) {
 							if (!bc.isObjectBinding) {
 								BaseSlot sl = dft.getSlot(bc.getName());
 								if (sl == null) {
@@ -104,8 +102,7 @@ public class TemplateValidation implements Analysis {
 									result = Analysis.VALIDATION_FAILED;
 								}
 							}
-						} else if (cons instanceof PredicateConstraint) {
-                            PredicateConstraint pc = (PredicateConstraint)cons;
+						} else if (cons instanceof PredicateConstraint pc) {
                             Function f = engine.findFunction(pc.getFunctionName());
                             if (f == null) {
                                 addInvalidFunctionError(rule.getName() + "::" + pc.getFunctionName());
@@ -117,8 +114,7 @@ public class TemplateValidation implements Analysis {
 							oc.getTemplateName() + " template does not exist.");
 					result = Analysis.VALIDATION_FAILED;
 				}
-			} else if (cnd instanceof TestCondition) {
-                TestCondition tc = (TestCondition)cnd;
+			} else if (cnd instanceof TestCondition tc) {
                 if (tc.getFunction() == null) {
                     this.error.addMessage(NO_FUNCTION);
                     result = Analysis.VALIDATION_FAILED;
@@ -137,8 +133,7 @@ public class TemplateValidation implements Analysis {
         Action[] acts = rule.getActions();
         for (int idx=0; idx < acts.length; idx++) {
             Action act = acts[idx];
-            if (act instanceof FunctionAction) {
-                FunctionAction fa = (FunctionAction)act;
+            if (act instanceof FunctionAction fa) {
                 if (engine.findFunction(fa.getFunctionName()) == null) {
                     addInvalidFunctionError(fa.getFunctionName());
                     result = Analysis.VALIDATION_FAILED;

@@ -100,8 +100,8 @@ public class CubeFact implements Fact {
 
 	public Object getSlotValue(int id) {
 		BaseSlot s = this.slots[id];
-		if (s instanceof DimensionSlot) {
-			return ((DimensionSlot)s).getDimension();
+		if (s instanceof DimensionSlot dimensionSlot) {
+			return (dimensionSlot).getDimension();
 		} else {
 			return ((MeasureSlot)s).getDefmeasure();
 		}
@@ -158,8 +158,8 @@ public class CubeFact implements Fact {
 	 * compare the slots like deffact.
 	 */
 	public boolean slotEquals(Fact fact) {
-		if (fact instanceof CubeFact) {
-			return ((CubeFact)fact).getObjectInstance() == this.objInstance;
+		if (fact instanceof CubeFact cubeFact) {
+			return (cubeFact).getObjectInstance() == this.objInstance;
 		} else {
 			return false;
 		}

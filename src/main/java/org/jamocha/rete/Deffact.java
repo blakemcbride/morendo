@@ -267,8 +267,7 @@ public class Deffact implements Fact {
 	public void updateSlots(Rete engine, BaseSlot[] updates) {
 		for (int idx = 0; idx < updates.length; idx++) {
 			BaseSlot uslot = updates[idx];
-			if (uslot.value instanceof BoundParam) {
-				BoundParam bp = (BoundParam) uslot.value;
+			if (uslot.value instanceof BoundParam bp) {
 				Object val = engine.getBinding(bp.getVariableName());
 				this.slots[uslot.getId()].value = val;
 			} else {
@@ -353,8 +352,8 @@ public class Deffact implements Fact {
                 Object[] mval = new Object[ms.getValue().length];
                 for (int mdx=0; mdx < mval.length; mdx++) {
                     Object v = sval[mdx];
-                    if (v instanceof BoundParam) {
-                        mval[mdx] = ((BoundParam)v).getValue();
+                    if (v instanceof BoundParam boundParam) {
+                        mval[mdx] = (boundParam).getValue();
                     } else {
                         mval[mdx] = v;
                     }

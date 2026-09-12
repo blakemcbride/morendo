@@ -174,8 +174,8 @@ public class MultiplePredJoin extends BaseJoin {
         // we iterate over the binds and evaluate the facts
         for (int idx = 0; idx < this.binds.length; idx++) {
             Binding bnd = binds[idx];
-            if (bnd instanceof Binding2) {
-                eval = ((Binding2)bnd).evaluate(leftlist, right, engine);
+            if (bnd instanceof Binding2 binding2) {
+                eval = (binding2).evaluate(leftlist, right, engine);
             } else {
                 eval = bnd.evaluate(leftlist, right);
             }

@@ -81,8 +81,7 @@ public class LinkedActivationList extends AbstractActivationList {
 	}
 
 	public void addActivation(Activation act) {
-		if (act instanceof LinkedActivation) {
-            LinkedActivation newact = (LinkedActivation) act;
+		if (act instanceof LinkedActivation newact) {
 			if (lazy) {
 				if (count == 0) {
 					this.first = newact;
@@ -205,8 +204,7 @@ public class LinkedActivationList extends AbstractActivationList {
 	 * the first or last before removing it.
 	 */
 	public Activation removeActivation(Activation act) {
-		if (act instanceof LinkedActivation) {
-			LinkedActivation lact = (LinkedActivation)act;
+		if (act instanceof LinkedActivation lact) {
 			if (first == lact) {
 				this.first = lact.getNext();
 			} 

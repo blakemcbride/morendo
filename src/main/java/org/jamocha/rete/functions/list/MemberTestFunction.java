@@ -29,8 +29,8 @@ public class MemberTestFunction implements Function {
 		if (params != null && params.length == 2) {
 			Object item = params[0].getValue();
 			Object l = params[1];
-			if (l instanceof ValueParam) {
-				Object list = ((ValueParam)l).getValue();
+			if (l instanceof ValueParam valueParam) {
+				Object list = (valueParam).getValue();
 				if (list.getClass().isArray()) {
 					Object[] ary = (Object[])list;
 					for (int idx=0; idx < ary.length; idx++) {

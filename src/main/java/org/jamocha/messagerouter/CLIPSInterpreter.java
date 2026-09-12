@@ -31,8 +31,8 @@ public class CLIPSInterpreter {
 
 	public ReturnVector executeCommand(Object command) {
 		ReturnVector result = null;
-		if (command instanceof Function) {
-			result = ((Function) command)
+		if (command instanceof Function function) {
+			result = (function)
 					.executeFunction(engine, null);
 		} else {
 			throw new RuntimeException(command.toString().trim() + " is not a recognized command" + Constants.LINEBREAK);

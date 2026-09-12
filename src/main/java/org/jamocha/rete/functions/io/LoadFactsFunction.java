@@ -86,9 +86,7 @@ public class LoadFactsFunction implements Function {
                     InputStream inStream = getInputStream(input);
 					CLIPSParser parser = new CLIPSParser(inStream);
 					List<?> data = parser.loadExpr();
-					Iterator<?> itr = data.iterator();
-					while (itr.hasNext()) {
-						Object val = itr.next();
+					for (Object val : data) {
 						ValueParam[] vp = (ValueParam[])val;
 						Deftemplate tmpl = (Deftemplate) engine
 								.getCurrentFocus().getTemplate(

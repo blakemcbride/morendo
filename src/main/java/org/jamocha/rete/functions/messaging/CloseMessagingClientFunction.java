@@ -23,8 +23,8 @@ public class CloseMessagingClientFunction implements Function {
 		if (params != null && params.length > 0) {
 			for (int i=0; i < params.length; i++) {
 				Object value = engine.getDefglobalValue(params[i].getStringValue());
-				if (value instanceof MessageClient) {
-					((MessageClient)value).close();
+				if (value instanceof MessageClient messageClient) {
+					(messageClient).close();
 					engine.removeDefglobal(params[i].getStringValue());
 				}
 			}

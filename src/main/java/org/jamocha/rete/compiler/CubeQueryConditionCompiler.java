@@ -79,19 +79,17 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
         Constraint[] constrs = cond.getConstraints();
         for (int idx=0; idx < constrs.length; idx++) {
             Constraint cnstr = constrs[idx];
-            if (cnstr instanceof BoundConstraint) {
-                BoundConstraint bc = (BoundConstraint)cnstr;
+            if (cnstr instanceof BoundConstraint bc) {
                 ruleCompiler.compileConstraint(bc, templ, rule, position);
-            } else if (cnstr instanceof PredicateConstraint) {
-            	if (rule.getBinding(((PredicateConstraint) cnstr).getVariableName()) == null) {
-                	PredicateConstraint pc = (PredicateConstraint)cnstr;
+            } else if (cnstr instanceof PredicateConstraint predicateConstraint) {
+            	if (rule.getBinding((predicateConstraint).getVariableName()) == null) {
+                	PredicateConstraint pc = predicateConstraint;
                 	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 	Binding2 bind = new Binding2(operator);
                 	bind.setRightIndex(templ.getColumnIndex(pc.getName()));
                 	bind.setVarName(pc.getVariableName());
                 	Object val = pc.getValue();
-                	if (val instanceof BoundParam) {
-                		BoundParam bp = (BoundParam)val;
+                	if (val instanceof BoundParam bp) {
                 		Binding bd = rule.getBinding(bp.getVariableName());
                 		bind.setLeftRow(bd.getLeftRow());
                 		bind.setLeftIndex(bd.getLeftIndex());
@@ -110,19 +108,17 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
         Constraint[] constrs = cond.getConstraints();
         for (int idx=0; idx < constrs.length; idx++) {
             Constraint cnstr = constrs[idx];
-            if (cnstr instanceof BoundConstraint) {
-                BoundConstraint bc = (BoundConstraint)cnstr;
+            if (cnstr instanceof BoundConstraint bc) {
                 queryCompiler.compileConstraint(bc, templ, query, position);
-            } else if (cnstr instanceof PredicateConstraint) {
-            	if (query.getBinding(((PredicateConstraint) cnstr).getVariableName()) == null) {
-                	PredicateConstraint pc = (PredicateConstraint)cnstr;
+            } else if (cnstr instanceof PredicateConstraint predicateConstraintValue) {
+            	if (query.getBinding((predicateConstraintValue).getVariableName()) == null) {
+                	PredicateConstraint pc = predicateConstraintValue;
                 	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 	Binding2 bind = new Binding2(operator);
                 	bind.setRightIndex(templ.getColumnIndex(pc.getName()));
                 	bind.setVarName(pc.getVariableName());
                 	Object val = pc.getValue();
-                	if (val instanceof BoundParam) {
-                		BoundParam bp = (BoundParam)val;
+                	if (val instanceof BoundParam bp) {
                 		Binding bd = query.getBinding(bp.getVariableName());
                 		bind.setLeftRow(bd.getLeftRow());
                 		bind.setLeftIndex(bd.getLeftIndex());
@@ -233,8 +229,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 	       ArrayList<Binding> bindlist = new ArrayList<>();
         for (int idz=0; idz < Constraints.size(); idz++) {
             Object cst = Constraints.get(idz);
-            if (cst instanceof BoundConstraint) {
-                BoundConstraint bc = (BoundConstraint)cst;
+            if (cst instanceof BoundConstraint bc) {
                 Binding cpy = rule.copyBinding(bc.getVariableName());
                 if (cpy != null) {
                     if (cpy.getLeftRow() >= position) {
@@ -266,8 +261,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 	       ArrayList<Binding> bindlist = new ArrayList<>();
         for (int idz=0; idz < Constraints.size(); idz++) {
             Object cst = Constraints.get(idz);
-            if (cst instanceof BoundConstraint) {
-                BoundConstraint bc = (BoundConstraint)cst;
+            if (cst instanceof BoundConstraint bc) {
                 Binding cpy = query.copyBinding(bc.getVariableName());
                 if (cpy != null) {
                     if (cpy.getLeftRow() >= position) {
@@ -299,8 +293,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		ArrayList<Binding> bindlist = new ArrayList<>();
 		for (int idz=0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
-	   		if (cst instanceof PredicateConstraint) {
-	   	    	PredicateConstraint pc = (PredicateConstraint)cst;
+	   		if (cst instanceof PredicateConstraint pc) {
 	   	    	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 if (pc.reverseOperator()) {
                 	operator = ConversionUtils.getOppositeOperatorCode(operator);
@@ -311,8 +304,8 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 	   	        cpy.setRightIndex(rinx);
 	   	    	bindlist.add(cpy);
 	   	    	BaseSlot bslot = tmpl.getSlot(pc.getName());
-	   	    	if (bslot instanceof DimensionSlot) {
-	   	    		((DimensionSlot)bslot).getDimension().setAutoIndex(true);
+	   	    	if (bslot instanceof DimensionSlot dimensionSlot) {
+	   	    		(dimensionSlot).getDimension().setAutoIndex(true);
 	   	    	}
 	   		}
 		}
@@ -328,8 +321,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		ArrayList<Binding> bindlist = new ArrayList<>();
 		for (int idz=0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
-	   		if (cst instanceof PredicateConstraint) {
-	   	    	PredicateConstraint pc = (PredicateConstraint)cst;
+	   		if (cst instanceof PredicateConstraint pc) {
 	   	    	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 if (pc.reverseOperator()) {
                 	operator = ConversionUtils.getOppositeOperatorCode(operator);
@@ -340,8 +332,8 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 	   	        cpy.setRightIndex(rinx);
 	   	    	bindlist.add(cpy);
 	   	    	BaseSlot bslot = tmpl.getSlot(pc.getName());
-	   	    	if (bslot instanceof DimensionSlot) {
-	   	    		((DimensionSlot)bslot).getDimension().setAutoIndex(true);
+	   	    	if (bslot instanceof DimensionSlot dimensionSlotValue) {
+	   	    		(dimensionSlotValue).getDimension().setAutoIndex(true);
 	   	    	}
 	   		}
 		}

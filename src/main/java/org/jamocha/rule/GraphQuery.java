@@ -91,11 +91,9 @@ public class GraphQuery extends Defquery {
 			ArrayList<QueryBaseAlphaCondition> params = new ArrayList<>(this.queryParameterNodeMap.values());
 			for (int i=0; i < parameters.length; i++) {
 				Object node = params.get(i);
-				if (node instanceof QueryParameterNode) {
-					QueryParameterNode pnode = (QueryParameterNode)node;
+				if (node instanceof QueryParameterNode pnode) {
 					pnode.setQueryParameterValue(parameters[i].getValue());
-				} else if (node instanceof QueryFuncAlphaNode) {
-					QueryFuncAlphaNode pnode = (QueryFuncAlphaNode)node;
+				} else if (node instanceof QueryFuncAlphaNode pnode) {
 					pnode.setQueryParameterValue(parameters[i].getValue());
 				}
 			}

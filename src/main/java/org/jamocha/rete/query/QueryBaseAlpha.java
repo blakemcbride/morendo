@@ -72,14 +72,11 @@ public abstract class QueryBaseAlpha extends BaseNode {
     {
         for (int idx=0; idx < this.successorNodes.length; idx++) {
             Object nNode = this.successorNodes[idx];
-            if (nNode instanceof QueryBaseAlpha) {
-                QueryBaseAlpha next = (QueryBaseAlpha) nNode;
+            if (nNode instanceof QueryBaseAlpha next) {
                 next.assertFact(fact, engine, mem);
-            } else if (nNode instanceof QueryBaseJoin) {
-            	QueryBaseJoin next = (QueryBaseJoin) nNode;
+            } else if (nNode instanceof QueryBaseJoin next) {
                 next.assertRight(fact,engine,mem);
-            } else if (nNode instanceof QueryResultNode) {
-            	QueryResultNode next = (QueryResultNode)nNode;
+            } else if (nNode instanceof QueryResultNode next) {
                 Index inx = new Index(new Fact[]{fact});
                 next.addResult(inx,engine,mem);
             }

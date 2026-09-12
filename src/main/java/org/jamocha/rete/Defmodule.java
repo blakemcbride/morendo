@@ -146,8 +146,8 @@ public class Defmodule implements Module {
 	 */
 	public Activation nextActivation(Rete engine) {
 		Activation act = this.activations.nextActivation();
-		if (act instanceof LinkedActivation) {
-			((LinkedActivation) act).remove(engine);
+		if (act instanceof LinkedActivation linkedActivation) {
+			(linkedActivation).remove(engine);
 		}
 		return act;
 	}
@@ -202,8 +202,7 @@ public class Defmodule implements Module {
 		// first remove the alpha nodes
 		for (int idx=0; idx < cnds.length; idx++) {
 			Condition cnd = cnds[idx];
-			if (cnd instanceof ObjectCondition) {
-				ObjectCondition oc = (ObjectCondition)cnd;
+			if (cnd instanceof ObjectCondition oc) {
 				String templ = oc.getTemplateName();
 				Deftemplate temp = (Deftemplate)this.deftemplates.get(templ);
 				ObjectTypeNode otn = mem.getRuleCompiler().getObjectTypeNode(temp);
@@ -217,8 +216,7 @@ public class Defmodule implements Module {
 		for (int idx=0; idx < bjl.size(); idx++) {
 			BaseJoin bjoin = (BaseJoin)bjl.get(idx);
 			Condition cnd = cnds[idx + 1];
-			if (cnd instanceof ObjectCondition) {
-				ObjectCondition oc = (ObjectCondition)cnd;
+			if (cnd instanceof ObjectCondition oc) {
 				String templ = oc.getTemplateName();
 				Deftemplate temp = (Deftemplate)this.deftemplates.get(templ);
 				ObjectTypeNode otn = mem.getRuleCompiler().getObjectTypeNode(temp);
@@ -268,8 +266,7 @@ public class Defmodule implements Module {
 	 * The key is either the Defclass or a string name
 	 */
 	public boolean containsTemplate(Object key) {
-		if (key instanceof Defclass) {
-			Defclass dc = (Defclass) key;
+		if (key instanceof Defclass dc) {
 			return this.classToDeftemplates.containsKey(dc.getClassObject().getName());
 		} else {
 			return this.deftemplates.containsKey(key);

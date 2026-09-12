@@ -41,15 +41,15 @@ public class ExistCondition extends ObjectCondition {
 
     public void addConstraint(Constraint con) {
         this.constraints.add(con);
-        if (con instanceof BoundConstraint) {
-        	((BoundConstraint)con).setBindableConstraint(false);
+        if (con instanceof BoundConstraint boundConstraint) {
+        	(boundConstraint).setBindableConstraint(false);
         }
     }
     
     public void addConstraint(Constraint con, int position) {
         this.constraints.add(0,con);
-        if (con instanceof BoundConstraint) {
-        	((BoundConstraint)con).setBindableConstraint(false);
+        if (con instanceof BoundConstraint boundConstraintValue) {
+        	(boundConstraintValue).setBindableConstraint(false);
         }
     }
     

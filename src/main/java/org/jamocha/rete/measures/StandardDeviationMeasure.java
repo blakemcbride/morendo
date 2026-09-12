@@ -68,14 +68,11 @@ public class StandardDeviationMeasure implements AggregateMeasure {
 		BigDecimal sum = new BigDecimal(0);
 		for (int idx=0; idx < data.size(); idx++) {
 			Object value = data.get(idx);
-			if (value instanceof Number) {
-				Number n = (Number)value;
+			if (value instanceof Number n) {
 				sum = sum.add(new BigDecimal(n.doubleValue()));
-			} else if (value instanceof BigDecimal) {
-				BigDecimal bd = (BigDecimal)value;
+			} else if (value instanceof BigDecimal bd) {
 				sum = sum.add(bd);
-			} else if (value instanceof BigInteger) {
-				BigInteger bi = (BigInteger)value;
+			} else if (value instanceof BigInteger bi) {
 				sum = sum.add(new BigDecimal(bi.longValue()));
 			}
 		}
@@ -84,12 +81,11 @@ public class StandardDeviationMeasure implements AggregateMeasure {
 		// now calculate the deviation from the average
 		for (int idx=0; idx < data.size(); idx++) {
 			Object value = data.get(idx);
-			if (value instanceof Number) {
-				Number n = (Number)value;
+			if (value instanceof Number n) {
 				BigDecimal dev = new BigDecimal(n.doubleValue()).subtract(average);
 				sum = sum.add(dev.pow(2));
-			} else if (value instanceof BigDecimal) {
-				BigDecimal dev = ((BigDecimal)value).subtract(average);
+			} else if (value instanceof BigDecimal bigDecimal) {
+				BigDecimal dev = (bigDecimal).subtract(average);
 				sum = sum.add(dev.pow(2));
 			} else if (value instanceof BigInteger) {
 				BigDecimal dev = new BigDecimal(value.toString()).subtract(average);

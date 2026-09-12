@@ -48,8 +48,7 @@ public class GenerateFacts {
 			Condition[] conditions = rule.getConditions();
 			for (int idx=0; idx < conditions.length; idx++) {
 				Condition c = conditions[idx];
-				if (c instanceof ObjectCondition) {
-					ObjectCondition oc = (ObjectCondition)c;
+				if (c instanceof ObjectCondition oc) {
 					Deftemplate tpl = (Deftemplate)engine.findTemplate(oc.getTemplateName());
 					if (tpl.getClassName() != null) {
 						Object data = generateJavaFacts(oc,tpl,engine);
@@ -125,8 +124,7 @@ public class GenerateFacts {
 			if (cn instanceof LiteralConstraint) {
 				Slot s = new Slot(cn.getName(),cn.getValue());
 				list.add(s);
-			} else if (cn instanceof PredicateConstraint) {
-				PredicateConstraint pc = (PredicateConstraint)cn;
+			} else if (cn instanceof PredicateConstraint pc) {
 				Object val = generatePredicateValue(pc);
 				Slot s = new Slot(cn.getName(),val);
 				list.add(s);

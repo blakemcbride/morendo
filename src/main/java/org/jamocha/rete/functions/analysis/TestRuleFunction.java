@@ -64,11 +64,9 @@ public class TestRuleFunction implements Function {
 			if (facts.size() > 0) {
 				try {
 					engine.setWatch(Rete.WATCH_ALL);
-					Iterator<?> itr = facts.iterator();
-					while (itr.hasNext()) {
-						Object data = itr.next();
-						if (data instanceof Deffact) {
-							engine.assertFact( (Deffact)data );
+					for (Object data : facts) {
+						if (data instanceof Deffact deffact) {
+							engine.assertFact( deffact );
 						} else {
 							engine.assertObject(data,null,false,true);
 						}

@@ -129,9 +129,7 @@ public class BetaOnlyImpl implements BetaMemory {
 			buf.append(this.index.getFacts()[idx].getFactId());
 		}
 		buf.append(": ");
-		Iterator<Fact> itr = this.matches.keySet().iterator();
-		while (itr.hasNext()) {
-			Fact f = itr.next();
+		for (Fact f : this.matches.keySet()) {
 			buf.append(f.getFactId() + ", ");
 		}
 		return buf.toString();

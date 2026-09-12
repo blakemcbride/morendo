@@ -106,8 +106,7 @@ public class Shell {
 		if (event.getType() == MessageEvent.ERROR && message instanceof Exception) {
 			System.out.println(stackTrace((Exception) message).trim());
 		}
-		if (message instanceof DefaultReturnVector) {
-			DefaultReturnVector rv = (DefaultReturnVector) message;
+		if (message instanceof DefaultReturnVector rv) {
 			if (rv.getItems().size() > 0) {
 				ReturnValue rval = rv.getItems().get(0);
 				if (rval.getValueType() == Constants.ARRAY_TYPE || rval.getValueType() == Constants.LIST_TYPE) {

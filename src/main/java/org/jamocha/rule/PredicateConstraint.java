@@ -124,19 +124,17 @@ public class PredicateConstraint implements Constraint {
         for (int idx=0; idx < parameters.size(); idx++) {
         	Object p = parameters.get(idx);
             // for now, a simple implementation
-            if (p instanceof ValueParam) {
-                this.setValue( ((ValueParam)p).getValue() );
+            if (p instanceof ValueParam valueParam) {
+                this.setValue( (valueParam).getValue() );
                 if (idx == 0) {
                 	this.reverseOperator = true;
                 }
-            } else if (p instanceof BoundParam) {
-            	BoundParam bp = (BoundParam)p;
+            } else if (p instanceof BoundParam bp) {
             	if (!bp.getVariableName().equals(this.varName)) {
                 	this.setValue(p);
             	}
             	bcount++;
-            } else if (p instanceof FunctionParam2) {
-            	FunctionParam2 fparam = (FunctionParam2)p;
+            } else if (p instanceof FunctionParam2 fparam) {
             	if (fparam.hasBoundParameter()) {
                 	bcount++;
             	}
@@ -149,10 +147,10 @@ public class PredicateConstraint implements Constraint {
     
     public void addParameter(Parameter param) {
         this.parameters.add(param);
-        if (param instanceof ValueParam) {
-            this.setValue( ((ValueParam)param).getValue());
-        } else if (param instanceof BoundParam && this.varName == null) {
-            this.varName = ((BoundParam)param).getVariableName();
+        if (param instanceof ValueParam valueParamValue) {
+            this.setValue( (valueParamValue).getValue());
+        } else if (param instanceof BoundParam boundParam && this.varName == null) {
+            this.varName = (boundParam).getVariableName();
         }
     }
     
@@ -199,8 +197,8 @@ public class PredicateConstraint implements Constraint {
             			"&:(" + function + " ");
             	for (int idx=0; idx < this.parameters.size(); idx++) {
             		Parameter p = (Parameter)parameters.get(idx);
-            		if (p instanceof FunctionParam2) {
-            			buf.append( ((FunctionParam2)p).toPPString() );
+            		if (p instanceof FunctionParam2 functionParam2) {
+            			buf.append( (functionParam2).toPPString() );
             		}
             	}
             	buf.append(" ) )" + Constants.LINEBREAK);

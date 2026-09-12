@@ -152,8 +152,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 		Binding[] binds = new Binding[Constraints.size()];
 		for (int idz = 0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
-			if (cst instanceof BoundConstraint) {
-				BoundConstraint bc = (BoundConstraint) cst;
+			if (cst instanceof BoundConstraint bc) {
 				Binding cpy = rule.copyBinding(bc.getVariableName());
 				if (cpy.getLeftRow() >= position) {
 					binds = new Binding[0];
@@ -170,8 +169,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 						oc.setHasNotEqual(true);
 					}
 				}
-			} else if (cst instanceof PredicateConstraint) {
-				PredicateConstraint pc = (PredicateConstraint) cst;
+			} else if (cst instanceof PredicateConstraint pc) {
 				if (pc.getValue() instanceof BoundParam) {
 					oc.setHasPredicateJoin(true);
 					BoundParam bpm = (BoundParam) pc.getValue();
@@ -246,8 +244,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 		Binding[] binds = new Binding[Constraints.size()];
 		for (int idz = 0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
-			if (cst instanceof BoundConstraint) {
-				BoundConstraint bc = (BoundConstraint) cst;
+			if (cst instanceof BoundConstraint bc) {
 				Binding cpy = query.copyBinding(bc.getVariableName());
 				if (cpy.getLeftRow() >= position) {
 					binds = new Binding[0];
@@ -264,8 +261,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 						oc.setHasNotEqual(true);
 					}
 				}
-			} else if (cst instanceof PredicateConstraint) {
-				PredicateConstraint pc = (PredicateConstraint) cst;
+			} else if (cst instanceof PredicateConstraint pc) {
 				if (pc.getValue() instanceof BoundParam) {
 					oc.setHasPredicateJoin(true);
 					BoundParam bpm = (BoundParam) pc.getValue();

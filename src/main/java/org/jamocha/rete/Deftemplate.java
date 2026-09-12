@@ -330,10 +330,10 @@ public class Deftemplate implements Template, Serializable {
 			Slot s = (Slot) data[idz];
 			for (int idx = 0; idx < values.length; idx++) {
                 if (values[idx].getName().equals(s.getName())) {
-                    if (s instanceof MultiSlot && !(s.value instanceof BoundParam)) {
+                    if (s instanceof MultiSlot multiSlot && !(s.value instanceof BoundParam)) {
                         // since the value is multislot, we have to
                         // check for boundparams
-                        MultiSlot ms = (MultiSlot)s;
+                        MultiSlot ms = multiSlot;
                         Object[] mvals = ms.getValue();
                         for (int mdx=0; mdx < mvals.length; mdx++) {
                             if (mvals[mdx] instanceof BoundParam) {

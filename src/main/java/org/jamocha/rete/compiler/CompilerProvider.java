@@ -65,13 +65,11 @@ public class CompilerProvider {
 
 	private static ConditionCompiler wire(ConditionCompiler compiler, DefaultRuleCompiler rc,
 			DefaultQueryCompiler qc, GraphQueryCompiler gc) {
-		if (compiler instanceof AbstractConditionCompiler) {
-			AbstractConditionCompiler acc = (AbstractConditionCompiler) compiler;
+		if (compiler instanceof AbstractConditionCompiler acc) {
 			acc.ruleCompiler = rc;
 			acc.queryCompiler = qc;
 			acc.graphCompiler = gc;
-		} else if (compiler instanceof TestConditionCompiler) {
-			TestConditionCompiler tcc = (TestConditionCompiler) compiler;
+		} else if (compiler instanceof TestConditionCompiler tcc) {
 			tcc.ruleCompiler = rc;
 			tcc.queryCompiler = qc;
 			tcc.graphCompiler = gc;

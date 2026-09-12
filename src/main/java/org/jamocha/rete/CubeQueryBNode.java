@@ -299,8 +299,7 @@ public class CubeQueryBNode extends BaseJoin {
         		Defmeasure defmeasure = (Defmeasure)cubeFact.getSlotValue(measureIndex);
         		Measure msr = defmeasure.getMeasure();
         		BigDecimal calculatedValue = null;
-        		if (msr instanceof AggregateMeasure) {
-        			AggregateMeasure aggrMsr = (AggregateMeasure)msr;
+        		if (msr instanceof AggregateMeasure aggrMsr) {
         			calculatedValue = aggrMsr.calculate(engine, c, resultFact.getResultsetData(), cbinding);
         			resultFact.setSlotValue(cbinding.rightIndex, calculatedValue);
         		}

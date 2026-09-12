@@ -88,8 +88,8 @@ public class PrintFunction implements Function {
                     engine.writeMessage(Constants.LINEBREAK,output);
                 } else {
                 	Object val = params[idx].getValue();
-                	if (val instanceof String) {
-                        engine.writeMessage((String)val,output);
+                	if (val instanceof String string) {
+                        engine.writeMessage(string,output);
                 	} else if (val.getClass().isArray()) {
                 		Object[] ary = (Object[])val;
                 		writeArray(ary,engine,output,true);
@@ -105,8 +105,7 @@ public class PrintFunction implements Function {
 	public void writeArray(Object[] arry, Rete engine, String output, boolean linebreak) {
 		for (int idz=0; idz < arry.length; idz++) {
 			Object val = arry[idz];
-			if (val instanceof Fact) {
-				Fact f = (Fact)val;
+			if (val instanceof Fact f) {
 				engine.writeMessage(f.toFactString() + " ",output);
 			} else {
 				engine.writeMessage(arry[idz].toString() + " ",output);
@@ -120,8 +119,7 @@ public class PrintFunction implements Function {
 	public void writeList(ArrayList<?> array, Rete engine, String output, boolean linebreak) {
 		for (int i=0; i < array.size(); i++) {
 			Object val = array.get(i);
-			if (val instanceof Fact) {
-				Fact f = (Fact)val;
+			if (val instanceof Fact f) {
 				engine.writeMessage(f.toFactString() + " ",output);
 			} else if (val.getClass().isArray()) {
 				writeArray((Object[])val, engine, output, linebreak);

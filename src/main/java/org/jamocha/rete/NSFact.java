@@ -176,8 +176,8 @@ public class NSFact implements Fact, Serializable {
 	}
 	
 	public boolean slotEquals(Fact fact) {
-		if (fact instanceof NSFact) {
-			return ((NSFact)fact).objInstance == this.objInstance;
+		if (fact instanceof NSFact nSFact) {
+			return (nSFact).objInstance == this.objInstance;
 		} else {
 			return false;
 		}

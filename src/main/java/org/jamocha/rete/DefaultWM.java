@@ -230,8 +230,8 @@ public class DefaultWM implements WorkingMemory {
         if (template == null) {
             dc = this.engine.findDefclass(data);
             // Note: cubes aren't mapped by defclass, so we always lookup by template using cube name
-            if (data instanceof Cube) {
-            	dc = this.engine.findDefclassByTemplate(((Cube)data).getName());
+            if (data instanceof Cube cubeValue) {
+            	dc = this.engine.findDefclassByTemplate((cubeValue).getName());
             }
         } else {
             dc = this.engine.findDefclassByTemplate(template);
@@ -336,17 +336,12 @@ public class DefaultWM implements WorkingMemory {
         }
         this.alphaMemories.clear();
         // aggressivley clear the memories
-        Iterator<?> blitr = this.betaLeftMemories.values().iterator();
-        while (blitr.hasNext()) {
-            Object bval = blitr.next();
+        for (Object bval : this.betaLeftMemories.values()) {
             if (bval instanceof Map) {
                 Map<?, ?> lmem = (Map<?, ?>) bval;
                 // now iterate over the betamemories
-                Iterator<?> bmitr = lmem.keySet().iterator();
-                while (bmitr.hasNext()) {
-                	Object value = bmitr.next();
-                	if (value instanceof Index) {
-                        Index indx = (Index) value;
+                for (Object value : lmem.keySet()) {
+                	if (value instanceof Index indx) {
                         indx.clear();
                 	} else if (value instanceof Map) {
                 		((Map<?, ?>)value).clear();
@@ -356,15 +351,13 @@ public class DefaultWM implements WorkingMemory {
             }
         }
         this.betaLeftMemories.clear();
-        Iterator<?> britr = this.betaRightMemories.values().iterator();
-        while (britr.hasNext()) {
-            Object val = britr.next();
-            if (val instanceof HashedAlphaMemoryImpl) {
-                ((HashedAlphaMemoryImpl) val).clear();
-            } else if (val instanceof TemporalHashedAlphaMem) {
-                ((TemporalHashedAlphaMem)val).clear();
-            } else if (val instanceof CubeHashMemoryImpl) {
-            	((CubeHashMemoryImpl)val).clear();
+        for (Object val : this.betaRightMemories.values()) {
+            if (val instanceof HashedAlphaMemoryImpl hashedAlphaMemoryImpl) {
+                (hashedAlphaMemoryImpl).clear();
+            } else if (val instanceof TemporalHashedAlphaMem temporalHashedAlphaMem) {
+                (temporalHashedAlphaMem).clear();
+            } else if (val instanceof CubeHashMemoryImpl cubeHashMemoryImpl) {
+            	(cubeHashMemoryImpl).clear();
             } else {
                 Map<?, ?> mem = (Map<?, ?>) val;
                 mem.clear();
@@ -397,8 +390,7 @@ public class DefaultWM implements WorkingMemory {
 				Iterator<?> itr = facts.iterator();
 				while (itr.hasNext()) {
 					Object obj = itr.next();
-					if (obj instanceof EqualityIndex) {
-						EqualityIndex i = (EqualityIndex)obj;
+					if (obj instanceof EqualityIndex i) {
 						Deffact f = (Deffact)this.deffactMap.get(i);
 						if (!(f.getDeftemplate() instanceof InitialFact)) {
 							this.retractFact(f);

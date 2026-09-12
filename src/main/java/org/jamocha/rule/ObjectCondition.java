@@ -80,8 +80,7 @@ public class ObjectCondition extends AbstractCondition {
     	String pad = "  ";
         boolean obind = false;
     	Constraint cn = this.constraints.get(0);
-    	if (cn instanceof BoundConstraint) {
-    		BoundConstraint bc = (BoundConstraint)cn;
+    	if (cn instanceof BoundConstraint bc) {
     		if (bc.getIsObjectBinding()) {
     			start = 1;
     			buf.append(bc.toFactBindingPPString());
@@ -122,8 +121,7 @@ public class ObjectCondition extends AbstractCondition {
         int start = 0;
         boolean obind = false;
         Constraint cn = this.constraints.get(0);
-        if (cn instanceof BoundConstraint) {
-            BoundConstraint bc = (BoundConstraint)cn;
+        if (cn instanceof BoundConstraint bc) {
             if (bc.getIsObjectBinding()) {
                 start = 1;
                 buf.append(bc.toFactBindingPPString());

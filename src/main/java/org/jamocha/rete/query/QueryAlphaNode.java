@@ -175,8 +175,8 @@ public class QueryAlphaNode extends QueryBaseAlphaCondition {
     			clone.successorNodes[i] = ((QueryBaseAlpha)this.successorNodes[i]).clone(engine, query);
     		} else if (this.successorNodes[i] instanceof QueryBaseJoin) {
     			clone.successorNodes[i] = ((QueryBaseJoin)this.successorNodes[i]).clone(engine, query);
-    			if (query instanceof GraphQuery) {
-    				((GraphQuery)query).addJoinNode((QueryBaseJoin)clone.successorNodes[i]);
+    			if (query instanceof GraphQuery graphQuery) {
+    				(graphQuery).addJoinNode((QueryBaseJoin)clone.successorNodes[i]);
     			}
     		} else if (this.successorNodes[i] instanceof QueryResultNode) {
     			clone.successorNodes[i] = ((QueryResultNode)this.successorNodes[i]).clone(engine, query);

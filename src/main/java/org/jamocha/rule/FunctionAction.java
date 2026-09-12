@@ -63,8 +63,7 @@ public class FunctionAction implements Action {
     }
     
     public void setFunction(Function func) {
-        if (func instanceof ShellFunction) {
-            ShellFunction sf = (ShellFunction)func;
+        if (func instanceof ShellFunction sf) {
             this.functionName = sf.getName();
             this.parameters = sf.getParameters();
         } else {
@@ -174,8 +173,8 @@ public class FunctionAction implements Action {
             }
         }
         // If the function is a RuleFunction, we set the trigger facts
-        if (this.faction instanceof RuleFunction) {
-        	((RuleFunction)this.faction).setTriggerFacts(facts);
+        if (this.faction instanceof RuleFunction ruleFunction) {
+        	(ruleFunction).setTriggerFacts(facts);
         }
         // now we find the function
         this.faction.executeFunction(engine,this.parameters);

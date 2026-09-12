@@ -91,8 +91,8 @@ public abstract class BaseJoin extends BaseNode {
 
     public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
     throws AssertException {
-        if (node instanceof BaseJoin) {
-            addSuccessorNode((BaseJoin)node,engine,mem);
+        if (node instanceof BaseJoin baseJoin) {
+            addSuccessorNode(baseJoin,engine,mem);
         } else {
             addSuccessorNode((TerminalNode)node,engine,mem);
         }
@@ -144,11 +144,8 @@ public abstract class BaseJoin extends BaseNode {
 			// first, we get the memory for this node
 			Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
 			// now we iterate over the entry set
-			Iterator<?> itr = leftmem.values().iterator();
-			while (itr.hasNext()) {
-				Object omem = itr.next();
-				if (omem instanceof BetaMemory) {
-					BetaMemory bmem = (BetaMemory) omem;
+			for (Object omem : leftmem.values()) {
+				if (omem instanceof BetaMemory bmem) {
 					Index left = bmem.getIndex();
 					// iterate over the matches
                     Map<?, ?> rightmem = mem.getBetaRightMemory(this);
@@ -185,10 +182,10 @@ public abstract class BaseJoin extends BaseNode {
 			throws AssertException {
         for (int idx=0; idx < this.successorNodes.length; idx++) {
             BaseNode node = this.successorNodes[idx];
-			if (node instanceof BaseJoin) {
-				((BaseJoin) node).assertLeft(inx, engine, mem);
-			} else if (node instanceof TerminalNode) {
-				((TerminalNode) node).assertFacts(inx, engine, mem);
+			if (node instanceof BaseJoin baseJoinValue) {
+				(baseJoinValue).assertLeft(inx, engine, mem);
+			} else if (node instanceof TerminalNode terminalNode) {
+				(terminalNode).assertFacts(inx, engine, mem);
 			}
 		}
 	}
@@ -204,8 +201,8 @@ public abstract class BaseJoin extends BaseNode {
             BaseNode node = this.successorNodes[idx];
 			if (node instanceof BaseJoin) {
 				((BaseJoin) node).retractLeft(inx, engine, mem);
-			} else if (node instanceof TerminalNode) {
-				((TerminalNode) node).retractFacts(inx, engine, mem);
+			} else if (node instanceof TerminalNode terminalNodeValue) {
+				(terminalNodeValue).retractFacts(inx, engine, mem);
 			}
 		}
 	}

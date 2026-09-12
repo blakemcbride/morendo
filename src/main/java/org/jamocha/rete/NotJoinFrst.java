@@ -248,11 +248,8 @@ public class NotJoinFrst extends BaseJoin {
             // first, we get the memory for this node
             Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
             // now we iterate over the entry set
-            Iterator<?> itr = leftmem.values().iterator();
-            while (itr.hasNext()) {
-                Object omem = itr.next();
-                if (omem instanceof BetaMemory) {
-                    BetaMemory bmem = (BetaMemory) omem;
+            for (Object omem : leftmem.values()) {
+                if (omem instanceof BetaMemory bmem) {
                     // iterate over the matches
                     if (bmem.matchCount() == 0) {
                         node.assertFacts(new Index(new Fact[0]), engine, mem);

@@ -118,9 +118,7 @@ public class BetaMemoryImpl implements BetaMemory {
 			buf.append(this.index.getFacts()[idx].getFactId());
 		}
 		buf.append(": ");
-		Iterator<Fact> itr = matches.keySet().iterator();
-		while (itr.hasNext()) {
-			Fact f = itr.next();
+		for (Fact f : matches.keySet()) {
 			buf.append(f.getFactId() + ", ");
 		}
 		return buf.toString();

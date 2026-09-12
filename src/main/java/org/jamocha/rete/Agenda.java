@@ -149,9 +149,7 @@ public class Agenda {
 	 * Clear will clear all the modules and remove all activations
 	 */
 	public void clear() {
-		Iterator<?> itr = this.modules.keySet().iterator();
-		while (itr.hasNext()) {
-			Object key = itr.next();
+		for (Object key : this.modules.keySet()) {
 			Module mod = (Module) this.modules.get(key);
 			mod.clear();
 		}

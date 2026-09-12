@@ -58,13 +58,12 @@ public class LIANode extends BaseAlpha {
     {
         for (int idx=0; idx < this.successorNodes.length; idx++) {
             BaseNode nNode = this.successorNodes[idx];
-            if (nNode instanceof BaseJoin) {
-                BaseJoin next = (BaseJoin) nNode;
+            if (nNode instanceof BaseJoin next) {
                 Fact[] newf = {fact};
                 next.assertLeft(new Index(newf),engine,mem);
-            } else if (nNode instanceof TerminalNode) {
+            } else if (nNode instanceof TerminalNode terminalNode) {
                 Fact[] newf = {fact};
-                TerminalNode tn = (TerminalNode)nNode;
+                TerminalNode tn = terminalNode;
                 tn.assertFacts(new Index(newf),engine,mem);
             }
         }
@@ -90,12 +89,10 @@ public class LIANode extends BaseAlpha {
     {
         for (int idx = 0; idx < this.successorNodes.length; idx++) {
             BaseNode nNode = this.successorNodes[idx];
-            if (nNode instanceof BaseJoin) {
-                BaseJoin next = (BaseJoin) nNode;
+            if (nNode instanceof BaseJoin next) {
                 Fact[] newf = { fact };
                 next.retractLeft(new Index(newf), engine, mem);
-            } else if (nNode instanceof TerminalNode) {
-                TerminalNode next = (TerminalNode) nNode;
+            } else if (nNode instanceof TerminalNode next) {
                 Fact[] newf = { fact };
                 next.retractFacts(new Index(newf), engine, mem);
             }
@@ -117,11 +114,9 @@ public class LIANode extends BaseAlpha {
             if (alpha.size() > 0){
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()){
-                    if (node instanceof BaseAlpha) {
-                        BaseAlpha next = (BaseAlpha) node;
+                    if (node instanceof BaseAlpha next) {
                         next.assertFact((Fact)itr.next(),engine,mem);
-                    } else if (node instanceof BaseJoin) {
-                        BaseJoin next = (BaseJoin) node;
+                    } else if (node instanceof BaseJoin next) {
                         Index inx = new Index(new Fact[]{(Fact)itr.next()});
                         next.assertLeft(inx,engine,mem);
                     }

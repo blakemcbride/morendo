@@ -28,8 +28,8 @@ public class BitOrFunction implements Function {
 				value = ((ValueParam)params[0]).getIntValue();
 			} else if (params[0] instanceof BoundParam) {
 				Object v = ((BoundParam)params[0]).getValue(engine, Constants.OBJECT_TYPE);
-				if (v instanceof Number) {
-					value = ((Number)v).intValue();
+				if (v instanceof Number number) {
+					value = (number).intValue();
 				}
 			}
 			// iterate over the parameters
@@ -39,8 +39,8 @@ public class BitOrFunction implements Function {
 					intval = ((ValueParam)params[i]).getIntValue();
 				} else if (params[i] instanceof BoundParam) {
 					Object v = ((BoundParam)params[0]).getValue(engine, Constants.OBJECT_TYPE);
-					if (v instanceof Number) {
-						intval = ((Number)v).intValue();
+					if (v instanceof Number numberValue) {
+						intval = (numberValue).intValue();
 					}
 				}
 				value = value | intval;

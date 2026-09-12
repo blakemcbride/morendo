@@ -150,13 +150,13 @@ public class ObjectTypeNode extends BaseAlpha {
     			
     			BaseNode node = this.nodeHashMap.get(compIndex);
     			if (node != null) {
-    	            if (node instanceof BaseAlpha){
-    	                ((BaseAlpha)node).assertFact(fact,engine,mem);
-    	            } else if (node instanceof BaseJoin){
-    	                ((BaseJoin)node).assertRight(fact,engine,mem);
-    	            } else if (node instanceof TerminalNode) {
+    	            if (node instanceof BaseAlpha baseAlpha) {
+    	                (baseAlpha).assertFact(fact,engine,mem);
+    	            } else if (node instanceof BaseJoin baseJoin) {
+    	                (baseJoin).assertRight(fact,engine,mem);
+    	            } else if (node instanceof TerminalNode terminalNode) {
     	                Index inx = new Index(new Fact[]{fact});
-    	            	((TerminalNode)node).assertFacts(inx,engine,mem);
+    	            	(terminalNode).assertFacts(inx,engine,mem);
     	            }
     			}
     		}
@@ -165,13 +165,13 @@ public class ObjectTypeNode extends BaseAlpha {
     	// iterate over all other nodes
     	for (int idx=0; idx < nonHashNodes.length; idx++) {
     		BaseNode node = nonHashNodes[idx];
-            if (node instanceof BaseAlpha){
-                ((BaseAlpha)node).assertFact(fact,engine,mem);
-            } else if (node instanceof BaseJoin){
-                ((BaseJoin)node).assertRight(fact,engine,mem);
-            } else if (node instanceof TerminalNode) {
+            if (node instanceof BaseAlpha baseAlphaValue) {
+                (baseAlphaValue).assertFact(fact,engine,mem);
+            } else if (node instanceof BaseJoin baseJoinValue) {
+                (baseJoinValue).assertRight(fact,engine,mem);
+            } else if (node instanceof TerminalNode terminalNodeValue) {
                 Index inx = new Index(new Fact[]{fact});
-            	((TerminalNode)node).assertFacts(inx,engine,mem);
+            	(terminalNodeValue).assertFacts(inx,engine,mem);
             }
     	}
     }
@@ -271,8 +271,7 @@ public class ObjectTypeNode extends BaseAlpha {
     public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem) 
     throws AssertException 
     {
-    	if (node instanceof AlphaNode) {
-    		AlphaNode alphaNode = (AlphaNode)node;
+    	if (node instanceof AlphaNode alphaNode) {
     		if (alphaNode.getOperator() == Constants.EQUAL) {
         		nodeHashMap.put(alphaNode.getHashIndex(), alphaNode);
         		// increment the slot use count
@@ -298,14 +297,11 @@ public class ObjectTypeNode extends BaseAlpha {
             Iterator<?> itr = alpha.iterator();
             while (itr.hasNext()){
                 Fact f = (Fact)itr.next();
-                if (node instanceof BaseAlpha) {
-                    BaseAlpha next = (BaseAlpha) node;
+                if (node instanceof BaseAlpha next) {
                     next.assertFact(f,engine,mem);
-                } else if (node instanceof BaseJoin) {
-                    BaseJoin next = (BaseJoin) node;
+                } else if (node instanceof BaseJoin next) {
                     next.assertRight(f,engine,mem);
-                } else if (node instanceof TerminalNode) {
-                    TerminalNode t = (TerminalNode)node;
+                } else if (node instanceof TerminalNode t) {
                     Index inx = new Index(new Fact[]{f});
                     t.assertFacts(inx, engine, mem);
                 }
@@ -316,8 +312,8 @@ public class ObjectTypeNode extends BaseAlpha {
     public boolean removeNode(BaseNode n) {
     	boolean rem = super.removeNode(n);
     	ConversionUtils.remove(this.nonHashNodes,n);
-    	if (n instanceof AlphaNode) {
-        	this.nodeHashMap.remove(((AlphaNode)n).getHashIndex());
+    	if (n instanceof AlphaNode alphaNodeValue) {
+        	this.nodeHashMap.remove((alphaNodeValue).getHashIndex());
     	}
     	return rem;
     }

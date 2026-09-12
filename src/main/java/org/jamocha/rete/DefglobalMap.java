@@ -77,9 +77,7 @@ public class DefglobalMap {
 	 * @param engine
 	 */
 	public void printDefglobals(Rete engine) {
-		Iterator<String> itr = this.variables.keySet().iterator();
-		while (itr.hasNext()) {
-			String key = itr.next();
+		for (String key : this.variables.keySet()) {
 			Object val = this.variables.get(key);
 			engine.writeMessage(key + "=" + val.toString());
 		}

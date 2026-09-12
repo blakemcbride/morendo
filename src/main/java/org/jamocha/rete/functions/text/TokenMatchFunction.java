@@ -54,9 +54,7 @@ public class TokenMatchFunction implements Function {
 				}
 				if (resolvedValue instanceof Set) {
 					@SuppressWarnings("unchecked") Set<String> stop = (Set<String>)resolvedValue;
-					Iterator<String> itr = stop.iterator();
-					while (itr.hasNext()) {
-						String word = itr.next();
+					for (String word : stop) {
 						for (int i=0; i < rawText.length(); i++) {
 							int idof = rawText.substring(i).indexOf(word);
 							if (idof > -1) {

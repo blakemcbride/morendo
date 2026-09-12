@@ -534,20 +534,20 @@ public class DefaultQueryCompiler implements QueryCompiler {
     public void attachJoinNode(BaseNode last, BaseJoin join) 
     throws AssertException
     {
-        if (last instanceof BaseAlpha) {
-            ((BaseAlpha)last).addSuccessorNode(join,engine,null);
-        } else if (last instanceof BaseJoin) {
-            ((BaseJoin)last).addSuccessorNode(join,engine,null);
+        if (last instanceof BaseAlpha baseAlpha) {
+            (baseAlpha).addSuccessorNode(join,engine,null);
+        } else if (last instanceof BaseJoin baseJoin) {
+            (baseJoin).addSuccessorNode(join,engine,null);
         }
     }
     
     public void attachJoinNode(BaseNode last, QueryBaseJoin join) 
     throws AssertException
     {
-        if (last instanceof BaseAlpha) {
-            ((BaseAlpha)last).addSuccessorNode(join,engine,null);
-        } else if (last instanceof BaseJoin) {
-            ((BaseJoin)last).addSuccessorNode(join,engine,null);
+        if (last instanceof BaseAlpha baseAlphaValue) {
+            (baseAlphaValue).addSuccessorNode(join,engine,null);
+        } else if (last instanceof BaseJoin baseJoinValue) {
+            (baseJoinValue).addSuccessorNode(join,engine,null);
         }
     }
     

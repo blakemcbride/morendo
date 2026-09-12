@@ -62,8 +62,7 @@ public class TestNode extends BaseJoin {
 	}
 
 	public void lookUpFunction(Rete engine) {
-		if (func instanceof ShellFunction) {
-			ShellFunction sf = (ShellFunction) func;
+		if (func instanceof ShellFunction sf) {
 			sf.lookUpFunction(engine);
 			if (sf.getFunction() != null) {
 				this.func = sf.getFunction();

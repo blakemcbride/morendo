@@ -20,10 +20,10 @@ public class NinetyPercentMeasure implements AggregateMeasure {
 		if (data != null) {
 			java.util.Collections.sort(data);
 			Object value = data.get( (int)(data.size() * .9) );
-			if (value instanceof BigDecimal) {
-				return (BigDecimal)value;
-			} else if (value instanceof Number) {
-				return new BigDecimal( ((Number)value).doubleValue() );
+			if (value instanceof BigDecimal bigDecimal) {
+				return bigDecimal;
+			} else if (value instanceof Number number) {
+				return new BigDecimal( (number).doubleValue() );
 			} else {
 				return new BigDecimal( value.toString() );
 			}

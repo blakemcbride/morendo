@@ -63,8 +63,7 @@ public class TemporalCalculation {
 			for (int idx=0; idx < conditions.length; idx++) {
 				AbstractCondition condition = (AbstractCondition)conditions[idx];
 				Template template = condition.getTemplate();
-				if (condition instanceof TemporalCondition) {
-					TemporalCondition temporal = (TemporalCondition)condition;
+				if (condition instanceof TemporalCondition temporal) {
 					// if the distance is -1, it's the first temporal node
 					// so we set the distance to zero so the calculation is accurate
 					if (distance == -1) {

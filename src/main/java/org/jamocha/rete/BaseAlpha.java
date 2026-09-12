@@ -72,17 +72,15 @@ public abstract class BaseAlpha extends BaseNode {
     {
         for (int idx=0; idx < this.successorNodes.length; idx++) {
             Object nNode = this.successorNodes[idx];
-            if (nNode instanceof BaseAlpha) {
-                BaseAlpha next = (BaseAlpha) nNode;
+            if (nNode instanceof BaseAlpha next) {
                 next.retractFact(fact,engine,mem);
-            } else if (nNode instanceof BaseJoin) {
-            	BaseJoin next = (BaseJoin) nNode;
+            } else if (nNode instanceof BaseJoin next) {
                 // AlphaNodes always call retractRight in the
                 // BetaNode
                 next.retractRight(fact,engine,mem);
-            } else if (nNode instanceof TerminalNode) {
+            } else if (nNode instanceof TerminalNode terminalNode) {
                 Index inx = new Index(new Fact[]{fact});
-            	((TerminalNode)nNode).retractFacts(inx,engine,mem);
+            	(terminalNode).retractFacts(inx,engine,mem);
             }
         }
     }
@@ -97,14 +95,11 @@ public abstract class BaseAlpha extends BaseNode {
     {
         for (int idx=0; idx < this.successorNodes.length; idx++) {
             Object nNode = this.successorNodes[idx];
-            if (nNode instanceof BaseAlpha) {
-                BaseAlpha next = (BaseAlpha) nNode;
+            if (nNode instanceof BaseAlpha next) {
                 next.assertFact(fact, engine, mem);
-            } else if (nNode instanceof BaseJoin) {
-            	BaseJoin next = (BaseJoin) nNode;
+            } else if (nNode instanceof BaseJoin next) {
                 next.assertRight(fact,engine,mem);
-            } else if (nNode instanceof TerminalNode) {
-                TerminalNode next = (TerminalNode)nNode;
+            } else if (nNode instanceof TerminalNode next) {
                 Index inx = new Index(new Fact[]{fact});
                 next.assertFacts(inx,engine,mem);
             }
@@ -126,14 +121,11 @@ public abstract class BaseAlpha extends BaseNode {
             if (alpha.size() > 0){
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()){
-                    if (node instanceof BaseAlpha) {
-                        BaseAlpha next = (BaseAlpha) node;
+                    if (node instanceof BaseAlpha next) {
                         next.assertFact((Fact)itr.next(),engine,mem);
-                    } else if (node instanceof BaseJoin) {
-                        BaseJoin next = (BaseJoin) node;
+                    } else if (node instanceof BaseJoin next) {
                         next.assertRight((Fact)itr.next(),engine,mem);
-                    } else if (node instanceof TerminalNode) {
-                    	TerminalNode next = (TerminalNode)node;
+                    } else if (node instanceof TerminalNode next) {
                         Index inx = new Index(new Fact[]{(Fact)itr.next()});
                     	next.assertFacts(inx,engine,mem);
                     }
@@ -158,11 +150,9 @@ public abstract class BaseAlpha extends BaseNode {
             if (alpha.size() > 0) {
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()) {
-                    if (node instanceof BaseAlpha) {
-                        BaseAlpha next = (BaseAlpha)node;
+                    if (node instanceof BaseAlpha next) {
                         next.retractFact((Fact)itr.next(),engine,mem);
-                    } else if (node instanceof BaseJoin) {
-                        BaseJoin next = (BaseJoin)node;
+                    } else if (node instanceof BaseJoin next) {
                         next.retractRight((Fact)itr.next(),engine,mem);
                     }
                 }

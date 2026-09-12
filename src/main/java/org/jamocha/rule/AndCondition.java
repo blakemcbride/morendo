@@ -108,8 +108,7 @@ public class AndCondition implements Condition {
             Condition c = (Condition)nestedCE.get(idx);
             if (c instanceof TestCondition) {
                 buf.append(pad + c.toPPString());
-            } else if (c instanceof ObjectCondition) {
-                ObjectCondition oc = (ObjectCondition)c;
+            } else if (c instanceof ObjectCondition oc) {
                 buf.append(oc.toPPString(2));
             }
         }

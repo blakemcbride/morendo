@@ -189,14 +189,14 @@ public final class BasicClient implements MessageClient {
 
 	public void publish(Serializable message) {
 		try {
-			if (message instanceof String){
+			if (message instanceof String string) {
 				// if the message is a string, we create a Text message
 				// and publish it.
-				TextMessage resp = this.SESSION.createTextMessage((String)message);
+				TextMessage resp = this.SESSION.createTextMessage(string);
 				resp.setJMSType(MessageConstants.TEXT_MSG);
 				this.PUBLISHER.publish(resp);
-            } else if (message instanceof ObjectMessage){
-            	((ObjectMessage)message).setJMSType(MessageConstants.OBJECT_MSG);
+            } else if (message instanceof ObjectMessage objectMessage) {
+            	(objectMessage).setJMSType(MessageConstants.OBJECT_MSG);
                 this.PUBLISHER.publish((Message)message);
 			} else {
 				Message resp = this.SESSION.createObjectMessage(message);
@@ -271,11 +271,9 @@ public final class BasicClient implements MessageClient {
 				// we expect the message to be an object message and not a
 				// simple
 				// TextMessage. If it's not an ObjectMessage, we ignore it.
-				if (msg instanceof ObjectMessage && handler != null) {
-					ObjectMessage omsg = (ObjectMessage) msg;
+				if (msg instanceof ObjectMessage omsg && handler != null) {
 					handler.processMessage(omsg, this.ENGINE, this);
-				} else if (msg instanceof TextMessage && handler != null) {
-					TextMessage tmsg = (TextMessage) msg;
+				} else if (msg instanceof TextMessage tmsg && handler != null) {
 					handler.processMessage(tmsg, this.ENGINE, this);
 					log.info(tmsg.getText());
 				}

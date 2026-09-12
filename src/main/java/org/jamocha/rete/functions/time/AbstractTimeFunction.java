@@ -42,18 +42,18 @@ public abstract class AbstractTimeFunction {
 
 	/** Converts a supported representation to an Instant, or null if it cannot be converted. */
 	protected Instant toInstant(Object value) {
-		if (value instanceof Instant) {
-			return (Instant) value;
-		} else if (value instanceof Date) {
-			return ((Date) value).toInstant();
-		} else if (value instanceof Calendar) {
-			return ((Calendar) value).toInstant();
-		} else if (value instanceof ZonedDateTime) {
-			return ((ZonedDateTime) value).toInstant();
-		} else if (value instanceof Number) {
-			return Instant.ofEpochMilli(((Number) value).longValue());
-		} else if (value instanceof String) {
-			return parse((String) value);
+		if (value instanceof Instant instantValue) {
+			return instantValue;
+		} else if (value instanceof Date dateValue) {
+			return (dateValue).toInstant();
+		} else if (value instanceof Calendar calendarValue) {
+			return (calendarValue).toInstant();
+		} else if (value instanceof ZonedDateTime zonedDateTime) {
+			return (zonedDateTime).toInstant();
+		} else if (value instanceof Number number) {
+			return Instant.ofEpochMilli((number).longValue());
+		} else if (value instanceof String string) {
+			return parse(string);
 		}
 		return null;
 	}

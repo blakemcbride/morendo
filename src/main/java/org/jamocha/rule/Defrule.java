@@ -315,10 +315,10 @@ public class Defrule implements Rule, Scope {
             // only has 1 element. in all other cases, there will be atleast
             // 1 join node
             Condition c = this.conditions.get(0);
-            if (c instanceof ObjectCondition) {
-                return ((ObjectCondition)c).getLastNode();
-            } else if (c instanceof TestCondition) {
-                return ((TestCondition)c).getTestNode();
+            if (c instanceof ObjectCondition objectCondition) {
+                return (objectCondition).getLastNode();
+            } else if (c instanceof TestCondition testCondition) {
+                return (testCondition).getTestNode();
             }
             return null;
         } else {
@@ -420,8 +420,7 @@ public class Defrule implements Rule, Scope {
 	public Binding copyPredicateBinding(String varName, int operator) {
 		Object value = this.bindings.get(varName);
 		if (value != null) {
-			if (value instanceof Binding2) {
-				Binding2 b = (Binding2)value;
+			if (value instanceof Binding2 b) {
 				Binding2 b2 = new Binding2(operator);
 				b2.setLeftRow(b.getLeftRow());
 				b2.setLeftIndex(b.getLeftIndex());
@@ -469,26 +468,23 @@ public class Defrule implements Rule, Scope {
     private void resolveConditionTemplates(Rete engine, Condition[] cnds) {
         for (int idx=0; idx < cnds.length; idx++) {
             Condition cnd = cnds[idx];
-            if (cnd instanceof ObjectCondition) {
-                ObjectCondition oc = (ObjectCondition)cnd;
+            if (cnd instanceof ObjectCondition oc) {
                 Template dft = engine.findTemplate(oc.getTemplateName());
                 if (dft != null) {
                     oc.setTemplate(dft);
                 }
-            } else if (cnd instanceof ExistCondition) {
-                ExistCondition exc = (ExistCondition) cnd;
+            } else if (cnd instanceof ExistCondition exc) {
                 Template dft = engine.findTemplate(exc.getTemplateName());
                 if (dft != null) {
                     exc.setTemplate(dft);
                 }
-            } else if (cnd instanceof TemporalCondition) {
-                TemporalCondition tempc = (TemporalCondition)cnd;
+            } else if (cnd instanceof TemporalCondition tempc) {
                 Template dft = engine.findTemplate(tempc.getTemplateName());
                 if (dft != null) {
                     tempc.setTemplate(dft);
                 }
-            } else if (cnd instanceof AndCondition) {
-                resolveConditionTemplates(engine, ((AndCondition)cnd).getConditions() );
+            } else if (cnd instanceof AndCondition andCondition) {
+                resolveConditionTemplates(engine, (andCondition).getConditions() );
             }
         }
     }
@@ -568,9 +564,7 @@ public class Defrule implements Rule, Scope {
 	}
 
 	public void clear() {
-		Iterator<Condition> itr = this.conditions.iterator();
-		while (itr.hasNext()) {
-			Condition cond = itr.next();
+		for (Condition cond : this.conditions) {
 			cond.clear();
 		}
 		this.joins.clear();

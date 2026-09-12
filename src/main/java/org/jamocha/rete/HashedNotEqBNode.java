@@ -152,9 +152,7 @@ public class HashedNotEqBNode extends BaseJoin {
         rightmem.removePartialMatch(inx,rfact);
         // now we see the left memory matched and remove it also
         Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
-        Iterator<Index> itr = leftmem.values().iterator();
-        while (itr.hasNext()){
-            Index linx = itr.next();
+        for (Index linx : leftmem.values()) {
             if (this.evaluate(linx.getFacts(), rfact)){
                 // it matched, so we need to retract it from
                 // succeeding nodes

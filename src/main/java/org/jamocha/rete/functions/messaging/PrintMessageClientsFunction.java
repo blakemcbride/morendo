@@ -27,8 +27,7 @@ public class PrintMessageClientsFunction implements Function {
 		Iterator<?> iterator = globals.getValueIterator();
 		while (iterator.hasNext()) {
 			Object value = iterator.next();
-			if (value instanceof MessageClient) {
-				MessageClient client = (MessageClient)value;
+			if (value instanceof MessageClient client) {
 				String msg = "InitialContextFactory: " + client.getInitialContextFactory() + Constants.LINEBREAK +
 				"  ConnectionFactory: " + client.getConnectionFactory() + Constants.LINEBREAK +
 				"  URL: " + client.getProviderURL() + Constants.LINEBREAK +

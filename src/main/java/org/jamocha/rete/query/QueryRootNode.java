@@ -202,9 +202,7 @@ public class QueryRootNode {
      */
 	public QueryRootNode clone(Rete engine, Defquery query) {
     	QueryRootNode clone = new QueryRootNode(engine, this.root);
-    	Iterator<QueryObjTypeNode> iterator = this.queryObjTypeNodeMap.values().iterator();
-    	while (iterator.hasNext()) {
-    		QueryObjTypeNode qotn = iterator.next();
+    	for (QueryObjTypeNode qotn : this.queryObjTypeNodeMap.values()) {
     		clone.addQueryObjTypeNode(qotn.clone(engine, query));
     	}
     	clone.initialFactObjTypeNode = this.initialFactObjTypeNode;

@@ -49,8 +49,7 @@ public class DefaultComplexity implements Complexity {
             for (int idx=0; idx < conditions.length; idx++) {
                 this.complexityValue++;
                 Condition cond = conditions[idx];
-                if (cond instanceof ObjectCondition) {
-                    ObjectCondition oc = (ObjectCondition)cond;
+                if (cond instanceof ObjectCondition oc) {
                     Constraint[] constraints = oc.getConstraints();
                     int bindingCount = 0;
                     for (int idc=0; idc < constraints.length; idc++) {

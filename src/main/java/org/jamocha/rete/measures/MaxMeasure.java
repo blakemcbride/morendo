@@ -40,14 +40,11 @@ public class MaxMeasure implements AggregateMeasure {
 			for (int idx=0; idx < data.length; idx++) {
 				Index facts = (Index)data[idx];
 				Object value = facts.getFacts()[binding.getLeftRow()].getSlotValue(binding.getLeftIndex());
-				if (value instanceof Number) {
-					Number n = (Number)value;
+				if (value instanceof Number n) {
 					max = max.max(new BigDecimal(n.doubleValue()));
-				} else if (value instanceof BigDecimal) {
-					BigDecimal bd = (BigDecimal)value;
+				} else if (value instanceof BigDecimal bd) {
 					max = max.max(bd);
-				} else if (value instanceof BigInteger) {
-					BigInteger bi = (BigInteger)value;
+				} else if (value instanceof BigInteger bi) {
 					max = max.max(new BigDecimal(bi.longValue()));
 				}
 			}

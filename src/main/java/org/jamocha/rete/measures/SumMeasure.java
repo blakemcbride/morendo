@@ -40,14 +40,11 @@ public class SumMeasure implements AggregateMeasure {
 			for (int idx=0; idx < data.length; idx++) {
 				Index facts = (Index)data[idx];
 				Object value = facts.getFacts()[binding.getLeftRow()].getSlotValue(binding.getLeftIndex());
-				if (value instanceof Number) {
-					Number n = (Number)value;
+				if (value instanceof Number n) {
 					sum = sum.add(new BigDecimal(n.doubleValue()));
-				} else if (value instanceof BigDecimal) {
-					BigDecimal bd = (BigDecimal)value;
+				} else if (value instanceof BigDecimal bd) {
 					sum = sum.add(bd);
-				} else if (value instanceof BigInteger) {
-					BigInteger bi = (BigInteger)value;
+				} else if (value instanceof BigInteger bi) {
 					sum = sum.add(new BigDecimal(bi.longValue()));
 				}
 			}

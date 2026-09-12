@@ -90,10 +90,10 @@ public class ExistConditionCompiler extends AbstractConditionCompiler{
         ExistCondition cond = (ExistCondition)condition;
         BaseNode base = cond.getLastNode();
         if (base != null) {
-            if (base instanceof BaseAlpha) {
-                ((BaseAlpha) base).addSuccessorNode(bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
-            } else if (base instanceof BaseJoin) {
-                ((BaseJoin) base).addSuccessorNode(bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            if (base instanceof BaseAlpha baseAlpha) {
+                (baseAlpha).addSuccessorNode(bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            } else if (base instanceof BaseJoin baseJoin) {
+                (baseJoin).addSuccessorNode(bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
             }
         } else {
             // the rule doesn't have a literal constraint so we need to add
@@ -112,10 +112,10 @@ public class ExistConditionCompiler extends AbstractConditionCompiler{
         ExistCondition cond = (ExistCondition)condition;
         BaseNode base = cond.getLastNode();
         if (base != null) {
-            if (base instanceof BaseAlpha) {
-                ((BaseAlpha) base).addSuccessorNode(bjoin, queryCompiler.getEngine(), null);
-            } else if (base instanceof BaseJoin) {
-                ((BaseJoin) base).addSuccessorNode(bjoin, queryCompiler.getEngine(), null);
+            if (base instanceof BaseAlpha baseAlphaValue) {
+                (baseAlphaValue).addSuccessorNode(bjoin, queryCompiler.getEngine(), null);
+            } else if (base instanceof BaseJoin baseJoinValue) {
+                (baseJoinValue).addSuccessorNode(bjoin, queryCompiler.getEngine(), null);
             }
         } else {
             // the rule doesn't have a literal constraint so we need to add

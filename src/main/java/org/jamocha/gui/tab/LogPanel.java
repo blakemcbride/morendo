@@ -363,16 +363,15 @@ public final class LogPanel extends AbstractJamochaPanel implements ActionListen
 						+ "\nMessage-Type: " + event.getTypeFormatted()
 						+ "\n\nMessage:\n========\n");
 				Object message = event.getMessage();
-				if (message instanceof Exception) {
-					Exception ex = (Exception) message;
+				if (message instanceof Exception ex) {
 					StackTraceElement[] str = ex.getStackTrace();
 					buffer.append(ex.getClass().getName() + ": "
 							+ ex.getMessage());
 					for (StackTraceElement strelem : str) {
 						buffer.append("\n" + strelem);
 					}
-				} else if (message instanceof Function) {
-					buffer.append("(" + ((Function) message).getName() + ")");
+				} else if (message instanceof Function function) {
+					buffer.append("(" + (function).getName() + ")");
 				} else {
 					buffer.append(message.toString());
 				}

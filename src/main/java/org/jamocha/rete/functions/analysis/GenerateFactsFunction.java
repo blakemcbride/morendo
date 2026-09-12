@@ -79,11 +79,8 @@ public class GenerateFactsFunction implements Function {
 			facts = GenerateFacts.generateFacts(r,engine);
 			if (facts.size() > 0) {
 				if (echo) {
-					Iterator<?> itr = facts.iterator();
-					while (itr.hasNext()) {
-						Object data = itr.next();
-						if (data instanceof Deffact) {
-							Deffact f = (Deffact)data;
+					for (Object data : facts) {
+						if (data instanceof Deffact f) {
 							engine.writeMessage( f.toFactString() );
 						} else {
 							engine.writeMessage(data.toString());

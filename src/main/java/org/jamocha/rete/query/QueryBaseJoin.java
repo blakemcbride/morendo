@@ -100,10 +100,10 @@ public abstract class QueryBaseJoin extends BaseNode {
 			throws AssertException {
         for (int idx=0; idx < this.successorNodes.length; idx++) {
             BaseNode node = this.successorNodes[idx];
-			if (node instanceof QueryBaseJoin) {
-				((QueryBaseJoin) node).assertLeft(inx, engine, mem);
-			} else if (node instanceof QueryResultNode) {
-				((QueryResultNode) node).addResult(inx, engine, mem);
+			if (node instanceof QueryBaseJoin queryBaseJoin) {
+				(queryBaseJoin).assertLeft(inx, engine, mem);
+			} else if (node instanceof QueryResultNode queryResultNode) {
+				(queryResultNode).addResult(inx, engine, mem);
 			}
 		}
 	}

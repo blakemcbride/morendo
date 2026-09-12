@@ -10,8 +10,7 @@ public class NodeComparator implements Comparator<Object> {
     }
 
     public int compare(Object left, Object right) {
-        if (left instanceof BaseNode && right instanceof BaseNode) {
-            BaseNode lnode = (BaseNode)left;
+        if (left instanceof BaseNode lnode && right instanceof BaseNode) {
             BaseNode rnode = (BaseNode)right;
             if (lnode.getNodeId() > rnode.getNodeId()) {
                 return 1;

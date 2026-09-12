@@ -68,13 +68,12 @@ public class QueryLIANode extends QueryBaseAlpha {
     {
         for (int idx=0; idx < this.successorNodes.length; idx++) {
             BaseNode nNode = this.successorNodes[idx];
-            if (nNode instanceof QueryBaseJoin) {
-            	QueryBaseJoin next = (QueryBaseJoin) nNode;
+            if (nNode instanceof QueryBaseJoin next) {
                 Fact[] newf = {fact};
                 next.assertLeft(new Index(newf),engine,mem);
-            } else if (nNode instanceof QueryResultNode) {
+            } else if (nNode instanceof QueryResultNode queryResultNode) {
                 Fact[] newf = {fact};
-                QueryResultNode tn = (QueryResultNode)nNode;
+                QueryResultNode tn = queryResultNode;
                 tn.addResult(new Index(newf),engine,mem);
             }
         }

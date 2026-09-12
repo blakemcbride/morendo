@@ -118,12 +118,12 @@ public class ConversionUtils {
     
     public static Object convert(int type, Object val) {
     	if (type == Constants.INT_PRIM_TYPE || type == Constants.INTEGER_OBJECT) {
-    		if (val instanceof BigDecimal) {
-    			return Integer.valueOf(((BigDecimal)val).intValue());
+    		if (val instanceof BigDecimal bigDecimal) {
+    			return Integer.valueOf((bigDecimal).intValue());
     		}
     	} else if (type == Constants.SHORT_PRIM_TYPE || type == Constants.SHORT_OBJECT) {
-    		if (val instanceof BigDecimal) {
-    			return Short.valueOf(((BigDecimal)val).shortValue());
+    		if (val instanceof BigDecimal bigDecimalValue) {
+    			return Short.valueOf((bigDecimalValue).shortValue());
     		}
     	} else if (type == Constants.FLOAT_PRIM_TYPE || type == Constants.FLOAT_OBJECT) {
     		if (val instanceof BigDecimal) {

@@ -63,9 +63,9 @@ public class DiscoverAgentsFunction implements Function {
 		if (params != null && params.length == 1) {
 			String clientName = params[0].getStringValue();
 			Object value = engine.getDefglobalValue(clientName);
-			if (value instanceof MessageClient) {
+			if (value instanceof MessageClient messageClient) {
 				String message = "(refresh-channels)";
-				((MessageClient)value).publish(message);
+				(messageClient).publish(message);
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();

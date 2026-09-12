@@ -79,13 +79,11 @@ public abstract class AbstractCondition implements Condition {
         Iterator<Constraint> itr = constraints.iterator();
         while (itr.hasNext()) {
             Object c = itr.next();
-            if (c instanceof BoundConstraint) {
-                BoundConstraint bc = (BoundConstraint)c;
+            if (c instanceof BoundConstraint bc) {
                 if (!bc.firstDeclaration() && !bc.getIsObjectBinding()) {
                     binds.add(c);
                 }
-            } else if (c instanceof PredicateConstraint) {
-                PredicateConstraint pc = (PredicateConstraint)c;
+            } else if (c instanceof PredicateConstraint pc) {
                 if (pc.isPredicateJoin()) {
                     binds.add(pc);
                 }

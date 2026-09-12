@@ -646,10 +646,10 @@ public class DefaultRuleCompiler implements RuleCompiler {
     protected void attachTerminalNode(BaseNode last, TerminalNode terminal) {
         if (last != null && terminal != null) {
             try {
-                if (last instanceof BaseJoin) {
-                    ((BaseJoin)last).addSuccessorNode(terminal,engine,memory);
-                } else if (last instanceof BaseAlpha) {
-                    ((BaseAlpha)last).addSuccessorNode(terminal,engine,memory);
+                if (last instanceof BaseJoin baseJoin) {
+                    (baseJoin).addSuccessorNode(terminal,engine,memory);
+                } else if (last instanceof BaseAlpha baseAlpha) {
+                    (baseAlpha).addSuccessorNode(terminal,engine,memory);
                 }
             } catch (AssertException e) {
                 
@@ -667,10 +667,10 @@ public class DefaultRuleCompiler implements RuleCompiler {
     public void attachJoinNode(BaseNode last, BaseJoin join) 
     throws AssertException
     {
-        if (last instanceof BaseAlpha) {
-            ((BaseAlpha)last).addSuccessorNode(join,engine,memory);
-        } else if (last instanceof BaseJoin) {
-            ((BaseJoin)last).addSuccessorNode(join,engine,memory);
+        if (last instanceof BaseAlpha baseAlphaValue) {
+            (baseAlphaValue).addSuccessorNode(join,engine,memory);
+        } else if (last instanceof BaseJoin baseJoinValue) {
+            (baseJoinValue).addSuccessorNode(join,engine,memory);
         }
     }
     

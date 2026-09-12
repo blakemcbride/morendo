@@ -172,10 +172,10 @@ public class Defquery implements Query {
             // only has 1 element. in all other cases, there will be atleast
             // 1 join node
             Condition c = this.conditions.get(0);
-            if (c instanceof ObjectCondition) {
-                return ((ObjectCondition)c).getLastNode();
-            } else if (c instanceof TestCondition) {
-                return ((TestCondition)c).getTestNode();
+            if (c instanceof ObjectCondition objectCondition) {
+                return (objectCondition).getLastNode();
+            } else if (c instanceof TestCondition testCondition) {
+                return (testCondition).getTestNode();
             }
             return null;
         } else {
@@ -272,26 +272,23 @@ public class Defquery implements Query {
     private void resolveConditionTemplates(Rete engine, Condition[] cnds) {
         for (int idx=0; idx < cnds.length; idx++) {
             Condition cnd = cnds[idx];
-            if (cnd instanceof ObjectCondition) {
-                ObjectCondition oc = (ObjectCondition)cnd;
+            if (cnd instanceof ObjectCondition oc) {
                 Template dft = engine.findTemplate(oc.getTemplateName());
                 if (dft != null) {
                     oc.setTemplate(dft);
                 }
-            } else if (cnd instanceof ExistCondition) {
-                ExistCondition exc = (ExistCondition) cnd;
+            } else if (cnd instanceof ExistCondition exc) {
                 Template dft = engine.findTemplate(exc.getTemplateName());
                 if (dft != null) {
                     exc.setTemplate(dft);
                 }
-            } else if (cnd instanceof TemporalCondition) {
-                TemporalCondition tempc = (TemporalCondition)cnd;
+            } else if (cnd instanceof TemporalCondition tempc) {
                 Template dft = engine.findTemplate(tempc.getTemplateName());
                 if (dft != null) {
                     tempc.setTemplate(dft);
                 }
-            } else if (cnd instanceof AndCondition) {
-                resolveConditionTemplates(engine, ((AndCondition)cnd).getConditions() );
+            } else if (cnd instanceof AndCondition andCondition) {
+                resolveConditionTemplates(engine, (andCondition).getConditions() );
             }
         }
     }
@@ -345,9 +342,7 @@ public class Defquery implements Query {
 	}
 
 	public void clear() {
-		Iterator<Condition> itr = this.conditions.iterator();
-		while (itr.hasNext()) {
-			Condition cond = itr.next();
+		for (Condition cond : this.conditions) {
 			cond.clear();
 		}
 		this.joins.clear();
@@ -396,11 +391,9 @@ public class Defquery implements Query {
 			ArrayList<QueryBaseAlphaCondition> params = new ArrayList<>(this.queryParameterNodeMap.values());
 			for (int i=0; i < parameters.length; i++) {
 				Object node = params.get(i);
-				if (node instanceof QueryParameterNode) {
-					QueryParameterNode pnode = (QueryParameterNode)node;
+				if (node instanceof QueryParameterNode pnode) {
 					pnode.setQueryParameterValue(parameters[i].getValue());
-				} else if (node instanceof QueryFuncAlphaNode) {
-					QueryFuncAlphaNode pnode = (QueryFuncAlphaNode)node;
+				} else if (node instanceof QueryFuncAlphaNode pnode) {
 					pnode.setQueryParameterValue(parameters[i].getValue());
 				}
 			}

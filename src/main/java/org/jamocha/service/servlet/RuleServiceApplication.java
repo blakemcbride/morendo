@@ -97,8 +97,8 @@ public class RuleServiceApplication implements RuleApplication {
 		if (this.models != null) {
 			for (int idx=0; idx < models.size(); idx++) {
 				Model m = models.get(idx);
-				if (m instanceof ObjectModel) {
-					((ObjectModel)m).setRuleApplication(this);
+				if (m instanceof ObjectModel objectModel) {
+					(objectModel).setRuleApplication(this);
 				}
 				if (m.getURLObject() != null) {
 					urls.add(m.getURLObject());

@@ -145,8 +145,7 @@ public class Defdimension implements CubeDimension {
 	 * of Number of a subclass.
 	 */
 	public Map<Object, Object> getData(Object value, int operator) {
-		if (value instanceof Number) {
-			Number n = (Number)value;
+		if (value instanceof Number n) {
 			switch (operator) {
 				case Constants.GREATER:
 					return queryGreater(n);
@@ -171,8 +170,7 @@ public class Defdimension implements CubeDimension {
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			Object key = keyIterator.next();
-			if (key instanceof Number) {
-				Number v = (Number)key;
+			if (key instanceof Number v) {
 				if (Evaluate.evaluateGreater(v, value)) {
 					@SuppressWarnings("unchecked") Map<Object, Object> data = (Map<Object, Object>) tokenIndex.get(key);
 					matches.putAll(data);
@@ -191,8 +189,7 @@ public class Defdimension implements CubeDimension {
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			Object key = keyIterator.next();
-			if (key instanceof Number) {
-				Number v = (Number)key;
+			if (key instanceof Number v) {
 				if (Evaluate.evaluateLess(v, value)) {
 					@SuppressWarnings("unchecked") Map<Object, Object> data = (Map<Object, Object>)tokenIndex.get(key);
 					matches.putAll(data);
@@ -211,8 +208,7 @@ public class Defdimension implements CubeDimension {
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			Object key = keyIterator.next();
-			if (key instanceof Number) {
-				Number v = (Number)key;
+			if (key instanceof Number v) {
 				if (Evaluate.evaluateGreaterEqual(v, value)) {
 					@SuppressWarnings("unchecked") Map<Object, Object> data = (Map<Object, Object>)tokenIndex.get(key);
 					matches.putAll(data);
@@ -228,11 +224,8 @@ public class Defdimension implements CubeDimension {
 	
 	protected Map<Object,Object> queryLesserEqual(Number value) {
 		Map<Object,Object> matches = new HashMap<>();
-		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
-		while (keyIterator.hasNext()) {
-			Object key = keyIterator.next();
-			if (key instanceof Number) {
-				Number v = (Number)key;
+		for (Object key : this.tokenIndex.keySet()) {
+			if (key instanceof Number v) {
 				if (Evaluate.evaluateLessEqual(v, value)) {
 					@SuppressWarnings("unchecked") Map<Object,Object> data = (Map<Object,Object>)tokenIndex.get(key);
 					matches.putAll(data);

@@ -38,14 +38,11 @@ public class MinMeasure implements AggregateMeasure {
 			for (int idx=1; idx < data.length; idx++) {
 				Index facts = (Index)data[idx];
 				Object value = facts.getFacts()[binding.getLeftRow()].getSlotValue(binding.getLeftIndex());
-				if (value instanceof Number) {
-					Number n = (Number)value;
+				if (value instanceof Number n) {
 					min = min.min(new BigDecimal(n.doubleValue()));
-				} else if (value instanceof BigDecimal) {
-					BigDecimal bd = (BigDecimal)value;
+				} else if (value instanceof BigDecimal bd) {
 					min = min.min(bd);
-				} else if (value instanceof BigInteger) {
-					BigInteger bi = (BigInteger)value;
+				} else if (value instanceof BigInteger bi) {
 					min = min.min(new BigDecimal(bi.longValue()));
 				}
 			}

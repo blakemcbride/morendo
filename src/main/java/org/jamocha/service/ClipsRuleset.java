@@ -61,15 +61,12 @@ public class ClipsRuleset implements Ruleset {
 			Object expr = null;
 			try {
 				while ((expr = parser.basicExpr()) != null) {
-					if (expr instanceof Defrule) {
-						Defrule rl = (Defrule) expr;
+					if (expr instanceof Defrule rl) {
 						engine.getRuleCompiler().addRule(rl);
-					} else if (expr instanceof Deftemplate) {
-						Deftemplate dft = (Deftemplate) expr;
+					} else if (expr instanceof Deftemplate dft) {
 						engine.getCurrentFocus().addTemplate(dft, engine,
 								engine.getWorkingMemory());
-					} else if (expr instanceof Function) {
-						Function fnc = (Function) expr;
+					} else if (expr instanceof Function fnc) {
 						fnc.executeFunction(engine, null);
 					}
 				}

@@ -50,10 +50,10 @@ public class MedianMeasure implements AggregateMeasure {
 				// it's odd
 				int div = size / 2;
 				Object value = data.get(div);
-				if (value instanceof BigDecimal) {
-					return (BigDecimal)value;
-				} else if (value instanceof Number) {
-					return new BigDecimal( ((Number)value).doubleValue() );
+				if (value instanceof BigDecimal bigDecimal) {
+					return bigDecimal;
+				} else if (value instanceof Number numberValue) {
+					return new BigDecimal( (numberValue).doubleValue() );
 				} else {
 					return new BigDecimal( value.toString() );
 				}
@@ -88,8 +88,8 @@ public class MedianMeasure implements AggregateMeasure {
 	protected BigDecimal addValues(Object val1, Object val2) {
 		BigDecimal bd1 = null;
 		BigDecimal bd2 = null;
-		if (val1 instanceof BigDecimal) {
-			bd1 = (BigDecimal)val1;
+		if (val1 instanceof BigDecimal bigDecimalValue) {
+			bd1 = bigDecimalValue;
 		} else {
 			bd1 = new BigDecimal( val1.toString());
 		}

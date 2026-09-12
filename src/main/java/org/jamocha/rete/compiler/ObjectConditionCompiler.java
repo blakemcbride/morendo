@@ -85,24 +85,22 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
             Constraint[] constrs = cond.getConstraints();
             for (int idx=0; idx < constrs.length; idx++) {
                 Constraint cnstr = constrs[idx];
-                if (cnstr instanceof LiteralConstraint) {
+                if (cnstr instanceof LiteralConstraint literalConstraint) {
                     current = 
-                    	ruleCompiler.compileConstraint((LiteralConstraint)cnstr, templ, util);
-                } else if (cnstr instanceof AndLiteralConstraint) {
+                    	ruleCompiler.compileConstraint(literalConstraint, templ, util);
+                } else if (cnstr instanceof AndLiteralConstraint andLiteralConstraint) {
                     current = 
-                    	ruleCompiler.compileConstraint((AndLiteralConstraint)cnstr, templ, util);
-                } else if (cnstr instanceof OrLiteralConstraint) {
+                    	ruleCompiler.compileConstraint(andLiteralConstraint, templ, util);
+                } else if (cnstr instanceof OrLiteralConstraint orLiteralConstraint) {
                     current = 
-                    	ruleCompiler.compileConstraint((OrLiteralConstraint)cnstr, templ, util);
-                } else if (cnstr instanceof BoundConstraint) {
-                    BoundConstraint bc = (BoundConstraint)cnstr;
+                    	ruleCompiler.compileConstraint(orLiteralConstraint, templ, util);
+                } else if (cnstr instanceof BoundConstraint bc) {
                     BaseAlpha2 ifn =
                         ruleCompiler.compileConstraint(bc, templ, util, position);
                     if (ifn != null) {
                         current = ifn;
                     }
-                } else if (cnstr instanceof PredicateConstraint) {
-                	PredicateConstraint pcon = (PredicateConstraint)cnstr;
+                } else if (cnstr instanceof PredicateConstraint pcon) {
                     current = 
                     	ruleCompiler.compileConstraint(pcon, templ, util, position);
                     if (pcon.isPredicateJoin()) {
@@ -133,8 +131,8 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
 	}
 	
 	public void compile(Condition condition, int position, Query query) {
-		if (query instanceof GraphQuery) {
-			compile(condition, position, (GraphQuery)query);
+		if (query instanceof GraphQuery graphQuery) {
+			compile(condition, position, graphQuery);
 		} else {
 			ObjectCondition cond = (ObjectCondition)condition;
 	        QueryObjTypeNode queryOTN = queryCompiler.findQueryObjTypeNode(cond.getTemplate());
@@ -148,20 +146,19 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
 	            Constraint[] constrs = cond.getConstraints();
 	            for (int idx=0; idx < constrs.length; idx++) {
 	                Constraint cnstr = constrs[idx];
-	                if (cnstr instanceof LiteralConstraint) {
+	                if (cnstr instanceof LiteralConstraint literalConstraintValue) {
 	                    current = 
-	                    	queryCompiler.compileConstraint((LiteralConstraint)cnstr, templ, query);
-	                } else if (cnstr instanceof AndLiteralConstraint) {
+	                    	queryCompiler.compileConstraint(literalConstraintValue, templ, query);
+	                } else if (cnstr instanceof AndLiteralConstraint andLiteralConstraintValue) {
 	                    current = 
-	                    	queryCompiler.compileConstraint((AndLiteralConstraint)cnstr, templ, query);
-	                } else if (cnstr instanceof OrLiteralConstraint) {
+	                    	queryCompiler.compileConstraint(andLiteralConstraintValue, templ, query);
+	                } else if (cnstr instanceof OrLiteralConstraint orLiteralConstraintValue) {
 	                    current = 
-	                    	queryCompiler.compileConstraint((OrLiteralConstraint)cnstr, templ, query);
-	                } else if (cnstr instanceof BoundConstraint) {
+	                    	queryCompiler.compileConstraint(orLiteralConstraintValue, templ, query);
+	                } else if (cnstr instanceof BoundConstraint boundConstraint) {
 	                	current =
-	                		queryCompiler.compileConstraint((BoundConstraint)cnstr, templ, query, position);
-	                } else if (cnstr instanceof PredicateConstraint) {
-	                	PredicateConstraint pcon = (PredicateConstraint)cnstr;
+	                		queryCompiler.compileConstraint(boundConstraint, templ, query, position);
+	                } else if (cnstr instanceof PredicateConstraint pcon) {
 	                    current = 
 	                    	queryCompiler.compileConstraint(pcon, templ, query, position);
 	                }
@@ -214,11 +211,10 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
                 } else if (cnstr instanceof OrLiteralConstraint) {
                     current = 
                    		graphCompiler.compileConstraint((OrLiteralConstraint)cnstr, templ, query);
-                } else if (cnstr instanceof BoundConstraint) {
+                } else if (cnstr instanceof BoundConstraint boundConstraintValue) {
                 	current =
-               			graphCompiler.compileConstraint((BoundConstraint)cnstr, templ, query, position);
-                } else if (cnstr instanceof PredicateConstraint) {
-                	PredicateConstraint pcon = (PredicateConstraint)cnstr;
+               			graphCompiler.compileConstraint(boundConstraintValue, templ, query, position);
+                } else if (cnstr instanceof PredicateConstraint pcon) {
                     current = 
                     	graphCompiler.compileConstraint(pcon, templ, query, position);
                 }
@@ -230,8 +226,8 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
                 	}
                 } else if (current != null && current != previous){
                     try {
-                    	if (current instanceof QueryParameterNode) {
-                    		String pname = ((QueryParameterNode)current).getParameterName();
+                    	if (current instanceof QueryParameterNode queryParameterNode) {
+                    		String pname = (queryParameterNode).getParameterName();
                     		if (query.isQueryParameter(pname)) {
                                 previous.addSuccessorNode(current,graphCompiler.getEngine(),null);
                                 previous = current;
@@ -304,8 +300,7 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
         Object[] scc = existing.getSuccessorNodes();
         for (int idx=0; idx < scc.length; idx++) {
             Object next = scc[idx];
-            if (next instanceof BaseAlpha) {
-                BaseAlpha baseAlpha = (BaseAlpha)next;
+            if (next instanceof BaseAlpha baseAlpha) {
                 if (baseAlpha.hashString().equals(alpha.hashString())) {
                     return baseAlpha;
                 }
@@ -360,8 +355,8 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
 	}
 	
 	public void compileFirstJoin(Condition condition, Query query) throws AssertException{
-		if (query instanceof GraphQuery) {
-			compileFirstJoin(condition,(GraphQuery)query);
+		if (query instanceof GraphQuery graphQueryValue) {
+			compileFirstJoin(condition,graphQueryValue);
 		} else {
 			Defquery dquery = (Defquery)query;
 	        ObjectCondition cond = (ObjectCondition) condition;

@@ -26,16 +26,12 @@ public class CubeQueryCondition extends ObjectCondition {
 	
 	public List<Object> getQueryConstraints() {
         ArrayList<Object> binds = new ArrayList<>();
-        Iterator<?> itr = constraints.iterator();
-        while (itr.hasNext()) {
-            Object c = itr.next();
-            if (c instanceof BoundConstraint) {
-                BoundConstraint bc = (BoundConstraint)c;
+        for (Object c : constraints) {
+            if (c instanceof BoundConstraint bc) {
                 if (!bc.firstDeclaration() && !bc.getIsObjectBinding()) {
                     binds.add(c);
                 }
-            } else if (c instanceof PredicateConstraint) {
-                PredicateConstraint pc = (PredicateConstraint)c;
+            } else if (c instanceof PredicateConstraint pc) {
                 binds.add(pc);
             }
         }
