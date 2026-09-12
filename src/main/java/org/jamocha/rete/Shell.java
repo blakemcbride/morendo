@@ -123,7 +123,8 @@ public class Shell {
 
 	/**
 	 * True when the text holds at least one complete expression: every "(" is closed,
-	 * ignoring parentheses inside double-quoted strings and after a ";" comment marker.
+	 * ignoring parentheses inside double-quoted strings and after a ";;" comment marker
+	 * (the grammar's comment token; a single ";" is an ordinary token).
 	 */
 	static boolean isComplete(CharSequence text) {
 		int depth = 0;
@@ -139,7 +140,7 @@ public class Shell {
 				}
 				continue;
 			}
-			if (c == ';') {
+			if (c == ';' && i + 1 < text.length() && text.charAt(i + 1) == ';') {
 				while (i < text.length() && text.charAt(i) != '\n') {
 					i++;
 				}

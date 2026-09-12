@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Morendo is a RETE inference engine in Java that speaks the CLIPS rule language (a fork of the
 Jamocha/Sumatra engine, so the package root is still `org.jamocha`). Deliberately unsupported:
-ordered facts. Added on top of plain RETE: MOLAP cubes, graph queries, temporal facts/rules,
+ordered facts. Comments in `.clp` files are `;;` (a single `;` is a token in this grammar). Added on top of plain RETE: MOLAP cubes, graph queries, temporal facts/rules,
 `only`/`multiple` conditional elements, no-agenda (event-driven) rules, fuzzy bindings, and a
 rule cost function. Design notes for these live in `doc/*.pdf|odt` and `classdiagrams/`.
 
@@ -19,7 +19,7 @@ in `Tasks.java` from Maven Central into `libs/` (git-ignored). Everything built 
 
 ```sh
 ./bld build                 # download libs, generate the parser, compile, copy resources
-./bld test                  # + compile tests, run org.jamocha.AllTests through JUnitCore
+./bld test                  # + compile tests, run every test class through the JUnit console launcher
 ./bld test woolfel.rete.SimpleJoinTest      # one test class
 ./bld golden-update [only_1,manners16]      # regenerate golden files (all, or some)
 ./bld jar | dist | javadoc  # target/morendo-<version>.jar / .zip / javadoc
@@ -38,14 +38,16 @@ signature run `./bld clean test` to avoid stale-class errors. A failed task exit
 (the `guard` wrapper in `Tasks.java`; bld itself would exit 0). `run` and `test` spawn the JVM
 without a console, so the interactive shell must be started with `./morendo`, not `bld run`.
 
-CI (`.github/workflows/ci.yml`) runs `./bld test` on JDK 21. The suite is
-`src/test/java/org/jamocha/AllTests.java`; only classes listed there are tests, the rest of
-`src/test` (`*Benchmark*`, `rulebenchmark`, `hashtest`, `cube`, `sample`) are benchmarks,
-generators and examples. Tests are JUnit 3 style (`extends TestCase`) under the JUnit 4.1 runner.
-Engine tests live in `src/test/java/woolfel/rete`; `src/test/java/woolfel/examples/model` has the
-bean classes (`Account`, `Hobby`, ...) that samples and tests assert as facts. File paths in tests
-and `.clp` files are relative to the repo root. `InitServiceTest` is excluded from the suite
-because the service package never builds applications from its JSON config.
+CI (`.github/workflows/ci.yml`) runs `./bld test` on JDK 21. Tests are JUnit 6 (Jupiter),
+discovered by scanning `target/test-classes`: a class is a test when it has `@Test` methods
+**and** its name matches the launcher's default filter (`*Test`, `*Tests` or `Test*`), so name
+new test classes that way. The rest of `src/test` (`*Benchmark*`, `rulebenchmark`, `hashtest`,
+`cube`, `sample`) are benchmarks, generators and examples with no `@Test` methods. Engine tests
+live in `src/test/java/woolfel/rete`; `src/test/java/woolfel/examples/model` has the bean classes
+(`Account`, `Hobby`, ...) that samples and tests assert as facts. File paths in tests and `.clp`
+files are relative to the repo root. `InitServiceTest` and the two JMS sample tests are
+`@Disabled` with the reason (the service package never builds applications from its JSON config;
+the messaging sample's rule file is not in the repository).
 
 ### Golden (characterization) tests
 
@@ -67,8 +69,10 @@ Morendo> (fire)          # NOT (run); the function is named "fire"
 Morendo> (exit)
 ```
 
-Run from the repo root: `LogFactory` loads `log4j.properties` from the working directory, and log4j
-then writes `./logs/SystemOut.log` (git-ignored, as are `cache/`, `libs/`, `target/`).
+Logging is Log4j 2, configured by `src/main/resources/log4j2.xml`: WARN and above to stderr,
+`-Dmorendo.log.level=DEBUG` for more, `-Dlog4j2.configurationFile=classpath:log4j2-file.xml` to
+also write `logs/morendo.log`. Loggers are obtained with `LogManager.getLogger(X.class)`;
+there is no logging wrapper any more. `logs/`, `cache/`, `libs/` and `target/` are git-ignored.
 
 ### Parser generation
 
@@ -102,9 +106,11 @@ Even `Rete.loadRuleset()` and `Rete.build()` just invoke `BatchFunction` / `Buil
 ### Input path
 
 Text -> `CLIPSParser` (JavaCC) -> builds `Defrule`/`Defquery`/`GraphQuery`/`Deftemplate`/`Defcube` objects
-or `Function` + `Parameter[]` calls -> executed against `Rete`. The shell (`rete/Shell`) does not call
-the parser directly: it opens a `StreamChannel` on `messagerouter/MessageRouter`, whose command thread
-hands each command to `CLIPSInterpreter`, which parses and executes it. `service/` wraps the same engine
+or `Function` + `Parameter[]` calls -> executed against `Rete`. The shell (`rete/Shell`, JLine
+line editing, collects input until the parentheses balance) does not call the parser directly: it
+sends each expression through a `StringChannel` on `messagerouter/MessageRouter`, whose command
+thread hands it to `CLIPSInterpreter`, which parses and executes it, and reads the result events
+back from the channel. `service/` wraps the same engine
 for embedding (`RuleService` -> `RuleApplication` -> `EngineContext`, JSON config in
 `samples/configuration`, plus a `servlet/` variant).
 
@@ -172,5 +178,7 @@ parsed into `Rule` setters in `clips.jj` (`ruleBody()`).
 
 `rete/sc` holds statically-compiled node interfaces that nothing references; `rete/fuzzy` is the FuzzyJ-inspired
 `FuzzyBinding`; `rete/visualisation` and `gui/` are the Swing network viewer and GUI tabs;
-`messaging/` is a JMS client; `logging/LogFactory` wraps log4j 1.2; `rule/util/TopologyCostCalculation`
+`messaging/` is a Jakarta Messaging (JMS) client; `service/servlet` targets Jakarta Servlet;
+`rete/util/IOUtilities.open` is the one place that turns a location string (URL, `classpath:`
+resource or file path) into a stream; `rule/util/TopologyCostCalculation`
 is the README's rule cost function. `benchmark/manners` holds the classic Manners benchmark rule files.

@@ -29,7 +29,9 @@ downloads the dependencies into `libs/`.
 ./morendo -shell # interactive shell from a checkout; ./morendo -gui for the Swing GUI
 ```
 
-Inside the shell: `(batch samples/only/only_1.clp)`, `(facts)`, `(fire)`, `(exit)`.
+Inside the shell: `(batch samples/only/only_1.clp)`, `(facts)`, `(fire)`, `(exit)`. The shell has
+line editing and history (JLine); constructs can be typed over several lines. Logging goes to
+stderr at WARN; see `src/main/resources/log4j2.xml` for the options.
 
 ## Acknowledgements
 Morendo wouldn't be possible without the work by Dr. Forgy, Paul Haley, Gary Riley and Ernest Friedman-Hill. Even though morendo is a clean room implementation of RETE, the lessons learned from OPS5, CLIPS, JESS and half dozen other RETE rule engines influenced the implementation. The rule engine is open source, so that anyone can learn from it.

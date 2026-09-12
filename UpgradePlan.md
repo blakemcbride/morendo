@@ -124,7 +124,25 @@ only file to edit. Model the tasks on KISS.
 Verification: `./bld test` green, Phase 0 goldens unchanged, generated parser byte-identical to
 the committed one.
 
-## Phase 2: Library upgrades
+## Phase 2: Library upgrades - DONE 2026-09-12
+
+Delivered, one commit each: Log4j 2.26.1 directly (`org.jamocha.logging` deleted, `log4j2.xml` +
+opt-in `log4j2-file.xml` on the classpath, `log4j.properties` gone, exception-only log calls now
+keep the throwable); Jackson 2.22.2 (annotations 2.22, no source changes); `jakarta.jms-api` 3.1.0
+and `jakarta.servlet-api` 6.1.0 (import renames, `web.xml` samples on the EE 6.1 schema);
+`IOUtilities.open`/`toURL` replacing the twelve `new URL(String)` sites; JUnit 6.1.3 (Jupiter) with
+tests discovered by classpath scanning through the console launcher, `GoldenSampleTest` as a
+`@TestFactory`, `AllTests` removed, disabled tests carry their reason; JLine 4.4.3 (JLine 4 is the
+current line, not 3) in `Shell`, which now collects balanced expressions and uses a
+`StringChannel`. Departure from the plan: JUnit went straight to Jupiter without a vintage step,
+because the old 4.1 jar is too old for the vintage engine and the conversion was mechanical.
+
+Two things learned: the JUnit console launcher only discovers classes named `*Test`, `*Tests` or
+`Test*`, and the CLIPS grammar here only knows `;;` comments (a single `;` is a token), which
+differs from CLIPS proper and is worth fixing in the grammar during Phase 3.
+
+Original plan:
+
 
 Each item is independent; do them as separate commits.
 
@@ -256,7 +274,7 @@ The Swing GUI stays (decided); the JMS messaging package stays until decided oth
 |---|---|---|---|
 | 0 Safety net | done | none | - |
 | 1 Build system | done | low | 0 |
-| 2 Libraries | 1-2 days | low | 1 |
+| 2 Libraries | done | low | 1 |
 | 3a Mechanical | 2-3 days | low | 0 |
 | 3b Structural | 1-2 weeks | medium | 3a |
 | 4 Modules | 1-2 days | low | 2, 3a |
