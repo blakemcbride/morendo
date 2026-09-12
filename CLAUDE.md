@@ -11,9 +11,8 @@ ordered facts. Comments in `.clp` files are `;;` (a single `;` is a token in thi
 rule cost function. Design notes for these live in `doc/*.pdf|odt` and `classdiagrams/`. The
 version is 3.0.0 (`Constants.VERSION`; the original code was 2.0.0-SNAPSHOT, the modernization 2.0.0). Documents at the root: `README.md` (the GitHub page:
 origins, what changed from Peter Lin's original, where things are), `README2.md` (the original
-README, kept as is), `BUILDING.md`, `USAGE.md`, this file, and `UpgradePlan.md` (the 2.0.0
-modernization plan). `FeaturePlan.md`, the 3.0.0 feature plan, is Blake's local working file and
-is not committed; neither are changes to `UpgradePlan.md`.
+README, kept as is), `BUILDING.md`, `USAGE.md` and this file. The plans that drove the 2.0.0
+modernization and the 3.0.0 language work were working files and are not in the repository.
 
 ## Build and run
 
@@ -94,8 +93,8 @@ scenario scripts in `src/test/resources/scenarios/` (Manners 16 guests, MOLAP, g
 the language scenarios `slot_calls`, `loops`, `deffunction`, `halt`, `deffacts`, `fact_access`,
 `agenda`, `strings`, `routers`, `types`, `lists`, `or_ce`, `forall`, `return_value`) with
 `(watch rules)` on, and compares the printed output, the firing trace and template/rule/fact/node
-counts with `src/test/resources/golden/<name>.txt`. This is the safety net for the modernization
-work in `UpgradePlan.md`: any engine change must keep it green, or the golden diff must be reviewed
+counts with `src/test/resources/golden/<name>.txt`. This is the safety net for engine changes:
+any engine change must keep it green, or the golden diff must be reviewed
 and regenerated on purpose with `./bld golden-update`. Dates and activation timestamps are masked,
 so the files are stable across runs and platforms.
 

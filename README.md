@@ -55,8 +55,8 @@ language additions and the documentation described below are the fork's.
    are per engine, and an engine no longer writes a working directory into the current
    directory.
 5. **Documentation.** An 87-page user manual and tutorial (`manual/morendo.pdf`) whose shell
-   transcripts are real output replayed against every build, a developer guide (`CLAUDE.md`),
-   and the plan that drove the modernization (`UpgradePlan.md`).
+   transcripts are real output replayed against every build, and a developer guide
+   (`CLAUDE.md`).
 
 The version is 3.0.0; the original code was 2.0.0-SNAPSHOT and the modernization was 2.0.0.
 
