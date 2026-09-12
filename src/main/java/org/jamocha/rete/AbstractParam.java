@@ -23,7 +23,8 @@ import java.math.BigInteger;
  * @author Peter Lin AbstractParam provides the common implementation of
  *         Parameter interface.
  */
-public abstract class AbstractParam implements Parameter {
+public abstract sealed class AbstractParam implements Parameter
+		permits ValueParam, BoundParam, FunctionParam, FunctionParam2, SlotParam, StringParam, ShellBoundParam {
 	/**
 	 * 
 	 */

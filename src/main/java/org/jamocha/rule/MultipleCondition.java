@@ -27,7 +27,7 @@ import org.jamocha.rete.compiler.ConditionCompiler;
  * MultipleCondition is a special case of exist when there is
  * more than 1 match for the given pattern.
  */
-public class MultipleCondition extends ObjectCondition {
+public final class MultipleCondition extends ObjectCondition {
 
 	/**
 	 * 

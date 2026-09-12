@@ -26,7 +26,7 @@ import org.jamocha.rete.compiler.ConditionCompiler;
  *
  * ExistCondition for existential quantifier.
  */
-public class ExistCondition extends ObjectCondition {
+public final class ExistCondition extends ObjectCondition {
 
 	/**
 	 * 

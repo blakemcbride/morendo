@@ -22,7 +22,7 @@ package org.jamocha.rete;
  * Parameter can be a value, a bound variable or the result of a function.
  * It is up to the implementing class to provide the necessary logic.
  */
-public interface Parameter extends ReturnValue {
+public sealed interface Parameter extends ReturnValue permits AbstractParam {
     /**
      * In some cases, we may need to reset the parameter. For example,
      * function and bound parameters may need to be reset, so the

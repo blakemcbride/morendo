@@ -20,7 +20,7 @@ package org.jamocha.rete;
  * @author Peter Lin
  *
  */
-public class SlotParam extends AbstractParam {
+public final class SlotParam extends AbstractParam {
 
 	/**
      * 

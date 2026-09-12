@@ -33,7 +33,7 @@ import org.jamocha.rete.compiler.ConditionCompiler;
  * AndCondition is specifically created to handle and conjunctions. AndConditions
  * are compiled to a BetaNode.
  */
-public class OrCondition implements Condition {
+public final class OrCondition implements Condition {
 
     /**
 	 * 

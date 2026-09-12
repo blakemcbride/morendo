@@ -29,7 +29,7 @@ package org.jamocha.rete;
  * the TestNode would pass the necessary fact to a function that
  * uses a bound variable.
  */
-public class FunctionParam extends AbstractParam {
+public final class FunctionParam extends AbstractParam {
 
     /**
      * 

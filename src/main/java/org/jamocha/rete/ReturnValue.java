@@ -26,7 +26,7 @@ import java.math.BigInteger;
  * the return value. Since users will be able to use CLIPS syntax
  * to define functions, we provide this functionality.
  */
-public interface ReturnValue {
+public sealed interface ReturnValue permits Parameter {
     int getValueType();
     
     Object getValue();

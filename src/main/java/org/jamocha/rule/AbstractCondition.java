@@ -9,7 +9,7 @@ import org.jamocha.rete.BaseNode;
 import org.jamocha.rete.Template;
 import org.jamocha.rete.query.QueryBaseAlpha;
 
-public abstract class AbstractCondition implements Condition {
+public abstract sealed class AbstractCondition implements Condition permits ObjectCondition {
 
     /**
 	 * 

@@ -29,7 +29,7 @@ import org.jamocha.rete.compiler.ConditionCompiler;
  * attributes: relativeTime and varname. Since all temporal nodes have
  * to have both, we make it easier to set and get.
  */
-public class TemporalCondition extends ObjectCondition {
+public final class TemporalCondition extends ObjectCondition {
 
     /**
 	 * 

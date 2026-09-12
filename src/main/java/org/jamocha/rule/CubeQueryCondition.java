@@ -9,7 +9,7 @@ import org.jamocha.rete.RuleCompiler;
 import org.jamocha.rete.compiler.CompilerProvider;
 import org.jamocha.rete.compiler.ConditionCompiler;
 
-public class CubeQueryCondition extends ObjectCondition {
+public final class CubeQueryCondition extends ObjectCondition {
 
 	/**
 	 * 

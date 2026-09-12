@@ -27,7 +27,8 @@ package org.jamocha.rule;
  * then evaluated against 1 or more operations.
  * 
  */
-public interface Constraint {
+public sealed interface Constraint
+		permits LiteralConstraint, BoundConstraint, PredicateConstraint, AndLiteralConstraint, OrLiteralConstraint {
     /**
      * This should be the name of the constraint. In the case of an
      * object, it is the field's name

@@ -28,7 +28,8 @@ import org.jamocha.rete.compiler.ConditionCompiler;
  * matches on the fields of an object. The patterns may be simple value
  * comparisons, or joins against other objects.
  */
-public class ObjectCondition extends AbstractCondition {
+public sealed class ObjectCondition extends AbstractCondition
+		permits ExistCondition, OnlyCondition, MultipleCondition, TemporalCondition, CubeQueryCondition {
 	
 	/**
 	 * 

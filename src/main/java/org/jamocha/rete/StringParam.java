@@ -23,7 +23,7 @@ package org.jamocha.rete;
  * implementation for the convienance methods that convert the value to
  * primitive types.
  */
-public class StringParam extends AbstractParam {
+public final class StringParam extends AbstractParam {
 
 	/**
 	 * 

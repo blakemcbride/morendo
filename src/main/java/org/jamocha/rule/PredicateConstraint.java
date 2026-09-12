@@ -35,7 +35,7 @@ import org.jamocha.rete.ValueParam;
  * on it. For example (myslot ?s&:(> ?s 100) )
  * 
  */
-public class PredicateConstraint implements Constraint {
+public final class PredicateConstraint implements Constraint {
 
     /**
 	 * 

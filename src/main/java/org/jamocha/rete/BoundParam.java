@@ -22,7 +22,7 @@ package org.jamocha.rete;
  * BoundParam is a parameter that is a binding. The test node will need to
  * call setFact(Fact[] facts) so the parameter can access the value.
  */
-public class BoundParam extends AbstractParam {
+public final class BoundParam extends AbstractParam {
 
     /**
 	 * 

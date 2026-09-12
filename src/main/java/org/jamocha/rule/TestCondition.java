@@ -45,7 +45,7 @@ import org.jamocha.rete.functions.ShellFunction;
  * A TestCondition is a pattern that uses a function. For example,
  * in CLIPS, (test (> ?var1 ?var2) )
  */
-public class TestCondition implements Condition {
+public final class TestCondition implements Condition {
 
     /**
 	 * 

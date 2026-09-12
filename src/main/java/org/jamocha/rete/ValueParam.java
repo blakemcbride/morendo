@@ -25,7 +25,7 @@ import java.math.BigDecimal;
  * implementation for the convienance methods that convert the value to
  * primitive types.
  */
-public class ValueParam extends AbstractParam {
+public sealed class ValueParam extends AbstractParam permits DefaultReturnValue {
 
 	/**
      * 

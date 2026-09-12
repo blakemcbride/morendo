@@ -35,7 +35,7 @@ import org.jamocha.rete.ConversionUtils;
  * term literal constraint, it doesn't make sense to fight existing
  * terminology.
  */
-public class AndLiteralConstraint implements Constraint {
+public final class AndLiteralConstraint implements Constraint {
 
     /**
 	 * 

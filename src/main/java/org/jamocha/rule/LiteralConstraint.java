@@ -28,7 +28,7 @@ import org.jamocha.rete.Constants;
  * term literal constraint, it doesn't make sense to fight existing
  * terminology.
  */
-public class LiteralConstraint implements Constraint {
+public final class LiteralConstraint implements Constraint {
 
     /**
 	 * 

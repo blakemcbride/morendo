@@ -24,7 +24,7 @@ package org.jamocha.rete;
  * can bind an object, fact or value. Bindings in the shell are global
  * bindings.
  */
-public class ShellBoundParam extends AbstractParam {
+public final class ShellBoundParam extends AbstractParam {
 
     /**
      * 

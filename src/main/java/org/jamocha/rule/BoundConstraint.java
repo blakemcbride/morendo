@@ -29,7 +29,7 @@ import org.jamocha.rete.Constants;
  * for bound constraints. When a rule declares a slot as a binding,
  * a BoundConstraint is used.
  */
-public class BoundConstraint implements Constraint {
+public final class BoundConstraint implements Constraint {
 
     /**
 	 * 

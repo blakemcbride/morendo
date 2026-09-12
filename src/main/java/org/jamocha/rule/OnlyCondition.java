@@ -27,7 +27,7 @@ import org.jamocha.rete.compiler.ConditionCompiler;
  * OnlyCondition is a special case of exist when there is
  * only 1 match for the given pattern.
  */
-public class OnlyCondition extends ObjectCondition {
+public final class OnlyCondition extends ObjectCondition {
 
 	/**
 	 * 

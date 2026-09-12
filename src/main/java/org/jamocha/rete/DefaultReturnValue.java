@@ -31,7 +31,7 @@ package org.jamocha.rete;
  * The convienance methods in ReturnValue should make it easier to access the
  * values.
  */
-public class DefaultReturnValue extends ValueParam {
+public final class DefaultReturnValue extends ValueParam {
 
 	/**
 	 * 

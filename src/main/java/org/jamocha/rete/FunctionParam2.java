@@ -24,7 +24,7 @@ import org.jamocha.rule.Rule;
  *
  * Describe difference between the Function parameters
  */
-public class FunctionParam2 extends AbstractParam {
+public final class FunctionParam2 extends AbstractParam {
 
     /**
      * 
