@@ -67,13 +67,13 @@ public class WatchFunction implements Function {
     
     protected void setWatch(Rete engine, String cmd) {
         if (cmd.equals("all")) {
-            engine.setWatch(Rete.WATCH_ALL);
+            engine.setWatch(Rete.Watch.ALL);
         } else if (cmd.equals("facts")) {
-            engine.setWatch(Rete.WATCH_FACTS);
+            engine.setWatch(Rete.Watch.FACTS);
         } else if (cmd.equals("activations")) {
-            engine.setWatch(Rete.WATCH_ACTIVATIONS);
+            engine.setWatch(Rete.Watch.ACTIVATIONS);
         } else if (cmd.equals("rules")) {
-            engine.setWatch(Rete.WATCH_RULES);
+            engine.setWatch(Rete.Watch.RULES);
         }
     }
 

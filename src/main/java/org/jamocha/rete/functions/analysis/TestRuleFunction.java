@@ -63,7 +63,7 @@ public class TestRuleFunction implements Function {
 			ArrayList<?> facts = GenerateFacts.generateFacts(r,engine);
 			if (facts.size() > 0) {
 				try {
-					engine.setWatch(Rete.WATCH_ALL);
+					engine.setWatch(Rete.Watch.ALL);
 					for (Object data : facts) {
 						if (data instanceof Deffact deffact) {
 							engine.assertFact( deffact );
@@ -72,7 +72,7 @@ public class TestRuleFunction implements Function {
 						}
 					}
 					engine.fire();
-					engine.setUnWatch(Rete.WATCH_ALL);
+					engine.setUnWatch(Rete.Watch.ALL);
 				} catch (AssertException e) {
 					e.printStackTrace();
 				}

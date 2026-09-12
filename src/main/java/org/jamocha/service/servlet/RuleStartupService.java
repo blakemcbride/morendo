@@ -183,10 +183,10 @@ public class RuleStartupService implements ServletContextListener, RuleService {
 			int initialCount = application.getInitialPool();
 			for (int c=0; c < initialCount; c++) {
 				org.jamocha.rete.Rete engine = new org.jamocha.rete.Rete();
-				engine.setWatch(Rete.WATCH_ALL);
+				engine.setWatch(Rete.Watch.ALL);
 				application.initializeEngine(engine);
 				application.setCurrentPoolCount(c + 1);
-				engine.setUnWatch(Rete.WATCH_ALL);
+				engine.setUnWatch(Rete.Watch.ALL);
 				queue.add(engine);
 			}
 		}

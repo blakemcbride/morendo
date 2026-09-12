@@ -413,19 +413,19 @@ public final class ShellPanel extends AbstractJamochaPanel implements ActionList
 						stopTimer();
 						StringBuilder buffer = new StringBuilder();
 						for (MessageEvent event : msgEvents) {
-							if (event.getType() == MessageEvent.PARSE_ERROR
-									|| event.getType() == MessageEvent.ERROR
-									|| event.getType() == MessageEvent.RESULT) {
+							if (event.getType() == MessageEvent.Type.PARSE_ERROR
+									|| event.getType() == MessageEvent.Type.ERROR
+									|| event.getType() == MessageEvent.Type.RESULT) {
 
 								printPrompt = true;
 								lastIncompleteCommand = new StringBuilder();
 							}
-							if (event.getType() == MessageEvent.ERROR) {
+							if (event.getType() == MessageEvent.Type.ERROR) {
 								buffer.append(exceptionToString(
 										(Exception) event.getMessage()).trim()
 										+ System.getProperty("line.separator"));
 							}
-							if (event.getType() != MessageEvent.COMMAND
+							if (event.getType() != MessageEvent.Type.COMMAND
 									&& !event.getMessage().toString()
 											.equals("") && !event.getMessage().equals(Constants.NIL_SYMBOL)) {
 								if(event.getMessage() instanceof DefaultReturnVector) {

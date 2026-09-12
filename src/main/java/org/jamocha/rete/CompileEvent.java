@@ -29,7 +29,7 @@ public class CompileEvent extends AbstractEvent {
 	 * 
 	 */
 
-	private int type = -1;
+	private Kind type;
 
 	private String message = "";
 
@@ -38,16 +38,16 @@ public class CompileEvent extends AbstractEvent {
 	/**
 	 * @param source
 	 */
-	public CompileEvent(Object source, int eventType) {
+	public CompileEvent(Object source, Kind eventType) {
 		super(source);
 		this.type = eventType;
 	}
 
-	public int getEventType() {
+	public Kind getEventType() {
 		return this.type;
 	}
 
-	public void setEventType(int eventType) {
+	public void setEventType(Kind eventType) {
 		this.type = eventType;
 	}
 

@@ -148,13 +148,13 @@ public class DefaultRuleCompiler implements RuleCompiler {
 	                
 	                // now we add the rule to the module
 	                currentMod.addRule(rule);
-	                CompileEvent ce = new CompileEvent(rule,CompileEvent.ADD_RULE_EVENT);
+	                CompileEvent ce = new CompileEvent(rule,CompileEvent.Kind.ADD_RULE);
 	                ce.setRule(rule);
                     ce.setMessage("Complexity: " + rule.getComplexity().getValue());
 	                this.notifyListener(ce);
 	                return true;
 	            } catch (AssertException e) {
-	                CompileEvent ce = new CompileEvent(rule,CompileEvent.INVALID_RULE);
+	                CompileEvent ce = new CompileEvent(rule,CompileEvent.Kind.INVALID_RULE);
 	                ce.setMessage(Messages.getString("RuleCompiler.assert.error")); //$NON-NLS-1$
 	                this.notifyListener(ce);
 	                log.debug(e.toString(), e);
@@ -169,7 +169,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
                 attachTerminalNode(last,tnode);
                 // now we add the rule to the module
                 currentMod.addRule(rule);
-                CompileEvent ce = new CompileEvent(rule,CompileEvent.ADD_RULE_EVENT);
+                CompileEvent ce = new CompileEvent(rule,CompileEvent.Kind.ADD_RULE);
                 ce.setRule(rule);
                 this.notifyListener(ce);
                 return true;
@@ -555,14 +555,14 @@ public class DefaultRuleCompiler implements RuleCompiler {
                         // the function doesn't return boolean, so we have to notify
                         // the listeners the condition is not valid
                         CompileEvent ce = 
-                            new CompileEvent(this,CompileEvent.FUNCTION_INVALID);
+                            new CompileEvent(this,CompileEvent.Kind.FUNCTION_INVALID);
                         ce.setMessage(INVALID_FUNCTION + " " + f.getName() + " " + f.getReturnType()); //$NON-NLS-1$
                         this.notifyListener(ce);
                     }
                 } else {
                     // we need to notify listeners the function wasn't found
                     CompileEvent ce = 
-                        new CompileEvent(this,CompileEvent.FUNCTION_NOT_FOUND);
+                        new CompileEvent(this,CompileEvent.Kind.FUNCTION_NOT_FOUND);
                     // ce.setMessage(FUNCTION_NOT_FOUND + " " + f.getReturnType()); //$NON-NLS-1$
                     ce.setMessage(FUNCTION_NOT_FOUND + " Null return type"); // TODO
                     this.notifyListener(ce);
@@ -710,10 +710,10 @@ public class DefaultRuleCompiler implements RuleCompiler {
         //engine.writeMessage(event.getMessage());
         while (itr.hasNext()) {
             CompilerListener listen = itr.next();
-            int etype = event.getEventType();
-            if (etype == CompileEvent.ADD_RULE_EVENT) {
+            CompileEvent.Kind etype = event.getEventType();
+            if (etype == CompileEvent.Kind.ADD_RULE) {
                 listen.ruleAdded(event);
-            } else if (etype == CompileEvent.REMOVE_RULE_EVENT) {
+            } else if (etype == CompileEvent.Kind.REMOVE_RULE) {
                 listen.ruleRemoved(event);
             } else {
                 listen.compileError(event);

@@ -99,11 +99,11 @@ public class Shell {
 	}
 
 	private void print(MessageEvent event) {
-		if (event.getType() == MessageEvent.COMMAND) {
+		if (event.getType() == MessageEvent.Type.COMMAND) {
 			return;
 		}
 		Object message = event.getMessage();
-		if (event.getType() == MessageEvent.ERROR && message instanceof Exception) {
+		if (event.getType() == MessageEvent.Type.ERROR && message instanceof Exception) {
 			System.out.println(stackTrace((Exception) message).trim());
 		}
 		if (message instanceof DefaultReturnVector rv) {

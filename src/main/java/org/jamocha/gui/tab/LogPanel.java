@@ -136,77 +136,29 @@ public final class LogPanel extends AbstractJamochaPanel implements ActionListen
 			this(event.getType(), event.getMessage(), event.getChannelId());
 		}
 
-		public LogMessageEvent(int type, Object message, String channelId) {
+		public LogMessageEvent(MessageEvent.Type type, Object message, String channelId) {
 			super(type, message, channelId);
 			switch (type) {
-			case MessageEvent.ADD_NODE_ERROR:
-				typeFormatted = "ERROR: Error adding node";
-				superType = 3;
-				break;
-			case MessageEvent.ADD_RULE_EVENT:
-				typeFormatted = "EVENT: added Rule";
-				superType = 1;
-				break;
-			case MessageEvent.CLIPSPARSER_ERROR:
-				typeFormatted = "ERROR: Error in CLIPSParser";
-				superType = 3;
-				break;
-			case MessageEvent.CLIPSPARSER_REINIT:
-				typeFormatted = "EVENT: CLIPSParser reinitialized";
-				superType = 1;
-				break;
-			case MessageEvent.CLIPSPARSER_WARNING:
-				typeFormatted = "WARNING: CLIPSParser-Warning";
-				superType = 2;
-				break;
-			case MessageEvent.COMMAND:
+			case COMMAND -> {
 				typeFormatted = "EVENT: incoming Command";
 				superType = 1;
-				break;
-			case MessageEvent.ENGINE:
-				typeFormatted = "EVENT: Engine-Message";
-				superType = 1;
-				break;
-			case MessageEvent.ERROR:
-				typeFormatted = "ERROR: unspecified Error";
-				superType = 3;
-				break;
-			case MessageEvent.FUNCTION_INVALID:
-				typeFormatted = "WARNING: invalid Function";
-				superType = 2;
-				break;
-			case MessageEvent.FUNCTION_NOT_FOUND:
-				typeFormatted = "WARNING: Function not found";
-				superType = 2;
-				break;
-			case MessageEvent.INVALID_RULE:
-				typeFormatted = "WARNING: invalid Rule";
-				superType = 2;
-				break;
-			case MessageEvent.PARSE_ERROR:
-				typeFormatted = "ERROR: Parse-Error";
-				superType = 3;
-				break;
-			case MessageEvent.REMOVE_RULE_EVENT:
-				typeFormatted = "EVENT: Rule removed";
-				superType = 1;
-				break;
-			case MessageEvent.RESULT:
+			}
+			case RESULT -> {
 				typeFormatted = "EVENT: returned result";
 				superType = 1;
-				break;
-			case MessageEvent.RULE_EXISTS:
-				typeFormatted = "EVENT: Rule exists";
+			}
+			case ENGINE -> {
+				typeFormatted = "EVENT: Engine-Message";
 				superType = 1;
-				break;
-			case MessageEvent.TEMPLATE_NOTFOUND:
-				typeFormatted = "WARNING: Template not found";
-				superType = 2;
-				break;
-			default:
-				typeFormatted = "Unknown Messagetype";
-				superType = 1;
-				break;
+			}
+			case PARSE_ERROR -> {
+				typeFormatted = "ERROR: Parse-Error";
+				superType = 3;
+			}
+			case ERROR -> {
+				typeFormatted = "ERROR: unspecified Error";
+				superType = 3;
+			}
 			}
 		}
 

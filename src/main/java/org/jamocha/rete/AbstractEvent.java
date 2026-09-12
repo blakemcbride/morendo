@@ -29,29 +29,11 @@ public abstract class AbstractEvent extends EventObject {
 	 * 
 	 */
 
-	public static final int ADD_RULE_EVENT = 0;
-
-	public static final int REMOVE_RULE_EVENT = 1;
-
-	public static final int PARSE_ERROR = 2;
-
-	public static final int INVALID_RULE = 3;
-
-	public static final int RULE_EXISTS = 4;
-
-	public static final int TEMPLATE_NOTFOUND = 5;
-
-	public static final int CLIPSPARSER_ERROR = 6;
-
-	public static final int CLIPSPARSER_WARNING = 7;
-	
-	public static final int CLIPSPARSER_REINIT = 8;
-
-	public static final int FUNCTION_NOT_FOUND = 9;
-	
-	public static final int FUNCTION_INVALID = 10;
-	
-	public static final int ADD_NODE_ERROR = 11;
+	/** What a compile event reports. */
+	public enum Kind {
+		ADD_RULE, REMOVE_RULE, PARSE_ERROR, INVALID_RULE, RULE_EXISTS, TEMPLATE_NOTFOUND, CLIPSPARSER_ERROR,
+		CLIPSPARSER_WARNING, CLIPSPARSER_REINIT, FUNCTION_NOT_FOUND, FUNCTION_INVALID, ADD_NODE_ERROR
+	}
 	
 	/**
 	 * @param source

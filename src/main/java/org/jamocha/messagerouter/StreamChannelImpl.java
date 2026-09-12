@@ -46,11 +46,11 @@ class StreamChannelImpl extends AbstractCommunicationChannel implements
 					}
 				} catch (ParseException e) {
 					router.postMessageEvent(new MessageEvent(
-							MessageEvent.PARSE_ERROR, e, getChannelId()));
+							MessageEvent.Type.PARSE_ERROR, e, getChannelId()));
 					parser.ReInit(reader);
 				} catch (TokenMgrError e) {
 					router.postMessageEvent(new MessageEvent(
-							MessageEvent.PARSE_ERROR, e, getChannelId()));
+							MessageEvent.Type.PARSE_ERROR, e, getChannelId()));
 					parser.ReInit(reader);
 				}
 			}
@@ -102,7 +102,7 @@ class StreamChannelImpl extends AbstractCommunicationChannel implements
 				router.enqueueCommand(command, getChannelId());
 			}
 		} catch (ParseException e) {
-			router.postMessageEvent(new MessageEvent(MessageEvent.PARSE_ERROR,
+			router.postMessageEvent(new MessageEvent(MessageEvent.Type.PARSE_ERROR,
 					e, getChannelId()));
 		}
 	}

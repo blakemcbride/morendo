@@ -283,7 +283,7 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler{
                 }
             } catch (AssertException e) {
                 // send an event with the correct error
-                CompileEvent ce = new CompileEvent(this,CompileEvent.ADD_NODE_ERROR);
+                CompileEvent ce = new CompileEvent(this,CompileEvent.Kind.ADD_NODE_ERROR);
                 ce.setMessage(alpha.toPPString());
                 ruleCompiler.notifyListener(ce);
             }

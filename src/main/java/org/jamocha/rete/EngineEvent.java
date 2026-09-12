@@ -30,17 +30,13 @@ public class EngineEvent extends EventObject {
     /**
      * 
      */
-    public static final int ASSERT_EVENT = 0;
-    public static final int RETRACT_EVENT = 1;
-    public static final int PROFILE_EVENT = 2;
-    public static final int ASSERT_RETRACT_EVENT = 3;
-    public static final int ASSERT_RETRACT_PROFILE_EVENT = 4;
-    public static final int ASSERT_PROFILE_EVENT = 5;
+	/** What an engine event reports. */
+	public enum Kind { ASSERT, RETRACT, PROFILE, ASSERT_RETRACT, ASSERT_RETRACT_PROFILE, ASSERT_PROFILE }
  
     /**
      * the default value is assert event
      */
-    private int typeCode = ASSERT_EVENT;
+    private Kind typeCode = Kind.ASSERT;
     private transient BaseNode sourceNode = null;
     private Fact[] facts = null;
 
@@ -50,18 +46,18 @@ public class EngineEvent extends EventObject {
      * @param typeCode - event type
      * @param sourceNode - the node which initiated the event
      */
-	public EngineEvent(Object source, int typeCode, BaseNode sourceNode, Fact[] facts) {
+	public EngineEvent(Object source, Kind typeCode, BaseNode sourceNode, Fact[] facts) {
 		super(source);
         this.typeCode = typeCode;
         this.sourceNode = sourceNode;
         this.facts = facts;
 	}
     
-    public int getEventType() {
+    public Kind getEventType() {
         return this.typeCode;
     }
     
-    public void setEventType(int type) {
+    public void setEventType(Kind type) {
         this.typeCode = type;
     }
 

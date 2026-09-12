@@ -163,7 +163,7 @@ public class GoldenSampleTest {
 		Rete engine = new Rete();
 		StringWriter out = new StringWriter();
 		engine.addPrintWriter("golden", new PrintWriter(out));
-		engine.setWatch(Rete.WATCH_RULES);
+		engine.setWatch(Rete.Watch.RULES);
 		try {
 			if (scenario.before != null) {
 				scenario.before.apply(engine);

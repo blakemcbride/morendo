@@ -55,17 +55,17 @@ public class UnProfileFunction implements Function {
         if (params != null && params.length > 0) {
             for (int idx=0; idx < params.length; idx++) {
                 if (params[idx].getStringValue().equals("all")) {
-                    engine.setProfile(Rete.PROFILE_ALL);
+                    engine.setProfile(Rete.Profile.ALL);
                 } else if (params[idx].getStringValue().equals("assert-fact")) {
-                    engine.setProfile(Rete.PROFILE_ASSERT);
+                    engine.setProfile(Rete.Profile.ASSERT);
                 } else if (params[idx].getStringValue().equals("add-activation")) {
-                    engine.setProfile(Rete.PROFILE_ADD_ACTIVATION);
+                    engine.setProfile(Rete.Profile.ADD_ACTIVATION);
                 } else if (params[idx].getStringValue().equals("fire")) {
-                    engine.setProfile(Rete.PROFILE_FIRE);
+                    engine.setProfile(Rete.Profile.FIRE);
                 } else if (params[idx].getStringValue().equals("retract-fact")) {
-                    engine.setProfile(Rete.PROFILE_RETRACT);
+                    engine.setProfile(Rete.Profile.RETRACT);
                 } else if (params[idx].getStringValue().equals("remove-activation")) {
-                    engine.setProfile(Rete.PROFILE_RM_ACTIVATION);
+                    engine.setProfile(Rete.Profile.RM_ACTIVATION);
                 }
             }
         }

@@ -61,8 +61,8 @@ public class StringChannelImpl extends AbstractCommunicationChannel implements
 							if (count > 0) {
 								MessageEvent lastMessage = commandMessages
 										.get(count - 1);
-								if (lastMessage.getType() == MessageEvent.RESULT
-										|| lastMessage.getType() == MessageEvent.ERROR) {
+								if (lastMessage.getType() == MessageEvent.Type.RESULT
+										|| lastMessage.getType() == MessageEvent.Type.ERROR) {
 									alreadyReceived.addAll(commandMessages);
 									commandMessages.clear();
 									blocked = false;
@@ -79,10 +79,10 @@ public class StringChannelImpl extends AbstractCommunicationChannel implements
 				}
 			}
 		} catch (ParseException e) {
-			router.postMessageEvent(new MessageEvent(MessageEvent.PARSE_ERROR,
+			router.postMessageEvent(new MessageEvent(MessageEvent.Type.PARSE_ERROR,
 					e, getChannelId()));
 		} catch (TokenMgrError e) {
-			router.postMessageEvent(new MessageEvent(MessageEvent.PARSE_ERROR,
+			router.postMessageEvent(new MessageEvent(MessageEvent.Type.PARSE_ERROR,
 					e, getChannelId()));
 			parser.ReInit(reader);
 		}

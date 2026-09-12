@@ -135,7 +135,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
 				this.currentQuery = null;
 				return true;
 			} catch (AssertException e) {
-				CompileEvent ce = new CompileEvent(query, CompileEvent.INVALID_RULE);
+				CompileEvent ce = new CompileEvent(query, CompileEvent.Kind.INVALID_RULE);
 				ce.setMessage(Messages.getString("RuleCompiler.assert.error"));
 				this.notifyListener(ce);
 				log.debug(e.toString(), e);
@@ -453,14 +453,14 @@ public class DefaultQueryCompiler implements QueryCompiler {
                     // the function doesn't return boolean, so we have to notify
                     // the listeners the condition is not valid
                     CompileEvent ce = 
-                        new CompileEvent(this,CompileEvent.FUNCTION_INVALID);
+                        new CompileEvent(this,CompileEvent.Kind.FUNCTION_INVALID);
                     ce.setMessage(INVALID_FUNCTION + " " + f.getReturnType()); //$NON-NLS-1$
                     this.notifyListener(ce);
                 }
             } else {
                 // we need to notify listeners the function wasn't found
                 CompileEvent ce = 
-                    new CompileEvent(this,CompileEvent.FUNCTION_NOT_FOUND);
+                    new CompileEvent(this,CompileEvent.Kind.FUNCTION_NOT_FOUND);
                 ce.setMessage(FUNCTION_NOT_FOUND + " " + f.getReturnType()); //$NON-NLS-1$
                 this.notifyListener(ce);
             }
@@ -587,10 +587,10 @@ public class DefaultQueryCompiler implements QueryCompiler {
         //engine.writeMessage(event.getMessage());
         while (itr.hasNext()) {
             CompilerListener listen = itr.next();
-            int etype = event.getEventType();
-            if (etype == CompileEvent.ADD_RULE_EVENT) {
+            CompileEvent.Kind etype = event.getEventType();
+            if (etype == CompileEvent.Kind.ADD_RULE) {
                 listen.ruleAdded(event);
-            } else if (etype == CompileEvent.REMOVE_RULE_EVENT) {
+            } else if (etype == CompileEvent.Kind.REMOVE_RULE) {
                 listen.ruleRemoved(event);
             } else {
                 listen.compileError(event);

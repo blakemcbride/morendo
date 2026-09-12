@@ -89,16 +89,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	/**
 	 * 
 	 */
-	public static final int WATCH_ACTIVATIONS = 001;
-	public static final int WATCH_ALL = 002;
-	public static final int WATCH_FACTS = 003;
-	public static final int WATCH_RULES = 004;
-	public static final int PROFILE_ADD_ACTIVATION = 101;
-	public static final int PROFILE_ASSERT = 102;
-	public static final int PROFILE_ALL = 103;
-	public static final int PROFILE_FIRE = 104;
-	public static final int PROFILE_RETRACT = 105;
-	public static final int PROFILE_RM_ACTIVATION = 106;
+	/** What (watch ...) and (unwatch ...) switch on. */
+	public enum Watch { ACTIVATIONS, ALL, FACTS, RULES }
+
+	/** What (profile ...) and (unprofile ...) switch on. */
+	public enum Profile { ADD_ACTIVATION, ASSERT, ALL, FIRE, RETRACT, RM_ACTIVATION }
 	protected boolean halt = true;
 	protected int firingcount = 0;
 	protected boolean prettyPrint = false;
@@ -1178,18 +1173,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * 
 	 * @param type
 	 */
-	public void setWatch(int type) {
-		if (type == WATCH_ACTIVATIONS) {
-			this.workingMem.getAgenda().setWatch(true);
-		} else if (type == WATCH_ALL) {
-			this.workingMem.getAgenda().setWatch(true);
-            this.workingMem.setWatchFact(true);
-            this.workingMem.setWatchRules(true);
-		} else if (type == WATCH_FACTS) {
-            this.workingMem.setWatchFact(true);
-		} else if (type == WATCH_RULES) {
-            this.workingMem.setWatchRules(true);
-		}
+	public void setWatch(Watch what) {
+		watch(what, true);
 	}
 
 	/**
@@ -1198,17 +1183,20 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * 
 	 * @param type
 	 */
-	public void setUnWatch(int type) {
-		if (type == WATCH_ACTIVATIONS) {
-			this.workingMem.getAgenda().setWatch(false);
-		} else if (type == WATCH_ALL) {
-			this.workingMem.getAgenda().setWatch(false);
-            this.workingMem.setWatchFact(false);
-            this.workingMem.setWatchRules(false);
-		} else if (type == WATCH_FACTS) {
-            this.workingMem.setWatchFact(false);
-		} else if (type == WATCH_RULES) {
-            this.workingMem.setWatchRules(false);
+	public void setUnWatch(Watch what) {
+		watch(what, false);
+	}
+
+	private void watch(Watch what, boolean on) {
+		switch (what) {
+		case ACTIVATIONS -> this.workingMem.getAgenda().setWatch(on);
+		case FACTS -> this.workingMem.setWatchFact(on);
+		case RULES -> this.workingMem.setWatchRules(on);
+		case ALL -> {
+			this.workingMem.getAgenda().setWatch(on);
+			this.workingMem.setWatchFact(on);
+			this.workingMem.setWatchRules(on);
+		}
 		}
 	}
 
@@ -1252,24 +1240,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * 
 	 * @param type
 	 */
-	public void setProfile(int type) {
-		if (type == PROFILE_ADD_ACTIVATION) {
-			this.workingMem.getAgenda().setProfileAdd(true);
-		} else if (type == PROFILE_ASSERT) {
-            this.workingMem.setProfileAssert(true);
-		} else if (type == PROFILE_ALL) {
-			this.workingMem.getAgenda().setProfileAdd(true);
-            this.workingMem.setProfileAssert(true);
-            this.workingMem.setProfileFire(true);
-            this.workingMem.setProfileRetract(true);
-			this.workingMem.getAgenda().setProfileRemove(true);
-		} else if (type == PROFILE_FIRE) {
-            this.workingMem.setProfileFire(true);
-		} else if (type == PROFILE_RETRACT) {
-            this.workingMem.setProfileRetract(true);
-		} else if (type == PROFILE_RM_ACTIVATION) {
-			this.workingMem.getAgenda().setProfileRemove(true);
-		}
+	public void setProfile(Profile what) {
+		profile(what, true);
 	}
 
 	/**
@@ -1278,23 +1250,24 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 * 
 	 * @param type
 	 */
-	public void setProfileOff(int type) {
-		if (type == PROFILE_ADD_ACTIVATION) {
-			this.workingMem.getAgenda().setProfileAdd(false);
-		} else if (type == PROFILE_ASSERT) {
-            this.workingMem.setProfileAssert(false);
-		} else if (type == PROFILE_ALL) {
-			this.workingMem.getAgenda().setProfileAdd(false);
-            this.workingMem.setProfileAssert(false);
-            this.workingMem.setProfileFire(false);
-            this.workingMem.setProfileRetract(false);
-			this.workingMem.getAgenda().setProfileRemove(false);
-		} else if (type == PROFILE_FIRE) {
-            this.workingMem.setProfileFire(false);
-		} else if (type == PROFILE_RETRACT) {
-            this.workingMem.setProfileRetract(false);
-		} else if (type == PROFILE_RM_ACTIVATION) {
-			this.workingMem.getAgenda().setProfileRemove(false);
+	public void setProfileOff(Profile what) {
+		profile(what, false);
+	}
+
+	private void profile(Profile what, boolean on) {
+		switch (what) {
+		case ADD_ACTIVATION -> this.workingMem.getAgenda().setProfileAdd(on);
+		case ASSERT -> this.workingMem.setProfileAssert(on);
+		case FIRE -> this.workingMem.setProfileFire(on);
+		case RETRACT -> this.workingMem.setProfileRetract(on);
+		case RM_ACTIVATION -> this.workingMem.getAgenda().setProfileRemove(on);
+		case ALL -> {
+			this.workingMem.getAgenda().setProfileAdd(on);
+			this.workingMem.setProfileAssert(on);
+			this.workingMem.setProfileFire(on);
+			this.workingMem.setProfileRetract(on);
+			this.workingMem.getAgenda().setProfileRemove(on);
+		}
 		}
 	}
 
@@ -1399,7 +1372,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 	 */
 	public void writeMessage(String msg, String output) {
 		MessageRouter router = getMessageRouter();
-		router.postMessageEvent(new MessageEvent(MessageEvent.ENGINE, msg, "t"
+		router.postMessageEvent(new MessageEvent(MessageEvent.Type.ENGINE, msg, "t"
 				.equals(output) ? router.getCurrentChannelId() : output));
 		if (this.outputStreams.size() > 0) {
 			Iterator<Writer> itr = this.outputStreams.values().iterator();

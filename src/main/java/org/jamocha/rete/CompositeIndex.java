@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2008 Peter Lin
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://jamocha.sourceforge.net/
- *
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,67 +16,26 @@
  */
 package org.jamocha.rete;
 
+import java.util.Objects;
 
 /**
- * @author Peter Lin
- * 
- * CompositeIndex is used by ObjectTypeNodes to hash AlphaNodes and stick them
- * in a HashTable. This should improve the performance over the proof-of-concept
- * implementation using Strings.
+ * The key under which alpha nodes are shared: a slot name, the comparison operator
+ * and the literal value of a constraint.
  */
-public class CompositeIndex {
+public record CompositeIndex(String name, int operator, Object value) {
 
-	/**
-	 * 
-	 */
-
-	private String name = null;
-
-	// by default, we set it to Equals
-	private int operator = Constants.EQUAL;
-
-	private Object value = null;
-
-	private int hashCode;
-
-	/**
-	 * 
-	 */
-	public CompositeIndex(String name, int operator, Object value) {
-		super();
-		this.name = name;
-		this.operator = operator;
-		this.value = value;
-		this.calculateHash();
+	@Override
+	public boolean equals(Object other) {
+		return this == other || (other instanceof CompositeIndex ci && ci.name.equals(name)
+				&& ci.operator == operator && Objects.equals(ci.value, value));
 	}
 
-	private void calculateHash() {
-		if (this.value == null) {
-			this.hashCode = name.hashCode() + this.operator + 0;
-		} else {
-			this.hashCode = name.hashCode() + this.operator + this.value.hashCode();
-		}
-	}
-
-	public boolean equals(Object val) {
-		if (this == val) {
-			return true;
-		}
-		if (val == null || getClass() != val.getClass()) {
-			return false;
-		}
-
-		CompositeIndex ci = (CompositeIndex) val;
-		return ci.name.equals(this.name) && ci.operator == this.operator
-				&& ci.value.equals(this.value);
-	}
-
+	@Override
 	public int hashCode() {
-		return this.hashCode;
+		return name.hashCode() + operator + (value == null ? 0 : value.hashCode());
 	}
 
 	public String toPPString() {
-		return this.name + ":" + this.operator + ":"
-				+ String.valueOf(this.value);
+		return name + ":" + operator + ":" + String.valueOf(value);
 	}
 }

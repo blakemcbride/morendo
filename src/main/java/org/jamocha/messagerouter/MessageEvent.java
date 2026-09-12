@@ -16,7 +16,7 @@
  */
 package org.jamocha.messagerouter;
 
-import org.jamocha.rete.AbstractEvent;
+import java.util.EventObject;
 
 /**
  * The Class for MessageEvents.
@@ -24,27 +24,16 @@ import org.jamocha.rete.AbstractEvent;
  * @author Alexander Wilden, Christoph Emonds, Sebastian Reinartz
  * 
  */
-public class MessageEvent extends AbstractEvent {
+public class MessageEvent extends EventObject {
+
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
+	/** What a message carries. */
+	public enum Type { COMMAND, RESULT, ENGINE, ERROR, PARSE_ERROR }
 
-	public static final int COMMAND = 101;
-	
-	public static final int RESULT = 102;
-	
-	public static final int ENGINE = 103;
-	
-	public static final int ERROR = -1;
-
-	/**
-	 * The message that was send.
-	 */
 	private transient Object message;
-	
-	private int type;
+
+	private Type type;
 
 	/**
 	 * The constructor for a new MessageEvent. Uses CLIPS as standard-language.
@@ -56,7 +45,7 @@ public class MessageEvent extends AbstractEvent {
 	 * @param receiver
 	 *            The id of the receiver of this message.
 	 */
-	public MessageEvent(int type, Object message, String channelId) {
+	public MessageEvent(Type type, Object message, String channelId) {
 		super(channelId);
 		this.type = type;
 		this.message = message;
@@ -80,12 +69,12 @@ public class MessageEvent extends AbstractEvent {
 		return (String) getSource();
 	}
 
-	public int getType() {
+	public Type getType() {
 		return type;
 	}
 	
 	public boolean isError() {
-		return type < 0;
+		return type == Type.ERROR;
 	}
 
 	void setChannelId(String channelId) {

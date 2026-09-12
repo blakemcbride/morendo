@@ -52,21 +52,21 @@ public class EventCounter implements EngineEventListener {
 	 */
 	@SuppressWarnings("unchecked")
 	public void eventOccurred(EngineEvent event) {
-        if (event.getEventType() == EngineEvent.ASSERT_EVENT) {
+        if (event.getEventType() == EngineEvent.Kind.ASSERT) {
             asserts.add(event);
-        } else if (event.getEventType() == EngineEvent.ASSERT_PROFILE_EVENT) {
+        } else if (event.getEventType() == EngineEvent.Kind.ASSERT_PROFILE) {
             asserts.add(event);
             profiles.add(event);
-        } else if (event.getEventType() == EngineEvent.ASSERT_RETRACT_EVENT) {
+        } else if (event.getEventType() == EngineEvent.Kind.ASSERT_RETRACT) {
             asserts.add(event);
             retracts.add(event);
-        } else if (event.getEventType() == EngineEvent.ASSERT_RETRACT_PROFILE_EVENT) {
+        } else if (event.getEventType() == EngineEvent.Kind.ASSERT_RETRACT_PROFILE) {
             asserts.add(event);
             profiles.add(event);
             retracts.add(event);
-        } else if (event.getEventType() == EngineEvent.PROFILE_EVENT) {
+        } else if (event.getEventType() == EngineEvent.Kind.PROFILE) {
             profiles.add(event);
-        } else if (event.getEventType() == EngineEvent.RETRACT_EVENT) {
+        } else if (event.getEventType() == EngineEvent.Kind.RETRACT) {
             retracts.add(event);
         }
         Object val = this.nodeFilter.get(event.getSourceNode());

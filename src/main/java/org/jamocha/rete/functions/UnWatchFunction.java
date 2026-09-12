@@ -67,13 +67,13 @@ public class UnWatchFunction implements Function {
     
     protected void setWatch(Rete engine, String cmd) {
         if (cmd.equals("all")) {
-            engine.setUnWatch(Rete.WATCH_ALL);
+            engine.setUnWatch(Rete.Watch.ALL);
         } else if (cmd.equals("facts")) {
-            engine.setUnWatch(Rete.WATCH_FACTS);
+            engine.setUnWatch(Rete.Watch.FACTS);
         } else if (cmd.equals("activations")) {
-            engine.setUnWatch(Rete.WATCH_ACTIVATIONS);
+            engine.setUnWatch(Rete.Watch.ACTIVATIONS);
         } else if (cmd.equals("rules")) {
-            engine.setUnWatch(Rete.WATCH_RULES);
+            engine.setUnWatch(Rete.Watch.RULES);
         }
     }
 

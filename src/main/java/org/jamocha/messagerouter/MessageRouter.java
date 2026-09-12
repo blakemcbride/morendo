@@ -79,16 +79,16 @@ public class MessageRouter {
 					if (schabau != null) {
 						currentChannelId = schabau.channelId;
 						try {
-							messageQueue.offer(new MessageEvent(MessageEvent.COMMAND, schabau.command,
+							messageQueue.offer(new MessageEvent(MessageEvent.Type.COMMAND, schabau.command,
 									currentChannelId));
 							
 							ReturnVector result = interpreter.executeCommand(schabau.command);
 							
-							messageQueue.offer(new MessageEvent(MessageEvent.RESULT, result,
+							messageQueue.offer(new MessageEvent(MessageEvent.Type.RESULT, result,
 									currentChannelId));
 						} catch (Exception e) {
 							postMessageEvent(new MessageEvent(
-									MessageEvent.ERROR, e, currentChannelId));
+									MessageEvent.Type.ERROR, e, currentChannelId));
 						} finally {
 							currentChannelId = null;
 						}
