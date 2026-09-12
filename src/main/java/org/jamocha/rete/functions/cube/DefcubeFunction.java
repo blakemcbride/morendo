@@ -75,7 +75,7 @@ public class DefcubeFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{Cube.class};
+		return new Class<?>[]{Cube.class};
 	}
 
 	public int getReturnType() {

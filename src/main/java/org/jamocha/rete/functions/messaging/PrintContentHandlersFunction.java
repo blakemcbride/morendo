@@ -53,7 +53,7 @@ public class PrintContentHandlersFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[0];
+		return new Class<?>[0];
 	}
 
 	public int getReturnType() {

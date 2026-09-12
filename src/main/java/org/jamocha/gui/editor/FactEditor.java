@@ -44,7 +44,7 @@ import org.jamocha.rete.Slot;
 import org.jamocha.rete.Template;
 
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class FactEditor extends AbstractJamochaEditor implements
+public final class FactEditor extends AbstractJamochaEditor implements
 		ActionListener, ListSelectionListener {
 
 

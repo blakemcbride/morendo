@@ -97,6 +97,7 @@ public class Defrule implements Rule, Scope {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("this-escape") // the complexity object refers back to its rule
 	public Defrule() {
 		super();
         this.complex = ComplexityFactory.newInstance();
@@ -109,7 +110,7 @@ public class Defrule implements Rule, Scope {
 
     public Defrule(String name) {
         this();
-        setName(name);
+        this.name = name;
     }
     
 	/* (non-Javadoc)

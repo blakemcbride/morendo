@@ -160,9 +160,9 @@ public class TestConditionCompiler implements ConditionCompiler {
 	public void connectJoinNode(Condition previousCondition,Condition condition, BaseJoin previousJoinNode, BaseJoin joinNode) throws AssertException {
         
         if (previousJoinNode != null) {
-        	ruleCompiler.attachJoinNode(previousJoinNode,(BaseJoin)joinNode);
+        	ruleCompiler.attachJoinNode(previousJoinNode,joinNode);
         } else {
-        	ruleCompiler.attachJoinNode(previousCondition.getLastNode(),(BaseJoin)joinNode);
+        	ruleCompiler.attachJoinNode(previousCondition.getLastNode(),joinNode);
         }
 		
 	}
@@ -170,9 +170,9 @@ public class TestConditionCompiler implements ConditionCompiler {
 	public void connectJoinNode(Condition previousCondition,Condition condition, QueryBaseJoin previousJoinNode, QueryBaseJoin joinNode) throws AssertException {
         
         if (previousJoinNode != null) {
-        	queryCompiler.attachJoinNode(previousJoinNode,(QueryBaseJoin)joinNode);
+        	queryCompiler.attachJoinNode(previousJoinNode,joinNode);
         } else {
-        	queryCompiler.attachJoinNode(previousCondition.getLastNode(),(QueryBaseJoin)joinNode);
+        	queryCompiler.attachJoinNode(previousCondition.getLastNode(),joinNode);
         }
 		
 	}

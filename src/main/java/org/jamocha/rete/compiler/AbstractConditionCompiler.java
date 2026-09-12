@@ -77,9 +77,9 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 	 */
 	public final void connectJoinNode(Condition previousCondition,Condition condition, BaseJoin previousJoinNode, BaseJoin joinNode) throws AssertException {
         if (previousJoinNode != null) {
-        	ruleCompiler.attachJoinNode(previousJoinNode,(BaseJoin)joinNode);
+        	ruleCompiler.attachJoinNode(previousJoinNode,joinNode);
         } else {
-        	ruleCompiler.attachJoinNode(previousCondition.getLastNode(),(BaseJoin)joinNode);
+        	ruleCompiler.attachJoinNode(previousCondition.getLastNode(),joinNode);
         }
         // next we have to add the ExistJoin for the right side, which should be either
         // an alphaNode or the objectTypeNode
@@ -87,7 +87,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
         ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(oc.getTemplateName());
         
         if (oc.getNodes().size() > 0) {
-        	ruleCompiler.attachJoinNode(oc.getLastNode(),(BaseJoin)joinNode);
+        	ruleCompiler.attachJoinNode(oc.getLastNode(),joinNode);
         } else {
             otn.addSuccessorNode(joinNode,ruleCompiler.getEngine(),ruleCompiler.getEngine().getWorkingMemory());
         }
@@ -95,9 +95,9 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 	
 	public final void connectJoinNode(Condition previousCondition, Condition condition, QueryBaseJoin previousJoinNode, QueryBaseJoin joinNode) throws AssertException {
         if (previousJoinNode != null) {
-        	queryCompiler.attachJoinNode(previousJoinNode,(QueryBaseJoin)joinNode);
+        	queryCompiler.attachJoinNode(previousJoinNode,joinNode);
         } else {
-        	queryCompiler.attachJoinNode(previousCondition.getLastNode(),(QueryBaseJoin)joinNode);
+        	queryCompiler.attachJoinNode(previousCondition.getLastNode(),joinNode);
         }
         // next we have to add the ExistJoin for the right side, which should be either
         // an alphaNode or the objectTypeNode
@@ -106,7 +106,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
         QueryObjTypeNode qotn = queryCompiler.findQueryObjTypeNode(template);
         
         if (oc.getNodes().size() > 0) {
-        	queryCompiler.attachJoinNode(oc.getLastNode(),(QueryBaseJoin)joinNode);
+        	queryCompiler.attachJoinNode(oc.getLastNode(),joinNode);
         } else {
             qotn.addSuccessorNode(joinNode,queryCompiler.getEngine(),queryCompiler.getEngine().getWorkingMemory());
         }
@@ -114,9 +114,9 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 	
 	public final void connectJoinNode(Condition previousCondition, Condition condition, QueryBaseJoin previousJoinNode, QueryBaseJoin joinNode, GraphQueryCompiler compiler) throws AssertException {
         if (previousJoinNode != null) {
-        	compiler.attachJoinNode(previousJoinNode,(QueryBaseJoin)joinNode);
+        	compiler.attachJoinNode(previousJoinNode,joinNode);
         } else {
-        	compiler.attachJoinNode(previousCondition.getLastNode(),(QueryBaseJoin)joinNode);
+        	compiler.attachJoinNode(previousCondition.getLastNode(),joinNode);
         }
         // next we have to add the ExistJoin for the right side, which should be either
         // an alphaNode or the objectTypeNode
@@ -125,7 +125,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
         QueryObjTypeNode qotn = compiler.findQueryObjTypeNode(template);
         
         if (oc.getNodes().size() > 0) {
-        	compiler.attachJoinNode(oc.getLastNode(),(QueryBaseJoin)joinNode);
+        	compiler.attachJoinNode(oc.getLastNode(),joinNode);
         } else {
             qotn.addSuccessorNode(joinNode,compiler.getEngine(),compiler.getEngine().getWorkingMemory());
         }
@@ -193,7 +193,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 						binds[idz] = b2;
 						b2.setFunction( ruleCompiler.getEngine().findFunction(pc.getFunctionName()));
 						Parameter[] params = new Parameter[pc.getParameters().size()];
-						params = (Parameter[]) pc.getParameters().toArray(params);
+						params = pc.getParameters().toArray(params);
 						b2.setParams(params);
 						for (int px = 0; px < params.length; px++) {
 							if (params[px] instanceof FunctionParam2) {
@@ -224,7 +224,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 					bind2.setPredJoin(true);
 					Parameter[] params = new Parameter[pc.getParameters()
 							.size()];
-					params = (Parameter[]) pc.getParameters().toArray(params);
+					params = pc.getParameters().toArray(params);
 					bind2.setParams(params);
 					for (int px = 0; px < params.length; px++) {
 						if (params[px] instanceof FunctionParam2) {
@@ -302,7 +302,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 					bind2.setPredJoin(true);
 					Parameter[] params = new Parameter[pc.getParameters()
 							.size()];
-					params = (Parameter[]) pc.getParameters().toArray(params);
+					params = pc.getParameters().toArray(params);
 					bind2.setParams(params);
 					for (int px = 0; px < params.length; px++) {
 						if (params[px] instanceof FunctionParam2) {

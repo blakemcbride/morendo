@@ -83,6 +83,7 @@ import org.jamocha.rule.Rule;
  * This is the main Rete engine class. For now it's called Rete, but I may
  * change it to Engine to be more generic.
  */
+@SuppressWarnings("this-escape") // the router, root node and compilers are created with a reference to the engine
 public class Rete implements PropertyChangeListener, CompilerListener {
 
 	/**

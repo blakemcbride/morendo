@@ -41,7 +41,7 @@ import org.jamocha.gui.tab.settings.ShellSettingsPanel;
  * @author Alexander Wilden <october.rust@gmx.de>
  */
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class SettingsPanel extends AbstractJamochaPanel implements
+public final class SettingsPanel extends AbstractJamochaPanel implements
 		ActionListener {
 
 

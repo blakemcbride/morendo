@@ -113,7 +113,7 @@ public class OrLiteralConstraint implements Constraint {
 		buf.append("    (" + this.name + " ");
 		int count = 0;
 		while (itr.hasNext()) {
-			MultiValue mv = (MultiValue)itr.next();
+			MultiValue mv = itr.next();
 			if (count > 0) {
 				buf.append("|");
 			}

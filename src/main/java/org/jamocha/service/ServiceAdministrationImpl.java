@@ -18,7 +18,7 @@ public class ServiceAdministrationImpl implements ServiceAdministration {
 
 	public RuleApplication getApplication(String applicationName, String version) {
 		String key = applicationName + "::" + version;
-		return (RuleApplication)this.ruleService.getRuleApplicationMap().get(key);
+		return this.ruleService.getRuleApplicationMap().get(key);
 	}
 
 	public int getEnginePoolCount(String ruleApplication, String version) {
@@ -44,7 +44,7 @@ public class ServiceAdministrationImpl implements ServiceAdministration {
 	public void reinitialize(String ruleApplication, String version) {
 		log.info("--- Start reinitializing rule application: " + ruleApplication + " " + version);
 		String key = ruleApplication + "::" + version;
-		java.util.PriorityQueue<Rete> queue = (java.util.PriorityQueue<Rete>)this.ruleService.getEngineMap().remove(key);
+		java.util.PriorityQueue<Rete> queue = this.ruleService.getEngineMap().remove(key);
 		// first close all the engine instances.
 		Iterator<Rete> itr = queue.iterator();
 		while (itr.hasNext()) {

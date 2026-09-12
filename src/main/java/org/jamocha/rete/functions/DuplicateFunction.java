@@ -118,7 +118,7 @@ public class DuplicateFunction implements RuleFunction {
      * Example: (modify ?boundVariable (slotName value)* )
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] {BoundParam.class,SlotParam[].class};
+		return new Class<?>[] {BoundParam.class,SlotParam[].class};
 	}
 
     /**

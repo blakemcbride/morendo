@@ -221,7 +221,7 @@ public class MessageRouter {
 	}
 
 	public void closeChannel(String channelName) {
-		CommunicationChannel channel  = (CommunicationChannel)idToChannel.get(channelName);
+		CommunicationChannel channel  = idToChannel.get(channelName);
 		if(channel instanceof StreamChannelImpl) {
 			((StreamChannelImpl)channel).close();
 		}

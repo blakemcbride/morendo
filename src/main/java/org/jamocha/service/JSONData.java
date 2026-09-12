@@ -91,7 +91,7 @@ public class JSONData<T> implements InitialData {
 			try {
 				Class<?> rootclz = Class.forName(this.name);
 				if (rootclz != null && this.url != null) {
-					data = (List<Object>) loadJsonData(this.url, rootclz);
+					data = loadJsonData(this.url, rootclz);
 				}
 			} catch (ClassNotFoundException e) {
 				log.warn(e.getMessage());

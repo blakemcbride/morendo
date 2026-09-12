@@ -48,7 +48,7 @@ public class OnlyCondition extends ObjectCondition {
         pad = "    ";
         buf.append(pad + "(" + getTemplateName() + Constants.LINEBREAK);
         for (int idx=start; idx < getConstraints().length; idx++) {
-            Constraint cnstr = (Constraint)getConstraints()[idx];
+            Constraint cnstr = getConstraints()[idx];
             buf.append("  " + cnstr.toPPString());
         }
         buf.append(pad + ")" + Constants.LINEBREAK);

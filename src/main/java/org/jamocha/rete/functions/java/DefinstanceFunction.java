@@ -68,7 +68,7 @@ public class DefinstanceFunction implements Function {
 					Defclass defclass = engine.findDefclassByName(classname);
 					if (defclass != null) {
 						instance = defclass.getClassObject().getDeclaredConstructor().newInstance();
-						Parameter[] parameters = (Parameter[])func.getParameters();
+						Parameter[] parameters = func.getParameters();
 						for (int idx=0; idx < parameters.length; idx++) {
 							if (parameters[idx] instanceof FunctionParam2) {
 								FunctionParam2 fp = (FunctionParam2)parameters[idx];
@@ -148,7 +148,7 @@ public class DefinstanceFunction implements Function {
 	 * The function expects a single BoundParam that is an object binding
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] { BoundParam.class, ValueParam.class };
+		return new Class<?>[] { BoundParam.class, ValueParam.class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

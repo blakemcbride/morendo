@@ -39,7 +39,7 @@ import org.jamocha.gui.JamochaGui;
 import org.jamocha.gui.icons.IconLoader;
 
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class ShellSettingsPanel extends AbstractSettingsPanel implements
+public final class ShellSettingsPanel extends AbstractSettingsPanel implements
 		ActionListener {
 
 

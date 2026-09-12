@@ -83,7 +83,7 @@ public class Edge {
 					oldValue, newValue);
 
 			for (int i = 0; i < listeners.size(); i++) {
-				((java.beans.PropertyChangeListener) listeners.get(i))
+				(listeners.get(i))
 						.propertyChange(event);
 			}
 		}

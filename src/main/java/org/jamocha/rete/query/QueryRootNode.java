@@ -109,7 +109,7 @@ public class QueryRootNode {
      * @return
      */
     public QueryObjTypeNode findQueryObjTypeNode(Template template) {
-    	return (QueryObjTypeNode)this.queryObjTypeNodeMap.get(template);
+    	return this.queryObjTypeNodeMap.get(template);
     }
     
     /**
@@ -132,8 +132,8 @@ public class QueryRootNode {
     	} else {
         	Iterator<Template> iterator = this.queryObjTypeNodeMap.keySet().iterator();
         	while (iterator.hasNext()) {
-        		Template template = (Template)iterator.next();
-            	QueryObjTypeNode qotn = (QueryObjTypeNode)this.queryObjTypeNodeMap.get(template);
+        		Template template = iterator.next();
+            	QueryObjTypeNode qotn = this.queryObjTypeNodeMap.get(template);
                 if (qotn != null) {
                     qotn.assertFact(null,engine,mem);
                 }
@@ -154,7 +154,7 @@ public class QueryRootNode {
             Rete engine, WorkingMemory mem)
     throws AssertException
     {
-    	QueryObjTypeNode otn = (QueryObjTypeNode)this.queryObjTypeNodeMap.get(template);
+    	QueryObjTypeNode otn = this.queryObjTypeNodeMap.get(template);
         if (otn != null) {
             otn.assertFact(null,engine,mem);
         }
@@ -205,7 +205,7 @@ public class QueryRootNode {
     	QueryRootNode clone = new QueryRootNode(engine, this.root);
     	Iterator<QueryObjTypeNode> iterator = this.queryObjTypeNodeMap.values().iterator();
     	while (iterator.hasNext()) {
-    		QueryObjTypeNode qotn = (QueryObjTypeNode)iterator.next();
+    		QueryObjTypeNode qotn = iterator.next();
     		clone.addQueryObjTypeNode(qotn.clone(engine, query));
     	}
     	clone.initialFactObjTypeNode = this.initialFactObjTypeNode;

@@ -73,7 +73,7 @@ public class FactIdFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{long.class};
+		return new Class<?>[]{long.class};
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

@@ -66,7 +66,7 @@ public class BetaMemoryImpl implements BetaMemory {
 	 * @return
 	 */
 	public Iterator<Fact> iterateRightFacts() {
-		return (Iterator<Fact>) this.matches.keySet().iterator();
+		return this.matches.keySet().iterator();
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class BetaMemoryImpl implements BetaMemory {
 		buf.append(": ");
 		Iterator<Fact> itr = matches.keySet().iterator();
 		while (itr.hasNext()) {
-			Fact f = (Fact) itr.next();
+			Fact f = itr.next();
 			buf.append(f.getFactId() + ", ");
 		}
 		return buf.toString();

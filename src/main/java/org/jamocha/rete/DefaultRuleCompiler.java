@@ -470,7 +470,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
         if (cnstr.hasIntraFactJoin()) {
             IntraFactNode ifnode = new IntraFactNode(engine.nextNodeId());
             BoundConstraint first = cnstr.getFirstIFJ();
-            Binding rightbind = ((Binding)rule.getBinding((String)first.getValue()));
+            Binding rightbind = (rule.getBinding((String)first.getValue()));
             Slot left = (Slot) templ.getSlot(cnstr.getName()).clone();
             Slot right = (Slot) templ.getSlot(rightbind.getLeftIndex()).clone();
             ifnode.setSlot(left);
@@ -543,7 +543,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
                         f.getReturnType() == Constants.BOOLEAN_OBJECT) {
 
                     	Parameter[] parameters = new Parameter[cnstr.getParameters().size()];
-                    	parameters = (Parameter[])cnstr.getParameters().toArray(parameters);
+                    	parameters = cnstr.getParameters().toArray(parameters);
                     	// configure the parameters
                     	compileParameters(parameters, cnstr, engine, templ, rule);
 
@@ -684,7 +684,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
     public LIANode findLIANode(ObjectTypeNode otn) {
         LIANode node = null;
         if (otn.getSuccessorNodes() != null && otn.getSuccessorNodes().length > 0) {
-            Object[] nodes = (Object[])otn.getSuccessorNodes();
+            Object[] nodes = otn.getSuccessorNodes();
             for (int idx=0; idx < nodes.length; idx++) {
                 if (nodes[idx] instanceof LIANode) {
                     node = (LIANode)nodes[idx];

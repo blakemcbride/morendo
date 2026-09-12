@@ -113,7 +113,7 @@ public class DefaultWM implements WorkingMemory {
     private boolean profileAssert = false;
     private boolean profileRetract = false;
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "this-escape" }) // the compiler needs its working memory from the start
 	public DefaultWM(Rete engine, RootNode node, RuleCompiler compiler) {
         this.engine = engine;
         alphaMemories = (Map<Object, Object>) engine.newMap();
@@ -183,7 +183,7 @@ public class DefaultWM implements WorkingMemory {
     }
     
 	public void assertFact(Fact fact) throws AssertException {
-        Fact f = (Fact)fact;
+        Fact f = fact;
         if (!this.containsFact(f)) {
             this.deffactMap.put(fact.equalityIndex(), f);
             f.setFactId(engine);
@@ -507,7 +507,7 @@ public class DefaultWM implements WorkingMemory {
     }
 
     public Module findModule(String name) {
-        return (Module)this.modules.get(name);
+        return this.modules.get(name);
     }
     
     /**
@@ -784,7 +784,7 @@ public class DefaultWM implements WorkingMemory {
 	public void modifyObject(Object data) throws AssertException,
             RetractException {
         if (this.getDynamicFacts().containsKey(data)) {
-            Defclass dc = (Defclass) this.engine.findDefclass(data);
+            Defclass dc = this.engine.findDefclass(data);
             // first we retract the fact
             Fact ft = (Fact) this.getDynamicFacts().remove(data);
             // check to see if the fact is a temporal fact
@@ -835,7 +835,7 @@ public class DefaultWM implements WorkingMemory {
     }
 
     public Module removeModule(String name) {
-        return (Module)this.modules.remove(name);
+        return this.modules.remove(name);
     }
 
     public void retractFact(Fact fact) throws RetractException {

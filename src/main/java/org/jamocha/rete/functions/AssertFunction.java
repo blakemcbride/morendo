@@ -110,7 +110,7 @@ public class AssertFunction implements RuleFunction {
 	 * fact. For objects, there's (assert-object ?binding).
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam.class };
+		return new Class<?>[] { ValueParam.class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

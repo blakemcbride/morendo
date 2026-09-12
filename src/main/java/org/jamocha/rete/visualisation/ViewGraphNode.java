@@ -24,7 +24,7 @@ import java.lang.Math;
  * @author Josef Alexander Hahn
  * ViewGraphNode represents a node in the visualisation graph
  */
-public class ViewGraphNode {
+public final class ViewGraphNode {
 	
 	protected int subtreewidth;
 	protected BaseNode reteNode;

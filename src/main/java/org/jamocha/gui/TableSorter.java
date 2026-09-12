@@ -37,7 +37,7 @@ import javax.swing.table.TableColumnModel;
  * @author Alexander Wilden <october.rust@gmx.de>
  */
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class TableSorter extends TableMap {
+public final class TableSorter extends TableMap {
 
 
 	private int indexes[];
@@ -183,7 +183,7 @@ public class TableSorter extends TableMap {
 		checkModel();
 
 		compares = 0;
-		shuttlesort((int[]) indexes.clone(), indexes, 0, indexes.length);
+		shuttlesort(indexes.clone(), indexes, 0, indexes.length);
 	}
 
 	public void n2sort() {

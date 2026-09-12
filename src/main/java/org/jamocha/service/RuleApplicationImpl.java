@@ -69,7 +69,7 @@ public class RuleApplicationImpl implements RuleApplication {
 		this.clipsData = bean.getClipsData();
 		this.objectData = bean.getObjectData();
 		this.jsonData = bean.getJsonData();
-		this.models = (List<ObjectModel>)bean.getModels();
+		this.models = bean.getModels();
 		this.rulesets = bean.getRulesets();
 	}
 	

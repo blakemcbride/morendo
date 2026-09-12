@@ -256,9 +256,11 @@ public class Tasks {
 			rm(argsFile.getPath());
 			Files.write(Paths.get(BUILDDIR, "lint.txt"), output.getBytes(StandardCharsets.UTF_8));
 			java.util.Map<String, Integer> counts = new java.util.TreeMap<>();
-			Matcher m = Pattern.compile("warning: \\[([a-z-]+)\\]").matcher(output);
+			// count warnings per category, leaving out the generated parser sources (not ours to fix)
+			Matcher m = Pattern.compile("(?m)^(\\S+\\.java):\\d+: warning: \\[([a-z-]+)\\]").matcher(output);
 			while (m.find())
-				counts.merge(m.group(1), 1, Integer::sum);
+				if (!isGeneratedParserFile(Paths.get(m.group(1))))
+					counts.merge(m.group(2), 1, Integer::sum);
 			int total = 0;
 			for (java.util.Map.Entry<String, Integer> e : counts.entrySet()) {
 				println(String.format("%6d  %s", e.getValue(), e.getKey()));
@@ -270,6 +272,12 @@ public class Tasks {
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException("lint: " + e.getMessage());
 		}
+	}
+
+	/** True for the JavaCC output in the parser package. */
+	private static boolean isGeneratedParserFile(java.nio.file.Path f) {
+		return f.getParent().toString().replace(File.separatorChar, '/').endsWith(PARSER_DIR)
+				&& f.getFileName().toString().matches(GENERATED_PARSER_FILES);
 	}
 
 	private static void doJar() {

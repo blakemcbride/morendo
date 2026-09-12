@@ -16,6 +16,7 @@ public abstract class AbstractJamochaEditor extends JFrame {
 	 */
 	protected Rete engine;
 
+@SuppressWarnings("this-escape") // JFrame setup in the base class constructor
 	public AbstractJamochaEditor(Rete engine) {
 		this.engine = engine;
 		this.setTitle("Jamochaeditor");

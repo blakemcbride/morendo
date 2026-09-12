@@ -114,7 +114,7 @@ public class GenerateFactsFunction implements Function {
 	 * The function does not take any parameters
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[]{ValueParam.class};
+		return new Class<?>[]{ValueParam.class};
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

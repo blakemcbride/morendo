@@ -40,7 +40,7 @@ import org.jamocha.rete.util.ReflectionUtil;
  * propertyChangeListener support. If it does, the Method object for those
  * two are cached.
  */
-public class Defclass {
+public final class Defclass {
 
 	/**
 	 * 
@@ -71,7 +71,7 @@ public class Defclass {
 	 * and removePropertyChangeListener(java.beans.PropertyChangeListener).
 	 * We don't require the classes extend PropertyChangeSupport.
 	 */
-	public void init() {
+	public final void init() {
 		try {
 			this.INFO = Introspector.getBeanInfo(this.OBJECT_CLASS);
 			// we have to filter out the class PropertyDescriptor
@@ -132,9 +132,9 @@ public class Defclass {
 			// a parent, we lookup all methods and not just the
 			// declared methods.
 			addListener = this.OBJECT_CLASS.getMethod(Constants.PCS_ADD,
-					new Class[] { PropertyChangeListener.class });
+					new Class<?>[] { PropertyChangeListener.class });
 			removeListener = this.OBJECT_CLASS.getMethod(Constants.PCS_REMOVE,
-					new Class[] { PropertyChangeListener.class });
+					new Class<?>[] { PropertyChangeListener.class });
 		} catch (NoSuchMethodException e) {
 			// we should log this
 		}
@@ -412,9 +412,9 @@ public class Defclass {
 
 	public Method getCallMethod(String name, Object[] parameters) {
 		String key = name + "(";
-		Class<?>[] cparams = new Class[0];
+		Class<?>[] cparams = new Class<?>[0];
 		if (parameters != null) {
-			cparams = new Class[parameters.length];
+			cparams = new Class<?>[parameters.length];
 			for (int idx=0; idx < parameters.length; idx++) {
 				if (idx > 0) {
 					key += ",";

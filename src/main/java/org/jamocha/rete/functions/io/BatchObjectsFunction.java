@@ -102,7 +102,7 @@ public class BatchObjectsFunction implements Function {
 			ObjectInputStream ois = new ObjectInputStream(ins);
 			List<Object> data = (List<Object>)ois.readObject();
 			for (Object obj: data) {
-				Deftemplate templ = (Deftemplate)engine.findDeftemplate(obj.getClass());
+				Deftemplate templ = engine.findDeftemplate(obj.getClass());
 				engine.assertObject(obj, templ.getName(), false, true);
 			}
 			if (rv != null) {
@@ -119,7 +119,7 @@ public class BatchObjectsFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam.class };
+		return new Class<?>[] { ValueParam.class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

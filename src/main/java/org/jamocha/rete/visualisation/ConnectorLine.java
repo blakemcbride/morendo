@@ -103,18 +103,18 @@ public class ConnectorLine extends Primitive{
 		Point pto=to.calculateIntersection(angleToFrom);
 		Point parrow1=new Point((int) Math.round(6*Math.cos(angleToFrom+Math.PI/4.0)),(int)Math.round(6*Math.sin(angleToFrom+Math.PI/4.0)));
 		Point parrow2=new Point((int) Math.round(6*Math.cos(angleToFrom-Math.PI/4.0)), (int)Math.round(6*Math.sin(angleToFrom-Math.PI/4.0)));
-		pfrom.x-=offsetX;
-		pfrom.y-=offsetY;
-		pto.x-=offsetX;
-		pto.y-=offsetY;
-		pfrom.x*=factorX;
-		pfrom.y*=factorY;
-		pto.x*=factorX;
-		pto.y*=factorY;
-		parrow1.x*=factorX;
-		parrow1.y*=factorY;
-		parrow2.x*=factorX;
-		parrow2.y*=factorY;		
+		pfrom.x = (pfrom.x - offsetX);
+		pfrom.y = (pfrom.y - offsetY);
+		pto.x = (pto.x - offsetX);
+		pto.y = (pto.y - offsetY);
+		pfrom.x = (int) (pfrom.x * factorX);
+		pfrom.y = (int) (pfrom.y * factorY);
+		pto.x = (int) (pto.x * factorX);
+		pto.y = (int) (pto.y * factorY);
+		parrow1.x = (int) (parrow1.x * factorX);
+		parrow1.y = (int) (parrow1.y * factorY);
+		parrow2.x = (int) (parrow2.x * factorX);
+		parrow2.y = (int) (parrow2.y * factorY);
 
 		//calculate a good line width
 		int linewidth=(int)Math.round(1*Math.min(factorX,factorY));

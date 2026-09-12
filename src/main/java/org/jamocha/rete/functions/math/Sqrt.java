@@ -57,7 +57,7 @@ public class Sqrt implements Function {
 		double bdh = 0.0;
 		if (params.length == 1) {
 			if (params[0] instanceof ValueParam) {
-	            bdval = (BigDecimal)params[0].getBigDecimalValue();
+	            bdval = params[0].getBigDecimalValue();
 			} else {
 	            bdval = new BigDecimal(params[0].getValue(engine, Constants.BIG_DECIMAL).toString());
 			}
@@ -76,7 +76,7 @@ public class Sqrt implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam[].class };
+		return new Class<?>[] { ValueParam[].class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

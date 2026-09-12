@@ -374,7 +374,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 					// we ignore it, since object bindings are neither dimensions or measures
 				} else {
 					// it's a measure
-					CubeBinding cbind = (CubeBinding)cube.getBindingBySlot(bc.getName());
+					CubeBinding cbind = cube.getBindingBySlot(bc.getName());
 					measureBinding.add(cbind);
 				}
 			}
@@ -403,7 +403,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 					}
 				} else {
 					// it's a measure
-					CubeBinding cbind = (CubeBinding)cube.getBindingBySlot(bc.getName());
+					CubeBinding cbind = cube.getBindingBySlot(bc.getName());
 					measureBinding.add(cbind);
 				}
 			}

@@ -135,7 +135,7 @@ public class TemporalCondition extends ObjectCondition {
         }
     	buf.append(pad + "(" + this.templateName + Constants.LINEBREAK);
     	for (int idx=start; idx < this.constraints.size(); idx++) {
-    		Constraint cnstr = (Constraint)this.constraints.get(idx);
+    		Constraint cnstr = this.constraints.get(idx);
             if (this.negated) {
                 buf.append("    " + cnstr.toPPString());
             } else {

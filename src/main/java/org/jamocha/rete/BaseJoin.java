@@ -169,7 +169,7 @@ public abstract class BaseJoin extends BaseNode {
 	 */
 	public void removeAllSuccessors() {
 		for (int idx=0; idx < this.successorNodes.length; idx++) {
-			BaseNode bn = (BaseNode) this.successorNodes[idx];
+			BaseNode bn = this.successorNodes[idx];
 			bn.removeAllSuccessors();
 		}
 		this.successorNodes = new BaseNode[0];

@@ -64,7 +64,7 @@ public class ExitFunction implements Function {
 	 * the function ignores them.
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[0];
+		return new Class<?>[0];
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

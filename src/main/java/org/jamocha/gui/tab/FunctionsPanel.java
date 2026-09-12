@@ -50,7 +50,7 @@ import org.jamocha.rete.Function;
  * @author Nikolaus Koemm
  */
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class FunctionsPanel extends AbstractJamochaPanel implements ActionListener,
+public final class FunctionsPanel extends AbstractJamochaPanel implements ActionListener,
 		ListSelectionListener {
 
 	
@@ -110,7 +110,7 @@ public class FunctionsPanel extends AbstractJamochaPanel implements ActionListen
 	
 		private void initFunctionsList() {
 		Collection<?> c = gui.getEngine().getAllFunctions();
-		Function[] func = (Function[]) c.toArray(new Function[0]);
+		Function[] func = c.toArray(new Function[0]);
 		List<Function> funcs = new ArrayList<>();
 		boolean larger = false;
 		funcs.add(0, func[0]);

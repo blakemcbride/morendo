@@ -79,7 +79,7 @@ public class ObjectCondition extends AbstractCondition {
     	// default indent for CE is 2 spaces
     	String pad = "  ";
         boolean obind = false;
-    	Constraint cn = (Constraint)this.constraints.get(0);
+    	Constraint cn = this.constraints.get(0);
     	if (cn instanceof BoundConstraint) {
     		BoundConstraint bc = (BoundConstraint)cn;
     		if (bc.getIsObjectBinding()) {
@@ -97,7 +97,7 @@ public class ObjectCondition extends AbstractCondition {
         }
     	buf.append(pad + "(" + this.templateName + Constants.LINEBREAK);
     	for (int idx=start; idx < this.constraints.size(); idx++) {
-    		Constraint cnstr = (Constraint)this.constraints.get(idx);
+    		Constraint cnstr = this.constraints.get(idx);
             if (this.negated) {
                 buf.append("  " + cnstr.toPPString());
             } else {
@@ -121,7 +121,7 @@ public class ObjectCondition extends AbstractCondition {
         int tabCount = tabs;
         int start = 0;
         boolean obind = false;
-        Constraint cn = (Constraint)this.constraints.get(0);
+        Constraint cn = this.constraints.get(0);
         if (cn instanceof BoundConstraint) {
             BoundConstraint bc = (BoundConstraint)cn;
             if (bc.getIsObjectBinding()) {
@@ -138,7 +138,7 @@ public class ObjectCondition extends AbstractCondition {
         }
         buf.append(padding(tabCount) + "(" + this.templateName + Constants.LINEBREAK);
         for (int idx=start; idx < this.constraints.size(); idx++) {
-            Constraint cnstr = (Constraint)this.constraints.get(idx);
+            Constraint cnstr = this.constraints.get(idx);
             if (this.negated) {
                 buf.append(padding(tabCount) + cnstr.toPPString());
             } else {

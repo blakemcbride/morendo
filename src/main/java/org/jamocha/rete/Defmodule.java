@@ -137,7 +137,7 @@ public class Defmodule implements Module {
 	 * @return
 	 */
 	public Activation removeActivation(Activation actv) {
-		return (Activation) this.activations.removeActivation(actv);
+		return this.activations.removeActivation(actv);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class Defmodule implements Module {
 	 * is the classname or the user define name.
 	 */
 	public Template getTemplate(Defclass key) {
-		Template templ = (Template) this.deftemplates.get(key.getClassObject()
+		Template templ = this.deftemplates.get(key.getClassObject()
 				.getName());
 		if (templ == null) {
 			templ = (Template) this.classToDeftemplates.get(key.getClassObject()
@@ -292,7 +292,7 @@ public class Defmodule implements Module {
 	}
 
 	public Template getTemplate(String key) {
-		return (Template) this.deftemplates.get(key);
+		return this.deftemplates.get(key);
 	}
 
 	/**
@@ -364,7 +364,7 @@ public class Defmodule implements Module {
 	 * implementation looks up the rule in the HashMap
 	 */
 	public Rule findRule(String name) {
-		return (Rule) this.rules.get(name);
+		return this.rules.get(name);
 	}
 
 	/**

@@ -43,7 +43,7 @@ import org.jamocha.rete.Rete;
  * @author Peter Lin
  *
  */
-public class BasicClient implements MessageClient {
+public final class BasicClient implements MessageClient {
 
 	/**
 	 * 
@@ -85,7 +85,7 @@ public class BasicClient implements MessageClient {
 		init();
 	}
 	
-	public void init() {
+	public final void init() {
 		Properties prop = new Properties();
 		prop.put(Context.INITIAL_CONTEXT_FACTORY, this.JNDI);
 		prop.put(Context.PROVIDER_URL, this.URL);

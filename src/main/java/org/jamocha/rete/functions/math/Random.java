@@ -66,7 +66,7 @@ public class Random implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] {};
+		return new Class<?>[] {};
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

@@ -74,7 +74,7 @@ public class TopologyCostAllFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam[].class };
+		return new Class<?>[] { ValueParam[].class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

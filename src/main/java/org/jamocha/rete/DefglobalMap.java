@@ -80,7 +80,7 @@ public class DefglobalMap {
 	public void printDefglobals(Rete engine) {
 		Iterator<String> itr = this.variables.keySet().iterator();
 		while (itr.hasNext()) {
-			String key = (String)itr.next();
+			String key = itr.next();
 			Object val = this.variables.get(key);
 			engine.writeMessage(key + "=" + val.toString());
 		}

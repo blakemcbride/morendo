@@ -75,7 +75,7 @@ public class AgentStatusResponseFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{long.class, long.class};
+		return new Class<?>[]{long.class, long.class};
 	}
 
 	public int getReturnType() {

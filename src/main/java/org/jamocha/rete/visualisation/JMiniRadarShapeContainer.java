@@ -17,7 +17,7 @@ import java.awt.event.MouseMotionListener;
  * mini-map. Here you can scroll in the network and
  * the new offset is given to the MasterShapeContainer.
  */
-public class JMiniRadarShapeContainer extends JShapeContainer implements MouseListener, MouseMotionListener, ComponentListener{
+public final class JMiniRadarShapeContainer extends JShapeContainer implements MouseListener, MouseMotionListener, ComponentListener{
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -144,8 +144,8 @@ public class JMiniRadarShapeContainer extends JShapeContainer implements MouseLi
 		double myScalingFactor=getFactor();
 		int x1=(int)(x/myScalingFactor);
 		int y1=(int)(y/myScalingFactor);
-		x1-=masterShapeContainer.getWidth()/2/masterZoomFactor;
-		y1-=masterShapeContainer.getHeight()/2/masterZoomFactor;
+		x1 = (int) (x1 - masterShapeContainer.getWidth()/2/masterZoomFactor);
+		y1 = (int) (y1 - masterShapeContainer.getHeight()/2/masterZoomFactor);
 		int offsetXmax=graphwidth+10-(int)(masterShapeContainer.getWidth()/masterZoomFactor);
 		int offsetYmax=graphheight+10-(int)(masterShapeContainer.getHeight()/masterZoomFactor);
 		if (x1>offsetXmax) x1=offsetXmax;

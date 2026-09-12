@@ -61,7 +61,7 @@ public class TopFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{ValueParam.class,ValueParam.class};
+		return new Class<?>[]{ValueParam.class,ValueParam.class};
 	}
 
 	public int getReturnType() {

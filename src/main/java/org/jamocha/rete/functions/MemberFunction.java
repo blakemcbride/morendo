@@ -69,7 +69,7 @@ public class MemberFunction implements Function {
 				methodname = rval.firstReturnValue().getStringValue();
 			}
 			if(params.length > 2){
-				argsclass = new Class[params.length-1];
+				argsclass = new Class<?>[params.length-1];
 				args = new Object[params.length-1];
 			}
 			for (int idx = 2; idx < params.length; idx++) {
@@ -123,7 +123,7 @@ public class MemberFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam[].class };
+		return new Class<?>[] { ValueParam[].class };
 	}
 
 	public int getReturnType() {

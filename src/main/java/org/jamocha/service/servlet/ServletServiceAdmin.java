@@ -31,7 +31,7 @@ public class ServletServiceAdmin implements ServiceAdministration {
 
 	public RuleApplication getApplication(String applicationName, String version) {
 		String key = applicationName + "::" + version;
-		return (RuleApplication)this.ruleService.getRuleApplicationMap().get(key);	}
+		return this.ruleService.getRuleApplicationMap().get(key);	}
 
 	public int getEnginePoolCount(String ruleApplication, String version) {
 		String key = ruleApplication + "::" + version;
@@ -67,7 +67,7 @@ public class ServletServiceAdmin implements ServiceAdministration {
 		queue.clear();
 		
 		// Now reload the RuleApplication and recreate the engine instances
-		RuleApplication app = (RuleApplication)this.ruleService.getRuleApplicationMap().get(key);
+		RuleApplication app = this.ruleService.getRuleApplicationMap().get(key);
 		queue = new java.util.PriorityQueue<Rete>();
 		this.ruleService.getEngineMap().put(ruleApplication, (List<Rete>) queue);
 		for (int idx=0; idx < app.getInitialPool(); idx++) {
@@ -82,7 +82,7 @@ public class ServletServiceAdmin implements ServiceAdministration {
 		servletContext.log("--- Start reloading Function Package: " + ruleApplication + " " + version);
 		boolean reload = false;
 		String key = ruleApplication + "::" + version;
-		RuleApplication app = (RuleApplication)this.ruleService.getRuleApplicationMap().get(key);
+		RuleApplication app = this.ruleService.getRuleApplicationMap().get(key);
 		java.util.PriorityQueue<?> queue = (PriorityQueue<?>) this.ruleService.getEngineMap().remove(key);
 		Iterator<?> iterator = queue.iterator();
 		while (iterator.hasNext()) {
@@ -100,7 +100,7 @@ public class ServletServiceAdmin implements ServiceAdministration {
 		servletContext.log("--- Start reloading Initial Data: " + ruleApplication + " " + version);
 		boolean reload = false;
 		String key = ruleApplication + "::" + version;
-		RuleApplication app = (RuleApplication)this.ruleService.getRuleApplicationMap().get(key);
+		RuleApplication app = this.ruleService.getRuleApplicationMap().get(key);
 		java.util.PriorityQueue<?> queue = (PriorityQueue<?>) this.ruleService.getEngineMap().remove(key);
 		Iterator<?> iterator = queue.iterator();
 		while (iterator.hasNext()) {
@@ -118,7 +118,7 @@ public class ServletServiceAdmin implements ServiceAdministration {
 		servletContext.log("--- Start reloading Ruleset: " + ruleApplication + " " + version);
 		boolean reload = false;
 		String key = ruleApplication + "::" + version;
-		RuleApplication app = (RuleApplication)this.ruleService.getRuleApplicationMap().get(key);
+		RuleApplication app = this.ruleService.getRuleApplicationMap().get(key);
 		java.util.PriorityQueue<?> queue = (PriorityQueue<?>) this.ruleService.getEngineMap().remove(key);
 		Iterator<?> iterator = queue.iterator();
 		while (iterator.hasNext()) {

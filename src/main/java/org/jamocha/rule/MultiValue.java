@@ -47,7 +47,7 @@ public class MultiValue {
 		this.negated = neg;
 	}
 
-	public void setValue(Object val) {
+	public final void setValue(Object val) {
 		this.value = val;
 	}
 	

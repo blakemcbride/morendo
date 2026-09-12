@@ -38,7 +38,7 @@ public class WatchQueryFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{String.class, String.class};
+		return new Class<?>[]{String.class, String.class};
 	}
 
 	public int getReturnType() {

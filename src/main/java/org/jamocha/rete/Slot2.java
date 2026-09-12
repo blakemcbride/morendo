@@ -49,7 +49,7 @@ public class Slot2 extends Slot {
     }
     
     public Slot2(String name) {
-    	this.setName(name);
+    	this.name = name;
     }
     
     /**

@@ -60,7 +60,7 @@ import org.jamocha.rete.TerminalNode;
  * getVisualiserPanel. That JPanel-instance you can
  * embed somewhere.
  */
-public class Visualiser implements ActionListener, MouseListener, EngineEventListener{
+public final class Visualiser implements ActionListener, MouseListener, EngineEventListener{
 	protected JZoomableShapeContainer container;
 	protected JMiniRadarShapeContainer radar;
 	protected ViewGraphNode root;

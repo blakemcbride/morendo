@@ -107,7 +107,7 @@ public class RuleServiceApplication implements RuleApplication {
 		}
 		if (this.functionGroups != null) {
 			for (int idx=0; idx < functionGroups.size(); idx++) {
-				org.jamocha.service.FunctionPackage functionGroup = (org.jamocha.service.FunctionPackage)functionGroups.get(idx);
+				org.jamocha.service.FunctionPackage functionGroup = functionGroups.get(idx);
 				if (functionGroup.getURLObject() != null) {
 					urls.add(functionGroup.getURLObject());
 				}
@@ -181,7 +181,7 @@ public class RuleServiceApplication implements RuleApplication {
 		}
 		boolean success = true;
 		for (int idx=0; idx < this.functionGroups.size(); idx++) {
-			org.jamocha.service.FunctionPackage functionGroup = (org.jamocha.service.FunctionPackage)this.functionGroups.get(idx);
+			org.jamocha.service.FunctionPackage functionGroup = this.functionGroups.get(idx);
 			String[] classnames = functionGroup.getClassNames();
 			for (int fx=0; fx < classnames.length; fx++) {
 				String classname = classnames[fx];
@@ -324,7 +324,7 @@ public class RuleServiceApplication implements RuleApplication {
 	}
 
 	public List<FunctionPackage> getFunctionGroups() {
-		return (List<FunctionPackage>) this.functionGroups;
+		return this.functionGroups;
 	}
 
 	public List<ObjectData> getObjectData() {

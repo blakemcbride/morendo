@@ -94,7 +94,7 @@ public class FunctionParam extends AbstractParam {
                 params[idx].setFact(this.facts);
         	} else if (params[idx] instanceof BoundParam){
         		// we look up the value
-        		BoundParam bp = (BoundParam)params[idx];
+        		BoundParam bp = params[idx];
         		Object val = this.engine.getDefglobalValue(bp.getVariableName());
         		bp.setResolvedValue(val);
         	}
@@ -114,7 +114,7 @@ public class FunctionParam extends AbstractParam {
     	// clone the parameters first
     	BoundParam[] cloneParam = new BoundParam[this.params.length];
     	for (int i=0; i < this.params.length; i++) {
-    		cloneParam[i] = (BoundParam)this.params[i].clone();
+    		cloneParam[i] = this.params[i].clone();
     	}
     	FunctionParam clone = new FunctionParam(this.func, this.engine);
     	clone.facts = this.facts;

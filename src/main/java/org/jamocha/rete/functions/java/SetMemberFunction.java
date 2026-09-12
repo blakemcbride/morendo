@@ -102,7 +102,7 @@ public class SetMemberFunction implements Function {
      * Example: (set-member ?objectVariable slotName value)
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] {BoundParam.class,StringParam.class,ValueParam.class};
+		return new Class<?>[] {BoundParam.class,StringParam.class,ValueParam.class};
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

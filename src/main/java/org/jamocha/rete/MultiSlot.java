@@ -38,11 +38,11 @@ public class MultiSlot extends Slot {
 	}
 
 	public MultiSlot(String name) {
-		super.setName(name);
+		this.name = name;
 	}
 
 	public MultiSlot(String name, Object[] value) {
-		super.setName(name);
+		this.name = name;
 		this.value = value;
 	}
 
@@ -109,7 +109,7 @@ public class MultiSlot extends Slot {
 		MultiSlot newms = new MultiSlot();
 		newms.setId(this.getId());
 		newms.setName(this.getName());
-		newms.setValue((Object[]) this.getValue());
+		newms.setValue(this.getValue());
 		return newms;
 	}
 

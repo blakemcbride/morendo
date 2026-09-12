@@ -131,7 +131,7 @@ public class QueryMultipleFuncJoin extends QueryBaseJoin {
         boolean eval = true;
         // we iterate over the binds and evaluate the facts
         for (int idx = 0; idx < this.binds.length; idx++) {
-            Binding bnd = (Binding) binds[idx];
+            Binding bnd = binds[idx];
             if (bnd instanceof Binding2) {
                 eval = ((Binding2)bnd).evaluate(leftlist, right, engine);
             } else {

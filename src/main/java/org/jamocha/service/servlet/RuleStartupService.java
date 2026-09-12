@@ -59,6 +59,7 @@ public class RuleStartupService implements ServletContextListener, RuleService {
 	protected ServletContext servletContext = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	
+	@SuppressWarnings("this-escape") // the administration object refers back to its service
 	public RuleStartupService() {
 		applications = new ArrayList<>();
 		administration = new ServletServiceAdmin(this);

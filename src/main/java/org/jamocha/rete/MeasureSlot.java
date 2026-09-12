@@ -25,7 +25,7 @@ public class MeasureSlot extends BaseSlot {
 
 	public MeasureSlot(Defmeasure measure) {
 		this.defmeasure = measure;
-		this.setName(measure.getMeasureLabel());
+		this.name = measure.getMeasureLabel();
 	}
 	
 	public Defmeasure getDefmeasure() {

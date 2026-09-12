@@ -212,7 +212,7 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
             // handle it appropriate. This means we need to
             // add a LIANode to _IntialFact and attach a NOTNode
             // to the LIANode.
-            ObjectTypeNode otn = (ObjectTypeNode)this.ruleCompiler.getInputnodes().get(ruleCompiler.getEngine().getInitFact());
+            ObjectTypeNode otn = this.ruleCompiler.getInputnodes().get(ruleCompiler.getEngine().getInitFact());
             LIANode lianode = ruleCompiler.findLIANode(otn);
             NotJoin njoin = new NotJoin(ruleCompiler.getEngine().nextNodeId());
             njoin.setBindings(new Binding[0]);

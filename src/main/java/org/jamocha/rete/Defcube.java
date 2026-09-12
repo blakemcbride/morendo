@@ -117,12 +117,12 @@ public class Defcube implements Cube {
 	
 	public void setDimensions(List<?> list) {
 		CubeDimension[] dimens = new CubeDimension[list.size()];
-		this.dimensions = (CubeDimension[])list.toArray(dimens);
+		this.dimensions = list.toArray(dimens);
 	}
 	
 	public void setDefmeasures(List<?> list) {
 		Defmeasure[] mrs = new Defmeasure[list.size()];
-		this.defmeasures = (Defmeasure[])list.toArray(mrs);
+		this.defmeasures = list.toArray(mrs);
 	}
 	
 	public void setDeftemplates(List<?> list) {
@@ -153,7 +153,7 @@ public class Defcube implements Cube {
 	 * generated cube rule.
 	 */
 	public void addData(Fact[] data, Rete engine) {
-		Index index = new Index((Fact[])data);
+		Index index = new Index(data);
 		dataset.put(index, index);
 		indexData(data, engine);
 	}
@@ -162,7 +162,7 @@ public class Defcube implements Cube {
 	 * Remove data from the cube.
 	 */
 	public void removeData(Fact[] data) {
-		Index index = new Index((Fact[])data);
+		Index index = new Index(data);
 		dataset.remove(index);
 	}
 	

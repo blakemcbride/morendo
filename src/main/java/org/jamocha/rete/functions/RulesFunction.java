@@ -72,7 +72,7 @@ public class RulesFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[0];
+		return new Class<?>[0];
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

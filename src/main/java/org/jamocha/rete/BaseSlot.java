@@ -37,7 +37,7 @@ public class BaseSlot implements Serializable, Cloneable {
 	/**
 	 * The name of the slot
 	 */
-	private String name;
+	protected String name;
 
 	/**
 	 * the id of the slot
@@ -82,7 +82,7 @@ public class BaseSlot implements Serializable, Cloneable {
 	 * Set the name of the slot
 	 * @param text
 	 */
-	public void setName(String text) {
+	public final void setName(String text) {
 		this.name = text;
 	}
 

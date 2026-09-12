@@ -100,7 +100,7 @@ public class InterpretedFunction implements Function, Scope {
 
 
   public Class<?>[] getParameter() {
-        return new Class[]{BoundParam.class};
+        return new Class<?>[]{BoundParam.class};
     }
 
     public int getReturnType() {

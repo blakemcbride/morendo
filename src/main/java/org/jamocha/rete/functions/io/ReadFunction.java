@@ -48,7 +48,7 @@ public class ReadFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{Object.class};
+		return new Class<?>[]{Object.class};
 	}
 
 	public int getReturnType() {

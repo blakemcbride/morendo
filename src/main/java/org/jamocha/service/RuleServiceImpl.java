@@ -33,6 +33,7 @@ public class RuleServiceImpl implements RuleService {
 	private ServiceAdministration administration = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	
+	@SuppressWarnings("this-escape") // the administration object refers back to its service
 	public RuleServiceImpl() {
 		applications = new ArrayList<>();
 		administration = new ServiceAdministrationImpl(this);

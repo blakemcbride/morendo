@@ -31,7 +31,7 @@ import org.jamocha.rete.Module;
 import org.jamocha.rete.Rete;
 
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class TemplateEditor extends AbstractJamochaEditor implements
+public final class TemplateEditor extends AbstractJamochaEditor implements
 		ActionListener {
 
 

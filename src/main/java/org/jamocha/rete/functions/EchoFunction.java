@@ -77,7 +77,7 @@ public class EchoFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] { ShellBoundParam[].class };
+		return new Class<?>[] { ShellBoundParam[].class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

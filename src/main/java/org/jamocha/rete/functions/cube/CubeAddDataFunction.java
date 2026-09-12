@@ -88,7 +88,7 @@ public class CubeAddDataFunction implements RuleFunction {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{String.class};
+		return new Class<?>[]{String.class};
 	}
 
 	public int getReturnType() {

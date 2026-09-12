@@ -75,7 +75,7 @@ public class BeforeFunction extends AbstractTimeFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{Object.class, Object.class};
+		return new Class<?>[]{Object.class, Object.class};
 	}
 
 	public int getReturnType() {

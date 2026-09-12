@@ -89,7 +89,7 @@ public class BindFunction implements Function {
 	 * and the second is some value. At the moment, the function does not hand
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam.class, ValueParam.class };
+		return new Class<?>[] { ValueParam.class, ValueParam.class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

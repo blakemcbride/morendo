@@ -25,7 +25,7 @@ public class DimensionSlot extends BaseSlot {
 	
 	public DimensionSlot(CubeDimension dimension) {
 		this.dimension = dimension;
-		this.setName(dimension.getName());
+		this.name = dimension.getName();
 	}
 	
 	public CubeDimension getDimension() {

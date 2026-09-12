@@ -98,7 +98,7 @@ public class DefstrategyFunction implements Function {
 	 * templatename, parenttemplate) parent template name is optional.
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam.class, ValueParam.class,
+		return new Class<?>[] { ValueParam.class, ValueParam.class,
 				ValueParam.class };
 	}
 

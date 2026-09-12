@@ -74,7 +74,7 @@ public class TemporalHashedAlphaMem {
      * key.
 	 */
 	public void addPartialMatch(HashIndex index, Fact fact, Rete engine) {
-		Map<Object, Object> matches = (Map<Object, Object>)this.memory.get(index);
+		Map<Object, Object> matches = this.memory.get(index);
 		if (matches == null) {
 			this.addNewPartialMatch(index,fact,engine);
 		} else {

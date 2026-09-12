@@ -30,7 +30,7 @@ import org.jamocha.gui.JamochaGui;
 import org.jamocha.messagerouter.StringChannel;
 
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class EngineSettingsPanel extends AbstractSettingsPanel implements
+public final class EngineSettingsPanel extends AbstractSettingsPanel implements
 		ActionListener {
 
 

@@ -45,7 +45,7 @@ public class CubeFact implements Fact {
 		mapSlots();
 	}
 
-	protected void mapSlots() {
+	private void mapSlots() {
 		for (int idx=0; idx < slots.length; idx++) {
 			slotMap.put(this.slots[idx].getName(), slots[idx]);
 		}

@@ -97,7 +97,7 @@ public class RootNode {
         // has been added to the working memory, so we just assert.
         // we need to lookup the defclass and deftemplate to assert
         // the object to the network
-        ObjectTypeNode otn = (ObjectTypeNode)this.inputNodes.get(fact.getDeftemplate());
+        ObjectTypeNode otn = this.inputNodes.get(fact.getDeftemplate());
         if (otn != null) {
             otn.assertFact(fact,engine,mem);
         }
@@ -116,7 +116,7 @@ public class RootNode {
             Rete engine, WorkingMemory mem)
     throws AssertException
     {
-        ObjectTypeNode otn = (ObjectTypeNode)this.inputNodes.get(template);
+        ObjectTypeNode otn = this.inputNodes.get(template);
         if (otn != null) {
             otn.assertFact(fact,engine,mem);
         }
@@ -132,7 +132,7 @@ public class RootNode {
     public synchronized void retractObject(Fact fact, Rete engine, WorkingMemory mem)
     throws RetractException
     {
-        ObjectTypeNode otn = (ObjectTypeNode)this.inputNodes.get(fact.getDeftemplate());
+        ObjectTypeNode otn = this.inputNodes.get(fact.getDeftemplate());
         if (otn != null) {
             otn.retractFact(fact,engine,mem);
         }
@@ -151,7 +151,7 @@ public class RootNode {
             Rete engine, WorkingMemory mem)
     throws RetractException
     {
-        ObjectTypeNode otn = (ObjectTypeNode)this.inputNodes.get(template);
+        ObjectTypeNode otn = this.inputNodes.get(template);
         if (otn != null) {
             otn.retractFact(fact,engine,mem);
         }

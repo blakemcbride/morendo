@@ -38,7 +38,7 @@ public class Slot extends BaseSlot {
      * @param name
      */
     public Slot(String name){
-        this.setName(name);
+        this.name = name;
     }
     
     /**

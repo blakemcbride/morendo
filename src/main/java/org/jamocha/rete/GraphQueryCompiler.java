@@ -393,7 +393,7 @@ public class GraphQueryCompiler implements QueryCompiler {
         if (cnstr.hasIntraFactJoin()) {
             QueryIntraFactNode ifnode = new QueryIntraFactNode(engine.nextNodeId());
             BoundConstraint first = cnstr.getFirstIFJ();
-            Binding rightbind = ((Binding)query.getBinding((String)first.getValue()));
+            Binding rightbind = (query.getBinding((String)first.getValue()));
             Slot left = (Slot) templ.getSlot(cnstr.getName()).clone();
             Slot right = (Slot) templ.getSlot(rightbind.getLeftIndex()).clone();
             ifnode.setSlot(left);
@@ -461,7 +461,7 @@ public class GraphQueryCompiler implements QueryCompiler {
                     f.getReturnType() == Constants.BOOLEAN_OBJECT) {
 
                 	Parameter[] parameters = new Parameter[cnstr.getParameters().size()];
-                	parameters = (Parameter[])cnstr.getParameters().toArray(parameters);
+                	parameters = cnstr.getParameters().toArray(parameters);
                 	// configure the parameters
                 	compileParameters(parameters, cnstr, engine, templ, query);
                 	Slot pslot = (Slot)templ.getSlot(cnstr.getName());
@@ -587,7 +587,7 @@ public class GraphQueryCompiler implements QueryCompiler {
     public QueryLIANode findQueryLIANode(QueryObjTypeNode otn) {
     	QueryLIANode node = null;
         if (otn.getSuccessorNodes() != null && otn.getSuccessorNodes().length > 0) {
-            Object[] nodes = (Object[])otn.getSuccessorNodes();
+            Object[] nodes = otn.getSuccessorNodes();
             for (int idx=0; idx < nodes.length; idx++) {
                 if (nodes[idx] instanceof QueryLIANode) {
                     node = (QueryLIANode)nodes[idx];

@@ -50,7 +50,7 @@ public class CompositeIndex {
 		this.calculateHash();
 	}
 
-	protected void calculateHash() {
+	private void calculateHash() {
 		if (this.value == null) {
 			this.hashCode = name.hashCode() + this.operator + 0;
 		} else {

@@ -64,7 +64,7 @@ public class AddSecondsFunction extends AbstractTimeFunction implements
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{Date.class};
+		return new Class<?>[]{Date.class};
 	}
 
 	public int getReturnType() {

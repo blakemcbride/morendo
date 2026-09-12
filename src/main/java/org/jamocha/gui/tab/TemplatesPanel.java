@@ -59,7 +59,7 @@ import org.jamocha.rete.Template;
  * @version 0.01
  */
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class TemplatesPanel extends AbstractJamochaPanel implements
+public final class TemplatesPanel extends AbstractJamochaPanel implements
 		ListSelectionListener, ActionListener {
 
 
@@ -121,7 +121,7 @@ public class TemplatesPanel extends AbstractJamochaPanel implements
 
 	private void initTemplatesList() {
 		dataModel.clear();
-		Collection<Module> modules = (Collection<Module>) gui.getEngine().getWorkingMemory().getModules();
+		Collection<Module> modules = gui.getEngine().getWorkingMemory().getModules();
 		// dataModel.setTemplates(modules);
 		for (Module module : modules) {
 			Collection<Template> templates = module.getTemplates();

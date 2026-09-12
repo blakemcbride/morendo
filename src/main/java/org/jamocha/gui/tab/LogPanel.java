@@ -33,7 +33,7 @@ import org.jamocha.messagerouter.StringChannel;
 import org.jamocha.rete.Function;
 
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class LogPanel extends AbstractJamochaPanel implements ActionListener,
+public final class LogPanel extends AbstractJamochaPanel implements ActionListener,
 		ListSelectionListener {
 
 

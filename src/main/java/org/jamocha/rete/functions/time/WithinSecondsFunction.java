@@ -94,7 +94,7 @@ public class WithinSecondsFunction extends AbstractTimeFunction implements Funct
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{Date.class, Date.class};
+		return new Class<?>[]{Date.class, Date.class};
 	}
 
 	public int getReturnType() {

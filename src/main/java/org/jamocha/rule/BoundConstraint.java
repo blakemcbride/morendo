@@ -84,7 +84,7 @@ public class BoundConstraint implements Constraint {
 	/**
      * the name is the name of the slot or object field.
 	 */
-	public void setName(String name) {
+	public final void setName(String name) {
         if (name.startsWith("?")) {
             this.name = name.substring(1);
         } else {
@@ -218,7 +218,7 @@ public class BoundConstraint implements Constraint {
     }
     
     public BoundConstraint getFirstIFJ() {
-        return (BoundConstraint)this.ifjoins.get(0);
+        return this.ifjoins.get(0);
     }
     
 	/**

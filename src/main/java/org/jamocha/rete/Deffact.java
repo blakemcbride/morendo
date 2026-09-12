@@ -323,7 +323,7 @@ public class Deffact implements Fact {
 	 */
 	public Deffact cloneFact() {
 		Deffact newfact = new Deffact(deftemplate, this.objInstance,
-				(BaseSlot[])deftemplate.cloneAllSlots(), -1);
+				deftemplate.cloneAllSlots(), -1);
 		BaseSlot[] slts = newfact.slots;
 		for (int idx = 0; idx < slts.length; idx++) {
 			// probably need to revisit this and make sure

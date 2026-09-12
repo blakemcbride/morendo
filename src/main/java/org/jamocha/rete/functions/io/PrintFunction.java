@@ -144,12 +144,12 @@ public class PrintFunction implements Function {
 	/**
      * The implementation returns an array of size 1 with Parameter.class
      * as the only entry. Any function that can take an unlimited number
-     * of Parameters should return new Class[] {Parameter.class}.
+     * of Parameters should return new Class<?>[] {Parameter.class}.
      * If a function doesn't take any parameters, the method should return
      * null instead.
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] {ValueParam[].class};
+		return new Class<?>[] {ValueParam[].class};
 	}
 
 	/**

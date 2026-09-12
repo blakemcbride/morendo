@@ -120,7 +120,7 @@ public class LoadStreamFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam.class };
+		return new Class<?>[] { ValueParam.class };
 	}
 
 	public static InputStream getInputStream(String input) throws

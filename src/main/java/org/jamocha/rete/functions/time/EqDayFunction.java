@@ -87,7 +87,7 @@ public class EqDayFunction extends AbstractTimeFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{Date.class, Date.class};
+		return new Class<?>[]{Date.class, Date.class};
 	}
 
 	public int getReturnType() {

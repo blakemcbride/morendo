@@ -74,7 +74,7 @@ public class PingAgentFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[]{String.class};
+		return new Class<?>[]{String.class};
 	}
 
 	public int getReturnType() {

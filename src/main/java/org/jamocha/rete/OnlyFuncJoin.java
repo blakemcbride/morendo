@@ -83,7 +83,7 @@ public class OnlyFuncJoin extends BaseJoin {
             }
         }
         if (bmem.matchCount() == 1) {
-        	Fact f = (Fact)bmem.iterateRightFacts().next();
+        	Fact f = bmem.iterateRightFacts().next();
         	bmem.setOnlyMatch(f);
             this.propagateAssert(linx.add(f), engine, mem);
         }
@@ -166,7 +166,7 @@ public class OnlyFuncJoin extends BaseJoin {
                 bmem.removeMatch(rfact);
                 if (bmem.matchCount() == 1) {
                 	try {
-                		Fact f = (Fact)bmem.iterateRightFacts().next();
+                		Fact f = bmem.iterateRightFacts().next();
                 		bmem.setOnlyMatch(f);
 						propagateAssert(bmem.getIndex().add(f),engine,mem);
 					} catch (AssertException e) {
@@ -189,7 +189,7 @@ public class OnlyFuncJoin extends BaseJoin {
         boolean eval = true;
         // we iterate over the binds and evaluate the facts
         for (int idx = 0; idx < this.binds.length; idx++) {
-            Binding bnd = (Binding) binds[idx];
+            Binding bnd = binds[idx];
             if (bnd instanceof Binding2) {
                 eval = ((Binding2)bnd).evaluate(leftlist, right, engine);
             } else {

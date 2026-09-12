@@ -75,7 +75,7 @@ public class UnDeftemplateFunction implements Function {
 	 * instance. The function gets the deftemplate using Parameter.getValue().
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[] { ValueParam.class };
+		return new Class<?>[] { ValueParam.class };
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

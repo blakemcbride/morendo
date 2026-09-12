@@ -52,7 +52,7 @@ public class GraphQuery extends Defquery {
 
     public GraphQuery(String name) {
         this();
-        setName(name);
+        this.name = name;
     }
 
     public void setGraphData(Fact[] data) {
@@ -67,11 +67,11 @@ public class GraphQuery extends Defquery {
     public void setWatch(boolean watch) {
     	this.watch = watch;
     	for (int i=0; i < this.joins.size(); i++) {
-    		QueryBaseJoin join = (QueryBaseJoin)this.joins.get(i);
+    		QueryBaseJoin join = this.joins.get(i);
     		join.setWatch(watch);
     	}
     	for (int i=0; i < this.conditions.size(); i++) {
-    		Condition c = (Condition)this.conditions.get(i);
+    		Condition c = this.conditions.get(i);
     		for (int n=0; n < c.getNodes().size(); n++) {
     			QueryBaseAlpha a = (QueryBaseAlpha)c.getNodes().get(n);
     			a.setWatch(watch);
@@ -101,7 +101,7 @@ public class GraphQuery extends Defquery {
 			}
 			// first assert the facts
 			for (int i=0; i < this.graphData.length; i++) {
-				Fact f = (Fact)this.graphData[i];
+				Fact f = this.graphData[i];
 				f.setFactId(engine);
 				this.queryRoot.assertObject(f, engine, memory);
 			}

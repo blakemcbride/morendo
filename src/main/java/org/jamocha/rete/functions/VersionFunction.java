@@ -62,7 +62,7 @@ public class VersionFunction implements Function {
 	 * The function does not take any parameters
 	 */
 	public Class<?>[] getParameter() {
-		return new Class[0];
+		return new Class<?>[0];
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

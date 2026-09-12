@@ -155,7 +155,7 @@ public abstract class AbstractCondition implements Condition {
     
     public Constraint[] getConstraints() {
         Constraint[] con = new Constraint[constraints.size()];
-        return (Constraint[])constraints.toArray(con);
+        return constraints.toArray(con);
     }
     
     public void addConstraint(Constraint con) {

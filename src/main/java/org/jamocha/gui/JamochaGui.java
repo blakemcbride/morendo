@@ -54,7 +54,7 @@ import org.jamocha.rete.Rete;
  * @version 0.01
  */
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class JamochaGui extends JFrame implements ChangeListener {
+public final class JamochaGui extends JFrame implements ChangeListener {
 
 
 	static final Preferences preferences = Preferences.userRoot().node(

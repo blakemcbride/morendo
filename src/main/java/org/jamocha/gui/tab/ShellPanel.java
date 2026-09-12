@@ -74,7 +74,7 @@ import org.jamocha.rete.ReturnValue;
  * Modified - Dave Woodman 23/05/21 - send currline with line end so that comments are recognised
  */
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
+public final class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 		FocusListener, AdjustmentListener {
 
 
@@ -511,37 +511,14 @@ public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 				while (running) {
 					if (!keyEventQueue.isEmpty()) {
 						KeyEvent e = keyEventQueue.poll();
-						int delta = 1;
 						switch (e.getKeyCode()) {
 						case KeyEvent.VK_DOWN:
 						case KeyEvent.VK_KP_DOWN:
-							delta = -1;
+							navigateHistory(-1);
+							break;
 						case KeyEvent.VK_UP:
 						case KeyEvent.VK_KP_UP:
-							stopTimer();
-							hideCursor();
-							// Here we walk through the history
-							history_offset += delta;
-							if (history_offset <= 0) {
-								history_offset = 0;
-								if (lastPromptIndex < getOffset()) {
-									removeLine();
-								}
-							} else {
-								if (history_offset > history.size()) {
-									history_offset = history.size();
-								}
-								if (lastPromptIndex < getOffset()) {
-									removeLine();
-								}
-								int index = history.size() - history_offset;
-								if (index >= 0 && history.size() > 0) {
-									String tmp = history.get(index);
-									printMessage(tmp, false);
-								}
-							}
-							moveCursorToEnd();
-							startTimer();
+							navigateHistory(1);
 							break;
 						case KeyEvent.VK_ENTER:
 							stopTimer();
@@ -860,4 +837,30 @@ public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 		}
 	}
 
+	/** Walks through the command history: delta 1 goes back in time, -1 forward. */
+	private void navigateHistory(int delta) {
+		stopTimer();
+		hideCursor();
+		history_offset += delta;
+		if (history_offset <= 0) {
+			history_offset = 0;
+			if (lastPromptIndex < getOffset()) {
+				removeLine();
+			}
+		} else {
+			if (history_offset > history.size()) {
+				history_offset = history.size();
+			}
+			if (lastPromptIndex < getOffset()) {
+				removeLine();
+			}
+			int index = history.size() - history_offset;
+			if (index >= 0 && history.size() > 0) {
+				String tmp = history.get(index);
+				printMessage(tmp, false);
+			}
+		}
+		moveCursorToEnd();
+		startTimer();
+	}
 }

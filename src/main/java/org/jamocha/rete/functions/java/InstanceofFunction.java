@@ -68,7 +68,7 @@ public class InstanceofFunction implements Function {
 	}
 
 	public Class<?>[] getParameter() {
-		return new Class[] {BoundParam.class,BoundParam.class};
+		return new Class<?>[] {BoundParam.class,BoundParam.class};
 	}
 
 	public int getReturnType() {

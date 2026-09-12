@@ -57,7 +57,7 @@ import org.jamocha.rete.exception.RetractException;
  * @author Alexander Wilden <october.rust@gmx.de>
  */
 @SuppressWarnings("serial") // Swing components are never serialized here
-public class FactsPanel extends AbstractJamochaPanel implements ActionListener,
+public final class FactsPanel extends AbstractJamochaPanel implements ActionListener,
 		ListSelectionListener {
 
 
@@ -117,7 +117,7 @@ public class FactsPanel extends AbstractJamochaPanel implements ActionListener,
 	}
 
 	private void initFactsList() {
-		List<Fact> facts = (List<Fact>) gui.getEngine().getAllFacts();
+		List<Fact> facts = gui.getEngine().getAllFacts();
 		dataModel.setFacts(facts);
 		factsTable.getColumnModel().getColumn(0).setPreferredWidth(50);
 		factsTable.getColumnModel().getColumn(1).setPreferredWidth(
