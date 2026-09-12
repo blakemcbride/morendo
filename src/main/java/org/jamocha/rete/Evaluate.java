@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2008 Peter Lin
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://ruleml-dev.sourceforge.net/
- *
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,243 +16,155 @@
  */
 package org.jamocha.rete;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 import java.time.Instant;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
- * @author Peter Lin
+ * Compares slot values for the alpha and join nodes.
  *
- * The purpose of Evaluate is similar to the Evaluatn in CLIPS. The class
- * constains static methods for evaluating two values
+ * Rules of comparison: NIL equals null and nothing else; strings and booleans compare by
+ * their text (a boolean against a string compares "true"/"false"); numbers compare as
+ * longs when both are integral and as doubles otherwise, and compare equal to a string
+ * holding their text; instants, dates and calendars compare by epoch millisecond, also
+ * against numbers; anything else falls back to equals(). Ordering is defined for numbers
+ * and temporal values only.
  */
 public class Evaluate {
 
-    /**
-     * evaluate is responsible for evaluating two values. The left value
-     * is the value in the slot. The right value is the value of the object
-     * instance to match against.
-     * @param operator
-     * @param left
-     * @param right
-     * @return
-     */
-    public static boolean evaluate(int operator, Object left, Object right){
-        boolean eval = false;
-        switch (operator){
-            case Constants.EQUAL:
-                eval = evaluateEqual(left,right);
-                break;
-            case Constants.NOTEQUAL:
-                eval = evaluateNotEqual(left,right);
-                break;
-            case Constants.LESS:
-                eval = evaluateLess(left,right);
-                break;
-            case Constants.LESSEQUAL:
-                eval = evaluateLessEqual(left,right);
-                break;
-            case Constants.GREATER:
-                eval = evaluateGreater(left,right);
-                break;
-            case Constants.GREATEREQUAL:
-                eval = evaluateGreaterEqual(left,right);
-                break;
-            case Constants.NILL:
-                eval = evaluateNull(left,right);
-                break;
-        }
-        return eval;
+    public static boolean evaluate(int operator, Object left, Object right) {
+        return switch (operator) {
+            case Constants.EQUAL -> evaluateEqual(left, right);
+            case Constants.NOTEQUAL -> evaluateNotEqual(left, right);
+            case Constants.LESS -> evaluateLess(left, right);
+            case Constants.LESSEQUAL -> evaluateLessEqual(left, right);
+            case Constants.GREATER -> evaluateGreater(left, right);
+            case Constants.GREATEREQUAL -> evaluateGreaterEqual(left, right);
+            case Constants.NILL -> evaluateNull(left, right);
+            default -> false;
+        };
     }
-    
-    /**
-     * evaluate if two values are equal. If they are equal
-     * return true. otherwise return false.
-     * @param left
-     * @param right
-     * @return
-     */
-    public static boolean evaluateEqual(Object left, Object right){
-    	if (left.equals(Constants.NIL_SYMBOL)) {
-    		return right == null;
-    	} else if (left instanceof String){
-            return evaluateStringEqual((String)left,right);
-    	} else if (left instanceof Boolean) {
-    		return evaluateBooleanEqual((Boolean)left,right);
-    	} else if (left instanceof Double) {
-    		return evaluateDoubleEqual((Double)left,right);
-    	} else if (left instanceof Integer) {
-    		return evaluateIntegerEqual((Integer)left,right);
-    	} else if (left instanceof Short) {
-    		return evaluateShortEqual((Short)left,right);
-    	} else if (left instanceof Float) {
-    		return evaluateFloatEqual((Float)left,right);
-    	} else if (left instanceof Long) {
-    		return evaluateLongEqual((Long)left,right);
-    	} else if (left instanceof BigDecimal) {
-    		return evaluateBigDecimalEqual((BigDecimal)left,right);
-    	} else if (isTemporal(left)) {
-    		return evaluateDateEqual(temporalMillis(left), right);
-        } else if (left instanceof Object && right instanceof Object) {
-        	return left.equals(right);
-        } else {
-    		return false;
-    	}
+
+    public static boolean evaluateEqual(Object left, Object right) {
+        if (Constants.NIL_SYMBOL.equals(left)) {
+            return right == null;
+        }
+        return switch (left) {
+            case null -> false;
+            case String s -> evaluateStringEqual(s, right);
+            case Boolean b -> evaluateBooleanEqual(b, right);
+            case Number n -> right instanceof String s ? n.toString().equals(s) : compare(Constants.EQUAL, n, right);
+            case Object o when isTemporal(o) -> evaluateDateEqual(temporalMillis(o), right);
+            default -> right != null && left.equals(right);
+        };
+    }
+
+    public static boolean evaluateNotEqual(Object left, Object right) {
+        if (Constants.NIL_SYMBOL.equals(left)) {
+            return right != null;
+        }
+        return switch (left) {
+            case null -> false;
+            case String s -> !s.equals(right);
+            case Boolean b -> evaluateBooleanNotEqual(b, right);
+            case Number n -> right instanceof String s ? !n.toString().equals(s) : compare(Constants.NOTEQUAL, n, right);
+            case Object o when isTemporal(o) -> evaluateDateNotEqual(temporalMillis(o), right);
+            default -> right != null && !left.equals(right);
+        };
+    }
+
+    public static boolean evaluateLess(Object left, Object right) {
+        return order(Constants.LESS, left, right);
+    }
+
+    public static boolean evaluateLessEqual(Object left, Object right) {
+        return order(Constants.LESSEQUAL, left, right);
+    }
+
+    public static boolean evaluateGreater(Object left, Object right) {
+        return order(Constants.GREATER, left, right);
+    }
+
+    public static boolean evaluateGreaterEqual(Object left, Object right) {
+        return order(Constants.GREATEREQUAL, left, right);
+    }
+
+    public static boolean evaluateNull(Object left, Object right) {
+        return right == null;
+    }
+
+    public static boolean evaluateStringEqual(String left, Object right) {
+        return right instanceof Boolean ? left.equals(right.toString()) : left.equals(right);
+    }
+
+    public static boolean evaluateBooleanEqual(Boolean left, Object right) {
+        return switch (right) {
+            case Boolean b -> left.equals(b);
+            case String s -> left.toString().equals(s);
+            case null, default -> false;
+        };
+    }
+
+    public static boolean evaluateBooleanNotEqual(Boolean left, Object right) {
+        return switch (right) {
+            case Boolean b -> !left.equals(b);
+            case String s -> !left.equals(Boolean.valueOf(s));
+            case null, default -> false;
+        };
+    }
+
+    /** Ordering comparisons: numbers against numbers, temporal values against temporal values or numbers. */
+    private static boolean order(int operator, Object left, Object right) {
+        return switch (left) {
+            case Number n -> compare(operator, n, right);
+            case Object o when isTemporal(o) -> compareMillis(operator, temporalMillis(o), right);
+            case null, default -> false;
+        };
     }
 
     /**
-     * evaluate if two values are equal when left is a string and right
-     * is some object.
-     * @param left
-     * @param right
-     * @return
+     * Compares a number with a right-hand value that must also be a number: exactly as longs
+     * when both are integral, as doubles when a floating-point or decimal value is involved.
      */
-    public static boolean evaluateStringEqual(String left, Object right) {
-    	if (right instanceof Boolean) {
-    		return left.equals(right.toString());
-    	} else {
-    		return left.equals(right);
-    	}
-    }
-    
-    /**
-     * evaluate Boolean values against each other. If the right is a String,
-     * the method will attempt to create a new Boolean object and evaluate.
-     * @param left
-     * @param right
-     * @return
-     */
-    public static boolean evaluateBooleanEqual(Boolean left, Object right) {
-    	if (right instanceof Boolean) {
-    		return left.equals(right);
-    	} else if (right instanceof String) {
-    		return left.toString().equals(right);
-    	} else {
-    		return false;
-    	}
-    }
-    
-    public static boolean evaluateIntegerEqual(Integer left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() == ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() == ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() == ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() == ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() == ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() == ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return left.toString().equals(right);
-        } else {
+    private static boolean compare(int operator, Number left, Object right) {
+        if (!(right instanceof Number r)) {
             return false;
         }
-    }
-    
-    public static boolean evaluateShortEqual(Short left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() == ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() == ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() == ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() == ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() == ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() == ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return left.toString().equals(right);
-        } else {
-            return false;
+        if (isIntegral(left) && isIntegral(r)) {
+            return test(operator, Long.compare(left.longValue(), r.longValue()));
         }
+        double l = left.doubleValue();
+        double d = r.doubleValue();
+        return switch (operator) {
+            case Constants.EQUAL -> l == d;
+            case Constants.NOTEQUAL -> l != d;
+            case Constants.LESS -> l < d;
+            case Constants.LESSEQUAL -> l <= d;
+            case Constants.GREATER -> l > d;
+            case Constants.GREATEREQUAL -> l >= d;
+            default -> false;
+        };
     }
-    
-    public static boolean evaluateFloatEqual(Float left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() == ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() == ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() == ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() == ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() == ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return left.toString().equals(right);
-        } else {
-            return false;
-        }
+
+    private static boolean isIntegral(Number n) {
+        return n instanceof Integer || n instanceof Long || n instanceof Short || n instanceof Byte || n instanceof BigInteger;
     }
-    
-    public static boolean evaluateLongEqual(Long left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() == ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() == ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() == ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() == ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() == ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() == ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return left.toString().equals(right);
-        } else {
-            return false;
-        }
+
+    /** Applies an operator to the sign of a comparison result. */
+    private static boolean test(int operator, int comparison) {
+        return switch (operator) {
+            case Constants.EQUAL -> comparison == 0;
+            case Constants.NOTEQUAL -> comparison != 0;
+            case Constants.LESS -> comparison < 0;
+            case Constants.LESSEQUAL -> comparison <= 0;
+            case Constants.GREATER -> comparison > 0;
+            case Constants.GREATEREQUAL -> comparison >= 0;
+            default -> false;
+        };
     }
-    
-    public static boolean evaluateDoubleEqual(Double left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() == ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() == ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() == ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() == ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() == ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() == ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateBigDecimalEqual(BigDecimal left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() == ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() == ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() == ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() == ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() == ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() == ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
+
+    // ---------------------------------------------------------------- temporal values
 
     /** True for the values a DATE slot or a time function may hold: an Instant, or a legacy Date or Calendar from a bean. */
     public static boolean isTemporal(Object value) {
@@ -261,765 +173,57 @@ public class Evaluate {
 
     /** Epoch milliseconds of a temporal value or a number; Long.MIN_VALUE for anything else. */
     public static long temporalMillis(Object value) {
-        if (value instanceof Instant) {
-            return ((Instant) value).toEpochMilli();
-        } else if (value instanceof Date) {
-            return ((Date) value).getTime();
-        } else if (value instanceof Calendar) {
-            return ((Calendar) value).getTimeInMillis();
-        } else if (value instanceof Number) {
-            return ((Number) value).longValue();
-        }
-        return Long.MIN_VALUE;
+        return switch (value) {
+            case Instant i -> i.toEpochMilli();
+            case Date d -> d.getTime();
+            case Calendar c -> c.getTimeInMillis();
+            case Number n -> n.longValue();
+            case null, default -> Long.MIN_VALUE;
+        };
     }
 
-    private static boolean temporalOrNumber(Object value) {
-        return isTemporal(value) || value instanceof Number;
+    private static boolean compareMillis(int operator, long left, Object right) {
+        return (isTemporal(right) || right instanceof Number) && test(operator, Long.compare(left, temporalMillis(right)));
     }
 
     public static boolean evaluateDateEqual(long left, Object right) {
-        return temporalOrNumber(right) && left == temporalMillis(right);
+        return compareMillis(Constants.EQUAL, left, right);
     }
-    
-    /**
-     * evaluate if two values are not equal. If they are not
-     * equal, return true. Otherwise return false.
-     * @param left
-     * @param right
-     * @return
-     */
-    public static boolean evaluateNotEqual(Object left, Object right){
-    	if (left.equals(Constants.NIL_SYMBOL)) {
-    		return right != null;
-    	} else if (left instanceof String) {
-            return !left.equals(right);
-        } else if (left instanceof Boolean) {
-        	return evaluateBooleanNotEqual((Boolean)left,right);
-        } else if (left instanceof Integer) {
-        	return evaluateIntegerNotEqual((Integer)left,right);
-        } else if (left instanceof Short) {
-        	return evaluateShortNotEqual((Short)left,right);
-        } else if (left instanceof Float) {
-        	return evaluateFloatNotEqual((Float)left,right);
-        } else if (left instanceof Long) {
-        	return evaluateLongNotEqual((Long)left,right);
-        } else if (left instanceof Double) {
-        	return evaluateDoubleNotEqual((Double)left,right);
-        } else if (left instanceof BigDecimal) {
-        	return evaluateBigDecimalNotEqual((BigDecimal)left,right);
-        } else if (isTemporal(left)) {
-        	return evaluateDateNotEqual(temporalMillis(left), right);
-        } else if (left instanceof Object && right instanceof Object) {
-        	return !left.equals(right);
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * evaluate Boolean values against each other. If the right is a String,
-     * the method will attempt to create a new Boolean object and evaluate.
-     * @param left
-     * @param right
-     * @return
-     */
-    public static boolean evaluateBooleanNotEqual(Boolean left, Object right) {
-    	if (right instanceof Boolean) {
-    		return !left.equals(right);
-    	} else if (right instanceof String) {
-    		Boolean b = Boolean.valueOf((String)right);
-    		return !left.equals(b);
-    	} else {
-    		return false;
-    	}
-    }
-    
-    public static boolean evaluateIntegerNotEqual(Integer left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() != ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() != ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() != ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() != ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() != ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() != ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return !left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
-   
-    public static boolean evaluateShortNotEqual(Short left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() != ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() != ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() != ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() != ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() != ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() != ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return !left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
-   
-    public static boolean evaluateFloatNotEqual(Float left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() != ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() != ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() != ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() != ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() != ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() != ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return !left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
-   
-    public static boolean evaluateLongNotEqual(Long left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() != ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() != ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() != ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() != ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() != ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() != ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return !left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
-   
-    public static boolean evaluateDoubleNotEqual(Double left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() != ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() != ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() != ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() != ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() != ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() != ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return !left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
-   
-    public static boolean evaluateBigDecimalNotEqual(BigDecimal left, Object right) {
-        if (right instanceof Double) {
-            return left.doubleValue() != ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() != ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() != ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() != ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() != ((Long)right).doubleValue();
-        } else if (right instanceof BigDecimal) {
-            return left.doubleValue() != ((BigDecimal)right).doubleValue();
-        } else if (right instanceof String) {
-        	return !left.toString().equals(right);
-        } else {
-            return false;
-        }
-    }
-    
+
     public static boolean evaluateDateNotEqual(long left, Object right) {
-        return temporalOrNumber(right) && left != temporalMillis(right);
-    }
-    
-    public static boolean evaluateLess(Object left, Object right){
-        if (left instanceof BigDecimal){
-            return evaluateBigDecimalLess((BigDecimal)left,right);
-        } else if (left instanceof Integer){
-            return evaluateIntegerLess((Integer)left,right);
-        } else if (left instanceof Short){
-            return evaluateShortLess((Short)left,right);
-        } else if (left instanceof Long){
-            return evaluateLongLess((Long)left,right);
-        } else if (left instanceof Float){
-            return evaluateFloatLess((Float)left,right);
-        } else if (left instanceof Double){
-            return evaluateDoubleLess((Double)left,right);
-        } else if (isTemporal(left)) {
-        	return evaluateDateLess(temporalMillis(left), right);
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateLessEqual(Object left, Object right){
-        if (left instanceof BigDecimal){
-            return evaluateBigDecimalLessEqual((BigDecimal)left,right);
-        } else if (left instanceof Integer){
-            return evaluateIntegerLessEqual((Integer)left,right);
-        } else if (left instanceof Short){
-            return evaluateShortLessEqual((Short)left,right);
-        } else if (left instanceof Long){
-            return evaluateLongLessEqual((Long)left,right);
-        } else if (left instanceof Float){
-            return evaluateFloatLessEqual((Float)left,right);
-        } else if (left instanceof Double){
-            return evaluateDoubleLessEqual((Double)left,right);
-        } else if (isTemporal(left)) {
-        	return evaluateDateLessEqual(temporalMillis(left), right);
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateGreater(Object left, Object right){
-        if (left instanceof BigDecimal){
-            return evaluateBigDecimalGreater((BigDecimal)left,right);
-        } else if (left instanceof Integer){
-            return evaluateIntegerGreater((Integer)left,right);
-        } else if (left instanceof Short){
-            return evaluateShortGreater((Short)left,right);
-        } else if (left instanceof Long){
-            return evaluateLongGreater((Long)left,right);
-        } else if (left instanceof Float){
-            return evaluateFloatGreater((Float)left,right);
-        } else if (left instanceof Double){
-            return evaluateDoubleGreater((Double)left,right);
-        } else if (isTemporal(left)) {
-        	return evaluateDateGreater(temporalMillis(left), right);
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateGreaterEqual(Object left, Object right){
-        if (left instanceof BigDecimal){
-            return evaluateBigDecimalGreaterEqual((BigDecimal)left,right);
-        } else if (left instanceof Integer){
-            return evaluateIntegerGreaterEqual((Integer)left,right);
-        } else if (left instanceof Short){
-            return evaluateShortGreaterEqual((Short)left,right);
-        } else if (left instanceof Long){
-            return evaluateLongGreaterEqual((Long)left,right);
-        } else if (left instanceof Float){
-            return evaluateFloatGreaterEqual((Float)left,right);
-        } else if (left instanceof Double){
-            return evaluateDoubleGreaterEqual((Double)left,right);
-        } else if (isTemporal(left)) {
-        	return evaluateDateGreaterEqual(temporalMillis(left), right);
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateBigDecimalGreaterEqual(BigDecimal left, Object right) {
-        if (right instanceof BigDecimal){
-            return left.doubleValue() >= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Integer){
-            return left.intValue() >= ((Integer)right).intValue();
-        } else if (right instanceof Short){
-            return left.shortValue() >= ((Short)right).shortValue();
-        } else if (right instanceof Long){
-            return left.longValue() >= ((Long)right).longValue();
-        } else if (right instanceof Float){
-            return left.floatValue() >= ((Float)right).floatValue();
-        } else if (right instanceof Double){
-            return left.doubleValue() >= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * In the case of checking if an object's attribute is null,
-     * we only check the right.
-     * @param left
-     * @param right
-     * @return
-     */
-    public static boolean evaluateNull(Object left, Object right){
-        if (right == null){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /// ------- Integer comparison methods ------- ///
-    public static boolean evaluateIntegerLess(Integer left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() < ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() < ((Integer)right).intValue();
-        } else if (right instanceof Short) {
-            return left.intValue() < ((Short)right).intValue();
-        } else if (right instanceof Long) {
-            return left.longValue() < ((Long)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() < ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() < ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateIntegerLessEqual(Integer left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() <= ((Integer)right).intValue();
-        } else if (right instanceof Short) {
-            return left.intValue() <= ((Short)right).intValue();
-        } else if (right instanceof Long) {
-            return left.longValue() <= ((Long)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() <= ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() <= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateIntegerGreater(Integer left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() > ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() > ((Integer)right).intValue();
-        } else if (right instanceof Short) {
-            return left.intValue() > ((Short)right).intValue();
-        } else if (right instanceof Long) {
-            return left.longValue() > ((Long)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() > ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() > ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateIntegerGreaterEqual(Integer left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() >= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() >= ((Integer)right).intValue();
-        } else if (right instanceof Short) {
-            return left.intValue() >= ((Short)right).intValue();
-        } else if (right instanceof Long) {
-            return left.longValue() >= ((Long)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() >= ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() >= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
+        return compareMillis(Constants.NOTEQUAL, left, right);
     }
 
-    /// ------- Short comparison methods ------- ///
-    public static boolean evaluateShortLess(Short left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() < ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.shortValue() < ((Short)right).shortValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() < ((Integer)right).intValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() < ((Float)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.longValue() < ((Long)right).longValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() < ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateShortLessEqual(Short left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.shortValue() <= ((Short)right).shortValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() <= ((Integer)right).intValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() <= ((Float)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.longValue() <= ((Long)right).longValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() <= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateShortGreater(Short left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() > ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.shortValue() > ((Short)right).shortValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() > ((Integer)right).intValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() > ((Float)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.longValue() > ((Long)right).longValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() > ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateShortGreaterEqual(Short left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() >= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.shortValue() >= ((Short)right).shortValue();
-        } else if (right instanceof Integer) {
-            return left.intValue() >= ((Integer)right).intValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() >= ((Float)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.longValue() >= ((Long)right).longValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() >= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    /// ------- Long comparison methods ------- ///
-    public static boolean evaluateLongLess(Long left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() < ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.longValue() < ((Long)right).longValue();
-        } else if (right instanceof Integer) {
-            return left.longValue() < ((Integer)right).longValue();
-        } else if (right instanceof Short) {
-            return left.longValue() < ((Short)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() < ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() < ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateLongLessEqual(Long left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.longValue() <= ((Long)right).longValue();
-        } else if (right instanceof Integer) {
-            return left.longValue() <= ((Integer)right).longValue();
-        } else if (right instanceof Short) {
-            return left.longValue() <= ((Short)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() <= ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() <= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateLongGreater(Long left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() > ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.longValue() > ((Long)right).longValue();
-        } else if (right instanceof Integer) {
-            return left.longValue() > ((Integer)right).longValue();
-        } else if (right instanceof Short) {
-            return left.longValue() > ((Short)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() > ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() > ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateLongGreaterEqual(Long left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() >= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.longValue() >= ((Long)right).longValue();
-        } else if (right instanceof Integer) {
-            return left.longValue() >= ((Integer)right).longValue();
-        } else if (right instanceof Short) {
-            return left.longValue() >= ((Short)right).longValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() >= ((Float)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() >= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    /// ------- Float comparison methods ------- ///
-    public static boolean evaluateFloatLess(Float left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() < ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() < ((Float)right).floatValue();
-        } else if (right instanceof Integer) {
-            return left.floatValue() < ((Integer)right).floatValue();
-        } else if (right instanceof Short) {
-            return left.floatValue() < ((Short)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.floatValue() < ((Long)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() < ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateFloatLessEqual(Float left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() <= ((Float)right).floatValue();
-        } else if (right instanceof Integer) {
-            return left.floatValue() <= ((Integer)right).floatValue();
-        } else if (right instanceof Short) {
-            return left.floatValue() <= ((Short)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.floatValue() <= ((Long)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() <= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateFloatGreater(Float left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() > ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() > ((Float)right).floatValue();
-        } else if (right instanceof Integer) {
-            return left.floatValue() > ((Integer)right).floatValue();
-        } else if (right instanceof Short) {
-            return left.floatValue() > ((Short)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.floatValue() > ((Long)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() > ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateFloatGreaterEqual(Float left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() >= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.floatValue() >= ((Float)right).floatValue();
-        } else if (right instanceof Integer) {
-            return left.floatValue() >= ((Integer)right).floatValue();
-        } else if (right instanceof Short) {
-            return left.floatValue() >= ((Short)right).floatValue();
-        } else if (right instanceof Long) {
-            return left.floatValue() >= ((Long)right).floatValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() >= ((Double)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-
-    /// ------- Double comparison methods ------- ///
-    public static boolean evaluateDoubleLess(Double left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() < ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() < ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() < ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() < ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() < ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() < ((Long)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateBigDecimalLess(BigDecimal left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() < ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() < ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() < ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() < ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() < ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() < ((Long)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateDoubleLessEqual(Double left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() <= ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() <= ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() <= ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() <= ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() <= ((Long)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateBigDecimalLessEqual(BigDecimal left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() <= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() <= ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() <= ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() <= ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() <= ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() <= ((Long)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateBigDecimalGreater(BigDecimal left, Object right) {
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() > ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() > ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() > ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() > ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() > ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() > ((Long)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateDoubleGreater(Double left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() > ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() > ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() > ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() > ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() > ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() > ((Long)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
-    
-    public static boolean evaluateDoubleGreaterEqual(Double left, Object right){
-        if (right instanceof BigDecimal) {
-            return left.doubleValue() >= ((BigDecimal)right).doubleValue();
-        } else if (right instanceof Double) {
-            return left.doubleValue() >= ((Double)right).doubleValue();
-        } else if (right instanceof Integer) {
-            return left.doubleValue() >= ((Integer)right).doubleValue();
-        } else if (right instanceof Short) {
-            return left.doubleValue() >= ((Short)right).doubleValue();
-        } else if (right instanceof Float) {
-            return left.doubleValue() >= ((Float)right).doubleValue();
-        } else if (right instanceof Long) {
-            return left.doubleValue() >= ((Long)right).doubleValue();
-        } else {
-            return false;
-        }
-    }
- 
-    /// ------- Date comparison methods ------- ///
     public static boolean evaluateDateLess(long left, Object right) {
-        return temporalOrNumber(right) && left < temporalMillis(right);
+        return compareMillis(Constants.LESS, left, right);
     }
-    
+
     public static boolean evaluateDateLessEqual(long left, Object right) {
-        return temporalOrNumber(right) && left <= temporalMillis(right);
+        return compareMillis(Constants.LESSEQUAL, left, right);
     }
-    
+
     public static boolean evaluateDateGreater(long left, Object right) {
-        return temporalOrNumber(right) && left > temporalMillis(right);
+        return compareMillis(Constants.GREATER, left, right);
     }
-    
+
     public static boolean evaluateDateGreaterEqual(long left, Object right) {
-        return temporalOrNumber(right) && left >= temporalMillis(right);
+        return compareMillis(Constants.GREATEREQUAL, left, right);
     }
-    
+
+    // ---------------------------------------------------------------- facts
+
+    /** True when both arrays hold the same fact instances in the same order. */
     public static boolean factsEqual(Fact[] left, Fact[] right) {
         if (left == right) {
             return true;
         }
-        int length = left.length;
-        if (length != right.length) {
+        if (left.length != right.length) {
             return false;
         }
-        for (int i=0; i<length; i++) {
-            Object o1 = left[i];
-            Object o2 = right[i];
-            if (!(o1==null ? o2==null : o1 == o2) )
+        for (int i = 0; i < left.length; i++) {
+            if (left[i] != right[i]) {
                 return false;
+            }
         }
         return true;
     }
