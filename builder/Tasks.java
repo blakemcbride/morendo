@@ -20,42 +20,76 @@ import static builder.BuildUtils.*;
  * Build tasks for Morendo, run through ./bld (bld.cmd on Windows). The generic helpers live
  * in builder/BuildUtils.java and are not meant to be edited; this file is the whole build.
  *
- * Layout:
- *   src/main/java        engine sources (package org.jamocha)
- *   src/main/resources   icons and message bundles, copied next to the classes
- *   src/main/javacc      the CLIPS grammar; the parser is generated into
- *                        src/main/java/org/jamocha/parser/clips (git-ignored there)
- *   src/test/java        tests, sample beans and example code
- *   src/test/resources   golden files and scenario scripts for the characterization tests
- *   libs/                downloaded jars (libs/tools holds build-time tools such as JavaCC)
- *   target/              everything the build produces
+ * Layout: one source root per module (see MODULES), src/<module>/java with resources in
+ * src/<module>/resources, compiled to target/<module>/classes and packaged as
+ * target/morendo-<module>-<version>.jar. Tests are in src/test/java (goldens and scenario
+ * scripts in src/test/resources) and compile against every module. The CLIPS grammar is
+ * src/core/javacc/clips.jj; the parser is generated into src/core/java/org/jamocha/parser/clips
+ * (git-ignored there). libs/ holds the downloaded jars (libs/tools the build-time tools).
  *
- * The version number lives in one place: Constants.VERSION in src/main/java.
+ * The version number lives in one place: Constants.VERSION in the core module.
  */
 public class Tasks {
 
 	final static String LIBS = "libs";
 	final static String TOOLS = LIBS + "/tools";
 	final static String BUILDDIR = "target";
-	final static String CLASSES = BUILDDIR + "/classes";
 	final static String TEST_CLASSES = BUILDDIR + "/test-classes";
-	final static String MAIN_SRC = "src/main/java";
 	final static String TEST_SRC = "src/test/java";
-	final static String RESOURCES = "src/main/resources";
-	final static String GRAMMAR = "src/main/javacc/clips.jj";
-	final static String PARSER_DIR = MAIN_SRC + "/org/jamocha/parser/clips";
+	final static String GRAMMAR = "src/core/javacc/clips.jj";
+	final static String PARSER_DIR = "src/core/java/org/jamocha/parser/clips";
 	final static String GENERATED_PARSER_FILES = "CLIPSParser.*\\.java|ParseException\\.java|SimpleCharStream\\.java|Token\\.java|TokenMgrError\\.java";
-	final static String CONSTANTS = MAIN_SRC + "/org/jamocha/rete/Constants.java";
+	final static String CONSTANTS = "src/core/java/org/jamocha/rete/Constants.java";
 	final static String MAIN_CLASS = "org.jamocha.Morendo";
 	final static String GOLDEN_TESTS = "org.jamocha.golden.GoldenSampleTest";
 	final static String MAVEN = "https://repo1.maven.org/maven2/";
 	final static String JAVACC = "javacc-7.0.13.jar";
 	final static String JUNIT = "junit-platform-console-standalone-6.1.3.jar";
 
-	final static ForeignDependencies foreignLibs = buildForeignDependencies();
-	final static ForeignDependencies toolLibs = buildToolDependencies();
-	final static LocalDependencies localLibs = new LocalDependencies();
+	/** The third-party jars, by short name; modules pick the ones they may use. */
+	final static String[][] CATALOG = {
+			{ "log4j-api", MAVEN + "org/apache/logging/log4j/log4j-api/2.26.1/log4j-api-2.26.1.jar" },
+			{ "log4j-core", MAVEN + "org/apache/logging/log4j/log4j-core/2.26.1/log4j-core-2.26.1.jar" },
+			{ "jackson-core", MAVEN + "com/fasterxml/jackson/core/jackson-core/2.22.2/jackson-core-2.22.2.jar" },
+			{ "jackson-databind", MAVEN + "com/fasterxml/jackson/core/jackson-databind/2.22.2/jackson-databind-2.22.2.jar" },
+			{ "jackson-annotations", MAVEN + "com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar" },
+			{ "jakarta.jms-api", MAVEN + "jakarta/jms/jakarta.jms-api/3.1.0/jakarta.jms-api-3.1.0.jar" },
+			{ "jakarta.servlet-api", MAVEN + "jakarta/servlet/jakarta.servlet-api/6.1.0/jakarta.servlet-api-6.1.0.jar" },
+			{ "jline", MAVEN + "org/jline/jline/4.4.3/jline-4.4.3.jar" },
+			// tests only; dist() leaves it out of the distribution
+			{ "junit", MAVEN + "org/junit/platform/junit-platform-console-standalone/6.1.3/" + JUNIT },
+	};
 
+	/**
+	 * A module: its source root is src/<name>/java (resources in src/<name>/resources), it is
+	 * compiled against the class directories of the modules it depends on and only the
+	 * third-party jars it names, so the compiler enforces the dependency rules.
+	 */
+	record Module(String name, String[] dependsOn, String[] jars) {
+		String src() {
+			return "src/" + name + "/java";
+		}
+
+		String resources() {
+			return "src/" + name + "/resources";
+		}
+
+		String classes() {
+			return BUILDDIR + "/" + name + "/classes";
+		}
+	}
+
+	final static Module[] MODULES = {
+			new Module("core", new String[0], new String[] { "log4j-api", "log4j-core" }),
+			new Module("examples", new String[] { "core" }, new String[] { "log4j-api" }),
+			new Module("messaging", new String[] { "core" }, new String[] { "log4j-api", "jakarta.jms-api" }),
+			new Module("gui", new String[] { "core" }, new String[] { "log4j-api" }),
+			new Module("service", new String[] { "core" }, new String[] { "log4j-api", "jackson-core", "jackson-databind", "jackson-annotations", "jakarta.servlet-api" }),
+			new Module("shell", new String[] { "core", "gui" }, new String[] { "log4j-api", "jline" }),
+	};
+
+	final static ForeignDependencies foreignLibs = jars(java.util.Arrays.stream(CATALOG).map(e -> e[0]).toArray(String[]::new));
+	final static ForeignDependencies toolLibs = buildToolDependencies();
 	private static String[] args;
 
 	public static void main(String[] args) throws Exception {
@@ -65,16 +99,16 @@ public class Tasks {
 
 	public static void listTasks() {
 		println("");
-		println("build                    download dependencies, generate the parser, compile");
+		println("build                    download dependencies, generate the parser, compile every module");
 		println("test [class]             build and run all tests under src/test/java, or one test class");
 		println("golden-update [names]    regenerate the golden files (all, or a comma-separated list of scenarios)");
 		println("run <class> [argument]... build and run a class, e.g. bld run org.jamocha.Morendo -gui");
 		println("                         (for the interactive shell use ./morendo -shell instead)");
 		println("parser                   regenerate the CLIPS parser from src/main/javacc/clips.jj if it changed");
-		println("jar                      build target/morendo-<version>.jar");
-		println("dist                     build target/morendo-<version>.zip (jar, libs, launcher, samples)");
+		println("jar                      build target/morendo-<module>-<version>.jar for every module");
+		println("dist                     build target/morendo-<version>.zip (module jars, libs, launcher, samples)");
 		println("javadoc                  build target/javadoc");
-		println("lint                     compile src/main/java with -Xlint:all; summary on the console, details in target/lint.txt");
+		println("lint                     compile all module sources with -Xlint:all; summary on the console, details in target/lint.txt");
 		println("libs                     download the jar files into libs/");
 		println("");
 		println("clean                    remove target/ and the generated parser sources");
@@ -126,7 +160,10 @@ public class Tasks {
 	public static void run() {
 		guard(() -> {
 			doBuild();
-			runJava(CLASSES, localLibs, foreignLibs);
+			LocalDependencies deps = new LocalDependencies();
+			for (Module module : MODULES)
+				deps.add(BUILDDIR + "/" + module.name() + "/", "classes");
+			runJava(BUILDDIR + "/shell/classes", deps, foreignLibs);
 		});
 	}
 
@@ -180,18 +217,28 @@ public class Tasks {
 		}
 	}
 
+	/** Compiles every module in dependency order, each against its own dependencies only. */
 	private static void doBuild() {
 		downloadAll(foreignLibs);
 		doParser();
-		mkdir(CLASSES);
-		buildJava(MAIN_SRC, CLASSES, localLibs, foreignLibs, null);
-		copyTree(RESOURCES, CLASSES);
+		for (Module module : MODULES) {
+			mkdir(module.classes());
+			LocalDependencies deps = new LocalDependencies();
+			for (String dep : module.dependsOn())
+				deps.add(BUILDDIR + "/" + dep + "/", "classes");
+			buildJava(module.src(), module.classes(), deps, jars(module.jars()), null);
+			if (new File(module.resources()).isDirectory())
+				copyTree(module.resources(), module.classes());
+		}
 	}
 
 	private static void doBuildTests() {
 		doBuild();
 		mkdir(TEST_CLASSES);
-		buildJava(TEST_SRC, TEST_CLASSES, localLibs, foreignLibs, CLASSES);
+		LocalDependencies deps = new LocalDependencies();
+		for (Module module : MODULES)
+			deps.add(BUILDDIR + "/" + module.name() + "/", "classes");
+		buildJava(TEST_SRC, TEST_CLASSES, deps, foreignLibs, null);
 	}
 
 	/**
@@ -203,10 +250,7 @@ public class Tasks {
 		doParser();
 		String dest = BUILDDIR + "/javadoc";
 		try {
-			java.util.List<java.nio.file.Path> sources;
-			try (java.util.stream.Stream<java.nio.file.Path> walk = Files.walk(Paths.get(MAIN_SRC))) {
-				sources = walk.filter(f -> f.toString().endsWith(".java")).sorted().collect(java.util.stream.Collectors.toList());
-			}
+			java.util.List<java.nio.file.Path> sources = moduleSources();
 			long newest = 0;
 			for (java.nio.file.Path f : sources)
 				newest = Math.max(newest, f.toFile().lastModified());
@@ -227,7 +271,7 @@ public class Tasks {
 	}
 
 	/**
-	 * Compiles the main sources with every javac lint category enabled, writes the full
+	 * Compiles all module sources with every javac lint category enabled, writes the full
 	 * output to target/lint.txt and prints a count per category. A separate compilation
 	 * (into target/lint) so the normal incremental build is not affected.
 	 */
@@ -238,11 +282,7 @@ public class Tasks {
 		rmTree(dest);
 		mkdir(dest);
 		try {
-			java.util.List<String> sources;
-			try (java.util.stream.Stream<java.nio.file.Path> walk = Files.walk(Paths.get(MAIN_SRC))) {
-				sources = walk.filter(f -> f.toString().endsWith(".java")).map(java.nio.file.Path::toString).sorted()
-						.collect(java.util.stream.Collectors.toList());
-			}
+			java.util.List<String> sources = moduleSources().stream().map(java.nio.file.Path::toString).collect(java.util.stream.Collectors.toList());
 			File argsFile = File.createTempFile("lint-", ".args");
 			Files.write(argsFile.toPath(), (String.join("\n", sources) + "\n").getBytes(StandardCharsets.UTF_8));
 			StringBuilder cp = new StringBuilder();
@@ -274,16 +314,31 @@ public class Tasks {
 		}
 	}
 
+	/** Every .java file of every module, sorted. */
+	private static java.util.List<java.nio.file.Path> moduleSources() throws IOException {
+		java.util.List<java.nio.file.Path> sources = new java.util.ArrayList<>();
+		for (Module module : MODULES)
+			try (java.util.stream.Stream<java.nio.file.Path> walk = Files.walk(Paths.get(module.src()))) {
+				walk.filter(f -> f.toString().endsWith(".java")).forEach(sources::add);
+			}
+		sources.sort(null);
+		return sources;
+	}
+
 	/** True for the JavaCC output in the parser package. */
 	private static boolean isGeneratedParserFile(java.nio.file.Path f) {
 		return f.getParent().toString().replace(File.separatorChar, '/').endsWith(PARSER_DIR)
 				&& f.getFileName().toString().matches(GENERATED_PARSER_FILES);
 	}
 
+	/** One jar per module; the shell jar carries the launcher's main class. */
 	private static void doJar() {
 		doBuild();
-		createManifest(CLASSES + "/META-INF/MANIFEST.MF", MAIN_CLASS);
-		createJar(CLASSES, jarFile());
+		for (Module module : MODULES) {
+			if (module.name().equals("shell"))
+				createManifest(module.classes() + "/META-INF/MANIFEST.MF", MAIN_CLASS);
+			createJar(module.classes(), jarFile(module));
+		}
 	}
 
 	private static void doDist() {
@@ -292,7 +347,8 @@ public class Tasks {
 		String stage = BUILDDIR + "/dist/" + name;
 		rmTree(BUILDDIR + "/dist");
 		mkdir(stage + "/libs");
-		copyForce(jarFile(), stage + "/morendo.jar");
+		for (Module module : MODULES)
+			copyForce(jarFile(module), stage + "/libs/" + new File(jarFile(module)).getName());
 		for (int i = 0; i < foreignLibs.size(); i++) {
 			String lib = foreignLibs.get(i);
 			if (!lib.endsWith(JUNIT))
@@ -334,7 +390,9 @@ public class Tasks {
 	 * expand classpath wildcards, so every jar is listed.
 	 */
 	private static String junitCommand(String systemProperties) {
-		StringBuilder cp = new StringBuilder(CLASSES).append(File.pathSeparator).append(TEST_CLASSES);
+		StringBuilder cp = new StringBuilder(TEST_CLASSES);
+		for (Module module : MODULES)
+			cp.append(File.pathSeparator).append(module.classes());
 		for (int i = 0; i < foreignLibs.size(); i++)
 			cp.append(File.pathSeparator).append(foreignLibs.get(i));
 		return "java " + systemProperties + " -jar " + LIBS + "/" + JUNIT
@@ -354,8 +412,24 @@ public class Tasks {
 		throw new RuntimeException("cannot read VERSION from " + CONSTANTS);
 	}
 
-	private static String jarFile() {
-		return BUILDDIR + "/morendo-" + version() + ".jar";
+	private static String jarFile(Module module) {
+		return BUILDDIR + "/morendo-" + module.name() + "-" + version() + ".jar";
+	}
+
+	/** The catalog entries with the given short names, as a ForeignDependencies for the build helpers. */
+	private static ForeignDependencies jars(String... names) {
+		ForeignDependencies dep = new ForeignDependencies();
+		for (String name : names) {
+			boolean found = false;
+			for (String[] entry : CATALOG)
+				if (entry[0].equals(name)) {
+					dep.add(LIBS, entry[1]);
+					found = true;
+				}
+			if (!found)
+				throw new IllegalArgumentException("no jar named " + name + " in the catalog");
+		}
+		return dep;
 	}
 
 	/** Zips a directory tree, keeping the executable bit of launcher scripts. */
@@ -390,22 +464,6 @@ public class Tasks {
 	}
 
 	// ---------------------------------------------------------------- dependencies
-
-	private static ForeignDependencies buildForeignDependencies() {
-		final ForeignDependencies dep = new ForeignDependencies();
-		// runtime
-		dep.add(LIBS, MAVEN + "org/apache/logging/log4j/log4j-api/2.26.1/log4j-api-2.26.1.jar");
-		dep.add(LIBS, MAVEN + "org/apache/logging/log4j/log4j-core/2.26.1/log4j-core-2.26.1.jar");
-		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-core/2.22.2/jackson-core-2.22.2.jar");
-		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-databind/2.22.2/jackson-databind-2.22.2.jar");
-		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar");
-		dep.add(LIBS, MAVEN + "jakarta/jms/jakarta.jms-api/3.1.0/jakarta.jms-api-3.1.0.jar");
-		dep.add(LIBS, MAVEN + "jakarta/servlet/jakarta.servlet-api/6.1.0/jakarta.servlet-api-6.1.0.jar");
-		dep.add(LIBS, MAVEN + "org/jline/jline/4.4.3/jline-4.4.3.jar");
-		// tests only (JUnit 6 platform, Jupiter and console launcher in one jar); dist() leaves it out
-		dep.add(LIBS, MAVEN + "org/junit/platform/junit-platform-console-standalone/6.1.3/" + JUNIT);
-		return dep;
-	}
 
 	/** Build-time tools, kept out of the runtime classpath. */
 	private static ForeignDependencies buildToolDependencies() {

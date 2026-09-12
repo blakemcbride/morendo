@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 # Starts Morendo:  ./morendo -shell   (interactive CLIPS shell)
 #                  ./morendo -gui     (Swing GUI)
-# Works from a checkout after "./bld build" (target/classes) and from an unpacked
-# distribution (morendo.jar). Logging options: see log4j2.xml in the jar / src/main/resources.
+# Works from a checkout after "./bld build" (target/<module>/classes) and from an unpacked
+# distribution (module jars in libs/). Logging options: see log4j2.xml in the core jar.
 DIR="$(cd "$(dirname "$0")" && pwd)"
-if [ -f "$DIR/morendo.jar" ]; then
-    CP="$DIR/morendo.jar:$DIR/libs/*"
-else
-    CP="$DIR/target/classes:$DIR/libs/*"
-fi
+CP="$DIR/libs/*"
+for d in "$DIR"/target/*/classes; do
+    [ -d "$d" ] && CP="$d:$CP"
+done
 exec java -Xms256m -Xmx1g -cp "$CP" org.jamocha.Morendo "$@"
