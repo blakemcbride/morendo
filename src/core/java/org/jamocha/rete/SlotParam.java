@@ -12,65 +12,59 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
 /**
  * @author Peter Lin
- *
  */
 public final class SlotParam extends AbstractParam {
 
-	/**
-     * 
-     */
-
+    /** */
     protected ValueType valueType = ValueType.SLOT;
 
-	protected Slot slot = null;
-
-	/**
-	 * 
-	 * @param type
-	 * @param slot
-	 */
-	public SlotParam(Slot slot) {
-		super();
-		this.slot = slot;
-	}
-
-	/* (non-Javadoc)
-	 * @see woolfel.engine.rete.ReturnValue#getValueType()
-	 */
-	public ValueType getValueType() {
-		return this.valueType;
-	}
-
-	/* (non-Javadoc)
-	 * @see woolfel.engine.rete.ReturnValue#getValue()
-	 */
-	public Object getValue() {
-		return this.slot;
-	}
-
-	public Slot getSlotValue() {
-		return this.slot;
-	}
+    protected Slot slot = null;
 
     /**
-     * Slot parameter is only used internally, so normal user functions
-     * should not need to deal with slot parameters.
+     * @param type
+     * @param slot
+     */
+    public SlotParam(Slot slot) {
+        super();
+        this.slot = slot;
+    }
+
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.ReturnValue#getValueType()
+     */
+    public ValueType getValueType() {
+        return this.valueType;
+    }
+
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.ReturnValue#getValue()
+     */
+    public Object getValue() {
+        return this.slot;
+    }
+
+    public Slot getSlotValue() {
+        return this.slot;
+    }
+
+    /**
+     * Slot parameter is only used internally, so normal user functions should not need to deal with
+     * slot parameters.
      */
     public Object getValue(Rete engine, ValueType valueType) {
         return this.slot;
     }
 
     /* (non-Javadoc)
-	 * @see woolfel.engine.rete.Parameter#reset()
-	 */
-	public void reset() {
-		this.slot = null;
-	}
-
+     * @see woolfel.engine.rete.Parameter#reset()
+     */
+    public void reset() {
+        this.slot = null;
+    }
 }

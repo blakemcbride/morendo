@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -20,54 +20,50 @@ import org.jamocha.rule.Rule;
 
 /**
  * @author Peter Lin
- *
  */
 public class CompileEvent extends AbstractEvent {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
+    /** */
+    private Kind type;
 
-	private Kind type;
+    private String message = "";
 
-	private String message = "";
+    private transient Rule rule = null;
 
-	private transient Rule rule = null;
+    /**
+     * @param source
+     */
+    public CompileEvent(Object source, Kind eventType) {
+        super(source);
+        this.type = eventType;
+    }
 
-	/**
-	 * @param source
-	 */
-	public CompileEvent(Object source, Kind eventType) {
-		super(source);
-		this.type = eventType;
-	}
+    public Kind getEventType() {
+        return this.type;
+    }
 
-	public Kind getEventType() {
-		return this.type;
-	}
+    public void setEventType(Kind eventType) {
+        this.type = eventType;
+    }
 
-	public void setEventType(Kind eventType) {
-		this.type = eventType;
-	}
+    public void setMessage(String text) {
+        this.message = text;
+    }
 
-	public void setMessage(String text) {
-		this.message = text;
-	}
+    public String getMessage() {
+        if (this.rule != null) {
+            return this.rule.getName() + " " + this.message;
+        } else {
+            return this.message;
+        }
+    }
 
-	public String getMessage() {
-		if (this.rule != null) {
-			return this.rule.getName() + " " + this.message;
-		} else {
-			return this.message;
-		}
-	}
+    public void setRule(Rule theRule) {
+        this.rule = theRule;
+    }
 
-	public void setRule(Rule theRule) {
-		this.rule = theRule;
-	}
-
-	public Rule getRule() {
-		return this.rule;
-	}
+    public Rule getRule() {
+        return this.rule;
+    }
 }

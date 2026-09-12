@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -31,80 +29,75 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Nikolaus Koemm
- * 
- * Min returns the smallest of two or more values.
+ *     <p>Min returns the smallest of two or more values.
  */
 public class NotFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String NOT = "not";
+    /** */
+    public static final String NOT = "not";
 
-	/**
-	 * 
-	 */
-	public NotFunction() {
-		super();
-	}
+    /** */
+    public NotFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean boolVal = Boolean.TRUE;
-		if (params != null) {
-			if(params.length==1) {
-				if (params[0] instanceof ValueParam) {
-					ValueParam n = (ValueParam) params[0];
-					boolVal = n.getBooleanValue();
-				} else if (params[0] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[0];
-					boolVal = (Boolean)engine.getBinding(bp.getVariableName());
-				} else if (params[0] instanceof FunctionParam2) {
-					FunctionParam2 n = (FunctionParam2) params[0];
-					n.setEngine(engine);
-					n.lookUpFunction();
-					ReturnVector rval = (ReturnVector) n.getValue();
-					boolVal = rval.firstReturnValue().getBooleanValue();
-				}
-				boolVal = (boolVal == false);
-			}
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, boolVal);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean boolVal = Boolean.TRUE;
+        if (params != null) {
+            if (params.length == 1) {
+                if (params[0] instanceof ValueParam) {
+                    ValueParam n = (ValueParam) params[0];
+                    boolVal = n.getBooleanValue();
+                } else if (params[0] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[0];
+                    boolVal = (Boolean) engine.getBinding(bp.getVariableName());
+                } else if (params[0] instanceof FunctionParam2) {
+                    FunctionParam2 n = (FunctionParam2) params[0];
+                    n.setEngine(engine);
+                    n.lookUpFunction();
+                    ReturnVector rval = (ReturnVector) n.getValue();
+                    boolVal = rval.firstReturnValue().getBooleanValue();
+                }
+                boolVal = (boolVal == false);
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, boolVal);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return NOT;
-	}
+    public String getName() {
+        return NOT;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam[].class };
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length >= 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("("+NOT);
-				int idx = 0;
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else {
-					buf.append(" " + params[idx].getStringValue());
-				}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(NOT <booleanexpression>)\n" +
-			"Function description:\n" +
-			"\tReturns the boolean not of any boolean expression argument.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length >= 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(" + NOT);
+            int idx = 0;
+            if (params[idx] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[idx];
+                buf.append(" ?" + bp.getVariableName());
+            } else if (params[idx] instanceof ValueParam) {
+                buf.append(" " + params[idx].getStringValue());
+            } else {
+                buf.append(" " + params[idx].getStringValue());
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(NOT <booleanexpression>)\n"
+                    + "Function description:\n"
+                    + "\tReturns the boolean not of any boolean expression argument.";
+        }
+    }
 }

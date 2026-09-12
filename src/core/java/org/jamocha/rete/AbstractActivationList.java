@@ -12,51 +12,45 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
-
 /**
  * @author Peter Lin
- *
- * This is a base class the defines the common fields like lazy and
- * strategy for the activation list. Creating new activationList
- * implementations should extend this class.
+ *     <p>This is a base class the defines the common fields like lazy and strategy for the
+ *     activation list. Creating new activationList implementations should extend this class.
  */
 public abstract class AbstractActivationList implements ActivationList {
 
-    /**
-	 * 
-	 */
+    /** */
+    protected Strategy stratey = null;
 
-	protected Strategy stratey = null;
-    
-	protected boolean lazy = true;
+    protected boolean lazy = true;
 
-	public abstract Activation nextActivation();
+    public abstract Activation nextActivation();
 
-	public abstract void addActivation(Activation act);
+    public abstract void addActivation(Activation act);
 
-	public abstract Activation removeActivation(Activation act);
+    public abstract Activation removeActivation(Activation act);
 
-	public abstract boolean isAscendingOrder();
+    public abstract boolean isAscendingOrder();
 
     public void setStrategy(Strategy strat) {
         this.stratey = strat;
     }
-    
+
     public Strategy getStrategy() {
         return this.stratey;
     }
-    
-	public void setLazy(boolean lazy) {
-		this.lazy = lazy;
-	}
 
-	public boolean isLazy() {
-		return this.lazy;
-	}
+    public void setLazy(boolean lazy) {
+        this.lazy = lazy;
+    }
+
+    public boolean isLazy() {
+        return this.lazy;
+    }
 
     public abstract ActivationList clone();
 }

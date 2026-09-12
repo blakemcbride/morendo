@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -20,32 +20,33 @@ import java.util.Iterator;
 
 /**
  * @author Peter Lin
- *
- * The ReturnVector can contain one or more items from a function.
- * Functions can return a specific implementation of ReturnVector.
- * This makes it easier to customize functions and process the
- * results of a function.
- * The interface extends Iterator, so 
+ *     <p>The ReturnVector can contain one or more items from a function. Functions can return a
+ *     specific implementation of ReturnVector. This makes it easier to customize functions and
+ *     process the results of a function. The interface extends Iterator, so
  */
 public interface ReturnVector {
-    
+
     void clear();
+
     /**
      * the number of items returned by the function
+     *
      * @return
      */
     int size();
+
     /**
-     * Class implementing the method should return itself, since
-     * ReturnVector extends Iterator.
+     * Class implementing the method should return itself, since ReturnVector extends Iterator.
+     *
      * @return
      */
-   	Iterator<?> getIterator();
+    Iterator<?> getIterator();
 
-	ReturnValue firstReturnValue();
-	
+    ReturnValue firstReturnValue();
+
     /**
      * Fucntions should add Return values in sequence using this method.
+     *
      * @param val
      */
     void addReturnValue(ReturnValue val);

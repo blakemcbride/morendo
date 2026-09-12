@@ -7,29 +7,53 @@ public class ParserTestGenerator2 {
 
     public static final String fact = "myObject";
     public static final String ASSERT = "assert";
-    
-    public ParserTestGenerator2() {
-    }
+
+    public ParserTestGenerator2() {}
 
     public String generateFact(int counter) {
-        return "(" + ASSERT + " (" + fact + 
-        " (attribute1 \"attr" + counter + "\")" + 
-        " (attribute2 \"attr" + counter + "\")" + 
-        " (attribute3 \"attr" + counter + "\")" + 
-        " (attribute4 \"attr" + counter + "\")" + 
-        " (attribute5 \"attr" + counter + "\")" + 
-        " ) )\r\n";
+        return "("
+                + ASSERT
+                + " ("
+                + fact
+                + " (attribute1 \"attr"
+                + counter
+                + "\")"
+                + " (attribute2 \"attr"
+                + counter
+                + "\")"
+                + " (attribute3 \"attr"
+                + counter
+                + "\")"
+                + " (attribute4 \"attr"
+                + counter
+                + "\")"
+                + " (attribute5 \"attr"
+                + counter
+                + "\")"
+                + " ) )\r\n";
     }
-    
+
     public String generateLoadFact(int counter) {
-        return "(" + fact + " (attribute1 \"attr" + counter + "\")" +
-        " (attribute2 \"attr" + counter + "\")" + 
-        " (attribute3 \"attr" + counter + "\")" + 
-        " (attribute4 \"attr" + counter + "\")" + 
-        " (attribute5 \"attr" + counter + "\")" + 
-        " )\r\n";
+        return "("
+                + fact
+                + " (attribute1 \"attr"
+                + counter
+                + "\")"
+                + " (attribute2 \"attr"
+                + counter
+                + "\")"
+                + " (attribute3 \"attr"
+                + counter
+                + "\")"
+                + " (attribute4 \"attr"
+                + counter
+                + "\")"
+                + " (attribute5 \"attr"
+                + counter
+                + "\")"
+                + " )\r\n";
     }
-    
+
     /**
      * @param args
      */
@@ -49,7 +73,7 @@ public class ParserTestGenerator2 {
             ParserTestGenerator2 ptg = new ParserTestGenerator2();
             try {
                 FileWriter writer = new FileWriter(filename);
-                for (int idx=0; idx < count; idx++) {
+                for (int idx = 0; idx < count; idx++) {
                     if (load) {
                         writer.write(ptg.generateLoadFact(idx));
                     } else {
@@ -61,8 +85,6 @@ public class ParserTestGenerator2 {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
         }
     }
-
 }

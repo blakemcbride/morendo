@@ -6,6 +6,6 @@ public class ReadExt implements ReadMacro {
     public ReadExt() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getExt();
+        return ((woolfel.examples.model.Account) instance).getExt();
     }
 }

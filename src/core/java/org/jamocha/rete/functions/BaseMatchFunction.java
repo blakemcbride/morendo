@@ -12,27 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.jamocha.rete.DefaultWM;
 import org.jamocha.rete.util.NodeComparator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- * A base class with methods that perform common operations like
- * getting the nodes and sorting them by node id.
- * 
+ * A base class with methods that perform common operations like getting the nodes and sorting them
+ * by node id.
+ *
  * @author Peter Lin
  */
 public abstract class BaseMatchFunction {
-    
+
     private static NodeComparator compare = new NodeComparator();
 
-	protected ArrayList<Object> getSortedAlphaNodes(DefaultWM wm) {
+    protected ArrayList<Object> getSortedAlphaNodes(DefaultWM wm) {
         ArrayList<Object> alphaNodes = new ArrayList<>();
         Iterator<?> itr = wm.getAllAlphaMemories().keySet().iterator();
         while (itr.hasNext()) {
@@ -41,8 +41,8 @@ public abstract class BaseMatchFunction {
         java.util.Collections.sort(alphaNodes, compare);
         return alphaNodes;
     }
-    
-	protected ArrayList<Object> getSortedBetaNodes(DefaultWM wm) {
+
+    protected ArrayList<Object> getSortedBetaNodes(DefaultWM wm) {
         ArrayList<Object> betaNodes = new ArrayList<>();
         Iterator<?> itr = wm.getAllBetaLeftMemories().keySet().iterator();
         while (itr.hasNext()) {

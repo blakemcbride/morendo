@@ -12,126 +12,119 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Peter Lin
- *
- * BetaMemory stores the matches
+ *     <p>BetaMemory stores the matches
  */
 public class BetaOnlyImpl implements BetaMemory {
 
-	/**
-	 * 
-	 */
+    /** */
+    protected Index index = null;
 
-	protected Index index = null;
+    protected Map<Fact, ?> matches = null;
 
-		protected Map<Fact, ?> matches = null;
-	
-	protected Fact onlyMatch = null;
+    protected Fact onlyMatch = null;
 
-	/**
-	 * 
-	 */
-	public BetaOnlyImpl(Index index, Rete engine) {
-		super();
-		this.index = index;
-		matches = engine.newLinkedHashmap(null);
-	}
+    /** */
+    public BetaOnlyImpl(Index index, Rete engine) {
+        super();
+        this.index = index;
+        matches = engine.newLinkedHashmap(null);
+    }
 
-	/**
-	 * Return the index of the beta memory
-	 * @return
-	 */
-	public Index getIndex() {
-		return this.index;
-	}
+    /**
+     * Return the index of the beta memory
+     *
+     * @return
+     */
+    public Index getIndex() {
+        return this.index;
+    }
 
-	/**
-	 * Get the array of facts
-	 * @return
-	 */
-	public Fact[] getLeftFacts() {
-		return this.index.getFacts();
-	}
+    /**
+     * Get the array of facts
+     *
+     * @return
+     */
+    public Fact[] getLeftFacts() {
+        return this.index.getFacts();
+    }
 
-	/**
-	 * Return the array containing the facts entering
-	 * the right input that matched
-	 * @return
-	 */
-	public Iterator<Fact> iterateRightFacts() {
-		return this.matches.keySet().iterator();
-	}
+    /**
+     * Return the array containing the facts entering the right input that matched
+     *
+     * @return
+     */
+    public Iterator<Fact> iterateRightFacts() {
+        return this.matches.keySet().iterator();
+    }
 
-	/**
-	 * The method will check to see if the fact has
-	 * previously matched
-	 * @param rightfacts
-	 * @return
-	 */
-	public boolean matched(Fact rightfact) {
-		return this.matches.containsKey(rightfact);
-	}
+    /**
+     * The method will check to see if the fact has previously matched
+     *
+     * @param rightfacts
+     * @return
+     */
+    public boolean matched(Fact rightfact) {
+        return this.matches.containsKey(rightfact);
+    }
 
-	/**
-	 * Add a match to the list
-	 * @param rightfacts
-	 */
-	public void addMatch(Fact rightfact) {
-		this.matches.put(rightfact, null);
-	}
+    /**
+     * Add a match to the list
+     *
+     * @param rightfacts
+     */
+    public void addMatch(Fact rightfact) {
+        this.matches.put(rightfact, null);
+    }
 
-	public void removeMatch(Fact rightfact) {
-		this.matches.remove(rightfact);
-	}
+    public void removeMatch(Fact rightfact) {
+        this.matches.remove(rightfact);
+    }
 
-	/**
-	 * clear will clear the memory
-	 */
-	public void clear() {
-		this.matches.clear();
-		this.index = null;
-		this.onlyMatch = null;
-	}
+    /** clear will clear the memory */
+    public void clear() {
+        this.matches.clear();
+        this.index = null;
+        this.onlyMatch = null;
+    }
 
-	/**
-	 * method simply returns the size
-	 */
-	public int matchCount() {
-		return matches.size();
-	}
+    /** method simply returns the size */
+    public int matchCount() {
+        return matches.size();
+    }
 
-	public Fact getOnlyMatch() {
-		return onlyMatch;
-	}
+    public Fact getOnlyMatch() {
+        return onlyMatch;
+    }
 
-	public void setOnlyMatch(Fact onlyMatch) {
-		this.onlyMatch = onlyMatch;
-	}
+    public void setOnlyMatch(Fact onlyMatch) {
+        this.onlyMatch = onlyMatch;
+    }
 
-	/**
-	 * The implementation will append the facts for the left followed
-	 * by double colon "::" and then the matches from the right
-	 */
-	public String toPPString() {
-		StringBuilder buf = new StringBuilder();
-		for (int idx = 0; idx < this.index.getFacts().length; idx++) {
-			if (idx > 0) {
-				buf.append(", ");
-			}
-			buf.append(this.index.getFacts()[idx].getFactId());
-		}
-		buf.append(": ");
-		for (Fact f : this.matches.keySet()) {
-			buf.append(f.getFactId() + ", ");
-		}
-		return buf.toString();
-	}
+    /**
+     * The implementation will append the facts for the left followed by double colon "::" and then
+     * the matches from the right
+     */
+    public String toPPString() {
+        StringBuilder buf = new StringBuilder();
+        for (int idx = 0; idx < this.index.getFacts().length; idx++) {
+            if (idx > 0) {
+                buf.append(", ");
+            }
+            buf.append(this.index.getFacts()[idx].getFactId());
+        }
+        buf.append(": ");
+        for (Fact f : this.matches.keySet()) {
+            buf.append(f.getFactId() + ", ");
+        }
+        return buf.toString();
+    }
 }

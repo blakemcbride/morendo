@@ -6,6 +6,6 @@ public class WriteNumber implements WriteMacro {
     public WriteNumber() {}
 
     public void setProperty(Object instance, Object value) {
-        ((woolfel.examples.model.Account)instance).setNumber((java.lang.String)value);
+        ((woolfel.examples.model.Account) instance).setNumber((java.lang.String) value);
     }
 }

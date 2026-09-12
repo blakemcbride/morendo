@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.analysis;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,58 +25,50 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- * 
- * WatchFunction allows users to watch different engine process, like
- * activations, facts and rules.
+ *     <p>WatchFunction allows users to watch different engine process, like activations, facts and
+ *     rules.
  */
 public class ValidateRuleFunction implements Function {
 
-	/**
-	 * 
-	 */
-	
-	protected static final String VALIDATE_RULE = "validate-rule";
-	
+    /** */
+    protected static final String VALIDATE_RULE = "validate-rule";
 
-	public ValidateRuleFunction() {
-		super();
-	}
+    public ValidateRuleFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         DefaultReturnVector ret = new DefaultReturnVector();
         boolean val = false;
         if (params != null && params.length == 1) {
-        	if (params[0].getBooleanValue()) {
-        		engine.setValidateRules(true);
-        		val = true;
-        	} else if (!params[0].getBooleanValue()) {
-        		engine.setValidateRules(false);
-        		val = true;
-        	}
+            if (params[0].getBooleanValue()) {
+                engine.setValidateRules(true);
+                val = true;
+            } else if (!params[0].getBooleanValue()) {
+                engine.setValidateRules(false);
+                val = true;
+            }
         }
-		DefaultReturnValue rv = 
-			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,val);
-		ret.addReturnValue(rv);
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, val);
+        ret.addReturnValue(rv);
         return ret;
-	}
-    
-	public String getName() {
-		return VALIDATE_RULE;
-	}
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public String getName() {
+        return VALIDATE_RULE;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(validate-rule [true|false])";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(validate-rule [true|false])";
+    }
 }

@@ -12,11 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.cube;
 
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.Cube;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
@@ -25,74 +24,69 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.RuleFunction;
+import org.jamocha.rete.ValueType;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
-import org.jamocha.rete.ValueType;
 
 /**
- * 
- * 
  * @author Peter Lin
  */
 public class CubeDeleteDataFunction implements RuleFunction {
 
-	/**
-	 * 
-	 */
-	public static final String CUBE_DELETE_DATA = "cube-delete-data";
-	private Fact[] triggerFacts = null;
+    /** */
+    public static final String CUBE_DELETE_DATA = "cube-delete-data";
 
-	public CubeDeleteDataFunction() {
-		super();
-	}
+    private Fact[] triggerFacts = null;
 
-	public void setTriggerFacts(Fact[] facts) {
-		this.triggerFacts = facts;
-	}
+    public CubeDeleteDataFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		boolean update = false;
-		if (params != null && params.length == 1) {
-			String name = (String)params[0].getValue(engine, ValueType.STRING);
-			Cube c = engine.getCube(name);
-			if (c != null && triggerFacts != null) {
-				c.removeData(this.triggerFacts);
-				update = true;
-				try {
-					engine.modifyObject(c);
-				} catch (AssertException e) {
-					// we should never get an exception
-				} catch (RetractException e) {
-					// we should never get an exception
-				}
-			}
-		}
-		
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,
-				update);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public void setTriggerFacts(Fact[] facts) {
+        this.triggerFacts = facts;
+    }
 
-	public String getName() {
-		return CUBE_DELETE_DATA;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        boolean update = false;
+        if (params != null && params.length == 1) {
+            String name = (String) params[0].getValue(engine, ValueType.STRING);
+            Cube c = engine.getCube(name);
+            if (c != null && triggerFacts != null) {
+                c.removeData(this.triggerFacts);
+                update = true;
+                try {
+                    engine.modifyObject(c);
+                } catch (AssertException e) {
+                    // we should never get an exception
+                } catch (RetractException e) {
+                    // we should never get an exception
+                }
+            }
+        }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{String.class};
-	}
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, update);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public String getName() {
+        return CUBE_DELETE_DATA;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			return "(cube-delete-data \"" + params[0].getStringValue() + "\")";
-		} else {
-			return "(cube-delete-data <name>)";
-		}
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String.class};
+    }
 
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            return "(cube-delete-data \"" + params[0].getStringValue() + "\")";
+        } else {
+            return "(cube-delete-data <name>)";
+        }
+    }
 }

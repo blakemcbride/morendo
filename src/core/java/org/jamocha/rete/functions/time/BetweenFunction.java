@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.time;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,62 +26,56 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- * 
- * Between checks that a time lies strictly between two others.
+ *     <p>Between checks that a time lies strictly between two others.
  */
 public class BetweenFunction extends AbstractTimeFunction implements Function {
 
-    /**
-	 * 
-	 */
-	public static final String BETWEEN = "between";
+    /** */
+    public static final String BETWEEN = "between";
+
+    /** */
+    public BetweenFunction() {
+        super();
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
     /**
-	 * 
-	 */
-	public BetweenFunction() {
-		super();
-	}
+     * The method expects an array of ShellBoundParam. The method will use StringBuilder to resolve
+     * the binding and print out 1 binding per line.
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean eval = Boolean.FALSE;
+        if (params != null && params.length == 3) {
+            Object one = params[0].getValue(engine, ValueType.OBJECT);
+            Object two = params[1].getValue(engine, ValueType.OBJECT);
+            Object three = params[2].getValue(engine, ValueType.OBJECT);
+            long begin = getMillisecondTime(one);
+            long end = getMillisecondTime(two);
+            long time = getMillisecondTime(three);
+            if (begin < time && time < end) {
+                eval = Boolean.TRUE;
+            }
+        }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	/**
-	 * The method expects an array of ShellBoundParam. The method will use
-	 * StringBuilder to resolve the binding and print out 1 binding per
-	 * line.
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean eval = Boolean.FALSE;
-		if (params != null && params.length == 3) {
-			Object one = params[0].getValue(engine, ValueType.OBJECT);
-			Object two = params[1].getValue(engine, ValueType.OBJECT);
-			Object three = params[2].getValue(engine, ValueType.OBJECT);
-			long begin = getMillisecondTime(one);
-			long end = getMillisecondTime(two);
-			long time = getMillisecondTime(three);
-			if (begin < time && time < end) {
-				eval = Boolean.TRUE;
-			}
-		}
-		
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = 
-			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public String getName() {
+        return BETWEEN;
+    }
 
-	public String getName() {
-		return BETWEEN;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {Object.class, Object.class, Object.class};
+    }
 
-	public Class<?>[] getParameter() {
-        return new Class<?>[]{Object.class,Object.class,Object.class};
-	}
-
-	public String toPPString(Parameter[] params, int indents) {
-		return "(between <begin> <end> <time>) \r\n the parameters can be Instant, Date, Calendar or epoch milliseconds.";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(between <begin> <end> <time>) \r\n"
+                + " the parameters can be Instant, Date, Calendar or epoch milliseconds.";
+    }
 }

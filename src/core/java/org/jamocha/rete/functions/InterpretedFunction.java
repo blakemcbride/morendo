@@ -12,14 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-import java.util.HashMap;
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -29,42 +26,39 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Scope;
 import org.jamocha.rete.ValueType;
 
+import java.util.HashMap;
+
 /**
- * 
  * @author Peter Lin
  */
 public class InterpretedFunction implements Function, Scope {
 
-    /**
-	 * 
-	 */
-	private String name = null;
+    /** */
+    private String name = null;
+
     protected String ppString = null;
     protected Parameter[] inputParams = null;
     private Function[] internalFunction = null;
-    /**
-     * these are the functions we pass to the top level function.
-     * they may be different than the input parameters for the
-     * function.
-     */
-    private Parameter[][] functionParams = null;
-	private HashMap<String, Object> bindings = new HashMap<>();
 
     /**
-     * 
+     * these are the functions we pass to the top level function. they may be different than the
+     * input parameters for the function.
      */
-    public InterpretedFunction(String name, Parameter[] params, Function[] func,
-            Parameter[][] functionParams) {
+    private Parameter[][] functionParams = null;
+
+    private HashMap<String, Object> bindings = new HashMap<>();
+
+    /** */
+    public InterpretedFunction(
+            String name, Parameter[] params, Function[] func, Parameter[][] functionParams) {
         this.name = name;
         this.inputParams = params;
         this.internalFunction = func;
         this.functionParams = functionParams;
     }
 
-    public void configureFunction(Rete engine) {
-        
-    }
-    
+    public void configureFunction(Rete engine) {}
+
     /* (non-Javadoc)
      * @see org.jamocha.rete.Function#executeFunction(org.jamocha.rete.Rete, org.jamocha.rete.Parameter[])
      */
@@ -72,23 +66,24 @@ public class InterpretedFunction implements Function, Scope {
         // the first thing we do is set the values
         DefaultReturnVector ret = new DefaultReturnVector();
         if (params.length == this.inputParams.length) {
-            for (int idx=0; idx < this.inputParams.length; idx++) {
-                BoundParam bp = (BoundParam)this.inputParams[idx];
+            for (int idx = 0; idx < this.inputParams.length; idx++) {
+                BoundParam bp = (BoundParam) this.inputParams[idx];
                 this.bindings.put(bp.getVariableName(), params[idx].getValue());
             }
             engine.pushScope(this);
-            for (int idx=0; idx < functionParams.length; idx++) {
-                ret =  (DefaultReturnVector)
-                this.internalFunction[idx].executeFunction(engine, this.functionParams[idx]);
+            for (int idx = 0; idx < functionParams.length; idx++) {
+                ret =
+                        (DefaultReturnVector)
+                                this.internalFunction[idx].executeFunction(
+                                        engine, this.functionParams[idx]);
             }
             engine.popScope();
             return ret;
         } else {
-            DefaultReturnValue rv = new DefaultReturnValue(
-                    ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
+            DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
             ret.addReturnValue(rv);
-            DefaultReturnValue rv2 = new DefaultReturnValue(
-                    ValueType.STRING, "incorrect number of parameters");
+            DefaultReturnValue rv2 =
+                    new DefaultReturnValue(ValueType.STRING, "incorrect number of parameters");
             ret.addReturnValue(rv2);
             return ret;
         }
@@ -98,10 +93,8 @@ public class InterpretedFunction implements Function, Scope {
         return this.name;
     }
 
-
-
-  public Class<?>[] getParameter() {
-        return new Class<?>[]{BoundParam.class};
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {BoundParam.class};
     }
 
     public ValueType getReturnType() {
@@ -127,7 +120,7 @@ public class InterpretedFunction implements Function, Scope {
     public Object getBindingValue(Object var) {
         return this.bindings.get(var);
     }
-    
+
     public void setBindingValue(String name, Object value) {
         this.bindings.put(name, value);
     }

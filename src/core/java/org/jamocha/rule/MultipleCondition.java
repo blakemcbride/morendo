@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
 
@@ -23,45 +23,40 @@ import org.jamocha.rete.compiler.ConditionCompiler;
 
 /**
  * @author Peter Lin
- *
- * MultipleCondition is a special case of exist when there is
- * more than 1 match for the given pattern.
+ *     <p>MultipleCondition is a special case of exist when there is more than 1 match for the given
+ *     pattern.
  */
 public final class MultipleCondition extends ObjectCondition {
 
-	/**
-	 * 
-	 */
+    /** */
 
-	/**
-	 * 
-	 */
-	public MultipleCondition() {
-		super();
-	}
+    /** */
+    public MultipleCondition() {
+        super();
+    }
 
     public void addConstraint(Constraint con) {
         this.constraints.add(con);
         if (con instanceof BoundConstraint boundConstraint) {
-        	(boundConstraint).setBindableConstraint(false);
-        }
-    }
-    
-    public void addConstraint(Constraint con, int position) {
-        this.constraints.add(position,con);
-        if (con instanceof BoundConstraint boundConstraintValue) {
-        	(boundConstraintValue).setBindableConstraint(false);
+            (boundConstraint).setBindableConstraint(false);
         }
     }
 
-	public String toPPString() {
+    public void addConstraint(Constraint con, int position) {
+        this.constraints.add(position, con);
+        if (con instanceof BoundConstraint boundConstraintValue) {
+            (boundConstraintValue).setBindableConstraint(false);
+        }
+    }
+
+    public String toPPString() {
         StringBuilder buf = new StringBuilder();
         int start = 0;
         String pad = "  ";
         buf.append(pad + "(multiple" + Constants.LINEBREAK);
         pad = "    ";
         buf.append(pad + "(" + getTemplateName() + Constants.LINEBREAK);
-        for (int idx=start; idx < getConstraints().length; idx++) {
+        for (int idx = start; idx < getConstraints().length; idx++) {
             Constraint cnstr = getConstraints()[idx];
             buf.append("  " + cnstr.toPPString());
         }
@@ -69,12 +64,12 @@ public final class MultipleCondition extends ObjectCondition {
         pad = "  ";
         buf.append(pad + ")" + Constants.LINEBREAK);
         return buf.toString();
-	}
+    }
 
-	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).multipleConditionCompiler;
-	}
-    
+    public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).multipleConditionCompiler;
+    }
+
     public static MultipleCondition newMultipleCondition(ObjectCondition cond) {
         MultipleCondition multiple = new MultipleCondition();
         multiple.constraints = cond.constraints;

@@ -6,6 +6,6 @@ public class WriteLast implements WriteMacro {
     public WriteLast() {}
 
     public void setProperty(Object instance, Object value) {
-        ((woolfel.examples.model.Account)instance).setLast((java.lang.String)value);
+        ((woolfel.examples.model.Account) instance).setLast((java.lang.String) value);
     }
 }

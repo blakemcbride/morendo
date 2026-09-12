@@ -1,5 +1,5 @@
 /*
-  * Copyright 2002-2009 Jamocha
+ * Copyright 2002-2009 Jamocha
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,78 +12,71 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.analysis;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 import org.jamocha.rule.Defrule;
 import org.jamocha.rule.util.TopologyCostCalculation;
-import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- * 
  */
 public class TopologyCostFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String TOPOLOGY_COST = "topology-cost";
+    /** */
+    public static final String TOPOLOGY_COST = "topology-cost";
+
     TopologyCostCalculation costFunction = new TopologyCostCalculation();
 
-	/**
-	 * 
-	 */
-	public TopologyCostFunction() {
-		super();
-	}
+    /** */
+    public TopologyCostFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector ret = new DefaultReturnVector();
-		if (params != null && params.length > 0) {
-			String ruleName = null;
-            for (int idx=0; idx < params.length; idx++) {
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        if (params != null && params.length > 0) {
+            String ruleName = null;
+            for (int idx = 0; idx < params.length; idx++) {
                 if (params[0] instanceof ValueParam) {
                     ValueParam n = (ValueParam) params[0];
                     ruleName = n.getStringValue();
                 } else if (params[0] instanceof BoundParam) {
                     BoundParam bp = (BoundParam) params[0];
-                    ruleName = (String)bp.getValue(engine, ValueType.STRING);
+                    ruleName = (String) bp.getValue(engine, ValueType.STRING);
                 }
-                Defrule r = (Defrule)engine.getCurrentFocus().findRule(ruleName);
+                Defrule r = (Defrule) engine.getCurrentFocus().findRule(ruleName);
                 costFunction.calculateCost(engine, r, engine.getRootNode());
             }
-		}
-		return ret;
-	}
+        }
+        return ret;
+    }
 
-	public String getName() {
-		return TOPOLOGY_COST;
-	}
+    public String getName() {
+        return TOPOLOGY_COST;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam[].class };
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(topology-cost <literal>+)\n" +
-			"Function description:\n" +
-			"\tCalculates the topology cost of one or more rules and sets the" +
-			"\n\tRule.costValue.";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(topology-cost <literal>+)\n"
+                + "Function description:\n"
+                + "\tCalculates the topology cost of one or more rules and sets the"
+                + "\n\tRule.costValue.";
+    }
 }

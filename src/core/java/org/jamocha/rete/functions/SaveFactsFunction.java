@@ -12,13 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -29,76 +25,73 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
-import org.jamocha.rete.util.FactUtils;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rete.util.FactUtils;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Peter Lin
- * 
- * Facts function will printout all the facts, not including any
- * initial facts which are internal to the rule engine.
+ *     <p>Facts function will printout all the facts, not including any initial facts which are
+ *     internal to the rule engine.
  */
 public class SaveFactsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String SAVE_FACTS = "save-facts";
+    /** */
+    public static final String SAVE_FACTS = "save-facts";
 
-	/**
-	 * 
-	 */
-	public SaveFactsFunction() {
-		super();
-	}
+    /** */
+    public SaveFactsFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean saved = Boolean.FALSE;
-		boolean sortid = true;
-		DefaultReturnVector rv = new DefaultReturnVector();
-		if (params != null && params.length >= 1) {
-			if (params[1] != null && 
-					params[1].getStringValue().equals("template")) {
-				sortid = false;
-			}
-			try {
-				FileWriter writer = new FileWriter(params[0].getStringValue());
-				List<?> facts = engine.getAllFacts();
-				Object[] sorted = null;
-				if (sortid) {
-					sorted = FactUtils.sortFacts(facts);
-				} else {
-					sorted = FactUtils.sortFactsByTemplate(facts);
-				}
-				for (int idx = 0; idx < sorted.length; idx++) {
-					Deffact ft = (Deffact) sorted[idx];
-					writer.write(ft.toPPString() + Constants.LINEBREAK);
-				}
-				writer.close();
-				saved = Boolean.TRUE;
-			} catch (IOException e) {
-				// we should log this
-			}
-		}
-		DefaultReturnValue drv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, saved);
-		rv.addReturnValue(drv);
-		return rv;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean saved = Boolean.FALSE;
+        boolean sortid = true;
+        DefaultReturnVector rv = new DefaultReturnVector();
+        if (params != null && params.length >= 1) {
+            if (params[1] != null && params[1].getStringValue().equals("template")) {
+                sortid = false;
+            }
+            try {
+                FileWriter writer = new FileWriter(params[0].getStringValue());
+                List<?> facts = engine.getAllFacts();
+                Object[] sorted = null;
+                if (sortid) {
+                    sorted = FactUtils.sortFacts(facts);
+                } else {
+                    sorted = FactUtils.sortFactsByTemplate(facts);
+                }
+                for (int idx = 0; idx < sorted.length; idx++) {
+                    Deffact ft = (Deffact) sorted[idx];
+                    writer.write(ft.toPPString() + Constants.LINEBREAK);
+                }
+                writer.close();
+                saved = Boolean.TRUE;
+            } catch (IOException e) {
+                // we should log this
+            }
+        }
+        DefaultReturnValue drv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, saved);
+        rv.addReturnValue(drv);
+        return rv;
+    }
 
-	public String getName() {
-		return SAVE_FACTS;
-	}
+    public String getName() {
+        return SAVE_FACTS;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class,ValueParam.class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(save-facts [filename] [sort(id|template)])";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(save-facts [filename] [sort(id|template)])";
+    }
 }

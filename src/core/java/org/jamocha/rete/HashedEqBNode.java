@@ -12,47 +12,40 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
-
-import java.util.Map;
-import java.util.Iterator;
 
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rete.util.NodeUtils;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @author Peter Lin
- * 
- * HashedBetaNode indexes the right input to improve cross product performance.
+ *     <p>HashedBetaNode indexes the right input to improve cross product performance.
  */
 public class HashedEqBNode extends BaseJoin {
 
-    /**
-     * 
-     */
-
+    /** */
     public HashedEqBNode(int id) {
         super(id);
     }
 
     /**
-     * assertLeft takes an array of facts. Since the next join may be joining
-     * against one or more objects, we need to pass all previously matched
-     * facts.
-     * 
+     * assertLeft takes an array of facts. Since the next join may be joining against one or more
+     * objects, we need to pass all previously matched facts.
+     *
      * @param factInstance
      * @param engine
      */
-	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws AssertException {
+    public void assertLeft(Index linx, Rete engine, WorkingMemory mem) throws AssertException {
         Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
         leftmem.put(linx, linx);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        HashedAlphaMemoryImpl rightmem = mem
-                .getBetaRightMemory(this);
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds, linx.getFacts()));
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.iterator(inx);
         if (itr != null) {
             while (itr.hasNext()) {
@@ -66,15 +59,13 @@ public class HashedEqBNode extends BaseJoin {
 
     /**
      * Assert from the right side is always going to be from an Alpha node.
-     * 
+     *
      * @param factInstance
      * @param engine
      */
-    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws AssertException {
-        HashedAlphaMemoryImpl rightmem = mem
-                .getBetaRightMemory(this);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
+    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds, rfact));
 
         rightmem.addPartialMatch(inx, rfact, engine);
         // now that we've added the facts to the list, we
@@ -96,17 +87,15 @@ public class HashedEqBNode extends BaseJoin {
 
     /**
      * Retracting from the left requires that we propogate the
-     * 
+     *
      * @param factInstance
      * @param engine
      */
-    public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws RetractException {
+    public void retractLeft(Index linx, Rete engine, WorkingMemory mem) throws RetractException {
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
-        EqHashIndex eqinx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        HashedAlphaMemoryImpl rightmem = mem
-                .getBetaRightMemory(this);
+        EqHashIndex eqinx = new EqHashIndex(NodeUtils.getLeftValues(this.binds, linx.getFacts()));
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
 
         // now we propogate the retract. To do that, we have
         // merge each item in the list with the Fact array
@@ -120,18 +109,15 @@ public class HashedEqBNode extends BaseJoin {
     }
 
     /**
-     * Retract from the right works in the following order. 1. remove the fact
-     * from the right memory 2. check which left memory matched 3. propogate the
-     * retract
-     * 
+     * Retract from the right works in the following order. 1. remove the fact from the right memory
+     * 2. check which left memory matched 3. propogate the retract
+     *
      * @param factInstance
      * @param engine
      */
-    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws RetractException {
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
-        HashedAlphaMemoryImpl rightmem = mem
-                .getBetaRightMemory(this);
+    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem) throws RetractException {
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds, rfact));
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
         // first we remove the fact from the right
         rightmem.removePartialMatch(inx, rfact);
         // now we see the left memory matched and remove it also
@@ -146,10 +132,10 @@ public class HashedEqBNode extends BaseJoin {
     }
 
     /**
-     * Method will use the right binding to perform the evaluation of the join.
-     * Since we are building joins similar to how CLIPS and other rule engines
-     * handle it, it means 95% of the time the right fact list only has 1 fact.
-     * 
+     * Method will use the right binding to perform the evaluation of the join. Since we are
+     * building joins similar to how CLIPS and other rule engines handle it, it means 95% of the
+     * time the right fact list only has 1 fact.
+     *
      * @param leftlist
      * @param right
      * @return
@@ -168,9 +154,7 @@ public class HashedEqBNode extends BaseJoin {
         return eval;
     }
 
-    /**
-     * Basic implementation will return string format of the betaNode
-     */
+    /** Basic implementation will return string format of the betaNode */
     public String toString() {
         StringBuilder buf = new StringBuilder();
         for (int idx = 0; idx < this.binds.length; idx++) {
@@ -182,9 +166,7 @@ public class HashedEqBNode extends BaseJoin {
         return buf.toString();
     }
 
-    /**
-     * returns the node named + node id and the bindings in a string format
-     */
+    /** returns the node named + node id and the bindings in a string format */
     public String toPPString() {
         StringBuilder buf = new StringBuilder();
         buf.append("HashedEqBNode-" + this.nodeID + "> ");

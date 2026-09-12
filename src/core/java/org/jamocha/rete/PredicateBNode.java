@@ -12,47 +12,40 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
-
-import java.util.Map;
-import java.util.Iterator;
 
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @author Peter Lin
- * 
- * HashedBetaNode indexes the right input to improve cross product performance.
+ *     <p>HashedBetaNode indexes the right input to improve cross product performance.
  */
 public class PredicateBNode extends BaseJoin {
 
-    /**
-     * 
-     */
-
+    /** */
     public PredicateBNode(int id) {
         super(id);
     }
 
     /**
      * Set the bindings for this join
-     * 
+     *
      * @param binds
      */
     public void setBindings(Binding[] binds) {
         this.binds = binds;
     }
 
-    /**
-     * clear will clear the lists
-     */
-	public void clear(WorkingMemory mem) {
+    /** clear will clear the lists */
+    public void clear(WorkingMemory mem) {
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-        HashedAlphaMemoryImpl rightmem = mem
-                .getBetaRightMemory(this);
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -67,15 +60,13 @@ public class PredicateBNode extends BaseJoin {
     }
 
     /**
-     * assertLeft takes an array of facts. Since the next join may be joining
-     * against one or more objects, we need to pass all previously matched
-     * facts.
-     * 
+     * assertLeft takes an array of facts. Since the next join may be joining against one or more
+     * objects, we need to pass all previously matched facts.
+     *
      * @param factInstance
      * @param engine
      */
-	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws AssertException {
+    public void assertLeft(Index linx, Rete engine, WorkingMemory mem) throws AssertException {
         Map<Index, BetaMemory> leftmem = mem.getBetaLeftMemory(this);
         BetaMemory bmem = new BetaMemoryImpl(linx, engine);
         leftmem.put(linx, bmem);
@@ -85,7 +76,7 @@ public class PredicateBNode extends BaseJoin {
             while (itr.hasNext()) {
                 Fact vl = (Fact) itr.next();
                 // we have to evaluate the function
-                if (vl != null && evaluate(linx.getFacts(),vl,engine)) {
+                if (vl != null && evaluate(linx.getFacts(), vl, engine)) {
                     bmem.addMatch(vl);
                     this.propagateAssert(linx.add(vl), engine, mem);
                 }
@@ -95,12 +86,11 @@ public class PredicateBNode extends BaseJoin {
 
     /**
      * Assert from the right side is always going to be from an Alpha node.
-     * 
+     *
      * @param factInstance
      * @param engine
      */
-	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws AssertException {
+    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
         Map<Fact, Fact> rightmem = mem.getBetaRightMemory(this);
         rightmem.put(rfact, rfact);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
@@ -117,12 +107,11 @@ public class PredicateBNode extends BaseJoin {
 
     /**
      * Retracting from the left requires that we propogate the
-     * 
+     *
      * @param factInstance
      * @param engine
      */
-    public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws RetractException {
+    public void retractLeft(Index linx, Rete engine, WorkingMemory mem) throws RetractException {
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
         Map<?, ?> rightmem = mem.getBetaRightMemory(this);
@@ -135,33 +124,31 @@ public class PredicateBNode extends BaseJoin {
     }
 
     /**
-     * Retract from the right works in the following order. 1. remove the fact
-     * from the right memory 2. check which left memory matched 3. propogate the
-     * retract
-     * 
+     * Retract from the right works in the following order. 1. remove the fact from the right memory
+     * 2. check which left memory matched 3. propogate the retract
+     *
      * @param factInstance
      * @param engine
      */
-    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws RetractException {
+    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem) throws RetractException {
         Map<?, ?> rightmem = mem.getBetaRightMemory(this);
         rightmem.remove(rfact);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
-        while (itr.hasNext()){
-            BetaMemory bmem = (BetaMemory)itr.next();
-            if (this.evaluate(bmem.getLeftFacts(), rfact, engine)){
+        while (itr.hasNext()) {
+            BetaMemory bmem = (BetaMemory) itr.next();
+            if (this.evaluate(bmem.getLeftFacts(), rfact, engine)) {
                 bmem.removeMatch(rfact);
-                propagateRetract(bmem.getIndex().add(rfact),engine,mem);
+                propagateRetract(bmem.getIndex().add(rfact), engine, mem);
             }
         }
     }
 
     /**
-     * Method will use the right binding to perform the evaluation of the join.
-     * Since we are building joins similar to how CLIPS and other rule engines
-     * handle it, it means 95% of the time the right fact list only has 1 fact.
-     * 
+     * Method will use the right binding to perform the evaluation of the join. Since we are
+     * building joins similar to how CLIPS and other rule engines handle it, it means 95% of the
+     * time the right fact list only has 1 fact.
+     *
      * @param leftlist
      * @param right
      * @return
@@ -183,9 +170,7 @@ public class PredicateBNode extends BaseJoin {
         return eval;
     }
 
-    /**
-     * Basic implementation will return string format of the betaNode
-     */
+    /** Basic implementation will return string format of the betaNode */
     public String toString() {
         StringBuilder buf = new StringBuilder();
         for (int idx = 0; idx < this.binds.length; idx++) {
@@ -197,9 +182,7 @@ public class PredicateBNode extends BaseJoin {
         return buf.toString();
     }
 
-    /**
-     * returns the node named + node id and the bindings in a string format
-     */
+    /** returns the node named + node id and the bindings in a string format */
     public String toPPString() {
         StringBuilder buf = new StringBuilder();
         buf.append("PredicateBNode-" + this.nodeID + "> ");

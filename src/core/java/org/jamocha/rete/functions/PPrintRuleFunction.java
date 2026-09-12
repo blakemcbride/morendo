@@ -12,66 +12,58 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
-import org.jamocha.rule.Rule;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rule.Rule;
 
 /**
  * @author Peter Lin
- * 
- * The function will print out the rule in a pretty format. Note the
- * format may not be identicle to what the user wrote. It is a normalized
- * and cleaned up format.
+ *     <p>The function will print out the rule in a pretty format. Note the format may not be
+ *     identicle to what the user wrote. It is a normalized and cleaned up format.
  */
 public class PPrintRuleFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String PPRULES = "ppdefrule";
-	
-	/**
-	 * 
-	 */
-	public PPrintRuleFunction() {
-		super();
-	}
+    /** */
+    public static final String PPRULES = "ppdefrule";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    /** */
+    public PPrintRuleFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		if (params != null && params.length > 0) {
-			for (int idx=0; idx < params.length; idx++) {
-				Rule rls = 
-					engine.getCurrentFocus().findRule(params[idx].getStringValue());
-				engine.writeMessage(rls.toPPString(),"t");
-			}
-		}
-		DefaultReturnVector rv = new DefaultReturnVector();
-		return rv;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public String getName() {
-		return PPRULES;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {
+                Rule rls = engine.getCurrentFocus().findRule(params[idx].getStringValue());
+                engine.writeMessage(rls.toPPString(), "t");
+            }
+        }
+        DefaultReturnVector rv = new DefaultReturnVector();
+        return rv;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public String getName() {
+        return PPRULES;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(ppdefrule <name>)";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(ppdefrule <name>)";
+    }
 }

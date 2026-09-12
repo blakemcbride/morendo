@@ -12,64 +12,58 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.time;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import org.jamocha.rete.ValueType;
 
-public class AddHoursFunction extends AbstractTimeFunction implements
-		Function {
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
-	/**
-	 * 
-	 */
-	public static final String ADD_HOURS = "add-hours";
+public class AddHoursFunction extends AbstractTimeFunction implements Function {
 
-	public AddHoursFunction() {
-		super();
-	}
+    /** */
+    public static final String ADD_HOURS = "add-hours";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Instant date = null;
-		if (params != null && params.length == 2) {
-			int minutes = params[0].getIntValue();
-			date = this.toInstant(params[1].getValue(engine, ValueType.OBJECT));
-			if (date != null) {
-				date = date.plus(minutes, ChronoUnit.HOURS);
-			}
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = 
-			new DefaultReturnValue(ValueType.DATE, date);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public AddHoursFunction() {
+        super();
+    }
 
-	public String getName() {
-		return ADD_HOURS;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Instant date = null;
+        if (params != null && params.length == 2) {
+            int minutes = params[0].getIntValue();
+            date = this.toInstant(params[1].getValue(engine, ValueType.OBJECT));
+            if (date != null) {
+                date = date.plus(minutes, ChronoUnit.HOURS);
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.DATE, date);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{Instant.class};
-	}
+    public String getName() {
+        return ADD_HOURS;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.DATE;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {Instant.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(add-hours <hours> <date>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.DATE;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(add-hours <hours> <date>)";
+    }
 }

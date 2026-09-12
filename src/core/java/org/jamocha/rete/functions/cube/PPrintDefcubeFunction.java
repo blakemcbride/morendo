@@ -12,11 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.cube;
 
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.Cube;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,49 +26,47 @@ import org.jamocha.rete.ValueType;
 
 public class PPrintDefcubeFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String PPDEFCUBE = "ppdefcube";
-	
-	public PPrintDefcubeFunction() {
-		super();
-	}
+    /** */
+    public static final String PPDEFCUBE = "ppdefcube";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		if (params != null && params.length > 0) {
-			for (int idx=0; idx < params.length; idx++) {
-				String name = params[idx].getStringValue();
-				Cube c = engine.getCube(name);
-				if (c != null) {
-					engine.writeMessage(c.toPPString(), "t");
-				}
-			}
-		}
-		DefaultReturnVector rv = new DefaultReturnVector();
-		return rv;
-	}
+    public PPrintDefcubeFunction() {
+        super();
+    }
 
-	public String getName() {
-		return PPDEFCUBE;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {
+                String name = params[idx].getStringValue();
+                Cube c = engine.getCube(name);
+                if (c != null) {
+                    engine.writeMessage(c.toPPString(), "t");
+                }
+            }
+        }
+        DefaultReturnVector rv = new DefaultReturnVector();
+        return rv;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{String.class};
-	}
+    public String getName() {
+        return PPDEFCUBE;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.STRING;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length == 1) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(ppdefcube " + params[0].getStringValue());
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(ppdefcube <name>)";
-		}
-	}
+    public ValueType getReturnType() {
+        return ValueType.STRING;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length == 1) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(ppdefcube " + params[0].getStringValue());
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(ppdefcube <name>)";
+        }
+    }
 }

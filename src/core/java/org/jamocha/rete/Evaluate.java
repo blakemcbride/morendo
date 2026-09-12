@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2008 Peter Lin
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -24,12 +24,11 @@ import java.util.Date;
 /**
  * Compares slot values for the alpha and join nodes.
  *
- * Rules of comparison: NIL equals null and nothing else; strings and booleans compare by
- * their text (a boolean against a string compares "true"/"false"); numbers compare as
- * longs when both are integral and as doubles otherwise, and compare equal to a string
- * holding their text; instants, dates and calendars compare by epoch millisecond, also
- * against numbers; anything else falls back to equals(). Ordering is defined for numbers
- * and temporal values only.
+ * <p>Rules of comparison: NIL equals null and nothing else; strings and booleans compare by their
+ * text (a boolean against a string compares "true"/"false"); numbers compare as longs when both are
+ * integral and as doubles otherwise, and compare equal to a string holding their text; instants,
+ * dates and calendars compare by epoch millisecond, also against numbers; anything else falls back
+ * to equals(). Ordering is defined for numbers and temporal values only.
  */
 public class Evaluate {
 
@@ -54,7 +53,10 @@ public class Evaluate {
             case null -> false;
             case String s -> evaluateStringEqual(s, right);
             case Boolean b -> evaluateBooleanEqual(b, right);
-            case Number n -> right instanceof String s ? n.toString().equals(s) : compare(Operator.EQUAL, n, right);
+            case Number n ->
+                    right instanceof String s
+                            ? n.toString().equals(s)
+                            : compare(Operator.EQUAL, n, right);
             case Object o when isTemporal(o) -> evaluateDateEqual(temporalMillis(o), right);
             default -> right != null && left.equals(right);
         };
@@ -68,7 +70,10 @@ public class Evaluate {
             case null -> false;
             case String s -> !s.equals(right);
             case Boolean b -> evaluateBooleanNotEqual(b, right);
-            case Number n -> right instanceof String s ? !n.toString().equals(s) : compare(Operator.NOTEQUAL, n, right);
+            case Number n ->
+                    right instanceof String s
+                            ? !n.toString().equals(s)
+                            : compare(Operator.NOTEQUAL, n, right);
             case Object o when isTemporal(o) -> evaluateDateNotEqual(temporalMillis(o), right);
             default -> right != null && !left.equals(right);
         };
@@ -114,7 +119,10 @@ public class Evaluate {
         };
     }
 
-    /** Ordering comparisons: numbers against numbers, temporal values against temporal values or numbers. */
+    /**
+     * Ordering comparisons: numbers against numbers, temporal values against temporal values or
+     * numbers.
+     */
     private static boolean order(Operator operator, Object left, Object right) {
         return switch (left) {
             case Number n -> compare(operator, n, right);
@@ -124,8 +132,8 @@ public class Evaluate {
     }
 
     /**
-     * Compares a number with a right-hand value that must also be a number: exactly as longs
-     * when both are integral, as doubles when a floating-point or decimal value is involved.
+     * Compares a number with a right-hand value that must also be a number: exactly as longs when
+     * both are integral, as doubles when a floating-point or decimal value is involved.
      */
     private static boolean compare(Operator operator, Number left, Object right) {
         if (!(right instanceof Number r)) {
@@ -148,7 +156,11 @@ public class Evaluate {
     }
 
     private static boolean isIntegral(Number n) {
-        return n instanceof Integer || n instanceof Long || n instanceof Short || n instanceof Byte || n instanceof BigInteger;
+        return n instanceof Integer
+                || n instanceof Long
+                || n instanceof Short
+                || n instanceof Byte
+                || n instanceof BigInteger;
     }
 
     /** Applies an operator to the sign of a comparison result. */
@@ -166,7 +178,10 @@ public class Evaluate {
 
     // ---------------------------------------------------------------- temporal values
 
-    /** True for the values a DATE slot or a time function may hold: an Instant, or a legacy Date or Calendar from a bean. */
+    /**
+     * True for the values a DATE slot or a time function may hold: an Instant, or a legacy Date or
+     * Calendar from a bean.
+     */
     public static boolean isTemporal(Object value) {
         return value instanceof Instant || value instanceof Date || value instanceof Calendar;
     }
@@ -183,7 +198,8 @@ public class Evaluate {
     }
 
     private static boolean compareMillis(Operator operator, long left, Object right) {
-        return (isTemporal(right) || right instanceof Number) && test(operator, Long.compare(left, temporalMillis(right)));
+        return (isTemporal(right) || right instanceof Number)
+                && test(operator, Long.compare(left, temporalMillis(right)));
     }
 
     public static boolean evaluateDateEqual(long left, Object right) {

@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jamocha.rete.BaseJoin;
 import org.jamocha.rete.BaseNode;
@@ -26,94 +23,85 @@ import org.jamocha.rete.QueryCompiler;
 import org.jamocha.rete.RuleCompiler;
 import org.jamocha.rete.compiler.ConditionCompiler;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Lin
- *
- * AndCondition is specifically created to handle and conjunctions. AndConditions
- * are compiled to a BetaNode.
+ *     <p>AndCondition is specifically created to handle and conjunctions. AndConditions are
+ *     compiled to a BetaNode.
  */
 public final class OrCondition implements Condition {
 
-    /**
-	 * 
-	 */
-	
-	protected List<Object> nestedCE = new ArrayList<>();
-    protected BaseJoin reteNode = null;
-    
-	/**
-	 * 
-	 */
-	public OrCondition() {
-		super();
-	}
+    /** */
+    protected List<Object> nestedCE = new ArrayList<>();
 
-	public boolean compare(Condition cond) {
-		if (!(cond instanceof OrCondition)) {
-			return false;
-		}
-		OrCondition orc = (OrCondition)cond;
-		if (orc.getNestedConditionalElement().size() == this.nestedCE.size()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    protected BaseJoin reteNode = null;
+
+    /** */
+    public OrCondition() {
+        super();
+    }
+
+    public boolean compare(Condition cond) {
+        if (!(cond instanceof OrCondition)) {
+            return false;
+        }
+        OrCondition orc = (OrCondition) cond;
+        if (orc.getNestedConditionalElement().size() == this.nestedCE.size()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public void addNestedConditionElement(Object ce) {
         this.nestedCE.add(ce);
     }
-    
+
     public List<Object> getNestedConditionalElement() {
         return this.nestedCE;
     }
-    
-	public List<?> getNodes() {
-		return new ArrayList<>();
-	}
 
-    /**
-     * not implemented yet
-     */
-	public void addNode(BaseNode node) {
-	}
-    
-    /**
-     * not implemented yet
-     */
-    public void addNewAlphaNodes(BaseNode node) {
+    public List<?> getNodes() {
+        return new ArrayList<>();
     }
 
-	public BaseNode getLastNode() {
-		return reteNode;
-	}
-    
+    /** not implemented yet */
+    public void addNode(BaseNode node) {}
+
+    /** not implemented yet */
+    public void addNewAlphaNodes(BaseNode node) {}
+
+    public BaseNode getLastNode() {
+        return reteNode;
+    }
+
     public void clear() {
-    	reteNode = null;
+        reteNode = null;
     }
-    
-	public String toPPString() {
-		return "";
-	}
 
-	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String toPPString() {
+        return "";
+    }
 
-	public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public List<Object> getBindConstraints() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public List<Object> getBindConstraints() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

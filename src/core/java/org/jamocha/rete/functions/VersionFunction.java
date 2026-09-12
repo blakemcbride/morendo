@@ -12,10 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -27,46 +26,38 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- *
- * ClearFunction will call Rete.clear()
+ *     <p>ClearFunction will call Rete.clear()
  */
 public class VersionFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String VERSION = "version";
+    /** */
+    public static final String VERSION = "version";
 
-	/**
-	 * 
-	 */
-	public VersionFunction() {
-		super();
-	}
+    /** */
+    public VersionFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector ret = new DefaultReturnVector();
-		engine.writeMessage(Constants.VERSION + Constants.LINEBREAK,
-				Constants.DEFAULT_OUTPUT);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        engine.writeMessage(Constants.VERSION + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
+        return ret;
+    }
 
-	public String getName() {
-		return VERSION;
-	}
+    public String getName() {
+        return VERSION;
+    }
 
-	/**
-	 * The function does not take any parameters
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    /** The function does not take any parameters */
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(version)";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(version)";
+    }
 }

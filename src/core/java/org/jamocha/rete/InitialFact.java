@@ -12,29 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
 /**
  * @author Peter Lin
- * 
- * InitialFact is used for rules without conditions and cases where a rule
- * starts with exist or not.
+ *     <p>InitialFact is used for rules without conditions and cases where a rule starts with exist
+ *     or not.
  */
 public class InitialFact extends Deftemplate {
 
-	/**
-     * 
-     */
+    /** */
     private static final long serialVersionUID = 1L;
 
-    /**
-	 * 
-	 */
-	public InitialFact() {
-		super(Constants.INITIAL_FACT);
-		this.slots = new Slot[0];
-	}
-
+    /** */
+    public InitialFact() {
+        super(Constants.INITIAL_FACT);
+        this.slots = new Slot[0];
+    }
 }

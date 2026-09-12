@@ -12,35 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
 /**
  * @author Peter Lin
- * 
- * DefaultReturnValue simply extends ValueParam. In many ways, input parameters
- * and return values have similar needs. Both have to contain information about
- * the type of value. ReturnValue defines the basic methods for getting the
- * value and figuring out what type it is.
- * <ol>
- * <li> Parameter interface extends ReturnValue</li>
- * <li> AbstractParam implements Parameter interface</li>
- * <li> ValueParam extends AbstractParam</li>
- * </ol>
- * The convienance methods in ReturnValue should make it easier to access the
- * values.
+ *     <p>DefaultReturnValue simply extends ValueParam. In many ways, input parameters and return
+ *     values have similar needs. Both have to contain information about the type of value.
+ *     ReturnValue defines the basic methods for getting the value and figuring out what type it is.
+ *     <ol>
+ *       <li>Parameter interface extends ReturnValue
+ *       <li>AbstractParam implements Parameter interface
+ *       <li>ValueParam extends AbstractParam
+ *     </ol>
+ *     The convienance methods in ReturnValue should make it easier to access the values.
  */
 public final class DefaultReturnValue extends ValueParam {
 
-	/**
-	 * 
-	 */
+    /** */
 
-	/**
-	 * 
-	 */
-	public DefaultReturnValue(ValueType vtype, Object value) {
-		super(vtype, value);
-	}
+    /** */
+    public DefaultReturnValue(ValueType vtype, Object value) {
+        super(vtype, value);
+    }
 }

@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -26,35 +24,28 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- *
- * ProfileFunction is used to turn on profiling. It provides basic
- * profiling of assert, retract, add activation, remove activation
- * and fire.
+ *     <p>ProfileFunction is used to turn on profiling. It provides basic profiling of assert,
+ *     retract, add activation, remove activation and fire.
  */
 public class UnProfileFunction implements Function {
 
-    /**
-	 * 
-	 */
-	public static final String PROFILE = "unprofile";
-    
-	/**
-	 * 
-	 */
-	public UnProfileFunction() {
-		super();
-	}
+    /** */
+    public static final String PROFILE = "unprofile";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    /** */
+    public UnProfileFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         if (params != null && params.length > 0) {
-            for (int idx=0; idx < params.length; idx++) {
+            for (int idx = 0; idx < params.length; idx++) {
                 if (params[idx].getStringValue().equals("all")) {
                     engine.setProfile(Rete.Profile.ALL);
                 } else if (params[idx].getStringValue().equals("assert-fact")) {
@@ -72,18 +63,17 @@ public class UnProfileFunction implements Function {
         }
         DefaultReturnVector ret = new DefaultReturnVector();
         return ret;
-	}
+    }
 
-	public String getName() {
-		return PROFILE;
-	}
+    public String getName() {
+        return PROFILE;
+    }
 
-	public Class<?>[] getParameter() {
-        return new Class<?>[]{ValueParam.class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(unprofile assert|all|retract|fire|add-activation|remove-activation)";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(unprofile assert|all|retract|fire|add-activation|remove-activation)";
+    }
 }

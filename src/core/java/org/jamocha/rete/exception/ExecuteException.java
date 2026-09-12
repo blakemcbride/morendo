@@ -12,53 +12,46 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.exception;
 
 /**
  * @author Peter Lin
- *
- * ExecuteException is only thrown when the RHS of the rule is executed.
- * If the action didn't execute correctly, throw an exception with
- * sufficient details to debug the issue.
+ *     <p>ExecuteException is only thrown when the RHS of the rule is executed. If the action didn't
+ *     execute correctly, throw an exception with sufficient details to debug the issue.
  */
 public class ExecuteException extends Exception {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
+    /** */
+    public static final String NULL_ACTION =
+            "Could not execute the action. " + "The action was NULL";
+
+    /** */
+    public ExecuteException() {
+        super();
+    }
+
+    /**
+     * @param message
      */
-    public static final String NULL_ACTION = "Could not execute the action. "
-			+ "The action was NULL";
+    public ExecuteException(String message) {
+        super(message);
+    }
 
-	/**
-	 * 
-	 */
-	public ExecuteException() {
-		super();
-	}
+    /**
+     * @param message
+     * @param cause
+     */
+    public ExecuteException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	/**
-	 * @param message
-	 */
-	public ExecuteException(String message) {
-		super(message);
-	}
-
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public ExecuteException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * @param cause
-	 */
-	public ExecuteException(Throwable cause) {
-		super(cause);
-	}
-
+    /**
+     * @param cause
+     */
+    public ExecuteException(Throwable cause) {
+        super(cause);
+    }
 }

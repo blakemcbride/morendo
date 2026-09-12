@@ -6,6 +6,6 @@ public class WriteOfficeCode implements WriteMacro {
     public WriteOfficeCode() {}
 
     public void setProperty(Object instance, Object value) {
-        ((woolfel.examples.model.Account)instance).setOfficeCode((java.lang.String)value);
+        ((woolfel.examples.model.Account) instance).setOfficeCode((java.lang.String) value);
     }
 }

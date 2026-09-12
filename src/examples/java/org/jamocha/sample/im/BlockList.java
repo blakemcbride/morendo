@@ -4,30 +4,30 @@ import java.util.List;
 
 public class BlockList {
 
-	private String userId;
-	@SuppressWarnings("rawtypes")
-	private List blocked;
-	
-	public BlockList() {
-		super();
-	}
+    private String userId;
 
-	public String getUserId() {
-		return userId;
-	}
+    @SuppressWarnings("rawtypes")
+    private List blocked;
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public BlockList() {
+        super();
+    }
 
-	@SuppressWarnings("rawtypes")
-	public List getBlocked() {
-		return blocked;
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	@SuppressWarnings("rawtypes")
-	public void setBlocked(List blocked) {
-		this.blocked = blocked;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
+    @SuppressWarnings("rawtypes")
+    public List getBlocked() {
+        return blocked;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public void setBlocked(List blocked) {
+        this.blocked = blocked;
+    }
 }

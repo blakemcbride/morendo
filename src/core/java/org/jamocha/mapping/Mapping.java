@@ -12,40 +12,49 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.mapping;
 
-import java.util.List;
-
 import org.jamocha.rete.Print;
 
+import java.util.List;
+
 public interface Mapping extends Print {
-	public static final String PROPERTY = "property";
-	public static final String KEY_PROPERTY = "key-property";
-	
-	String getMappingName();
-	void setMappingName(String name);
-	
-	String getClassName();
-	void setClassName(String clazz);
-	
-	String getSqlQuery();
-	void setSqlQuery(String query);
-	
-	String getTableName();
-	void setTableName(String table);
-	
-	String getTemplate();
-	void setTemplate(String template);
-	
-	List<?> getKeyProperties();
-	void setKeyProperties(List<KeyProperty> keyProperties);
-	void addKeyProperty(KeyProperty key);
-	
-	List<?> getProperties();
-	void setProperties(List<Property> properties);
-	void addProperty(Property property);
-	
-	boolean usesCompositeKey();
+    public static final String PROPERTY = "property";
+    public static final String KEY_PROPERTY = "key-property";
+
+    String getMappingName();
+
+    void setMappingName(String name);
+
+    String getClassName();
+
+    void setClassName(String clazz);
+
+    String getSqlQuery();
+
+    void setSqlQuery(String query);
+
+    String getTableName();
+
+    void setTableName(String table);
+
+    String getTemplate();
+
+    void setTemplate(String template);
+
+    List<?> getKeyProperties();
+
+    void setKeyProperties(List<KeyProperty> keyProperties);
+
+    void addKeyProperty(KeyProperty key);
+
+    List<?> getProperties();
+
+    void setProperties(List<Property> properties);
+
+    void addProperty(Property property);
+
+    boolean usesCompositeKey();
 }

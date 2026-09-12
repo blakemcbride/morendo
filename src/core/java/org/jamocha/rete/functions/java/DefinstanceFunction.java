@@ -12,18 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.java;
-
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Defclass;
@@ -33,131 +28,140 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
-import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rete.exception.AssertException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * @author Peter Lin
- *
- * Definstance will assert an object instance using Rete.assert(Object).
+ *     <p>Definstance will assert an object instance using Rete.assert(Object).
  */
 public class DefinstanceFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String DEFINSTANCE = "definstance";
-	private Logger log = LogManager.getLogger(DefinstanceFunction.class);
+    /** */
+    public static final String DEFINSTANCE = "definstance";
 
-	public DefinstanceFunction() {
-		super();
-	}
+    private Logger log = LogManager.getLogger(DefinstanceFunction.class);
 
-	public ValueType getReturnType() {
-		return ValueType.STRING;
-	}
+    public DefinstanceFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		String asrt = "";
-		Object instance = null;
-		if (params.length >= 1 && params[0] != null) {
-			if (params[0] instanceof FunctionParam2) {
-				FunctionParam2 func = (FunctionParam2)params[0];
-				String classname = func.getFunctionName();
-				try {
-					Defclass defclass = engine.findDefclassByName(classname);
-					if (defclass != null) {
-						instance = defclass.getClassObject().getDeclaredConstructor().newInstance();
-						Parameter[] parameters = func.getParameters();
-						for (int idx=0; idx < parameters.length; idx++) {
-							if (parameters[idx] instanceof FunctionParam2) {
-								FunctionParam2 fp = (FunctionParam2)parameters[idx];
-								String slotname = fp.getFunctionName();
-								ValueParam paramVal = (ValueParam)fp.getParameters()[0];
-								Class<?> returnType = defclass.getReadMethod(slotname).getReturnType();
-								Object value = getTypedValue(paramVal, returnType);
-								defclass.getWriteMethod(slotname).invoke(instance, new Object[]{value});
-							}
-						}
-					}
-				} catch (InstantiationException|IllegalAccessException|IllegalArgumentException
-						|InvocationTargetException|NoSuchMethodException|SecurityException e) {
-					log.debug(e.toString(), e);
-				}
-			} else if (params[0] instanceof BoundParam) {
-				instance = ((BoundParam)params[0]).getValue(engine, ValueType.OBJECT);
-			} else if (params[0] instanceof ValueParam) {
-				String classname = params[0].getStringValue();
-				Defclass defclass = engine.findDefclassByName(classname);
-				if (defclass != null) {
-					try {
-						instance = defclass.getClassObject().getDeclaredConstructor().newInstance();
-					} catch (InstantiationException|IllegalAccessException|IllegalArgumentException
-							|InvocationTargetException|NoSuchMethodException|SecurityException e) {
-						log.debug(e.toString(), e);					}
-				}
-			}
-			String template = null;
-			if (params.length == 2 && params[1].getStringValue() != null) {
-				template = params[1].getStringValue();
-			}
-			try {
-				engine.assertObject(instance, template, true, false);
-				asrt = "true";
-			} catch (AssertException e) {
-				// we should log this and output an error
-				asrt = "false";
-			}
-		} else {
-			asrt = "false";
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING,
-				asrt);
-		ret.addReturnValue(rv);
-		return ret;
-	}
-	
-	protected Object getTypedValue(ValueParam param, Class<?> clzz) {
-		if (clzz == String.class) {
-			return param.getStringValue();
-		} else if (clzz == int.class || clzz == Integer.class) {
-			return  Integer.valueOf(param.getIntValue());
-		} else if (clzz == short.class || clzz == Short.class) {
-			return Short.valueOf(param.getShortValue());
-		} else if (clzz == float.class || clzz == Float.class) {
-			return Float.valueOf(param.getFloatValue());
-		} else if (clzz == long.class || clzz == Long.class) {
-			return Long.valueOf(param.getLongValue());
-		} else if (clzz == double.class || clzz == Double.class) {
-			return Double.valueOf(param.getDoubleValue());
-		} else if (clzz == BigDecimal.class) {
-			return param.getBigDecimalValue();
-		} else if (clzz == BigInteger.class) {
-			return param.getBigIntegerValue();
-		} else {
-			return param.getValue();
-		}
-	}
+    public ValueType getReturnType() {
+        return ValueType.STRING;
+    }
 
-	public String getName() {
-		return DEFINSTANCE;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        String asrt = "";
+        Object instance = null;
+        if (params.length >= 1 && params[0] != null) {
+            if (params[0] instanceof FunctionParam2) {
+                FunctionParam2 func = (FunctionParam2) params[0];
+                String classname = func.getFunctionName();
+                try {
+                    Defclass defclass = engine.findDefclassByName(classname);
+                    if (defclass != null) {
+                        instance = defclass.getClassObject().getDeclaredConstructor().newInstance();
+                        Parameter[] parameters = func.getParameters();
+                        for (int idx = 0; idx < parameters.length; idx++) {
+                            if (parameters[idx] instanceof FunctionParam2) {
+                                FunctionParam2 fp = (FunctionParam2) parameters[idx];
+                                String slotname = fp.getFunctionName();
+                                ValueParam paramVal = (ValueParam) fp.getParameters()[0];
+                                Class<?> returnType =
+                                        defclass.getReadMethod(slotname).getReturnType();
+                                Object value = getTypedValue(paramVal, returnType);
+                                defclass.getWriteMethod(slotname)
+                                        .invoke(instance, new Object[] {value});
+                            }
+                        }
+                    }
+                } catch (InstantiationException
+                        | IllegalAccessException
+                        | IllegalArgumentException
+                        | InvocationTargetException
+                        | NoSuchMethodException
+                        | SecurityException e) {
+                    log.debug(e.toString(), e);
+                }
+            } else if (params[0] instanceof BoundParam) {
+                instance = ((BoundParam) params[0]).getValue(engine, ValueType.OBJECT);
+            } else if (params[0] instanceof ValueParam) {
+                String classname = params[0].getStringValue();
+                Defclass defclass = engine.findDefclassByName(classname);
+                if (defclass != null) {
+                    try {
+                        instance = defclass.getClassObject().getDeclaredConstructor().newInstance();
+                    } catch (InstantiationException
+                            | IllegalAccessException
+                            | IllegalArgumentException
+                            | InvocationTargetException
+                            | NoSuchMethodException
+                            | SecurityException e) {
+                        log.debug(e.toString(), e);
+                    }
+                }
+            }
+            String template = null;
+            if (params.length == 2 && params[1].getStringValue() != null) {
+                template = params[1].getStringValue();
+            }
+            try {
+                engine.assertObject(instance, template, true, false);
+                asrt = "true";
+            } catch (AssertException e) {
+                // we should log this and output an error
+                asrt = "false";
+            }
+        } else {
+            asrt = "false";
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING, asrt);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	/**
-	 * The function expects a single BoundParam that is an object binding
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { BoundParam.class, ValueParam.class };
-	}
+    protected Object getTypedValue(ValueParam param, Class<?> clzz) {
+        if (clzz == String.class) {
+            return param.getStringValue();
+        } else if (clzz == int.class || clzz == Integer.class) {
+            return Integer.valueOf(param.getIntValue());
+        } else if (clzz == short.class || clzz == Short.class) {
+            return Short.valueOf(param.getShortValue());
+        } else if (clzz == float.class || clzz == Float.class) {
+            return Float.valueOf(param.getFloatValue());
+        } else if (clzz == long.class || clzz == Long.class) {
+            return Long.valueOf(param.getLongValue());
+        } else if (clzz == double.class || clzz == Double.class) {
+            return Double.valueOf(param.getDoubleValue());
+        } else if (clzz == BigDecimal.class) {
+            return param.getBigDecimalValue();
+        } else if (clzz == BigInteger.class) {
+            return param.getBigIntegerValue();
+        } else {
+            return param.getValue();
+        }
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			return buf.toString();
-		} else {
-			return "(definstance <object instance> <template name>)";
-		}
-	}
+    public String getName() {
+        return DEFINSTANCE;
+    }
+
+    /** The function expects a single BoundParam that is an object binding */
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {BoundParam.class, ValueParam.class};
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            return buf.toString();
+        } else {
+            return "(definstance <object instance> <template name>)";
+        }
+    }
 }

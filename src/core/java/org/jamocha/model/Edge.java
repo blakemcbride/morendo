@@ -7,86 +7,82 @@ import java.util.List;
 
 public class Edge {
 
-	private List<PropertyChangeListener> listeners = new ArrayList<>();
-	private String id;
-	private String source;
-	private String target;
-	private String label;
-	private int weight;
-	
-	public Edge() {
-	}
+    private List<PropertyChangeListener> listeners = new ArrayList<>();
+    private String id;
+    private String source;
+    private String target;
+    private String label;
+    private int weight;
 
-	public String getId() {
-		return id;
-	}
+    public Edge() {}
 
-	public void setId(String id) {
-		String old = this.id;
-		this.id = id;
-		this.notifyListener("id", old, id);
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getSource() {
-		return source;
-	}
+    public void setId(String id) {
+        String old = this.id;
+        this.id = id;
+        this.notifyListener("id", old, id);
+    }
 
-	public void setSource(String source) {
-		String old = this.source;
-		this.source = source;
-		this.notifyListener("source", old, source);
-	}
+    public String getSource() {
+        return source;
+    }
 
-	public String getTarget() {
-		return target;
-	}
+    public void setSource(String source) {
+        String old = this.source;
+        this.source = source;
+        this.notifyListener("source", old, source);
+    }
 
-	public void setTarget(String target) {
-		String old = this.target;
-		this.target = target;
-		this.notifyListener("target", old, target);
-	}
+    public String getTarget() {
+        return target;
+    }
 
-	public String getLabel() {
-		return label;
-	}
+    public void setTarget(String target) {
+        String old = this.target;
+        this.target = target;
+        this.notifyListener("target", old, target);
+    }
 
-	public void setLabel(String label) {
-		String old = this.label;
-		this.label = label;
-		this.notifyListener("label", old, label);
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public int getWeight() {
-		return weight;
-	}
+    public void setLabel(String label) {
+        String old = this.label;
+        this.label = label;
+        this.notifyListener("label", old, label);
+    }
 
-	public void setWeight(int weight) {
-		int old = this.weight;
-		this.weight = weight;
-		this.notifyListener("weight", old, weight);
-	}
-	
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		this.listeners.add(listener);
-	}
+    public int getWeight() {
+        return weight;
+    }
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		this.listeners.remove(listener);
-	}
+    public void setWeight(int weight) {
+        int old = this.weight;
+        this.weight = weight;
+        this.notifyListener("weight", old, weight);
+    }
 
-	protected void notifyListener(String field, Object oldValue, Object newValue) {
-		if (listeners == null || listeners.size() == 0) {
-			return;
-		} else {
-			PropertyChangeEvent event = new PropertyChangeEvent(this, field,
-					oldValue, newValue);
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.add(listener);
+    }
 
-			for (int i = 0; i < listeners.size(); i++) {
-				(listeners.get(i))
-						.propertyChange(event);
-			}
-		}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.remove(listener);
+    }
 
-	}
+    protected void notifyListener(String field, Object oldValue, Object newValue) {
+        if (listeners == null || listeners.size() == 0) {
+            return;
+        } else {
+            PropertyChangeEvent event = new PropertyChangeEvent(this, field, oldValue, newValue);
+
+            for (int i = 0; i < listeners.size(); i++) {
+                (listeners.get(i)).propertyChange(event);
+            }
+        }
+    }
 }

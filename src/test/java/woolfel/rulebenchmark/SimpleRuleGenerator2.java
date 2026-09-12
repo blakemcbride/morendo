@@ -8,12 +8,10 @@ package woolfel.rulebenchmark;
 
 import java.io.FileWriter;
 import java.util.Random;
-import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- *
- * comment
+ *     <p>comment
  */
 public class SimpleRuleGenerator2 {
 
@@ -24,18 +22,16 @@ public class SimpleRuleGenerator2 {
     public int ruleType = 0;
 
     private Random ran = new Random();
-    
-    /**
-	 * 
-	 */
-	public SimpleRuleGenerator2() {
-		super();
-	}
+
+    /** */
+    public SimpleRuleGenerator2() {
+        super();
+    }
 
     public void setFilename(String name) {
         this.fileName = name;
     }
-    
+
     public void generateRules(int count, boolean memory) {
         try {
             this.wtr = new FileWriter(this.fileName);
@@ -49,14 +45,14 @@ public class SimpleRuleGenerator2 {
             } else if (ruleType == 3) {
                 this.generateSimpleRuleDecreaseOrder(count);
             } else if (ruleType == 4) {
-                generateSequentialRule(count,memory);
+                generateSequentialRule(count, memory);
             }
             wtr.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public String getDefTemplate() {
         StringBuilder buf = new StringBuilder();
         buf.append("(deftemplate transaction" + LINEBREAK);
@@ -82,7 +78,7 @@ public class SimpleRuleGenerator2 {
         buf.append(")" + LINEBREAK);
         return buf.toString();
     }
-    
+
     public String getDefTemplate2() {
         StringBuilder buf = new StringBuilder();
         buf.append("(deftemplate transaction");
@@ -111,9 +107,9 @@ public class SimpleRuleGenerator2 {
         buf.append(")");
         return buf.toString();
     }
-    
+
     public void generateSimpleRule(int count) {
-        for (int idx=0; idx < count; idx++) {
+        for (int idx = 0; idx < count; idx++) {
             StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
@@ -122,8 +118,7 @@ public class SimpleRuleGenerator2 {
             buf.append("    (countryCode \"US\")" + LINEBREAK);
             buf.append("    (exchange \"NYSE\")" + LINEBREAK);
             buf.append("    (subIndustryID 25501010)" + LINEBREAK);
-            buf.append("    (issuer \"" + SimpleDataGenerator2.issuers[idx] +
-                    "\")" + LINEBREAK);
+            buf.append("    (issuer \"" + SimpleDataGenerator2.issuers[idx] + "\")" + LINEBREAK);
             buf.append("  )" + LINEBREAK);
             buf.append("=>" + LINEBREAK);
             buf.append("  (printout t \"rule" + idx + " was fired\" )" + LINEBREAK);
@@ -135,28 +130,41 @@ public class SimpleRuleGenerator2 {
             }
         }
     }
-    
+
     /**
-     * generates the rules such that the slots are order in increasing
-     * order so that slots with fewer possible values are first.
+     * generates the rules such that the slots are order in increasing order so that slots with
+     * fewer possible values are first.
+     *
      * @param count
      */
     public void generateSimpleRuleIncreaseOrder(int count) {
-        for (int idx=0; idx < count; idx++) {
+        for (int idx = 0; idx < count; idx++) {
             StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId ?accid)" + LINEBREAK);
             buf.append("    (buyPrice ?bp)" + LINEBREAK);
-            buf.append("    (exchange \"" + SimpleDataGenerator2.exchange[ran.nextInt(4)] +
-                    "\")" + LINEBREAK);
-            buf.append("    (countryCode \"" + SimpleDataGenerator2.countries[ran.nextInt(9)] +
-                    "\")" + LINEBREAK);
-            buf.append("    (subIndustryID " + SimpleDataGenerator2.gics[ran.nextInt(19)] +
-                    ")" + LINEBREAK);
-            buf.append("    (issuer \"" + SimpleDataGenerator2.issuers[ran.nextInt(24)] +
-                    "\")" + LINEBREAK);
-            // buf.append("    (cusip " + 
+            buf.append(
+                    "    (exchange \""
+                            + SimpleDataGenerator2.exchange[ran.nextInt(4)]
+                            + "\")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (countryCode \""
+                            + SimpleDataGenerator2.countries[ran.nextInt(9)]
+                            + "\")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (subIndustryID "
+                            + SimpleDataGenerator2.gics[ran.nextInt(19)]
+                            + ")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (issuer \""
+                            + SimpleDataGenerator2.issuers[ran.nextInt(24)]
+                            + "\")"
+                            + LINEBREAK);
+            // buf.append("    (cusip " +
             //        SimpleDataGenerator2.cusips[ran.nextInt(SimpleDataGenerator2.cusips.length)] +
             //        ")" + LINEBREAK);
             buf.append("  )" + LINEBREAK);
@@ -172,21 +180,33 @@ public class SimpleRuleGenerator2 {
     }
 
     public void generateSimpleRuleRandomOrder(int count) {
-        for (int idx=0; idx < count; idx++) {
+        for (int idx = 0; idx < count; idx++) {
             StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId ?accid)" + LINEBREAK);
             buf.append("    (buyPrice ?bp)" + LINEBREAK);
-            buf.append("    (countryCode \"" + SimpleDataGenerator2.countries[ran.nextInt(9)] +
-                    "\")" + LINEBREAK);
-            buf.append("    (subIndustryID " + SimpleDataGenerator2.gics[ran.nextInt(19)] +
-                    ")" + LINEBREAK);
-            buf.append("    (exchange \"" + SimpleDataGenerator2.exchange[ran.nextInt(4)] +
-                    "\")" + LINEBREAK);
-            buf.append("    (issuer \"" + SimpleDataGenerator2.issuers[ran.nextInt(23)] +
-                    "\")" + LINEBREAK);
-            // buf.append("    (cusip " + 
+            buf.append(
+                    "    (countryCode \""
+                            + SimpleDataGenerator2.countries[ran.nextInt(9)]
+                            + "\")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (subIndustryID "
+                            + SimpleDataGenerator2.gics[ran.nextInt(19)]
+                            + ")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (exchange \""
+                            + SimpleDataGenerator2.exchange[ran.nextInt(4)]
+                            + "\")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (issuer \""
+                            + SimpleDataGenerator2.issuers[ran.nextInt(23)]
+                            + "\")"
+                            + LINEBREAK);
+            // buf.append("    (cusip " +
             //        SimpleDataGenerator2.cusips[ran.nextInt(SimpleDataGenerator2.cusips.length)] +
             //        ")" + LINEBREAK);
             buf.append("  )" + LINEBREAK);
@@ -200,31 +220,43 @@ public class SimpleRuleGenerator2 {
             }
         }
     }
-    
+
     /**
-     * generates the rule such that the slots are arranged in decreasing
-     * order of unique values. In other words, countryCode has 10 possible
-     * values, subIndustry has 9 possible values, etc.
+     * generates the rule such that the slots are arranged in decreasing order of unique values. In
+     * other words, countryCode has 10 possible values, subIndustry has 9 possible values, etc.
+     *
      * @param count
      */
     public void generateSimpleRuleDecreaseOrder(int count) {
-        for (int idx=0; idx < count; idx++) {
+        for (int idx = 0; idx < count; idx++) {
             StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId ?accid)" + LINEBREAK);
             buf.append("    (buyPrice ?bp)" + LINEBREAK);
-            // buf.append("    (cusip " + 
+            // buf.append("    (cusip " +
             //        SimpleDataGenerator2.cusips[ran.nextInt(SimpleDataGenerator2.cusips.length)] +
             //        ")" + LINEBREAK);
-            buf.append("    (issuer \"" + SimpleDataGenerator2.issuers[ran.nextInt(23)] +
-                    "\")" + LINEBREAK);
-            buf.append("    (subIndustryID " + SimpleDataGenerator2.gics[ran.nextInt(19)] +
-                    ")" + LINEBREAK);
-            buf.append("    (countryCode \"" + SimpleDataGenerator2.countries[ran.nextInt(9)] +
-                    "\")" + LINEBREAK);
-            buf.append("    (exchange \"" + SimpleDataGenerator2.exchange[ran.nextInt(4)] +
-                    "\")" + LINEBREAK);
+            buf.append(
+                    "    (issuer \""
+                            + SimpleDataGenerator2.issuers[ran.nextInt(23)]
+                            + "\")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (subIndustryID "
+                            + SimpleDataGenerator2.gics[ran.nextInt(19)]
+                            + ")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (countryCode \""
+                            + SimpleDataGenerator2.countries[ran.nextInt(9)]
+                            + "\")"
+                            + LINEBREAK);
+            buf.append(
+                    "    (exchange \""
+                            + SimpleDataGenerator2.exchange[ran.nextInt(4)]
+                            + "\")"
+                            + LINEBREAK);
             buf.append("  )" + LINEBREAK);
             buf.append("=>" + LINEBREAK);
             buf.append("  (printout t \"rule" + idx + " was fired\" )" + LINEBREAK);
@@ -236,15 +268,15 @@ public class SimpleRuleGenerator2 {
             }
         }
     }
-    
+
     public void generateSequentialRule(int count, boolean memory) {
-        for (int idx=0; idx < count; idx++) {
+        for (int idx = 0; idx < count; idx++) {
             StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx);
             if (!memory) {
                 buf.append(" (declare (remember-match FALSE))" + LINEBREAK);
             } else {
-                 buf.append(LINEBREAK);
+                buf.append(LINEBREAK);
             }
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId \"" + idx + "\")" + LINEBREAK);
@@ -259,7 +291,7 @@ public class SimpleRuleGenerator2 {
             }
         }
     }
-    
+
     public static void main(String[] args) {
         if (args != null && args.length > 0) {
             SimpleRuleGenerator2 gen = new SimpleRuleGenerator2();
@@ -271,7 +303,7 @@ public class SimpleRuleGenerator2 {
             }
             gen.ruleType = type;
             gen.setFilename(args[1]);
-            gen.generateRules(count,memory);
+            gen.generateRules(count, memory);
             System.out.println("done!!");
         }
     }

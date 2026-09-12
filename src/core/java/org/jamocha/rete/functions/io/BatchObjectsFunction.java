@@ -12,15 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.io;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.IOException;
-import java.util.List;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -32,114 +26,115 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
-import org.jamocha.rete.util.IOUtilities;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rete.util.IOUtilities;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.util.List;
 
 /**
  * @author Peter Lin
- *
- * Functional will load a List<Object> from binary format and assert each
- * object. I assumes the data file is in binary format and the root
- * object is List<Object>.
+ *     <p>Functional will load a List<Object> from binary format and assert each object. I assumes
+ *     the data file is in binary format and the root object is List<Object>.
  */
 public class BatchObjectsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String BATCH = "batch-objects";
+    /** */
+    public static final String BATCH = "batch-objects";
 
-	/**
-	 * 
-	 */
-	public BatchObjectsFunction() {
-		super();
-	}
+    /** */
+    public BatchObjectsFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	/**
-	 * method will attempt to load one or more files. If batch is called without
-	 * any parameters, the function does nothing and just returns.
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector rv = new DefaultReturnVector();
-		if (params != null && params.length > 0) {
-			for (int idx = 0; idx < params.length; idx++) {
-				try {
+    /**
+     * method will attempt to load one or more files. If batch is called without any parameters, the
+     * function does nothing and just returns.
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector rv = new DefaultReturnVector();
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {
+                try {
                     String input = params[idx].getStringValue();
                     InputStream inStream;
                     inStream = IOUtilities.open(input);
                     this.parse(engine, inStream, rv);
                     inStream.close();
                 } catch (FileNotFoundException e) {
-					// we should report the error
-					rv.addReturnValue(new DefaultReturnValue(
-							ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
-                    engine.writeMessage(e.getMessage() + Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);
+                    // we should report the error
+                    rv.addReturnValue(
+                            new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
+                    engine.writeMessage(
+                            e.getMessage() + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
                 } catch (IOException e) {
-                    rv.addReturnValue(new DefaultReturnValue(
-                            ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
-                    engine.writeMessage(e.getMessage() + Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);
-				}
-			}
-		}
-		return rv;
-	}
+                    rv.addReturnValue(
+                            new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
+                    engine.writeMessage(
+                            e.getMessage() + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
+                }
+            }
+        }
+        return rv;
+    }
 
-	/**
-	 * method does the actual work of creating a CLIPSParser and parsing
-	 * the file.
-	 * @param engine
-	 * @param ins
-	 * @param rv
-	 */
-	public void parse(Rete engine, InputStream ins, DefaultReturnVector rv) {
-		try {
-			ObjectInputStream ois = new ObjectInputStream(ins);
-			@SuppressWarnings("unchecked") List<Object> data = (List<Object>)ois.readObject();
-			for (Object obj: data) {
-				Deftemplate templ = engine.findDeftemplate(obj.getClass());
-				engine.assertObject(obj, templ.getName(), false, true);
-			}
-			if (rv != null) {
-				rv.addReturnValue(new DefaultReturnValue(
-						ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
-			}
-		} catch (Exception e) {
-            engine.writeMessage(e.getMessage() + Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);
-		}
-	}
+    /**
+     * method does the actual work of creating a CLIPSParser and parsing the file.
+     *
+     * @param engine
+     * @param ins
+     * @param rv
+     */
+    public void parse(Rete engine, InputStream ins, DefaultReturnVector rv) {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(ins);
+            @SuppressWarnings("unchecked")
+            List<Object> data = (List<Object>) ois.readObject();
+            for (Object obj : data) {
+                Deftemplate templ = engine.findDeftemplate(obj.getClass());
+                engine.assertObject(obj, templ.getName(), false, true);
+            }
+            if (rv != null) {
+                rv.addReturnValue(new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
+            }
+        } catch (Exception e) {
+            engine.writeMessage(e.getMessage() + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
+        }
+    }
 
-	public String getName() {
-		return BATCH;
-	}
+    public String getName() {
+        return BATCH;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam.class };
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(batch-objects");
-			for (int idx = 0; idx < params.length; idx++) {
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" \"" + params[idx].getStringValue() + "\"");
-				}
-			}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(batch-objects <filename>)\n" +
-					"Command description:\n" +
-					"\tLoads and executes the file <filename>.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(batch-objects");
+            for (int idx = 0; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    buf.append(" ?" + bp.getVariableName());
+                } else if (params[idx] instanceof ValueParam) {
+                    buf.append(" \"" + params[idx].getStringValue() + "\"");
+                }
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(batch-objects <filename>)\n"
+                    + "Command description:\n"
+                    + "\tLoads and executes the file <filename>.";
+        }
+    }
 }

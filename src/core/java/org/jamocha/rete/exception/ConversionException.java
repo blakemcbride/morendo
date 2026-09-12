@@ -11,22 +11,17 @@
 package org.jamocha.rete.exception;
 
 /**
- * conversion exception is used to handle conversion of strings to
- * numbers and booleans.
+ * conversion exception is used to handle conversion of strings to numbers and booleans.
+ *
  * @author Peter Lin
  */
 public class ConversionException extends Exception {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * 
-     */
+    /** */
 
-    /**
-     * 
-     */
-    public ConversionException() {
-    }
+    /** */
+    public ConversionException() {}
 
     /**
      * @param message
@@ -49,5 +44,4 @@ public class ConversionException extends Exception {
     public ConversionException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

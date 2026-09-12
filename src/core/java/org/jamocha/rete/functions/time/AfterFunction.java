@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.time;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -29,81 +27,76 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
 /**
- * After function is used to evaluate 2 time values. The time can be a date,
- * calendar or long millisecond time. It isn't meant to be used to be used
- * for Conditional Elements like (after (date (day "tuesday") ) ).
- * That type of logic is difficult to support and problematic. Until someone
- * figures out an efficient way to implement that type of temporal logic
- * safely, efficiently and reliably, it will remain impractical.
- * 
- * For further reading, look at Allen's paper, which tries to address
- * those issues with transitive closure. At this time, his approach only
- * works for a limited number of cases and is not performant.
- * 
+ * After function is used to evaluate 2 time values. The time can be a date, calendar or long
+ * millisecond time. It isn't meant to be used to be used for Conditional Elements like (after (date
+ * (day "tuesday") ) ). That type of logic is difficult to support and problematic. Until someone
+ * figures out an efficient way to implement that type of temporal logic safely, efficiently and
+ * reliably, it will remain impractical.
+ *
+ * <p>For further reading, look at Allen's paper, which tries to address those issues with
+ * transitive closure. At this time, his approach only works for a limited number of cases and is
+ * not performant.
+ *
  * @author Peter Lin
  */
 public class AfterFunction extends AbstractTimeFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String AFTER = "after";
-	
-	public AfterFunction() {
-		super();
-	}
+    /** */
+    public static final String AFTER = "after";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean eval = Boolean.FALSE;
-		
-		if (params != null && params.length == 2) {
-			long time1 = getMillisecondTime(params[0].getValue(engine, ValueType.OBJECT));
-			long time2 = getMillisecondTime(params[1].getValue(engine, ValueType.OBJECT));
-			if (time1 > time2) {
-				eval = Boolean.TRUE;
-			}
-		}
+    public AfterFunction() {
+        super();
+    }
 
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = 
-			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean eval = Boolean.FALSE;
 
-	public String getName() {
-		return AFTER;
-	}
+        if (params != null && params.length == 2) {
+            long time1 = getMillisecondTime(params[0].getValue(engine, ValueType.OBJECT));
+            long time2 = getMillisecondTime(params[1].getValue(engine, ValueType.OBJECT));
+            if (time1 > time2) {
+                eval = Boolean.TRUE;
+            }
+        }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{Object.class, Object.class};
-	}
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public String getName() {
+        return AFTER;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(after ");
-			for (int idx=0; idx < params.length; idx++) {
-				if (idx > 0) {
-					buf.append(" ");
-				}
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam)params[idx];
-					buf.append(bp.toPPString());
-				} else if (params[idx] instanceof FunctionParam2) {
-					FunctionParam2 fp = (FunctionParam2)params[idx];
-					buf.append(fp.toPPString());
-				}
-			}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(after <time1> <time2>) \r the first time is after the second time.";
-		}
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {Object.class, Object.class};
+    }
 
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(after ");
+            for (int idx = 0; idx < params.length; idx++) {
+                if (idx > 0) {
+                    buf.append(" ");
+                }
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    buf.append(bp.toPPString());
+                } else if (params[idx] instanceof FunctionParam2) {
+                    FunctionParam2 fp = (FunctionParam2) params[idx];
+                    buf.append(fp.toPPString());
+                }
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(after <time1> <time2>) \r the first time is after the second time.";
+        }
+    }
 }

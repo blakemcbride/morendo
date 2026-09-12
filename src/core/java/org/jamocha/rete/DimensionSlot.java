@@ -17,29 +17,28 @@ package org.jamocha.rete;
 
 public class DimensionSlot extends BaseSlot {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private transient CubeDimension dimension = null;
-	
-	public DimensionSlot(CubeDimension dimension) {
-		this.dimension = dimension;
-		this.name = dimension.getName();
-	}
-	
-	public CubeDimension getDimension() {
-		return this.dimension;
-	}
-	
-	public Object clone() {
-		DimensionSlot clone = new DimensionSlot(this.dimension);
-		clone.setValueType(this.getValueType());
-		clone.setId(this.getId());
-		return clone;
-	}
-	
-	public String toPPString() {
-		return dimension.toPPString();
-	}
+    /** */
+    private static final long serialVersionUID = 1L;
+
+    private transient CubeDimension dimension = null;
+
+    public DimensionSlot(CubeDimension dimension) {
+        this.dimension = dimension;
+        this.name = dimension.getName();
+    }
+
+    public CubeDimension getDimension() {
+        return this.dimension;
+    }
+
+    public Object clone() {
+        DimensionSlot clone = new DimensionSlot(this.dimension);
+        clone.setValueType(this.getValueType());
+        clone.setId(this.getId());
+        return clone;
+    }
+
+    public String toPPString() {
+        return dimension.toPPString();
+    }
 }

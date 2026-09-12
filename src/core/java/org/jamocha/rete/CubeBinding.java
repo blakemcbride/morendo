@@ -1,49 +1,47 @@
 package org.jamocha.rete;
 
 public class CubeBinding extends Binding {
-	
-	/**
-	 * 
-	 */
-	private String templateName = null;
-	private String slotName = null;
-	private boolean join = false;
-	private boolean measure = false;
-	
-	public CubeBinding() {
-		super();
-	}
-	
-	public boolean isJoin() {
-		return join;
-	}
 
-	public void setJoin(boolean join) {
-		this.join = join;
-	}
+    /** */
+    private String templateName = null;
 
-	public String getTemplateName() {
-		return templateName;
-	}
+    private String slotName = null;
+    private boolean join = false;
+    private boolean measure = false;
 
-	public void setTemplateName(String templateName) {
-		this.templateName = templateName;
-	}
+    public CubeBinding() {
+        super();
+    }
 
-	public String getSlotName() {
-		return this.slotName;
-	}
-	
-	public void setSlotName(String name) {
-		this.slotName = name;
-	}
-	
-	public boolean isMeasure() {
-		return measure;
-	}
+    public boolean isJoin() {
+        return join;
+    }
 
-	public void setMeasure(boolean measure) {
-		this.measure = measure;
-	}
+    public void setJoin(boolean join) {
+        this.join = join;
+    }
 
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    public String getSlotName() {
+        return this.slotName;
+    }
+
+    public void setSlotName(String name) {
+        this.slotName = name;
+    }
+
+    public boolean isMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(boolean measure) {
+        this.measure = measure;
+    }
 }

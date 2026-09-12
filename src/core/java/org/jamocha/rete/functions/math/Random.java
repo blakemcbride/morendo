@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.math;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,67 +26,60 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Christian Ebert
- * 
- * Returns a double value with a positive sign, greater than or equal to 0.0 and less 
- * than 1.0. Returned values are chosen pseudorandomly with (approximately)
- * uniform distribution from that range.
+ *     <p>Returns a double value with a positive sign, greater than or equal to 0.0 and less than
+ *     1.0. Returned values are chosen pseudorandomly with (approximately) uniform distribution from
+ *     that range.
  */
 public class Random implements Function {
 
-	/**
-	 * 
-	 */
-	
-	public static final String RANDOM = "random";
+    /** */
+    public static final String RANDOM = "random";
 
+    public Random() {
+        super();
+    }
 
-	public Random() {
-		super();
-	}
+    public ValueType getReturnType() {
+        return ValueType.DOUBLE_PRIM;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.DOUBLE_PRIM;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        double dval = java.lang.Math.random();
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.DOUBLE_PRIM, dval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		double dval = java.lang.Math.random();	
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.DOUBLE_PRIM,
-				dval); 
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public String getName() {
+        return RANDOM;
+    }
 
-	public String getName() {
-		return RANDOM;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {};
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] {};
-	}
-
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length >= 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(random");
-				int idx = 0;
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else {
-					buf.append(" " + params[idx].getStringValue());
-				}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(random)\n" +
-			"Function description:\n" +
-			"\tReturns a random value between 0.0 and 1.0.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length >= 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(random");
+            int idx = 0;
+            if (params[idx] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[idx];
+                buf.append(" ?" + bp.getVariableName());
+            } else if (params[idx] instanceof ValueParam) {
+                buf.append(" " + params[idx].getStringValue());
+            } else {
+                buf.append(" " + params[idx].getStringValue());
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(random)\n"
+                    + "Function description:\n"
+                    + "\tReturns a random value between 0.0 and 1.0.";
+        }
+    }
 }

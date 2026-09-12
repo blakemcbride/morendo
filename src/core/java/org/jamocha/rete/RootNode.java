@@ -12,63 +12,56 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
-
-import java.util.Iterator;
-import java.util.Map;
 
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rete.query.QueryRootNode;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @author Peter Lin
- * 
- * RootNode does not extend BaseNode like all other RETE nodes. This is
- * done for a couple of reasons.<br/>
- * <ul>
- * <li> RootNode doesn't need to have a memory </li>
- * <li> RootNode only has ObjectTypeNode for successors</li>
- * <li> RootNode doesn't need the toPPString and other string methods</li>
- * </ul>
- * In the future, the design may change. For now, I've decided to keep
- * it as simple as necessary.
+ *     <p>RootNode does not extend BaseNode like all other RETE nodes. This is done for a couple of
+ *     reasons.<br>
+ *     <ul>
+ *       <li>RootNode doesn't need to have a memory
+ *       <li>RootNode only has ObjectTypeNode for successors
+ *       <li>RootNode doesn't need the toPPString and other string methods
+ *     </ul>
+ *     In the future, the design may change. For now, I've decided to keep it as simple as
+ *     necessary.
  */
 public class RootNode {
 
-    /**
-     * 
-     */
-   	protected Map<Template, ObjectTypeNode> inputNodes = null;
+    /** */
+    protected Map<Template, ObjectTypeNode> inputNodes = null;
+
+    /** */
+    public RootNode(Rete engine) {
+        super();
+        inputNodes = engine.newMap();
+    }
 
     /**
-	 * 
-	 */
-	public RootNode(Rete engine) {
-		super();
-		inputNodes = engine.newMap();
-	}
-    
-    /**
-     * Add a new ObjectTypeNode. The implementation will check to see
-     * if the node already exists. It will only add the node if it
-     * doesn't already exist in the network.
+     * Add a new ObjectTypeNode. The implementation will check to see if the node already exists. It
+     * will only add the node if it doesn't already exist in the network.
+     *
      * @param node
      */
     public void addObjectTypeNode(ObjectTypeNode node) {
-        if (!this.inputNodes.containsKey(node.getDeftemplate()) ) {
-            this.inputNodes.put(node.getDeftemplate(),node);
+        if (!this.inputNodes.containsKey(node.getDeftemplate())) {
+            this.inputNodes.put(node.getDeftemplate(), node);
         }
     }
-    
+
     /**
-     * The current implementation just removes the ObjectTypeNode
-     * and doesn't prevent the removal. The method should be called
-     * with care, since removing the ObjectTypeNode can have serious
-     * negative effects. This would generally occur when an undeftemplate
-     * occurs.
+     * The current implementation just removes the ObjectTypeNode and doesn't prevent the removal.
+     * The method should be called with care, since removing the ObjectTypeNode can have serious
+     * negative effects. This would generally occur when an undeftemplate occurs.
      */
     public void removeObjectTypeNode(ObjectTypeNode node) {
         this.inputNodes.remove(node.getDeftemplate());
@@ -76,111 +69,111 @@ public class RootNode {
 
     /**
      * Return the HashMap with all the ObjectTypeNodes
+     *
      * @return
      */
-	public Map<?, ?> getObjectTypeNodes() {
+    public Map<?, ?> getObjectTypeNodes() {
         return this.inputNodes;
     }
-    
+
     /**
      * assertObject begins the pattern matching
+     *
      * @param fact
      * @param engine
      * @param mem
      * @throws AssertException
      */
     public synchronized void assertObject(Fact fact, Rete engine, WorkingMemory mem)
-    throws AssertException
-    {
+            throws AssertException {
         // we assume Rete has already checked to see if the object
         // has been added to the working memory, so we just assert.
         // we need to lookup the defclass and deftemplate to assert
         // the object to the network
         ObjectTypeNode otn = this.inputNodes.get(fact.getDeftemplate());
         if (otn != null) {
-            otn.assertFact(fact,engine,mem);
+            otn.assertFact(fact, engine, mem);
         }
         if (fact.getDeftemplate().getParent() != null) {
-            assertObjectParent(fact,fact.getDeftemplate().getParent(),engine,mem);
+            assertObjectParent(fact, fact.getDeftemplate().getParent(), engine, mem);
         }
     }
-    
+
     /**
      * Method will get the deftemplate's parent and do a lookup
+     *
      * @param fact
      * @param templates
      * @throws AssertException
      */
-    public synchronized void assertObjectParent(Fact fact, Template template, 
-            Rete engine, WorkingMemory mem)
-    throws AssertException
-    {
+    public synchronized void assertObjectParent(
+            Fact fact, Template template, Rete engine, WorkingMemory mem) throws AssertException {
         ObjectTypeNode otn = this.inputNodes.get(template);
         if (otn != null) {
-            otn.assertFact(fact,engine,mem);
+            otn.assertFact(fact, engine, mem);
         }
         if (template.getParent() != null) {
-            assertObjectParent(fact,template.getParent(),engine,mem);
+            assertObjectParent(fact, template.getParent(), engine, mem);
         }
     }
-    
+
     /**
      * Retract an object from the Working memory
+     *
      * @param objInstance
      */
     public synchronized void retractObject(Fact fact, Rete engine, WorkingMemory mem)
-    throws RetractException
-    {
+            throws RetractException {
         ObjectTypeNode otn = this.inputNodes.get(fact.getDeftemplate());
         if (otn != null) {
-            otn.retractFact(fact,engine,mem);
+            otn.retractFact(fact, engine, mem);
         }
         if (fact.getDeftemplate().getParent() != null) {
-            retractObjectParent(fact,fact.getDeftemplate().getParent(),engine,mem);
+            retractObjectParent(fact, fact.getDeftemplate().getParent(), engine, mem);
         }
     }
-    
+
     /**
      * Method will get the deftemplate's parent and do a lookup
+     *
      * @param fact
      * @param templates
      * @throws AssertException
      */
-    public synchronized void retractObjectParent(Fact fact, Template template, 
-            Rete engine, WorkingMemory mem)
-    throws RetractException
-    {
+    public synchronized void retractObjectParent(
+            Fact fact, Template template, Rete engine, WorkingMemory mem) throws RetractException {
         ObjectTypeNode otn = this.inputNodes.get(template);
         if (otn != null) {
-            otn.retractFact(fact,engine,mem);
+            otn.retractFact(fact, engine, mem);
         }
         if (template.getParent() != null) {
-            retractObjectParent(fact,template.getParent(),engine,mem);
+            retractObjectParent(fact, template.getParent(), engine, mem);
         }
     }
-    
-	public synchronized void clear() {
+
+    public synchronized void clear() {
         Iterator<?> itr = this.inputNodes.values().iterator();
         while (itr.hasNext()) {
-            ObjectTypeNode otn = (ObjectTypeNode)itr.next();
+            ObjectTypeNode otn = (ObjectTypeNode) itr.next();
             otn.clearSuccessors();
         }
-    	this.inputNodes.clear();
+        this.inputNodes.clear();
     }
-    
+
     /**
-     * Method will create QueryRootNode and add a clone of each ObjectTypeNode. We do this
-     * so the query network is completely separate from the RETE network.
+     * Method will create QueryRootNode and add a clone of each ObjectTypeNode. We do this so the
+     * query network is completely separate from the RETE network.
+     *
      * @param engine
      * @return
      */
-	public QueryRootNode createQueryRoot(Rete engine) {
-    	QueryRootNode queryRoot = new QueryRootNode(engine, this);
-    	Iterator<?> iterator = this.inputNodes.values().iterator();
-    	while (iterator.hasNext()) {
-    		ObjectTypeNode otn = (ObjectTypeNode)iterator.next();
-    		queryRoot.addQueryObjTypeNode(otn.createQueryObjTypeNode(engine));
-    	}
-    	return queryRoot;
+    public QueryRootNode createQueryRoot(Rete engine) {
+        QueryRootNode queryRoot = new QueryRootNode(engine, this);
+        Iterator<?> iterator = this.inputNodes.values().iterator();
+        while (iterator.hasNext()) {
+            ObjectTypeNode otn = (ObjectTypeNode) iterator.next();
+            queryRoot.addQueryObjTypeNode(otn.createQueryObjTypeNode(engine));
+        }
+        return queryRoot;
     }
 }

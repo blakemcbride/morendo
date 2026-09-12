@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
 
@@ -20,38 +20,31 @@ import org.jamocha.rete.Constants;
 
 /**
  * @author Peter Lin
- *
  */
 public class WarningSummary implements Summary {
 
-	/**
-	 * 
-	 */
-	private String[] warnings = new String[0];
+    /** */
+    private String[] warnings = new String[0];
 
+    public WarningSummary() {}
 
-	public WarningSummary() {
-	}
+    public void addMessage(String reason) {
+        int len = this.warnings.length;
+        String[] newwarn = new String[len + 1];
+        System.arraycopy(this.warnings, 0, newwarn, 0, this.warnings.length);
+        newwarn[len] = reason;
+        this.warnings = newwarn;
+    }
 
-	public void addMessage(String reason) {
-		int len = this.warnings.length;
-		String[] newwarn = new String[len + 1];
-		System.arraycopy(this.warnings, 0, newwarn, 0, this.warnings.length);
-		newwarn[len] = reason;
-		this.warnings = newwarn;
+    public String getMessage() {
+        StringBuilder buf = new StringBuilder();
+        for (int idx = 0; idx < this.warnings.length; idx++) {
+            buf.append(this.warnings[idx] + Constants.LINEBREAK);
+        }
+        return buf.toString();
+    }
 
-	}
-
-	public String getMessage() {
-		StringBuilder buf = new StringBuilder();
-		for (int idx=0; idx < this.warnings.length; idx++) {
-			buf.append(this.warnings[idx] + Constants.LINEBREAK);
-		}
-		return buf.toString();
-	}
-
-	public String[] getMessages() {
-		return warnings;
-	}
-
+    public String[] getMessages() {
+        return warnings;
+    }
 }

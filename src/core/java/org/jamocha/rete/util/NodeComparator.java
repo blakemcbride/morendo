@@ -1,17 +1,16 @@
 package org.jamocha.rete.util;
 
-import java.util.Comparator;
-
 import org.jamocha.rete.BaseNode;
+
+import java.util.Comparator;
 
 public class NodeComparator implements Comparator<Object> {
 
-    public NodeComparator() {
-    }
+    public NodeComparator() {}
 
     public int compare(Object left, Object right) {
         if (left instanceof BaseNode lnode && right instanceof BaseNode) {
-            BaseNode rnode = (BaseNode)right;
+            BaseNode rnode = (BaseNode) right;
             if (lnode.getNodeId() > rnode.getNodeId()) {
                 return 1;
             }
@@ -20,5 +19,4 @@ public class NodeComparator implements Comparator<Object> {
             return 0;
         }
     }
-
 }

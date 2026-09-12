@@ -6,6 +6,6 @@ public class ReadNumber implements ReadMacro {
     public ReadNumber() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getNumber();
+        return ((woolfel.examples.model.Account) instance).getNumber();
     }
 }

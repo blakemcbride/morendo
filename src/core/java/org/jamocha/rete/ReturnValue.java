@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -21,31 +21,29 @@ import java.math.BigInteger;
 
 /**
  * @author Peter Lin
- *
- * ReturnValue defines the base methods to get the value and type of
- * the return value. Since users will be able to use CLIPS syntax
- * to define functions, we provide this functionality.
+ *     <p>ReturnValue defines the base methods to get the value and type of the return value. Since
+ *     users will be able to use CLIPS syntax to define functions, we provide this functionality.
  */
 public sealed interface ReturnValue permits Parameter {
     ValueType getValueType();
-    
+
     Object getValue();
-    
+
     String getStringValue();
-    
+
     boolean getBooleanValue() throws ClassCastException;
-    
+
     int getIntValue() throws NumberFormatException;
-    
+
     short getShortValue() throws NumberFormatException;
-    
+
     long getLongValue() throws NumberFormatException;
-    
+
     float getFloatValue() throws NumberFormatException;
-    
+
     double getDoubleValue() throws NumberFormatException;
 
     BigInteger getBigIntegerValue() throws NumberFormatException;
-    
+
     BigDecimal getBigDecimalValue() throws NumberFormatException;
 }

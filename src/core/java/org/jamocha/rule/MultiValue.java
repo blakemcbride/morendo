@@ -12,54 +12,48 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
 
-
 /**
- * @author Peter Lin
- * The purpose of the class is for conditions that have & or |. For
- * example (name "bob" | "mike" | "jordan"), (name ~"mike" & ~"bob")
- * In those cases, we don't want to create a Literal constraint, since
- * they are all for the same slot.
+ * @author Peter Lin The purpose of the class is for conditions that have & or |. For example (name
+ *     "bob" | "mike" | "jordan"), (name ~"mike" & ~"bob") In those cases, we don't want to create a
+ *     Literal constraint, since they are all for the same slot.
  */
 public class MultiValue {
 
-	/**
-	 * 
-	 */
-	
-	protected Object value = null;
-	protected boolean negated = false;
-	
-	
-	public MultiValue() {
-		super();
-	}
-	
-	public MultiValue(Object val) {
-		setValue(val);
-	}
-	
-	public MultiValue(Object val, boolean neg) {
-		setValue(val);
-		this.negated = neg;
-	}
+    /** */
+    protected Object value = null;
 
-	public final void setValue(Object val) {
-		this.value = val;
-	}
-	
-	public Object getValue() {
-		return this.value;
-	}
-	
-	public void setNegated(boolean neg) {
-		this.negated = neg;
-	}
-	
-	public boolean getNegated() {
-		return this.negated;
-	}
+    protected boolean negated = false;
+
+    public MultiValue() {
+        super();
+    }
+
+    public MultiValue(Object val) {
+        setValue(val);
+    }
+
+    public MultiValue(Object val, boolean neg) {
+        setValue(val);
+        this.negated = neg;
+    }
+
+    public final void setValue(Object val) {
+        this.value = val;
+    }
+
+    public Object getValue() {
+        return this.value;
+    }
+
+    public void setNegated(boolean neg) {
+        this.negated = neg;
+    }
+
+    public boolean getNegated() {
+        return this.negated;
+    }
 }

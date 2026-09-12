@@ -12,83 +12,70 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.strategies;
-
 
 import org.jamocha.rete.Activation;
 import org.jamocha.rete.ActivationList;
 import org.jamocha.rete.Fact;
 import org.jamocha.rete.Strategy;
 
-
 /**
  * @author Peter Lin
- *
- * 
  */
 public class RecencyStrategy implements Strategy {
 
-	/**
-     * 
-     */
+    /** */
 
-    /**
-	 * 
-	 */
-	public RecencyStrategy() {
-		super();
-	}
+    /** */
+    public RecencyStrategy() {
+        super();
+    }
 
     public String getName() {
         return "recency";
     }
 
-	/**
-	 * Current implementation will check which order the list is and call
-	 * the appropriate method
-	 */
-	public void addActivation(ActivationList thelist, Activation newActivation) {
+    /** Current implementation will check which order the list is and call the appropriate method */
+    public void addActivation(ActivationList thelist, Activation newActivation) {
         thelist.addActivation(newActivation);
-	}
+    }
 
-	/**
-	 * Current implementation will check which order the list is and call
-	 * the appropriate method
-	 */
-	public Activation nextActivation(ActivationList thelist) {
+    /** Current implementation will check which order the list is and call the appropriate method */
+    public Activation nextActivation(ActivationList thelist) {
         return thelist.nextActivation();
-	}
+    }
 
-	/**
-	 * The method first compares the salience. If the salience is equal,
-	 * we then compare the aggregate time.
-	 * @param left
-	 * @param right
-	 * @return
-	 */
-	public int compare(Activation left, Activation right) {
-		if (right != null) {
-			if (left.getRule().getSalience() == right.getRule().getSalience()) {
-                // we compare the facts based on how recent it is
-                return compareRecency(left,right);
-			} else {
-				if (left.getRule().getSalience() > right.getRule().getSalience()) {
-					return 1;
-				} else {
-					return -1;
-				}
-			}
-		} else {
-			return 1;
-		}
-	}
-    
     /**
-     * compare will look to see which activation has more facts.
-     * it will first compare the timestamp of the facts. If the facts
-     * are equal, it will return the activation with more facts.
+     * The method first compares the salience. If the salience is equal, we then compare the
+     * aggregate time.
+     *
+     * @param left
+     * @param right
+     * @return
+     */
+    public int compare(Activation left, Activation right) {
+        if (right != null) {
+            if (left.getRule().getSalience() == right.getRule().getSalience()) {
+                // we compare the facts based on how recent it is
+                return compareRecency(left, right);
+            } else {
+                if (left.getRule().getSalience() > right.getRule().getSalience()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        } else {
+            return 1;
+        }
+    }
+
+    /**
+     * compare will look to see which activation has more facts. it will first compare the timestamp
+     * of the facts. If the facts are equal, it will return the activation with more facts.
+     *
      * @param left
      * @param right
      * @return
@@ -101,7 +88,7 @@ public class RecencyStrategy implements Strategy {
             len = rfacts.length;
         }
         // first we compare the time stamp
-        for (int idx=0; idx < len; idx++) {
+        for (int idx = 0; idx < len; idx++) {
             if (lfacts[idx].timeStamp() > rfacts[idx].timeStamp()) {
                 return 1;
             } else if (lfacts[idx].timeStamp() < rfacts[idx].timeStamp()) {
@@ -115,7 +102,7 @@ public class RecencyStrategy implements Strategy {
             return -1;
         }
         // next we compare the fact id
-        for (int idx=0; idx < len; idx++) {
+        for (int idx = 0; idx < len; idx++) {
             if (lfacts[idx].getFactId() > rfacts[idx].getFactId()) {
                 return 1;
             } else if (lfacts[idx].getFactId() < rfacts[idx].getFactId()) {

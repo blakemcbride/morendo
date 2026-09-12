@@ -6,6 +6,6 @@ public class WriteAccountId implements WriteMacro {
     public WriteAccountId() {}
 
     public void setProperty(Object instance, Object value) {
-        ((woolfel.examples.model.Account)instance).setAccountId((java.lang.String)value);
+        ((woolfel.examples.model.Account) instance).setAccountId((java.lang.String) value);
     }
 }

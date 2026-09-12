@@ -12,23 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.measures;
-
-import java.util.List;
 
 import org.jamocha.rete.Cube;
 import org.jamocha.rete.Rete;
 
+import java.util.List;
+
 public interface DatasetMeasure extends Measure {
-	/**
-	 * Concrete implementation should return a list of objects that satisfy
-	 * the query parameters
-	 * @param engine
-	 * @param cube
-	 * @param parameters
-	 * @return
-	 */
-		Object[] filterResults(Rete engine, Cube cube, List<?> data, List<?> parameters);
+    /**
+     * Concrete implementation should return a list of objects that satisfy the query parameters
+     *
+     * @param engine
+     * @param cube
+     * @param parameters
+     * @return
+     */
+    Object[] filterResults(Rete engine, Cube cube, List<?> data, List<?> parameters);
 }

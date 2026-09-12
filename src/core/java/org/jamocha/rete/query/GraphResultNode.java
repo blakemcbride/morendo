@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.query;
 
@@ -25,48 +25,47 @@ import org.jamocha.rule.Defquery;
 import org.jamocha.rule.GraphQuery;
 
 /**
- * GraphResultNode takes the last fact in the graph query and adds it to 
- * the list
- * 
- * @author peter
+ * GraphResultNode takes the last fact in the graph query and adds it to the list
  *
+ * @author peter
  */
 public class GraphResultNode extends QueryResultNode {
 
-	/**
-	 * 
-	 */
-	private volatile GraphQuery gquery = null;
-	
-	public GraphResultNode(int id) {
-		super(id);
-	}
+    /** */
+    private volatile GraphQuery gquery = null;
 
-	public Defquery getGraphQuery() {
-		return gquery;
-	}
+    public GraphResultNode(int id) {
+        super(id);
+    }
 
-	public void setGraphQuery(GraphQuery query) {
-		this.gquery = query;
-	}
+    public Defquery getGraphQuery() {
+        return gquery;
+    }
 
-	@Override
-	public void addResult(Index facts, Rete engine, WorkingMemory mem) {
-		if (this.watch) {
-    		engine.writeMessage("GraphResultNode (" + this.nodeID + ") :: " + 
-    				facts.toPPString() + Constants.LINEBREAK);
+    public void setGraphQuery(GraphQuery query) {
+        this.gquery = query;
+    }
 
-		}
-		Fact[] result = facts.getFacts();
-		if (result.length > 0) {
-			results.add(result[result.length - 1]);
-		}
-	}
-	
-	public GraphResultNode clone(Rete engine, GraphQuery query) {
-		GraphResultNode clone = new GraphResultNode(engine.nextNodeId());
-		clone.gquery = query;
-		query.setQueryResultNode(clone);
-		return clone;
-	}
+    @Override
+    public void addResult(Index facts, Rete engine, WorkingMemory mem) {
+        if (this.watch) {
+            engine.writeMessage(
+                    "GraphResultNode ("
+                            + this.nodeID
+                            + ") :: "
+                            + facts.toPPString()
+                            + Constants.LINEBREAK);
+        }
+        Fact[] result = facts.getFacts();
+        if (result.length > 0) {
+            results.add(result[result.length - 1]);
+        }
+    }
+
+    public GraphResultNode clone(Rete engine, GraphQuery query) {
+        GraphResultNode clone = new GraphResultNode(engine.nextNodeId());
+        clone.gquery = query;
+        query.setQueryResultNode(clone);
+        return clone;
+    }
 }

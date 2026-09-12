@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.messaging.agent;
 
@@ -20,85 +20,91 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AgentEntry {
-	private String hostname;
-	private String IPAddress;
-	private String application;
-	private String agentApplicationName;
-	private String agentApplicationVersion;
-	private long timestamp;
-	private List<String> ruleNames = new ArrayList<>();
-	
-	public AgentEntry() {
-		super();
-	}
+    private String hostname;
+    private String IPAddress;
+    private String application;
+    private String agentApplicationName;
+    private String agentApplicationVersion;
+    private long timestamp;
+    private List<String> ruleNames = new ArrayList<>();
 
-	public String getKey() {
-		return this.IPAddress + "::" + this.hostname +
-		"::" + this.application + "::" + this.agentApplicationName +
-		"::" + this.agentApplicationVersion;
-	}
-	
-	public String getHostname() {
-		return hostname;
-	}
+    public AgentEntry() {
+        super();
+    }
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
+    public String getKey() {
+        return this.IPAddress
+                + "::"
+                + this.hostname
+                + "::"
+                + this.application
+                + "::"
+                + this.agentApplicationName
+                + "::"
+                + this.agentApplicationVersion;
+    }
 
-	public String getIPAddress() {
-		return IPAddress;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
-	public void setIPAddress(String iPAddress) {
-		IPAddress = iPAddress;
-	}
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
 
-	public String getApplication() {
-		return application;
-	}
+    public String getIPAddress() {
+        return IPAddress;
+    }
 
-	public void setApplication(String application) {
-		this.application = application;
-	}
+    public void setIPAddress(String iPAddress) {
+        IPAddress = iPAddress;
+    }
 
-	public String getAgentApplicationName() {
-		return agentApplicationName;
-	}
+    public String getApplication() {
+        return application;
+    }
 
-	public void setAgentApplicationName(String agentApplicationName) {
-		this.agentApplicationName = agentApplicationName;
-	}
+    public void setApplication(String application) {
+        this.application = application;
+    }
 
-	public String getAgentApplicationVersion() {
-		return agentApplicationVersion;
-	}
+    public String getAgentApplicationName() {
+        return agentApplicationName;
+    }
 
-	public void setAgentApplicationVersion(String agentApplicationVersion) {
-		this.agentApplicationVersion = agentApplicationVersion;
-	}
-	
-	public long getTimestamp() {
-		return this.timestamp;
-	}
-	
-	public void setTimestamp(long ms) {
-		this.timestamp = ms;
-	}
-	
-	public List<String> getRules() {
-		return this.ruleNames;
-	}
-	
-	public void removeRule(String name) {
-		this.ruleNames.remove(name);
-	}
-	
-	public void addRule(String name) {
-		this.ruleNames.add(name);
-	}
-	
-	public void removeAllRules() {
-		this.ruleNames.clear();
-	}
+    public void setAgentApplicationName(String agentApplicationName) {
+        this.agentApplicationName = agentApplicationName;
+    }
+
+    public String getAgentApplicationVersion() {
+        return agentApplicationVersion;
+    }
+
+    public void setAgentApplicationVersion(String agentApplicationVersion) {
+        this.agentApplicationVersion = agentApplicationVersion;
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    public void setTimestamp(long ms) {
+        this.timestamp = ms;
+    }
+
+    public List<String> getRules() {
+        return this.ruleNames;
+    }
+
+    public void removeRule(String name) {
+        this.ruleNames.remove(name);
+    }
+
+    public void addRule(String name) {
+        this.ruleNames.add(name);
+    }
+
+    public void removeAllRules() {
+        this.ruleNames.clear();
+    }
 }

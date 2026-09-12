@@ -12,52 +12,43 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
-
-import java.util.Iterator;
-import java.util.Map;
 
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rete.util.NodeUtils;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @author Peter Lin
- * 
- * HashEqNJoin stands for Hashed Equal NotJoin. It is different from
- * NotJoin. The right facts are hashed to improve performance. This means
- * the node performs index joins to see if there's a matching facts on
- * the right side. If there is, the node will propogate without
- * performing evaluation. We can do this because only facts that match
- * would have the same index.
+ *     <p>HashEqNJoin stands for Hashed Equal NotJoin. It is different from NotJoin. The right facts
+ *     are hashed to improve performance. This means the node performs index joins to see if there's
+ *     a matching facts on the right side. If there is, the node will propogate without performing
+ *     evaluation. We can do this because only facts that match would have the same index.
  */
 public class HashedEqNJoin extends BaseJoin {
 
-    /**
-     * 
-     */
-
-    public HashedEqNJoin(int id){
+    /** */
+    public HashedEqNJoin(int id) {
         super(id);
     }
 
     /**
-     * assertLeft takes an array of facts. Since the next join may be
-     * joining against one or more objects, we need to pass all
-     * previously matched facts.
+     * assertLeft takes an array of facts. Since the next join may be joining against one or more
+     * objects, we need to pass all previously matched facts.
+     *
      * @param factInstance
      * @param engine
      */
-	public void assertLeft(Index linx, Rete engine, WorkingMemory mem) 
-    throws AssertException
-    {
+    public void assertLeft(Index linx, Rete engine, WorkingMemory mem) throws AssertException {
         Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
         leftmem.put(linx, linx);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        HashedAlphaMemoryImpl rightmem = mem
-                .getBetaRightMemory(this);
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds, linx.getFacts()));
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
         // we don't bother adding the right fact to the left, since
         // the right side is already Hashed
         if (rightmem.count(inx) == 0) {
@@ -66,82 +57,72 @@ public class HashedEqNJoin extends BaseJoin {
     }
 
     /**
-	 * Assert from the right side is always going to be from an Alpha node.
-	 * 
-	 * @param factInstance
-	 * @param engine
-	 */
-	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
-    throws AssertException
-    {
-        // get the memory for the node
-		HashedAlphaMemoryImpl rightmem = mem
-				.getBetaRightMemory(this);
-		EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
-		rightmem.addPartialMatch(inx, rfact, engine);
-		int after = rightmem.count(inx);
-		Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-		Iterator<?> itr = leftmem.values().iterator();
-		while (itr.hasNext()) {
-			Index linx = (Index) itr.next();
-			if (this.evaluate(linx.getFacts(), rfact)) {
-				if (after == 1) {
-					// we have to retract
-					try {
-						this.propagateRetract(linx, engine, mem);
-					} catch (RetractException e) {
-						throw new AssertException("NotJion - " + e.getMessage());
-					}
-				}
-			}
-		}
-
-    }
-
-    /**
-	 * Retracting from the left is different than retractRight for couple of
-	 * reasons.
-	 * <ul>
-	 * <li> NotJoin will only propogate the facts from the left</li>
-	 * <li> NotJoin never needs to merge the left and right</li>
-	 * </ul>
-	 * 
-	 * @param factInstance
-	 * @param engine
-	 */
-	public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
-    throws RetractException
-    {
-        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-        leftmem.remove(linx);
-        this.propagateRetract(linx,engine,mem);
-    }
-    
-    /**
-     * Retract from the right works in the following order.
-     * 1. remove the fact from the right memory
-     * 2. check which left memory matched
-     * 3. propogate the retract
+     * Assert from the right side is always going to be from an Alpha node.
+     *
      * @param factInstance
      * @param engine
      */
-	public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
-    throws RetractException
-    {
-        HashedAlphaMemoryImpl rightmem = 
-            mem.getBetaRightMemory(this);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
+    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
+        // get the memory for the node
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds, rfact));
+        rightmem.addPartialMatch(inx, rfact, engine);
+        int after = rightmem.count(inx);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+        Iterator<?> itr = leftmem.values().iterator();
+        while (itr.hasNext()) {
+            Index linx = (Index) itr.next();
+            if (this.evaluate(linx.getFacts(), rfact)) {
+                if (after == 1) {
+                    // we have to retract
+                    try {
+                        this.propagateRetract(linx, engine, mem);
+                    } catch (RetractException e) {
+                        throw new AssertException("NotJion - " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Retracting from the left is different than retractRight for couple of reasons.
+     *
+     * <ul>
+     *   <li>NotJoin will only propogate the facts from the left
+     *   <li>NotJoin never needs to merge the left and right
+     * </ul>
+     *
+     * @param factInstance
+     * @param engine
+     */
+    public void retractLeft(Index linx, Rete engine, WorkingMemory mem) throws RetractException {
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+        leftmem.remove(linx);
+        this.propagateRetract(linx, engine, mem);
+    }
+
+    /**
+     * Retract from the right works in the following order. 1. remove the fact from the right memory
+     * 2. check which left memory matched 3. propogate the retract
+     *
+     * @param factInstance
+     * @param engine
+     */
+    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem) throws RetractException {
+        HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds, rfact));
         // remove the fact from the right
-        int after = rightmem.removePartialMatch(inx,rfact);
-        if (after == 0){
+        int after = rightmem.removePartialMatch(inx, rfact);
+        if (after == 0) {
             // now we see the left memory matched and remove it also
             Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
             Iterator<?> itr = leftmem.values().iterator();
-            while (itr.hasNext()){
-                Index linx = (Index)itr.next();
-                if (this.evaluate(linx.getFacts(), rfact)){
+            while (itr.hasNext()) {
+                Index linx = (Index) itr.next();
+                if (this.evaluate(linx.getFacts(), rfact)) {
                     try {
-                        propagateAssert(linx,engine,mem);
+                        propagateAssert(linx, engine, mem);
                     } catch (AssertException e) {
                         throw new RetractException("NotJion - " + e.getMessage());
                     }
@@ -152,18 +133,18 @@ public class HashedEqNJoin extends BaseJoin {
     }
 
     /**
-     * Method will use the right binding to perform the evaluation
-     * of the join. Since we are building joins similar to how
-     * CLIPS and other rule engines handle it, it means 95% of the
+     * Method will use the right binding to perform the evaluation of the join. Since we are
+     * building joins similar to how CLIPS and other rule engines handle it, it means 95% of the
      * time the right fact list only has 1 fact.
+     *
      * @param leftlist
      * @param right
      * @return
      */
-    public boolean evaluate(Fact[] leftlist, Fact right){
+    public boolean evaluate(Fact[] leftlist, Fact right) {
         boolean eval = true;
         // we iterate over the binds and evaluate the facts
-        for (int idx=0; idx < this.binds.length; idx++){
+        for (int idx = 0; idx < this.binds.length; idx++) {
             // we got the binding
             Binding bnd = binds[idx];
             eval = bnd.evaluate(leftlist, right);
@@ -173,23 +154,23 @@ public class HashedEqNJoin extends BaseJoin {
         }
         return eval;
     }
-    
+
     /**
-     * NotJoin has to have a special addSuccessorNode since it needs
-     * to just propogate the left facts if it has zero matches.
+     * NotJoin has to have a special addSuccessorNode since it needs to just propogate the left
+     * facts if it has zero matches.
      */
-	public void addSuccessorNode(TerminalNode node, Rete engine,
-            WorkingMemory mem) throws AssertException {
+    public void addSuccessorNode(TerminalNode node, Rete engine, WorkingMemory mem)
+            throws AssertException {
         if (addNode(node)) {
             // first, we get the memory for this node
             Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
             // now we iterate over the entry set
             for (Object omem : leftmem.values()) {
                 if (omem instanceof BetaMemory bmem) {
-                    EqHashIndex inx = 
-                        new EqHashIndex(NodeUtils.getLeftValues(this.binds,bmem.getLeftFacts()));
-                    HashedAlphaMemoryImpl rightmem = mem
-                            .getBetaRightMemory(this);
+                    EqHashIndex inx =
+                            new EqHashIndex(
+                                    NodeUtils.getLeftValues(this.binds, bmem.getLeftFacts()));
+                    HashedAlphaMemoryImpl rightmem = mem.getBetaRightMemory(this);
                     // we don't bother adding the right fact to the left, since
                     // the right side is already Hashed
                     if (rightmem.count(inx) == 0) {
@@ -200,14 +181,12 @@ public class HashedEqNJoin extends BaseJoin {
         }
     }
 
-    /**
-     * method returns a simple format for the node
-     */
-    public String toString(){
+    /** method returns a simple format for the node */
+    public String toString() {
         StringBuilder buf = new StringBuilder();
         buf.append("HashedEqNJoin- ");
-        for (int idx=0; idx < this.binds.length; idx++){
-            if (idx > 0){
+        for (int idx = 0; idx < this.binds.length; idx++) {
+            if (idx > 0) {
                 buf.append(" && ");
             }
             buf.append(this.binds[idx].toBindString());
@@ -215,14 +194,12 @@ public class HashedEqNJoin extends BaseJoin {
         return buf.toString();
     }
 
-    /**
-     * The current implementation is similar to BetaNode
-     */
-    public String toPPString(){
+    /** The current implementation is similar to BetaNode */
+    public String toPPString() {
         StringBuilder buf = new StringBuilder();
         buf.append("HashedEqNJoin-" + this.nodeID + "> ");
-        for (int idx=0; idx < this.binds.length; idx++){
-            if (idx > 0){
+        for (int idx = 0; idx < this.binds.length; idx++) {
+            if (idx > 0) {
                 buf.append(" && ");
             }
             buf.append(this.binds[idx].toPPString());

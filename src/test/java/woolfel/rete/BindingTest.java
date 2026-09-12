@@ -12,122 +12,119 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rete;
 
-import org.jamocha.rete.HashedEqBNode;
-import org.jamocha.rete.Binding;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.jamocha.rete.Binding;
+import org.jamocha.rete.HashedEqBNode;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Peter Lin
- *
- * Tests for binding class. The test will create some bindings
- * and create betaNodes.
+ *     <p>Tests for binding class. The test will create some bindings and create betaNodes.
  */
 public class BindingTest {
 
-
-
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         System.out.println("this test does not do any setup");
     }
-    
+
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         System.out.println("this test does not do any teardown");
     }
-    
+
     @Test
-    public void testSingleBinding(){
+    public void testSingleBinding() {
 
         Binding bn = new Binding();
         bn.setLeftRow(0);
         bn.setLeftIndex(0);
         bn.setRightIndex(0);
-        
+
         Binding[] binds = {bn};
         HashedEqBNode btnode = new HashedEqBNode(1);
         btnode.setBindings(binds);
-        
+
         System.out.println("betaNode::" + btnode.toPPString());
         assertNotNull(btnode.toPPString());
     }
-    
+
     @Test
-    public void testTwoBinding(){
+    public void testTwoBinding() {
 
         Binding bn = new Binding();
         bn.setLeftRow(0);
         bn.setLeftIndex(0);
         bn.setRightIndex(0);
-        
+
         Binding bn2 = new Binding();
         bn2.setLeftRow(0);
         bn2.setLeftIndex(2);
         bn2.setRightIndex(2);
-        
-        Binding[] binds = {bn,bn2};
+
+        Binding[] binds = {bn, bn2};
         HashedEqBNode btnode = new HashedEqBNode(1);
         btnode.setBindings(binds);
-        
+
         System.out.println("betaNode::" + btnode.toPPString());
         assertNotNull(btnode.toPPString());
     }
 
     @Test
-    public void testThreeBinding(){
+    public void testThreeBinding() {
 
         Binding bn = new Binding();
         bn.setLeftRow(0);
         bn.setLeftIndex(0);
         bn.setRightIndex(0);
-        
+
         Binding bn2 = new Binding();
         bn2.setLeftRow(0);
         bn2.setLeftIndex(2);
         bn2.setRightIndex(2);
-        
+
         Binding bn3 = new Binding();
         bn3.setLeftRow(1);
         bn3.setLeftIndex(0);
         bn3.setRightIndex(0);
 
-        Binding[] binds = {bn,bn2,bn3};
+        Binding[] binds = {bn, bn2, bn3};
         HashedEqBNode btnode = new HashedEqBNode(1);
         btnode.setBindings(binds);
-        
+
         System.out.println("betaNode::" + btnode.toPPString());
         assertNotNull(btnode.toPPString());
     }
-    
+
     @Test
-    public void testThreeBinding2(){
+    public void testThreeBinding2() {
 
         Binding bn = new Binding();
         bn.setLeftRow(0);
         bn.setLeftIndex(0);
         bn.setRightIndex(0);
-        
+
         Binding bn2 = new Binding();
         bn2.setLeftRow(0);
         bn2.setLeftIndex(2);
         bn2.setRightIndex(2);
-        
+
         Binding bn3 = new Binding();
         bn3.setLeftRow(0);
         bn3.setLeftIndex(0);
         bn3.setRightIndex(0);
 
-        Binding[] binds = {bn,bn2,bn3};
+        Binding[] binds = {bn, bn2, bn3};
         HashedEqBNode btnode = new HashedEqBNode(1);
         btnode.setBindings(binds);
-        
+
         System.out.println("betaNode::" + btnode.toPPString());
         assertNotNull(btnode.toPPString());
     }

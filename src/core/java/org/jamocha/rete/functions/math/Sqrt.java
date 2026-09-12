@@ -12,14 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.math;
 
-import java.math.BigDecimal;
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -29,76 +26,73 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.math.BigDecimal;
 
 /**
  * @author Nikolaus Koemm
  * @author Peter Lin
- * 
- * Sqrt returns the square root value of a double value.
+ *     <p>Sqrt returns the square root value of a double value.
  */
 public class Sqrt implements Function {
 
-	/**
-	 * 
-	 */
-	
-	public static final String SQRT = "sqrt";
+    /** */
+    public static final String SQRT = "sqrt";
 
+    public Sqrt() {
+        super();
+    }
 
-	public Sqrt() {
-		super();
-	}
+    public ValueType getReturnType() {
+        return ValueType.BIG_DECIMAL;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BIG_DECIMAL;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        BigDecimal bdval = null;
+        double bdh = 0.0;
+        if (params.length == 1) {
+            if (params[0] instanceof ValueParam) {
+                bdval = params[0].getBigDecimalValue();
+            } else {
+                bdval =
+                        new BigDecimal(
+                                params[0].getValue(engine, ValueType.BIG_DECIMAL).toString());
+            }
+            bdh = Math.sqrt(bdval.doubleValue());
+            bdval = BigDecimal.valueOf(bdh);
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL, bdval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		BigDecimal bdval = null;
-		double bdh = 0.0;
-		if (params.length == 1) {
-			if (params[0] instanceof ValueParam) {
-	            bdval = params[0].getBigDecimalValue();
-			} else {
-	            bdval = new BigDecimal(params[0].getValue(engine, ValueType.BIG_DECIMAL).toString());
-			}
-			bdh = Math.sqrt(bdval.doubleValue());
-			bdval = BigDecimal.valueOf(bdh);
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL,
-				bdval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public String getName() {
+        return SQRT;
+    }
 
-	public String getName() {
-		return SQRT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam[].class };
-	}
-
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length >= 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(sqrt");
-				int idx = 0;
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else {
-					buf.append(" " + params[idx].getStringValue());
-				}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(sqrt <expression>)\n" +
-			"Function description:\n" +
-			"\tReturns the square root of its only argument.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length >= 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(sqrt");
+            int idx = 0;
+            if (params[idx] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[idx];
+                buf.append(" ?" + bp.getVariableName());
+            } else if (params[idx] instanceof ValueParam) {
+                buf.append(" " + params[idx].getStringValue());
+            } else {
+                buf.append(" " + params[idx].getStringValue());
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(sqrt <expression>)\n"
+                    + "Function description:\n"
+                    + "\tReturns the square root of its only argument.";
+        }
+    }
 }

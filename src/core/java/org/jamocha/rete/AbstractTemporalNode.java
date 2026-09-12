@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -21,35 +21,32 @@ import org.jamocha.rete.exception.RetractException;
 
 /**
  * @author Peter Lin
- * 
- * AbstractTemporalNode is the base class for all temporal joins. For performance
- * reasons, we will have several subclasses.
+ *     <p>AbstractTemporalNode is the base class for all temporal joins. For performance reasons, we
+ *     will have several subclasses.
  */
 public abstract class AbstractTemporalNode extends BaseJoin {
 
+    /** */
     /**
-	 * 
-	 */
-	/**
-     * The relative elapsed time for the left side of the join.
-     * The default value is 0 to indicate it has no time window
+     * The relative elapsed time for the left side of the join. The default value is 0 to indicate
+     * it has no time window
      */
     protected int leftElapsedTime = 0;
+
     /**
-     * the relative elapsed time for the right side of the join
-     * The default value is 0 to indicate it has no time window
+     * the relative elapsed time for the right side of the join The default value is 0 to indicate
+     * it has no time window
      */
     protected int rightElapsedTime = 0;
-    
+
     public AbstractTemporalNode(int id) {
         super(id);
     }
 
     /**
-     * assertLeft takes an array of facts. Since the next join may be joining
-     * against one or more objects, we need to pass all previously matched
-     * facts.
-     * 
+     * assertLeft takes an array of facts. Since the next join may be joining against one or more
+     * objects, we need to pass all previously matched facts.
+     *
      * @param factInstance
      * @param engine
      */
@@ -58,7 +55,7 @@ public abstract class AbstractTemporalNode extends BaseJoin {
 
     /**
      * Assert from the right side is always going to be from an Alpha node.
-     * 
+     *
      * @param factInstance
      * @param engine
      */
@@ -67,7 +64,7 @@ public abstract class AbstractTemporalNode extends BaseJoin {
 
     /**
      * Retracting from the left requires that we propogate the
-     * 
+     *
      * @param factInstance
      * @param engine
      */
@@ -75,10 +72,9 @@ public abstract class AbstractTemporalNode extends BaseJoin {
             throws RetractException;
 
     /**
-     * Retract from the right works in the following order. 1. remove the fact
-     * from the right memory 2. check which left memory matched 3. propogate the
-     * retract
-     * 
+     * Retract from the right works in the following order. 1. remove the fact from the right memory
+     * 2. check which left memory matched 3. propogate the retract
+     *
      * @param factInstance
      * @param engine
      */
@@ -86,9 +82,9 @@ public abstract class AbstractTemporalNode extends BaseJoin {
             throws RetractException;
 
     /**
-     * evaluate will first compare the timestamp of the last fact in the fact
-     * array of the left and make sure the fact is still fresh. if it is not
-     * fresh, the method returns false.
+     * evaluate will first compare the timestamp of the last fact in the fact array of the left and
+     * make sure the fact is still fresh. if it is not fresh, the method returns false.
+     *
      * @param leftlist
      * @param right
      * @return
@@ -113,7 +109,7 @@ public abstract class AbstractTemporalNode extends BaseJoin {
             return false;
         }
     }
-    
+
     protected long getRightTime() {
         long time;
         long ts = System.currentTimeMillis();
@@ -124,7 +120,7 @@ public abstract class AbstractTemporalNode extends BaseJoin {
         }
         return time;
     }
-    
+
     protected long getLeftTime() {
         long time;
         if (this.leftElapsedTime > 0) {
@@ -135,14 +131,10 @@ public abstract class AbstractTemporalNode extends BaseJoin {
         return time;
     }
 
-    /**
-     * Basic implementation will return string format of the betaNode
-     */
+    /** Basic implementation will return string format of the betaNode */
     public abstract String toString();
 
-    /**
-     * returns the node named + node id and the bindings in a string format
-     */
+    /** returns the node named + node id and the bindings in a string format */
     public abstract String toPPString();
 
     public int getLeftElapsedTime() {

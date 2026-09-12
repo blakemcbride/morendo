@@ -12,28 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.examples.model;
 
 /**
  * @author Peter Lin
- *
- * BackupAccount extends Account, which implements IAccount. the class
- * is used to test template inheritance
+ *     <p>BackupAccount extends Account, which implements IAccount. the class is used to test
+ *     template inheritance
  */
 public class BackupAccount extends Account {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /** */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	public BackupAccount() {
-		super();
-	}
-
+    /** */
+    public BackupAccount() {
+        super();
+    }
 }

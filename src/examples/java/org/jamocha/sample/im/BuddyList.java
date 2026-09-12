@@ -4,34 +4,35 @@ import java.util.List;
 
 public class BuddyList {
 
-	private String userId;
-	@SuppressWarnings("rawtypes")
-	private List buddies;
-	
-	public BuddyList() {
-		super();
-	}
+    private String userId;
 
-	public String getUserId() {
-		return userId;
-	}
+    @SuppressWarnings("rawtypes")
+    private List buddies;
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public BuddyList() {
+        super();
+    }
 
-	@SuppressWarnings("rawtypes")
-	public List getBuddies() {
-		return buddies;
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	@SuppressWarnings("rawtypes")
-	public void setBuddies(List buddies) {
-		this.buddies = buddies;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-	@SuppressWarnings("unchecked")
-	public void addBuddy(String userid) {
-		this.buddies.add(userid);
-	}
+    @SuppressWarnings("rawtypes")
+    public List getBuddies() {
+        return buddies;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public void setBuddies(List buddies) {
+        this.buddies = buddies;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addBuddy(String userid) {
+        this.buddies.add(userid);
+    }
 }

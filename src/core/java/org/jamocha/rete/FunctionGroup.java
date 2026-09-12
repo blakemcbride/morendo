@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -20,24 +20,24 @@ import java.util.List;
 
 /**
  * @author Peter Lin
- *
- * FunctionGroup is an organizational feature to group functions. For example,
- * one might want to group mathematic functions together. Or IO functions together
- * into a group.
+ *     <p>FunctionGroup is an organizational feature to group functions. For example, one might want
+ *     to group mathematic functions together. Or IO functions together into a group.
  */
 public interface FunctionGroup {
-	String getName();
+    String getName();
 
-	/**
-	 * classes implementing the interface need to implement this method to
-	 * create instances of the function and register them the rule engine.
-	 * @param engine
-	 */
-	void loadFunctions(Rete engine);
+    /**
+     * classes implementing the interface need to implement this method to create instances of the
+     * function and register them the rule engine.
+     *
+     * @param engine
+     */
+    void loadFunctions(Rete engine);
 
-	/**
-	 * A convienance method for listing the functions in a given group.
-	 * @return
-	 */
-	List<Function> listFunctions();
+    /**
+     * A convienance method for listing the functions in a given group.
+     *
+     * @return
+     */
+    List<Function> listFunctions();
 }

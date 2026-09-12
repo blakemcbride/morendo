@@ -6,6 +6,6 @@ public class ReadStatus implements ReadMacro {
     public ReadStatus() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getStatus();
+        return ((woolfel.examples.model.Account) instance).getStatus();
     }
 }

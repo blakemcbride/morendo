@@ -12,67 +12,50 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Peter Lin
- *
- * Basic implementation of Alpha memory. It uses HashMap for storing
- * the indexes.
+ *     <p>Basic implementation of Alpha memory. It uses HashMap for storing the indexes.
  */
 public class AlphaMemoryImpl implements AlphaMemory {
 
-	/**
-	 * 
-	 */
-	private Map<Fact, Fact> memory = null;
+    /** */
+    private Map<Fact, Fact> memory = null;
 
-	/**
-	 * 
-	 */
-	public AlphaMemoryImpl(String name, Rete engine) {
-		super();
-		memory = engine.newAlphaMemoryMap(name);
-	}
+    /** */
+    public AlphaMemoryImpl(String name, Rete engine) {
+        super();
+        memory = engine.newAlphaMemoryMap(name);
+    }
 
-	/**
-	 * addPartialMatch stores the fact with the factId as the
-	 * key.
-	 */
-	public void addPartialMatch(Fact fact) {
-		this.memory.put(fact, fact);
-	}
+    /** addPartialMatch stores the fact with the factId as the key. */
+    public void addPartialMatch(Fact fact) {
+        this.memory.put(fact, fact);
+    }
 
-	/**
-	 * clear the memory.
-	 */
-	public void clear() {
-		this.memory.clear();
-	}
+    /** clear the memory. */
+    public void clear() {
+        this.memory.clear();
+    }
 
-	/**
-	 * remove a partial match from the memory
-	 */
-	public Object removePartialMatch(Fact fact) {
-		return this.memory.remove(fact);
-	}
+    /** remove a partial match from the memory */
+    public Object removePartialMatch(Fact fact) {
+        return this.memory.remove(fact);
+    }
 
-	/**
-	 * Return the size of the memory
-	 */
-	public int size() {
-		return this.memory.size();
-	}
+    /** Return the size of the memory */
+    public int size() {
+        return this.memory.size();
+    }
 
-	/**
-	 * Return an iterator of the values
-	 */
-	public Iterator<Fact> iterator() {
-		return this.memory.keySet().iterator();
-	}
+    /** Return an iterator of the values */
+    public Iterator<Fact> iterator() {
+        return this.memory.keySet().iterator();
+    }
 }

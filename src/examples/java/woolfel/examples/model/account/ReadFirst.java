@@ -6,6 +6,6 @@ public class ReadFirst implements ReadMacro {
     public ReadFirst() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getFirst();
+        return ((woolfel.examples.model.Account) instance).getFirst();
     }
 }

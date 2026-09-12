@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -25,56 +23,45 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
-
 /**
- * Reset will retracts all the facts and re-assert them. It is the
- * same as Clips and JESS.
- * 
- * @author Peter Lin
+ * Reset will retracts all the facts and re-assert them. It is the same as Clips and JESS.
  *
+ * @author Peter Lin
  */
 public class ResetFactsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String RESET_FACTS = "reset-facts";
-	
-	/**
-	 * 
-	 */
-	public ResetFactsFunction() {
-		super();
-	}
+    /** */
+    public static final String RESET_FACTS = "reset-facts";
 
-	/**
-	 * the function does not return anything
-	 */
-	public ValueType getReturnType() {
+    /** */
+    public ResetFactsFunction() {
+        super();
+    }
+
+    /** the function does not return anything */
+    public ValueType getReturnType() {
         return ValueType.RETURN_VOID;
-	}
+    }
 
-	/**
-	 * current implementation will call Rete.resetAll. This means it
-	 * will reset all objects and deffacts.
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		engine.resetFacts();
-		return new DefaultReturnVector();
-	}
+    /**
+     * current implementation will call Rete.resetAll. This means it will reset all objects and
+     * deffacts.
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        engine.resetFacts();
+        return new DefaultReturnVector();
+    }
 
-	public String getName() {
-		return RESET_FACTS;
-	}
+    public String getName() {
+        return RESET_FACTS;
+    }
 
-	/**
-	 * reset does not take any parameters
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    /** reset does not take any parameters */
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(reset)";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(reset)";
+    }
 }

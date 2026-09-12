@@ -12,20 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.examples.model;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 /**
  * @author Peter Lin
- *
- * Alternate version of TestBean that does implement add/remove
- * PropertyChangeListener. This version implements notify method
- * to notify the listeners.
+ *     <p>Alternate version of TestBean that does implement add/remove PropertyChangeListener. This
+ *     version implements notify method to notify the listeners.
  */
 public class TestBean3 {
 
@@ -35,86 +33,81 @@ public class TestBean3 {
     protected long attr4;
     protected float attr5;
     protected double attr6;
-    
-    @SuppressWarnings("rawtypes")
-	protected ArrayList listeners = new ArrayList();
-    
-	/**
-	 * 
-	 */
-	public TestBean3() {
-		super();
-	}
 
-    public void setName(String val){
+    @SuppressWarnings("rawtypes")
+    protected ArrayList listeners = new ArrayList();
+
+    /** */
+    public TestBean3() {
+        super();
+    }
+
+    public void setName(String val) {
         this.attr1 = val;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return this.attr1;
     }
-    
-    public void setCount(int val){
+
+    public void setCount(int val) {
         this.attr2 = val;
     }
-    
-    public int getCount(){
+
+    public int getCount() {
         return this.attr2;
     }
-    
-    public void setShort(short val){
+
+    public void setShort(short val) {
         this.attr3 = val;
     }
-    
-    public short getShort(){
+
+    public short getShort() {
         return this.attr3;
     }
-    
-    public void setLong(long val){
+
+    public void setLong(long val) {
         this.attr4 = val;
     }
-    
-    public long getLong(){
+
+    public long getLong() {
         return this.attr4;
     }
-    
-    public void setFloat(float val){
+
+    public void setFloat(float val) {
         this.attr5 = val;
     }
-    
-    public float getFloat(){
+
+    public float getFloat() {
         return this.attr5;
     }
-    
-    public void setDouble(double val){
+
+    public void setDouble(double val) {
         this.attr6 = val;
     }
-    
-    public double getDouble(){
+
+    public double getDouble() {
         return this.attr6;
     }
-    
+
     @SuppressWarnings("unchecked")
-	public void addPropertyChangeListener(PropertyChangeListener listener){
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         this.listeners.add(listener);
     }
-    
-    public void removePropertyChangeListener(PropertyChangeListener listener){
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.listeners.remove(listener);
     }
-    
-    protected void notifyListener(String field, Object oldValue, Object newValue){
-        if (listeners == null || listeners.size() == 0) {
-			return;
-		} else {
-			PropertyChangeEvent event = new PropertyChangeEvent(this, field,
-					oldValue, newValue);
 
-			for (int i = 0; i < listeners.size(); i++) {
-				((java.beans.PropertyChangeListener) listeners.get(i))
-						.propertyChange(event);
-			}
-		}
-        
+    protected void notifyListener(String field, Object oldValue, Object newValue) {
+        if (listeners == null || listeners.size() == 0) {
+            return;
+        } else {
+            PropertyChangeEvent event = new PropertyChangeEvent(this, field, oldValue, newValue);
+
+            for (int i = 0; i < listeners.size(); i++) {
+                ((java.beans.PropertyChangeListener) listeners.get(i)).propertyChange(event);
+            }
+        }
     }
 }

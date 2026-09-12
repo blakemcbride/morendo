@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.query;
 
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -11,41 +10,38 @@ import org.jamocha.rete.ValueType;
 
 public class QueryTimeFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String QUERY_TIME = "query-time";
-	
-	public QueryTimeFunction() {
-		super();
-	}
+    /** */
+    public static final String QUERY_TIME = "query-time";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector ret = new DefaultReturnVector();
-		long time = 0;
-		if (params != null && params.length > 0) {
-			String name = params[0].getStringValue();
-			time = engine.getQueryTime(name);
-		}
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.LONG_OBJECT, Long.valueOf(time));
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public QueryTimeFunction() {
+        super();
+    }
 
-	public String getName() {
-		return QUERY_TIME;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        long time = 0;
+        if (params != null && params.length > 0) {
+            String name = params[0].getStringValue();
+            time = engine.getQueryTime(name);
+        }
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.LONG_OBJECT, Long.valueOf(time));
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{String.class};
-	}
+    public String getName() {
+        return QUERY_TIME;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.LONG_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(query-time <query name>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.LONG_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(query-time <query name>)";
+    }
 }

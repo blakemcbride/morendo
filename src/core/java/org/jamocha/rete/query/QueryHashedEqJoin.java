@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.query;
-
-import java.util.Map;
-import java.util.Iterator;
 
 import org.jamocha.rete.BaseNode;
 import org.jamocha.rete.Binding;
@@ -33,39 +30,40 @@ import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rete.util.NodeUtils;
 import org.jamocha.rule.Defquery;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
- * 
  * @author Peter Lin
  */
 public class QueryHashedEqJoin extends QueryBaseJoin {
 
-    /**
-     * 
-     */
-
+    /** */
     public QueryHashedEqJoin(int id) {
         super(id);
     }
 
     /**
-     * assertLeft takes an array of facts. Since the next join may be joining
-     * against one or more objects, we need to pass all previously matched
-     * facts.
-     * 
+     * assertLeft takes an array of facts. Since the next join may be joining against one or more
+     * objects, we need to pass all previously matched facts.
+     *
      * @param factInstance
      * @param engine
      */
-	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws AssertException {
+    public void assertLeft(Index linx, Rete engine, WorkingMemory mem) throws AssertException {
         Map<Index, Index> leftmem = mem.getQueryBetaMemory(this);
         leftmem.put(linx, linx);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds, linx.getFacts()));
         HashedAlphaMemoryImpl rightmem = mem.getQueryRightMemory(this);
         Iterator<?> itr = rightmem.iterator(inx);
-    	if (this.watch) {
-    		engine.writeMessage("QueryHashedEqJoin (" + this.nodeID + ") - assertLeft:: " + 
-    				linx.toPPString() + Constants.LINEBREAK);
-    	}
+        if (this.watch) {
+            engine.writeMessage(
+                    "QueryHashedEqJoin ("
+                            + this.nodeID
+                            + ") - assertLeft:: "
+                            + linx.toPPString()
+                            + Constants.LINEBREAK);
+        }
         if (itr != null) {
             while (itr.hasNext()) {
                 Fact vl = (Fact) itr.next();
@@ -78,14 +76,13 @@ public class QueryHashedEqJoin extends QueryBaseJoin {
 
     /**
      * Assert from the right side is always going to be from an Alpha node.
-     * 
+     *
      * @param factInstance
      * @param engine
      */
-	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws AssertException {
+    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
         HashedAlphaMemoryImpl rightmem = mem.getQueryRightMemory(this);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds, rfact));
 
         rightmem.addPartialMatch(inx, rfact, engine);
         // now that we've added the facts to the list, we
@@ -96,12 +93,20 @@ public class QueryHashedEqJoin extends QueryBaseJoin {
         // we could encounter a ClassCastException in the case of
         // key collision.
         Iterator<?> itr = leftmem.values().iterator();
-    	if (this.watch) {
-    		engine.writeMessage("QueryHashedEqJoin (" + this.nodeID + ") - assertRight::Rmem:: " + 
-    				rfact.toFactString() + Constants.LINEBREAK);
-    		engine.writeMessage("QueryHashedEqJoin (" + this.nodeID + ") - assertRight::Lmem-count:: " + 
-    				leftmem.size() + Constants.LINEBREAK);
-    	}
+        if (this.watch) {
+            engine.writeMessage(
+                    "QueryHashedEqJoin ("
+                            + this.nodeID
+                            + ") - assertRight::Rmem:: "
+                            + rfact.toFactString()
+                            + Constants.LINEBREAK);
+            engine.writeMessage(
+                    "QueryHashedEqJoin ("
+                            + this.nodeID
+                            + ") - assertRight::Lmem-count:: "
+                            + leftmem.size()
+                            + Constants.LINEBREAK);
+        }
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
             if (this.evaluate(linx.getFacts(), rfact)) {
@@ -113,31 +118,26 @@ public class QueryHashedEqJoin extends QueryBaseJoin {
 
     /**
      * Retracting from the left requires that we propogate the
-     * 
+     *
      * @param factInstance
      * @param engine
      */
-    public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws RetractException {
-    }
+    public void retractLeft(Index linx, Rete engine, WorkingMemory mem) throws RetractException {}
 
     /**
-     * Retract from the right works in the following order. 1. remove the fact
-     * from the right memory 2. check which left memory matched 3. propogate the
-     * retract
-     * 
+     * Retract from the right works in the following order. 1. remove the fact from the right memory
+     * 2. check which left memory matched 3. propogate the retract
+     *
      * @param factInstance
      * @param engine
      */
-    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws RetractException {
-    }
+    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem) throws RetractException {}
 
     /**
-     * Method will use the right binding to perform the evaluation of the join.
-     * Since we are building joins similar to how CLIPS and other rule engines
-     * handle it, it means 95% of the time the right fact list only has 1 fact.
-     * 
+     * Method will use the right binding to perform the evaluation of the join. Since we are
+     * building joins similar to how CLIPS and other rule engines handle it, it means 95% of the
+     * time the right fact list only has 1 fact.
+     *
      * @param leftlist
      * @param right
      * @return
@@ -156,9 +156,7 @@ public class QueryHashedEqJoin extends QueryBaseJoin {
         return eval;
     }
 
-    /**
-     * Basic implementation will return string format of the betaNode
-     */
+    /** Basic implementation will return string format of the betaNode */
     public String toString() {
         StringBuilder buf = new StringBuilder();
         for (int idx = 0; idx < this.binds.length; idx++) {
@@ -170,9 +168,7 @@ public class QueryHashedEqJoin extends QueryBaseJoin {
         return buf.toString();
     }
 
-    /**
-     * returns the node named + node id and the bindings in a string format
-     */
+    /** returns the node named + node id and the bindings in a string format */
     public String toPPString() {
         StringBuilder buf = new StringBuilder();
         buf.append("HashedEqBNode-" + this.nodeID + "> ");
@@ -186,28 +182,29 @@ public class QueryHashedEqJoin extends QueryBaseJoin {
         }
         return buf.toString();
     }
-    
-    public void garbageCollect(Rete engine, WorkingMemory memory) {
-    	
+
+    public void garbageCollect(Rete engine, WorkingMemory memory) {}
+
+    public QueryHashedEqJoin clone(Rete engine, Defquery query) {
+        QueryHashedEqJoin clone = new QueryHashedEqJoin(engine.nextNodeId());
+        Binding[] cloneBinding = new Binding[this.binds.length];
+        for (int i = 0; i < this.binds.length; i++) {
+            cloneBinding[i] = (Binding) this.binds[i].clone();
+        }
+        clone.binds = cloneBinding;
+        clone.successorNodes = new BaseNode[this.successorNodes.length];
+        for (int i = 0; i < this.successorNodes.length; i++) {
+            if (this.successorNodes[i] instanceof QueryBaseAlpha) {
+                clone.successorNodes[i] =
+                        ((QueryBaseAlpha) this.successorNodes[i]).clone(engine, query);
+            } else if (this.successorNodes[i] instanceof QueryBaseJoin) {
+                clone.successorNodes[i] =
+                        ((QueryBaseJoin) this.successorNodes[i]).clone(engine, query);
+            } else if (this.successorNodes[i] instanceof QueryResultNode) {
+                clone.successorNodes[i] =
+                        ((QueryResultNode) this.successorNodes[i]).clone(engine, query);
+            }
+        }
+        return clone;
     }
-    
-	public QueryHashedEqJoin clone(Rete engine, Defquery query) {
-		QueryHashedEqJoin clone = new QueryHashedEqJoin(engine.nextNodeId());
-		Binding[] cloneBinding = new Binding[this.binds.length];
-		for (int i=0; i < this.binds.length; i++) {
-			cloneBinding[i] = (Binding)this.binds[i].clone();
-		}
-		clone.binds = cloneBinding;
-		clone.successorNodes = new BaseNode[this.successorNodes.length];
-		for (int i=0; i < this.successorNodes.length; i++) {
-    		if (this.successorNodes[i] instanceof QueryBaseAlpha) {
-    			clone.successorNodes[i] = ((QueryBaseAlpha)this.successorNodes[i]).clone(engine, query);
-    		} else if (this.successorNodes[i] instanceof QueryBaseJoin) {
-    			clone.successorNodes[i] = ((QueryBaseJoin)this.successorNodes[i]).clone(engine, query);
-    		} else if (this.successorNodes[i] instanceof QueryResultNode) {
-    			clone.successorNodes[i] = ((QueryResultNode)this.successorNodes[i]).clone(engine, query);
-    		}
-		}
-		return clone;
-	}
 }

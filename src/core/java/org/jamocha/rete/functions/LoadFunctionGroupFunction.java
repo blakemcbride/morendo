@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,60 +25,52 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- *
  */
 public class LoadFunctionGroupFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String LOAD_FGROUP = "load-function-group";
-	
-	/**
-	 * 
-	 */
-	public LoadFunctionGroupFunction() {
-		super();
-	}
+    /** */
+    public static final String LOAD_FGROUP = "load-function-group";
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    /** */
+    public LoadFunctionGroupFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean load = Boolean.FALSE;
-		DefaultReturnVector ret = new DefaultReturnVector();
-		if (params != null && params.length > 0) {
-			for (int idx=0; idx < params.length; idx++) {
-				try {
-					String func = params[idx].getStringValue();
-					engine.declareFunctionGroup(func);
-					load = Boolean.TRUE;
-				} catch (ClassNotFoundException e) {
-					engine.writeMessage(e.getMessage());
-					load = Boolean.TRUE;
-				}
-			}
-		}
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, load);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public String getName() {
-		return LOAD_FGROUP;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean load = Boolean.FALSE;
+        DefaultReturnVector ret = new DefaultReturnVector();
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {
+                try {
+                    String func = params[idx].getStringValue();
+                    engine.declareFunctionGroup(func);
+                    load = Boolean.TRUE;
+                } catch (ClassNotFoundException e) {
+                    engine.writeMessage(e.getMessage());
+                    load = Boolean.TRUE;
+                }
+            }
+        }
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, load);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public String getName() {
+        return LOAD_FGROUP;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(load-function-group [classname])";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(load-function-group [classname])";
+    }
 }

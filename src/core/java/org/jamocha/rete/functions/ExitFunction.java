@@ -12,63 +12,55 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- * 
- * ExitFunction closes the engine. The shell ends when it sees the engine closed, and an
- * application can register a close hook on the engine if it wants to end as well.
+ *     <p>ExitFunction closes the engine. The shell ends when it sees the engine closed, and an
+ *     application can register a close hook on the engine if it wants to end as well.
  */
 public class ExitFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String EXIT = "exit";
+    /** */
+    public static final String EXIT = "exit";
 
-	/**
-	 * 
-	 */
-	public ExitFunction() {
-		super();
-	}
+    /** */
+    public ExitFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		if (engine != null) {
-			engine.close();
-		}
-		return null;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (engine != null) {
+            engine.close();
+        }
+        return null;
+    }
 
-	public String getName() {
-		return EXIT;
-	}
+    public String getName() {
+        return EXIT;
+    }
 
-	/**
-	 * the function does not take any parameters. If parameters are passed,
-	 * the function ignores them.
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    /**
+     * the function does not take any parameters. If parameters are passed, the function ignores
+     * them.
+     */
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(exit)";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(exit)";
+    }
 }

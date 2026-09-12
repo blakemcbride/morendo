@@ -12,15 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -30,66 +25,64 @@ import org.jamocha.rete.Template;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
 /**
  * @author Peter Lin
- * 
- * PPrintTemplate stands for Pretty Print deftemplate. It does the same
- * thing as (ppdeftemplate <deftemplate-name>) in CLIPS.
+ *     <p>PPrintTemplate stands for Pretty Print deftemplate. It does the same thing as
+ *     (ppdeftemplate <deftemplate-name>) in CLIPS.
  */
 public class PPrintTemplateFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String PPTEMPLATES = "ppdeftemplate";
-	
-	/**
-	 * 
-	 */
-	public PPrintTemplateFunction() {
-		super();
-	}
+    /** */
+    public static final String PPTEMPLATES = "ppdeftemplate";
 
-	public ValueType getReturnType() {
+    /** */
+    public PPrintTemplateFunction() {
+        super();
+    }
+
+    public ValueType getReturnType() {
         return ValueType.RETURN_VOID;
-	}
+    }
 
-	/**
-	 * the function will printout one or more templates. This implementation
-	 * is slightly different than CLIPS in that it can take one or more
-	 * template names. The definition in CLIPS beginners guide states the 
-	 * function does the following: (ppdeftemplate &lt;deftemplate-name>)
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		HashMap<Object, Object> filter = new HashMap<>();
-		if (params != null && params.length > 0) {
-			for (int idx=0; idx < params.length; idx++) {
-				if (params[idx] instanceof ValueParam) {
-					Object df = ((ValueParam)params[idx]).getValue();
-					filter.put(df,df);
-				}
-			}
-		}
-		Collection<?> templ = engine.getCurrentFocus().getTemplates();
-		Iterator<?> itr = templ.iterator();
-		while (itr.hasNext()) {
-			Template tp = (Template)itr.next();
-			if (filter.get(tp.getName()) != null) {
-				engine.writeMessage(tp.toPPString() + "\r\n","t");
-			}
-		}
-		return new DefaultReturnVector();
-	}
+    /**
+     * the function will printout one or more templates. This implementation is slightly different
+     * than CLIPS in that it can take one or more template names. The definition in CLIPS beginners
+     * guide states the function does the following: (ppdeftemplate &lt;deftemplate-name>)
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        HashMap<Object, Object> filter = new HashMap<>();
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {
+                if (params[idx] instanceof ValueParam) {
+                    Object df = ((ValueParam) params[idx]).getValue();
+                    filter.put(df, df);
+                }
+            }
+        }
+        Collection<?> templ = engine.getCurrentFocus().getTemplates();
+        Iterator<?> itr = templ.iterator();
+        while (itr.hasNext()) {
+            Template tp = (Template) itr.next();
+            if (filter.get(tp.getName()) != null) {
+                engine.writeMessage(tp.toPPString() + "\r\n", "t");
+            }
+        }
+        return new DefaultReturnVector();
+    }
 
-	public String getName() {
-		return PPTEMPLATES;
-	}
+    public String getName() {
+        return PPTEMPLATES;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{String.class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(ppdeftemplate <name>)";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(ppdeftemplate <name>)";
+    }
 }

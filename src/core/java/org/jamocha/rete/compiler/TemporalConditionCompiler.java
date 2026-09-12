@@ -12,11 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.compiler;
-
-import java.math.BigDecimal;
 
 import org.jamocha.rete.AbstractTemporalNode;
 import org.jamocha.rete.BaseAlpha;
@@ -45,32 +43,29 @@ import org.jamocha.rule.PredicateConstraint;
 import org.jamocha.rule.Rule;
 import org.jamocha.rule.TemporalCondition;
 
+import java.math.BigDecimal;
+
 /**
- * 
  * @author HouZhanbin
- * @author Peter Lin
- * Oct 12, 2007 9:42:15 AM
- *
+ * @author Peter Lin Oct 12, 2007 9:42:15 AM
  */
 public class TemporalConditionCompiler extends ObjectConditionCompiler {
-	
-	public TemporalConditionCompiler(RuleCompiler ruleCompiler){
+
+    public TemporalConditionCompiler(RuleCompiler ruleCompiler) {
         super(ruleCompiler);
-	}
-	
-	public TemporalConditionCompiler(QueryCompiler queryCompiler){
+    }
+
+    public TemporalConditionCompiler(QueryCompiler queryCompiler) {
         super(queryCompiler);
-	}
-	
-	public TemporalConditionCompiler(GraphQueryCompiler queryCompiler){
+    }
+
+    public TemporalConditionCompiler(GraphQueryCompiler queryCompiler) {
         super(queryCompiler);
-	}
-	
-	/**
-	 * Compile a single ObjectCondition and create the alphaNodes and/or Bindings
-	 */
-	public void compile(Condition condition, int position, Rule rule, boolean alphaMemory) {
-		TemporalCondition cond = (TemporalCondition)condition;
+    }
+
+    /** Compile a single ObjectCondition and create the alphaNodes and/or Bindings */
+    public void compile(Condition condition, int position, Rule rule, boolean alphaMemory) {
+        TemporalCondition cond = (TemporalCondition) condition;
         ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(cond.getTemplateName());
         // we set remember match to false, since the rule is temporal
         boolean switchMatch = false;
@@ -85,30 +80,29 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
             Template templ = cond.getTemplate();
 
             Constraint[] constrs = cond.getConstraints();
-            for (int idx=0; idx < constrs.length; idx++) {
+            for (int idx = 0; idx < constrs.length; idx++) {
                 Constraint cnstr = constrs[idx];
                 if (cnstr instanceof LiteralConstraint literalConstraint) {
-                    current = 
-                    	ruleCompiler.compileConstraint(literalConstraint, templ, rule);
+                    current = ruleCompiler.compileConstraint(literalConstraint, templ, rule);
                 } else if (cnstr instanceof AndLiteralConstraint andLiteralConstraint) {
-                    current = 
-                    	ruleCompiler.compileConstraint(andLiteralConstraint, templ, rule);
+                    current = ruleCompiler.compileConstraint(andLiteralConstraint, templ, rule);
                 } else if (cnstr instanceof OrLiteralConstraint orLiteralConstraint) {
-                    current = 
-                    	ruleCompiler.compileConstraint(orLiteralConstraint, templ, rule);
+                    current = ruleCompiler.compileConstraint(orLiteralConstraint, templ, rule);
                 } else if (cnstr instanceof BoundConstraint boundConstraint) {
-                	ruleCompiler.compileConstraint(boundConstraint, templ, rule, position);
+                    ruleCompiler.compileConstraint(boundConstraint, templ, rule, position);
                 } else if (cnstr instanceof PredicateConstraint predicateConstraint) {
-                    current = 
-                    	ruleCompiler.compileConstraint(predicateConstraint, templ, rule, position);
+                    current =
+                            ruleCompiler.compileConstraint(
+                                    predicateConstraint, templ, rule, position);
                 }
                 // we add the node to the previous
                 if (first == null) {
                     first = current;
                     previous = current;
-                } else if (current != previous){
+                } else if (current != previous) {
                     try {
-                        previous.addSuccessorNode(current,ruleCompiler.getEngine(),ruleCompiler.getMemory());
+                        previous.addSuccessorNode(
+                                current, ruleCompiler.getEngine(), ruleCompiler.getMemory());
                         // now set the previous to current
                         previous = current;
                     } catch (AssertException e) {
@@ -117,19 +111,19 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
                 }
             }
             if (first != null) {
-            	attachAlphaNode(otn,first,cond);
+                attachAlphaNode(otn, first, cond);
             }
         }
-        
+
         if (!cond.getNegated()) {
-        	position++;
+            position++;
         }
         if (switchMatch) {
             rule.setRememberMatch(true);
         }
-	}
-    
-    public void compileFirstJoin(Condition condition, Rule rule) throws AssertException{
+    }
+
+    public void compileFirstJoin(Condition condition, Rule rule) throws AssertException {
         ObjectCondition cond = (ObjectCondition) condition;
         ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(cond.getTemplateName());
         // the LeftInputAdapterNode is the first node to propogate to
@@ -153,19 +147,19 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
         } else {
             // add the LeftInputAdapterNode to the last alphaNode
             // In the case of node sharing, the LIANode could be the last
-            // alphaNode, so we have to check and only add the node to 
+            // alphaNode, so we have to check and only add the node to
             // the condition if it isn't a LIANode
             BaseAlpha old = (BaseAlpha) cond.getLastNode();
-            //if the last node of condition has a LIANode successor,
-            //the LIANode should be shared with the new CE followed by another CE.
+            // if the last node of condition has a LIANode successor,
+            // the LIANode should be shared with the new CE followed by another CE.
             // Houzhanbin,10/16/2007
-                BaseNode[] successors=(BaseNode[])old.getSuccessorNodes();
-                for(int i=0;i<successors.length;i++){
-                    if(successors[i] instanceof LIANode){
-                        cond.addNode(successors[i]);
-                        return;
-                    }
+            BaseNode[] successors = (BaseNode[]) old.getSuccessorNodes();
+            for (int i = 0; i < successors.length; i++) {
+                if (successors[i] instanceof LIANode) {
+                    cond.addNode(successors[i]);
+                    return;
                 }
+            }
 
             if (!(old instanceof LIANode)) {
                 old.addSuccessorNode(node, ruleCompiler.getEngine(), ruleCompiler.getMemory());
@@ -173,60 +167,65 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
             }
         }
     }
-    
-    public BaseJoin compileJoin(Condition condition, int position, Rule rule, Condition previousCond) {
-        
-        Binding[] binds = getBindings(condition,rule,position);
-        TemporalCondition tc = (TemporalCondition)condition;
+
+    public BaseJoin compileJoin(
+            Condition condition, int position, Rule rule, Condition previousCond) {
+
+        Binding[] binds = getBindings(condition, rule, position);
+        TemporalCondition tc = (TemporalCondition) condition;
         AbstractTemporalNode joinNode = null;
-        //deal with the CE which is not NOT CE.
-        if ( !tc.getNegated() ) {
+        // deal with the CE which is not NOT CE.
+        if (!tc.getNegated()) {
             if (binds.length > 0 && tc.getIntervalTime() > 0) {
-                joinNode = new TemporalIntervalNode(ruleCompiler.getEngine().nextNodeId(), ruleCompiler.getEngine());
-                ((TemporalIntervalNode)joinNode).setInterval(tc.getIntervalTime() * 1000);
+                joinNode =
+                        new TemporalIntervalNode(
+                                ruleCompiler.getEngine().nextNodeId(), ruleCompiler.getEngine());
+                ((TemporalIntervalNode) joinNode).setInterval(tc.getIntervalTime() * 1000);
                 // lookup the function
                 Function f = ruleCompiler.getEngine().findFunction(tc.getFunction());
                 if (f != null) {
-                	((TemporalIntervalNode)joinNode).setFunction(f);
-                	BigDecimal count = tc.getParameters()[0].getBigDecimalValue();
-                	((TemporalIntervalNode)joinNode).setCount(count);
+                    ((TemporalIntervalNode) joinNode).setFunction(f);
+                    BigDecimal count = tc.getParameters()[0].getBigDecimalValue();
+                    ((TemporalIntervalNode) joinNode).setCount(count);
                 }
             } else if (binds.length > 0) {
                 joinNode = new TemporalEqNode(ruleCompiler.getEngine().nextNodeId());
             }
         }
-        
+
         joinNode.setBindings(binds);
         joinNode.setRightElapsedTime(tc.getRelativeTime() * 1000);
         if (previousCond != null && previousCond instanceof TemporalCondition) {
-            joinNode.setLeftElapsedTime( ((TemporalCondition)previousCond).getRelativeTime() * 1000);
+            joinNode.setLeftElapsedTime(
+                    ((TemporalCondition) previousCond).getRelativeTime() * 1000);
         }
         return joinNode;
     }
-    
-    public void compileSingleCE(Rule rule) throws AssertException{
-        Condition[] conds=rule.getConditions();
-        ObjectCondition oc = (ObjectCondition)conds[0];
+
+    public void compileSingleCE(Rule rule) throws AssertException {
+        Condition[] conds = rule.getConditions();
+        ObjectCondition oc = (ObjectCondition) conds[0];
         if (oc.getNegated()) {
             // the ObjectCondition is negated, so we need to
             // handle it appropriate. This means we need to
             // add a LIANode to _IntialFact and attach a NOTNode
             // to the LIANode.
-            ObjectTypeNode otn = this.ruleCompiler.getInputnodes().get(ruleCompiler.getEngine().getInitFact());
+            ObjectTypeNode otn =
+                    this.ruleCompiler.getInputnodes().get(ruleCompiler.getEngine().getInitFact());
             LIANode lianode = ruleCompiler.findLIANode(otn);
             NotJoin njoin = new NotJoin(ruleCompiler.getEngine().nextNodeId());
             njoin.setBindings(new Binding[0]);
-            lianode.addSuccessorNode(njoin,ruleCompiler.getEngine(),ruleCompiler.getMemory());
+            lianode.addSuccessorNode(njoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
             // add the join to the rule object
             rule.addJoinNode(njoin);
-            oc.getLastNode().addSuccessorNode(njoin,ruleCompiler.getEngine(), ruleCompiler.getMemory());
-        } else if (oc.getNodes().size() == 0){
+            oc.getLastNode()
+                    .addSuccessorNode(njoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+        } else if (oc.getNodes().size() == 0) {
             // this means the rule has a binding, but no conditions
             ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(oc.getTemplateName());
             LIANode lianode = new LIANode(ruleCompiler.getEngine().nextNodeId());
             otn.addSuccessorNode(lianode, ruleCompiler.getEngine(), ruleCompiler.getMemory());
             rule.getConditions()[0].addNode(lianode);
         }
-        
     }
 }

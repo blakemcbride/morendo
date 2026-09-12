@@ -7,85 +7,81 @@ import java.util.List;
 
 public class Node {
 
-	private List<PropertyChangeListener> listeners = new ArrayList<>();
-	private String id;
-	private String label;
-	private String nodeType;
-	private int weight;
-	// in case the node needs to reference an external object, set the reference to the object's id
-	private String reference;
-	
-	public Node() {
-	}
+    private List<PropertyChangeListener> listeners = new ArrayList<>();
+    private String id;
+    private String label;
+    private String nodeType;
+    private int weight;
+    // in case the node needs to reference an external object, set the reference to the object's id
+    private String reference;
 
-	public String getId() {
-		return id;
-	}
+    public Node() {}
 
-	public void setId(String id) {
-		String old = this.id;
-		this.id = id;
-		this.notifyListener("id", old, id);
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getLabel() {
-		return label;
-	}
+    public void setId(String id) {
+        String old = this.id;
+        this.id = id;
+        this.notifyListener("id", old, id);
+    }
 
-	public void setLabel(String label) {
-		String old = this.label;
-		this.label = label;
-		this.notifyListener("label", old, label);
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public String getNodeType() {
-		return nodeType;
-	}
+    public void setLabel(String label) {
+        String old = this.label;
+        this.label = label;
+        this.notifyListener("label", old, label);
+    }
 
-	public void setNodeType(String type) {
-		String old = this.nodeType;
-		this.nodeType = type;
-		this.notifyListener("nodeType", old, type);
-	}
+    public String getNodeType() {
+        return nodeType;
+    }
 
-	public int getWeight() {
-		return weight;
-	}
+    public void setNodeType(String type) {
+        String old = this.nodeType;
+        this.nodeType = type;
+        this.notifyListener("nodeType", old, type);
+    }
 
-	public void setWeight(int weight) {
-		int old = this.weight;
-		this.weight = weight;
-		this.notifyListener("weight", old, weight);
-	}
-	
-	public String getReference() {
-		return reference;
-	}
+    public int getWeight() {
+        return weight;
+    }
 
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
+    public void setWeight(int weight) {
+        int old = this.weight;
+        this.weight = weight;
+        this.notifyListener("weight", old, weight);
+    }
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		this.listeners.add(listener);
-	}
+    public String getReference() {
+        return reference;
+    }
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		this.listeners.remove(listener);
-	}
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
-	protected void notifyListener(String field, Object oldValue, Object newValue) {
-		if (listeners == null || listeners.size() == 0) {
-			return;
-		} else {
-			PropertyChangeEvent event = new PropertyChangeEvent(this, field,
-					oldValue, newValue);
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.add(listener);
+    }
 
-			for (int i = 0; i < listeners.size(); i++) {
-				(listeners.get(i))
-						.propertyChange(event);
-			}
-		}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.remove(listener);
+    }
 
-	}
+    protected void notifyListener(String field, Object oldValue, Object newValue) {
+        if (listeners == null || listeners.size() == 0) {
+            return;
+        } else {
+            PropertyChangeEvent event = new PropertyChangeEvent(this, field, oldValue, newValue);
+
+            for (int i = 0; i < listeners.size(); i++) {
+                (listeners.get(i)).propertyChange(event);
+            }
+        }
+    }
 }

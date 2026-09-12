@@ -12,26 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.measures;
-
-import java.math.BigDecimal;
 
 import org.jamocha.rete.Cube;
 import org.jamocha.rete.CubeBinding;
 import org.jamocha.rete.Rete;
 
+import java.math.BigDecimal;
+
 public interface AggregateMeasure extends Measure {
-	
-	/**
-	 * Concrete implementation needs to use the CubeBinding to access the value
-	 * to calculate the measure
-	 * @param engine
-	 * @param cube
-	 * @param data
-	 * @param binding
-	 * @return
-	 */
-	BigDecimal calculate(Rete engine, Cube cube, Object[] data, CubeBinding binding);
+
+    /**
+     * Concrete implementation needs to use the CubeBinding to access the value to calculate the
+     * measure
+     *
+     * @param engine
+     * @param cube
+     * @param data
+     * @param binding
+     * @return
+     */
+    BigDecimal calculate(Rete engine, Cube cube, Object[] data, CubeBinding binding);
 }

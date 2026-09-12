@@ -6,6 +6,6 @@ public class ReadAreaCode implements ReadMacro {
     public ReadAreaCode() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getAreaCode();
+        return ((woolfel.examples.model.Account) instance).getAreaCode();
     }
 }

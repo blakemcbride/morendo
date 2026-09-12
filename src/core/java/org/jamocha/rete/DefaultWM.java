@@ -12,18 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
@@ -40,65 +31,64 @@ import org.jamocha.rete.query.QueryOnlyJoin;
 import org.jamocha.rete.query.QueryOnlyNeqJoin;
 import org.jamocha.rete.strategies.Strategies;
 import org.jamocha.rete.util.ProfileStats;
+
+import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * @author Peter Lin
- *
- * This a new implementation of the working memory that is a clean rewrite to make
- * it organized. The old one was getting a bit messy and refactoring it was becoming
- * a pain.
+ *     <p>This a new implementation of the working memory that is a clean rewrite to make it
+ *     organized. The old one was getting a bit messy and refactoring it was becoming a pain.
  */
 public class DefaultWM implements WorkingMemory {
 
-    /**
-	 * 
-	 */
-
-	protected Rete engine = null;
+    /** */
+    protected Rete engine = null;
 
     protected RootNode root = null;
 
-	protected Map<Object, Object> alphaMemories = null;
+    protected Map<Object, Object> alphaMemories = null;
     protected Map<Object, Object> betaLeftMemories = null;
-	protected Map<Object, Object> betaRightMemories = null;
-	protected Map<Object, Object> terminalMemories = null;
-	protected Map<Object, Object> queryLeftMemories = null;
-	protected Map<Object, Object> queryRightMemories = null;
+    protected Map<Object, Object> betaRightMemories = null;
+    protected Map<Object, Object> terminalMemories = null;
+    protected Map<Object, Object> queryLeftMemories = null;
+    protected Map<Object, Object> queryRightMemories = null;
     protected RuleCompiler compiler = null;
 
     /**
-     * We keep a map between the object instance and the corresponding shadown
-     * fact. If an object is added as static, it is added to this map. When the
-     * rule engine is notified of changes, it will check this list. If the
-     * object instance is in this list, we ignore it.
+     * We keep a map between the object instance and the corresponding shadown fact. If an object is
+     * added as static, it is added to this map. When the rule engine is notified of changes, it
+     * will check this list. If the object instance is in this list, we ignore it.
      */
     protected Map<Object, Object> staticFacts = null;
-    /**
-     * We keep a map of the dynamic object instances. When the rule engine is
-     * notified
-     */
+
+    /** We keep a map of the dynamic object instances. When the rule engine is notified */
     protected Map<Object, Object> dynamicFacts = null;
+
     /**
-     * We use a HashMap to make it easy to determine if an existing deffact
-     * already exists in the working memory. this is only used for deffacts and
-     * not for objects
+     * We use a HashMap to make it easy to determine if an existing deffact already exists in the
+     * working memory. this is only used for deffacts and not for objects
      */
     protected Map<Object, Object> deffactMap = null;
-    /**
-     * Container for Defglobals
-     */
+
+    /** Container for Defglobals */
     protected DefglobalMap defglobals = null;
-    /**
-     * The initial facts the rule engine needs at startup
-     */
+
+    /** The initial facts the rule engine needs at startup */
     protected ArrayList<Fact> initialFacts = new ArrayList<>();
 
     private Agenda agenda = null;
-    /**
-     * The ArrayList for the modules.
-     */
+
+    /** The ArrayList for the modules. */
     protected Map<Object, Module> modules = null;
+
     protected Map<String, Cube> cubes = null;
     protected HashMap<Object, Object> contexts = new HashMap<>();
     protected ArrayList<?> focusStack = new ArrayList<>();
@@ -112,9 +102,9 @@ public class DefaultWM implements WorkingMemory {
     private boolean profileFire = false;
     private boolean profileAssert = false;
     private boolean profileRetract = false;
-    
+
     @SuppressWarnings("this-escape") // the compiler needs its working memory from the start
-	public DefaultWM(Rete engine, RootNode node, RuleCompiler compiler) {
+    public DefaultWM(Rete engine, RootNode node, RuleCompiler compiler) {
         this.engine = engine;
         alphaMemories = engine.newMap();
         betaLeftMemories = engine.newMap();
@@ -134,7 +124,7 @@ public class DefaultWM implements WorkingMemory {
         this.agenda = new Agenda(engine);
         init();
     }
-    
+
     protected void init() {
         this.theStrat = Strategies.DEPTH;
         this.main = new Defmodule(Constants.MAIN_MODULE, engine);
@@ -152,37 +142,37 @@ public class DefaultWM implements WorkingMemory {
         }
         return mod;
     }
-    
+
     public void addModule(Module mod) {
         if (mod != null) {
             this.modules.put(mod.getModuleName(), mod);
             this.setCurrentModule(mod);
         }
     }
-    
-	public Collection<Module> getModules() {
+
+    public Collection<Module> getModules() {
         return this.modules.values();
     }
-    
+
     public void addCube(Cube cube) {
-    	if (!cubes.containsKey(cube.getName())) {
-    		cubes.put(cube.getName(), cube);
-    	}
+        if (!cubes.containsKey(cube.getName())) {
+            cubes.put(cube.getName(), cube);
+        }
     }
-    
+
     public Cube getCube(String name) {
-    	return cubes.get(name);
+        return cubes.get(name);
     }
-    
+
     public Cube removeCube(String name) {
-    	return cubes.remove(name);
+        return cubes.remove(name);
     }
-    
-	public List<String> getCubes() {
-    	return new ArrayList<>(this.cubes.keySet());
+
+    public List<String> getCubes() {
+        return new ArrayList<>(this.cubes.keySet());
     }
-    
-	public void assertFact(Fact fact) throws AssertException {
+
+    public void assertFact(Fact fact) throws AssertException {
         Fact f = fact;
         if (!this.containsFact(f)) {
             this.deffactMap.put(fact.equalityIndex(), f);
@@ -191,8 +181,7 @@ public class DefaultWM implements WorkingMemory {
                 this.assertFactWProfile(f);
             } else {
                 if (this.watchFact) {
-                    engine.writeMessage("==> " + fact.toFactString()
-                            + Constants.LINEBREAK, "t");
+                    engine.writeMessage("==> " + fact.toFactString() + Constants.LINEBREAK, "t");
                 }
                 this.root.assertObject(f, engine, this);
             }
@@ -200,38 +189,38 @@ public class DefaultWM implements WorkingMemory {
             f.resetID((Fact) this.deffactMap.get(fact.equalityIndex()));
         }
     }
-    
-    public void assertFact(TemporalFact fact, Instant effectiveTime, Instant expirationTime) throws AssertException {
-    	if (expirationTime != null) {
-    		fact.setEffectiveTime(effectiveTime.toEpochMilli());
-    		fact.setExpirationTime(expirationTime.toEpochMilli());
-    	}
-    	assertFact(fact);
+
+    public void assertFact(TemporalFact fact, Instant effectiveTime, Instant expirationTime)
+            throws AssertException {
+        if (expirationTime != null) {
+            fact.setEffectiveTime(effectiveTime.toEpochMilli());
+            fact.setExpirationTime(expirationTime.toEpochMilli());
+        }
+        assertFact(fact);
     }
 
     /**
-     * The current implementation of assertObject is simple, but flexible. This
-     * version is not multi-threaded and doesn't use an event queue. Later on a
-     * multi-threaded version will be written which overrides the base
-     * implementation. If the user passes a specific template name, the engine
-     * will attempt to only propogate the fact down that template. if no
-     * template name is given, the engine will propogate the fact down all input
-     * nodes, including parent templates.
-     * 
+     * The current implementation of assertObject is simple, but flexible. This version is not
+     * multi-threaded and doesn't use an event queue. Later on a multi-threaded version will be
+     * written which overrides the base implementation. If the user passes a specific template name,
+     * the engine will attempt to only propogate the fact down that template. if no template name is
+     * given, the engine will propogate the fact down all input nodes, including parent templates.
+     *
      * @param data
      * @param template
      * @param statc
      * @param shadow
      * @throws AssertException
      */
-	public void assertObject(Object data, String template, boolean statc,
-            boolean shadow) throws AssertException {
+    public void assertObject(Object data, String template, boolean statc, boolean shadow)
+            throws AssertException {
         Defclass dc = null;
         if (template == null) {
             dc = this.engine.findDefclass(data);
-            // Note: cubes aren't mapped by defclass, so we always lookup by template using cube name
+            // Note: cubes aren't mapped by defclass, so we always lookup by template using cube
+            // name
             if (data instanceof Cube cubeValue) {
-            	dc = this.engine.findDefclassByTemplate((cubeValue).getName());
+                dc = this.engine.findDefclassByTemplate((cubeValue).getName());
             }
         } else {
             dc = this.engine.findDefclassByTemplate(template);
@@ -247,8 +236,7 @@ public class DefaultWM implements WorkingMemory {
                     // first add the rule engine as a listener
                     if (dc.isJavaBean()) {
                         try {
-                            dc.getAddListenerMethod().invoke(data,
-                                    new Object[] { this.engine });
+                            dc.getAddListenerMethod().invoke(data, new Object[] {this.engine});
                         } catch (InvocationTargetException e) {
                             e.printStackTrace();
                         } catch (IllegalAccessException e) {
@@ -257,8 +245,7 @@ public class DefaultWM implements WorkingMemory {
                     }
                     // second, lookup the deftemplate and create the
                     // shadow fact
-                    Fact shadowfact = createFact(data, dc, template,
-                            engine.nextFactId(), false);
+                    Fact shadowfact = createFact(data, dc, template, engine.nextFactId(), false);
                     // add it to the dynamic fact map
                     this.getDynamicFacts().put(data, shadowfact);
                     this.assertFact(shadowfact);
@@ -270,12 +257,11 @@ public class DefaultWM implements WorkingMemory {
             }
         }
     }
-    
-    /**
-     * Method is used to assert temporal facts, which have effective and expiration time
-     */
-	public void assertTemporalObject(Object data, String template, Instant effective, 
-    		Instant expiration, boolean statc) throws AssertException {
+
+    /** Method is used to assert temporal facts, which have effective and expiration time */
+    public void assertTemporalObject(
+            Object data, String template, Instant effective, Instant expiration, boolean statc)
+            throws AssertException {
         Defclass dc = null;
         if (template == null) {
             dc = this.engine.findDefclass(data);
@@ -284,7 +270,7 @@ public class DefaultWM implements WorkingMemory {
         }
         if (dc != null) {
             if (statc && !this.getStaticFacts().containsKey(data)) {
-                Fact shadowfact = createFact(data, dc, template, engine.nextFactId(),true);
+                Fact shadowfact = createFact(data, dc, template, engine.nextFactId(), true);
                 // add it to the static fact map
                 this.getStaticFacts().put(data, shadowfact);
                 this.assertFact(shadowfact);
@@ -292,8 +278,7 @@ public class DefaultWM implements WorkingMemory {
                 // first add the rule engine as a listener
                 if (dc.isJavaBean()) {
                     try {
-                        dc.getAddListenerMethod().invoke(data,
-                                new Object[] { this.engine });
+                        dc.getAddListenerMethod().invoke(data, new Object[] {this.engine});
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -302,8 +287,8 @@ public class DefaultWM implements WorkingMemory {
                 }
                 // second, lookup the deftemplate and create the
                 // shadow fact
-                TemporalFact shadowfact = (TemporalFact)createFact(data, dc, template,
-                        engine.nextFactId(), true);
+                TemporalFact shadowfact =
+                        (TemporalFact) createFact(data, dc, template, engine.nextFactId(), true);
                 // add it to the dynamic fact map
                 shadowfact.setEffectiveTime(effective.toEpochMilli());
                 shadowfact.setExpirationTime(expiration.toEpochMilli());
@@ -314,21 +299,21 @@ public class DefaultWM implements WorkingMemory {
     }
 
     /**
-     * By default assertObjects will assert with shadow and dynamic. It also
-     * assumes the classes aren't using an user defined template name.
-     * 
+     * By default assertObjects will assert with shadow and dynamic. It also assumes the classes
+     * aren't using an user defined template name.
+     *
      * @param objs
      * @throws AssertException
      */
-	public void assertObjects(List<?> objs) throws AssertException {
+    public void assertObjects(List<?> objs) throws AssertException {
         Iterator<?> itr = objs.iterator();
         while (itr.hasNext()) {
-        	Object fact = itr.next();
+            Object fact = itr.next();
             assertObject(fact, null, false, true);
         }
     }
 
-	public void clear() {
+    public void clear() {
         Iterator<?> amitr = this.alphaMemories.values().iterator();
         while (amitr.hasNext()) {
             AlphaMemory am = (AlphaMemory) amitr.next();
@@ -341,11 +326,11 @@ public class DefaultWM implements WorkingMemory {
                 Map<?, ?> lmem = (Map<?, ?>) bval;
                 // now iterate over the betamemories
                 for (Object value : lmem.keySet()) {
-                	if (value instanceof Index indx) {
+                    if (value instanceof Index indx) {
                         indx.clear();
-                	} else if (value instanceof Map) {
-                		((Map<?, ?>)value).clear();
-                	}
+                    } else if (value instanceof Map) {
+                        ((Map<?, ?>) value).clear();
+                    }
                 }
                 lmem.clear();
             }
@@ -357,7 +342,7 @@ public class DefaultWM implements WorkingMemory {
             } else if (val instanceof TemporalHashedAlphaMem temporalHashedAlphaMem) {
                 (temporalHashedAlphaMem).clear();
             } else if (val instanceof CubeHashMemoryImpl cubeHashMemoryImpl) {
-            	(cubeHashMemoryImpl).clear();
+                (cubeHashMemoryImpl).clear();
             } else {
                 Map<?, ?> mem = (Map<?, ?>) val;
                 mem.clear();
@@ -373,44 +358,42 @@ public class DefaultWM implements WorkingMemory {
         Collection<?> mods = this.modules.values();
         Iterator<?> mitr = mods.iterator();
         while (mitr.hasNext()) {
-        	((Module)mitr.next()).clear();
+            ((Module) mitr.next()).clear();
         }
         this.cubes.clear();
         this.addModule(this.main);
     }
 
     /**
-     * clear the deffacts from the working memory. This does not include facts
-     * asserted using assertObject.
+     * clear the deffacts from the working memory. This does not include facts asserted using
+     * assertObject.
      */
-	public void clearFacts() {
-		if (this.deffactMap.size() > 0) {
-			try {
-				List<?> facts = new ArrayList<>(this.deffactMap.keySet());
-				Iterator<?> itr = facts.iterator();
-				while (itr.hasNext()) {
-					Object obj = itr.next();
-					if (obj instanceof EqualityIndex i) {
-						Deffact f = (Deffact)this.deffactMap.get(i);
-						if (!(f.getDeftemplate() instanceof InitialFact)) {
-							this.retractFact(f);
-							this.deffactMap.remove(i);
-						}
-					}
-				}
-			} catch (RetractException e) {
-				
-			}
-		}
+    public void clearFacts() {
+        if (this.deffactMap.size() > 0) {
+            try {
+                List<?> facts = new ArrayList<>(this.deffactMap.keySet());
+                Iterator<?> itr = facts.iterator();
+                while (itr.hasNext()) {
+                    Object obj = itr.next();
+                    if (obj instanceof EqualityIndex i) {
+                        Deffact f = (Deffact) this.deffactMap.get(i);
+                        if (!(f.getDeftemplate() instanceof InitialFact)) {
+                            this.retractFact(f);
+                            this.deffactMap.remove(i);
+                        }
+                    }
+                }
+            } catch (RetractException e) {
+
+            }
+        }
     }
 
-    /**
-     * Clear the objects from the working memory
-     */
-	public synchronized void clearObjects() {
+    /** Clear the objects from the working memory */
+    public synchronized void clearObjects() {
         if (this.getDynamicFacts().size() > 0) {
             try {
-            	ArrayList<?> objects = new ArrayList<>(this.dynamicFacts.keySet());
+                ArrayList<?> objects = new ArrayList<>(this.dynamicFacts.keySet());
                 Iterator<?> itr = objects.iterator();
                 while (itr.hasNext()) {
                     Object obj = itr.next();
@@ -422,7 +405,7 @@ public class DefaultWM implements WorkingMemory {
         }
         if (this.getStaticFacts().size() > 0) {
             try {
-            	ArrayList<?> objects = new ArrayList<>(this.getStaticFacts().keySet());
+                ArrayList<?> objects = new ArrayList<>(this.getStaticFacts().keySet());
                 Iterator<?> itr = objects.iterator();
                 while (itr.hasNext()) {
                     Object obj = itr.next();
@@ -435,25 +418,24 @@ public class DefaultWM implements WorkingMemory {
     }
 
     /**
-     * The implementation will look in the current module in focus. If it isn't
-     * found, it will search the other modules. The last module it checks should
-     * be the main module.
-     * 
+     * The implementation will look in the current module in focus. If it isn't found, it will
+     * search the other modules. The last module it checks should be the main module.
+     *
      * @param data
      * @param id
      * @return
      */
-    protected Fact createFact(Object data, Defclass dclass, String template,
-            long id, boolean temporal) throws AssertException {
+    protected Fact createFact(
+            Object data, Defclass dclass, String template, long id, boolean temporal)
+            throws AssertException {
         Fact ft = null;
         Template dft = null;
         if (template == null) {
-        	if (data instanceof Cube) {
-        		dft = getCurrentFocus().getTemplate( ((Cube)data).getName() );
-        	} else {
-                dft = getCurrentFocus().getTemplate(
-                        dclass.getClassObject().getName());
-        	}
+            if (data instanceof Cube) {
+                dft = getCurrentFocus().getTemplate(((Cube) data).getName());
+            } else {
+                dft = getCurrentFocus().getTemplate(dclass.getClassObject().getName());
+            }
         } else {
             dft = getCurrentFocus().getTemplate(template);
         }
@@ -471,14 +453,14 @@ public class DefaultWM implements WorkingMemory {
             // we've searched every module, so now check main
             if (dft == null && this.main.containsTemplate(dclass)) {
                 dft = this.main.getTemplate(dclass);
-            } 
+            }
             if (dft == null) {
                 // throw an exception
                 throw new AssertException("Could not find the template");
             }
         }
         if (temporal) {
-        	ft = dft.createTemporalFact(data, dclass, id);
+            ft = dft.createTemporalFact(data, dclass, id);
         } else {
             ft = dft.createFact(data, dclass, id);
         }
@@ -487,7 +469,7 @@ public class DefaultWM implements WorkingMemory {
 
     /**
      * convienance method for creating a Non-Shadow fact.
-     * 
+     *
      * @param data
      * @param id
      * @return
@@ -501,19 +483,20 @@ public class DefaultWM implements WorkingMemory {
     public Module findModule(String name) {
         return this.modules.get(name);
     }
-    
+
     /**
-     * Returns all alpha memories in a Map. The key is the alpha node
-     * and the value is the memory for it
+     * Returns all alpha memories in a Map. The key is the alpha node and the value is the memory
+     * for it
+     *
      * @return
      */
     public Map<?, ?> getAllAlphaMemories() {
         return this.alphaMemories;
     }
-    
+
     /**
-     * The current implementation will try to find the memory for the node.
-     * If it doesn't find it, it will create a new one.
+     * The current implementation will try to find the memory for the node. If it doesn't find it,
+     * it will create a new one.
      */
     @SuppressWarnings("unchecked") // the node that created the memory knows its type
     public <T> T getAlphaMemory(Object key) {
@@ -527,21 +510,21 @@ public class DefaultWM implements WorkingMemory {
     }
 
     /**
-     * Returns all left beta memories in a Map. The key is the beta node
-     * and the value is the memory for it
+     * Returns all left beta memories in a Map. The key is the beta node and the value is the memory
+     * for it
+     *
      * @return
      */
     public Map<?, ?> getAllBetaLeftMemories() {
         return this.betaLeftMemories;
     }
-    
+
     /**
-     * the current implementation will try to find the memory for the node.
-     * If it doesn't find it, it will create a new Left memory, which is
-     * HashMap.
+     * the current implementation will try to find the memory for the node. If it doesn't find it,
+     * it will create a new Left memory, which is HashMap.
      */
     @SuppressWarnings("unchecked") // the node that created the memory knows its type
-	public <T> T getBetaLeftMemory(Object key) {
+    public <T> T getBetaLeftMemory(Object key) {
         Object m = this.betaLeftMemories.get(key);
         if (m == null) {
             String mname = "blmem" + ((BaseNode) key).nodeID;
@@ -550,44 +533,47 @@ public class DefaultWM implements WorkingMemory {
         }
         return (T) m;
     }
-    
+
     @SuppressWarnings("unchecked") // the node that created the memory knows its type
     public <T> T getQueryBetaMemory(Object key) {
-    	Object m = this.queryLeftMemories.get(key);
-    	if (m == null) {
-    		String mname = "query" + ((BaseNode) key).nodeID;
-    		m = engine.newBetaMemoryMap(mname);
-    		this.queryLeftMemories.put(key, m);
-    	}
-    	return (T) m;
+        Object m = this.queryLeftMemories.get(key);
+        if (m == null) {
+            String mname = "query" + ((BaseNode) key).nodeID;
+            m = engine.newBetaMemoryMap(mname);
+            this.queryLeftMemories.put(key, m);
+        }
+        return (T) m;
     }
 
     public Map<?, ?> getAllBetaRightMemories() {
         return this.betaRightMemories;
     }
-    
+
     /**
-     * the current implementation will try to find the memory for the node.
-     * If it doesn't find it, it checks the node type and creates the
-     * appropriate AlphaMemory for the node. Since right memories are
-     * hashed, it creates the appropriate type of Hashed memory.
+     * the current implementation will try to find the memory for the node. If it doesn't find it,
+     * it checks the node type and creates the appropriate AlphaMemory for the node. Since right
+     * memories are hashed, it creates the appropriate type of Hashed memory.
      */
-	@SuppressWarnings("unchecked") // the node that created the memory knows its type
-	public <T> T getBetaRightMemory(Object key) {
+    @SuppressWarnings("unchecked") // the node that created the memory knows its type
+    public <T> T getBetaRightMemory(Object key) {
         Object val = this.betaRightMemories.get(key);
         if (val != null) {
             return (T) val;
         } else {
-            if (key instanceof HashedEqBNode || key instanceof HashedEqNJoin ||
-                    key instanceof ExistJoin || key instanceof OnlyJoin ||
-                    key instanceof MultipleJoin) {
+            if (key instanceof HashedEqBNode
+                    || key instanceof HashedEqNJoin
+                    || key instanceof ExistJoin
+                    || key instanceof OnlyJoin
+                    || key instanceof MultipleJoin) {
                 String mname = "hnode" + ((BaseNode) key).nodeID;
                 HashedAlphaMemoryImpl alpha = new HashedAlphaMemoryImpl(mname, engine);
                 this.betaRightMemories.put(key, alpha);
                 return (T) alpha;
-            } else if (key instanceof HashedNotEqBNode || key instanceof HashedNotEqNJoin ||
-                    key instanceof ExistNeqJoin || key instanceof OnlyNeqJoin || 
-                    key instanceof MultipleNeqJoin) {
+            } else if (key instanceof HashedNotEqBNode
+                    || key instanceof HashedNotEqNJoin
+                    || key instanceof ExistNeqJoin
+                    || key instanceof OnlyNeqJoin
+                    || key instanceof MultipleNeqJoin) {
                 String mname = "hneq" + ((BaseNode) key).nodeID;
                 HashedNeqAlphaMemory alpha = new HashedNeqAlphaMemory(mname, engine);
                 this.betaRightMemories.put(key, alpha);
@@ -598,10 +584,10 @@ public class DefaultWM implements WorkingMemory {
                 this.betaRightMemories.put(key, alpha);
                 return (T) alpha;
             } else if (key instanceof CubeQueryBNode) {
-            	String mname = "cqbnode" + ((BaseNode)key).nodeID;
-            	CubeHashMemoryImpl alpha = new CubeHashMemoryImpl(mname, engine);
-            	this.betaRightMemories.put(key, alpha);
-            	return (T) alpha;
+                String mname = "cqbnode" + ((BaseNode) key).nodeID;
+                CubeHashMemoryImpl alpha = new CubeHashMemoryImpl(mname, engine);
+                this.betaRightMemories.put(key, alpha);
+                return (T) alpha;
             } else {
                 String mname = "brmem" + ((BaseNode) key).nodeID;
                 Map<?, ?> right = engine.newAlphaMemoryMap(mname);
@@ -611,54 +597,58 @@ public class DefaultWM implements WorkingMemory {
         }
     }
 
-	@SuppressWarnings("unchecked") // the node that created the memory knows its type
-	public <T> T getQueryRightMemory(Object key) {
-    	Object val = this.queryRightMemories.get(key);
-    	if (val != null) {
-    		return (T) val;
-    	} else {
-        	if (key instanceof QueryHashedEqJoin || key instanceof QueryHashedEqNot ||
-        			key instanceof QueryExistJoin || key instanceof QueryOnlyJoin ||
-        			key instanceof QueryMultipleJoin) {
+    @SuppressWarnings("unchecked") // the node that created the memory knows its type
+    public <T> T getQueryRightMemory(Object key) {
+        Object val = this.queryRightMemories.get(key);
+        if (val != null) {
+            return (T) val;
+        } else {
+            if (key instanceof QueryHashedEqJoin
+                    || key instanceof QueryHashedEqNot
+                    || key instanceof QueryExistJoin
+                    || key instanceof QueryOnlyJoin
+                    || key instanceof QueryMultipleJoin) {
                 String mname = "hnode" + ((BaseNode) key).nodeID;
                 HashedAlphaMemoryImpl alpha = new HashedAlphaMemoryImpl(mname, engine);
                 this.queryRightMemories.put(key, alpha);
                 return (T) alpha;
-        	} else if (key instanceof QueryHashedNeqJoin || key instanceof QueryHashedNeqNot ||
-        			key instanceof QueryExistNeqJoin || key instanceof QueryOnlyNeqJoin ||
-        			key instanceof QueryMultipleNeqJoin) {
+            } else if (key instanceof QueryHashedNeqJoin
+                    || key instanceof QueryHashedNeqNot
+                    || key instanceof QueryExistNeqJoin
+                    || key instanceof QueryOnlyNeqJoin
+                    || key instanceof QueryMultipleNeqJoin) {
                 String mname = "hneq" + ((BaseNode) key).nodeID;
                 HashedNeqAlphaMemory alpha = new HashedNeqAlphaMemory(mname, engine);
                 this.queryRightMemories.put(key, alpha);
                 return (T) alpha;
             } else if (key instanceof QueryCubeQueryJoin) {
-            	String mname = "cqbnode" + ((BaseNode)key).nodeID;
-            	CubeHashMemoryImpl alpha = new CubeHashMemoryImpl(mname, engine);
-            	this.queryRightMemories.put(key, alpha);
-            	return (T) alpha;
+                String mname = "cqbnode" + ((BaseNode) key).nodeID;
+                CubeHashMemoryImpl alpha = new CubeHashMemoryImpl(mname, engine);
+                this.queryRightMemories.put(key, alpha);
+                return (T) alpha;
             } else {
                 String mname = "brmem" + ((BaseNode) key).nodeID;
                 Map<?, ?> right = engine.newAlphaMemoryMap(mname);
                 this.queryRightMemories.put(key, right);
                 return (T) right;
-        	}
-    	}
+            }
+        }
     }
-    
+
     public Agenda getAgenda() {
         return this.agenda;
     }
-    
+
     public Object getBinding(String name) {
         if (!this.scopes.isEmpty() && !name.startsWith("*")) {
-            Object val =  this.scopes.peek().getBindingValue(name);
+            Object val = this.scopes.peek().getBindingValue(name);
             return val;
         } else {
             return this.getDefglobals().getValue(name);
         }
     }
 
-    	public Map<Object, Object> getDeffactMap() {
+    public Map<Object, Object> getDeffactMap() {
         return this.deffactMap;
     }
 
@@ -666,13 +656,13 @@ public class DefaultWM implements WorkingMemory {
         return this.defglobals;
     }
 
-	public List<Fact> getAllFacts() {
+    public List<Fact> getAllFacts() {
         ArrayList<Fact> facts = new ArrayList<>();
         facts.addAll(this.getDeffacts());
         return facts;
     }
-    
-	public List<Fact> getDeffacts() {
+
+    public List<Fact> getDeffacts() {
         ArrayList<Fact> objects = new ArrayList<>();
         Iterator<Object> itr = this.getDeffactMap().values().iterator();
         while (itr.hasNext()) {
@@ -681,12 +671,12 @@ public class DefaultWM implements WorkingMemory {
         }
         return objects;
     }
-    
-	public Fact getFactById(long id) {
+
+    public Fact getFactById(long id) {
         Fact df = null;
         Iterator<?> itr = this.getDeffactMap().values().iterator();
         while (itr.hasNext()) {
-            df = (Deffact)itr.next();
+            df = (Deffact) itr.next();
             if (df.getFactId() == id) {
                 return df;
             }
@@ -696,7 +686,7 @@ public class DefaultWM implements WorkingMemory {
             // check dynamic facts
             Iterator<?> itr2 = this.getDynamicFacts().values().iterator();
             while (itr2.hasNext()) {
-                df = (Fact)itr2.next();
+                df = (Fact) itr2.next();
                 if (df.getFactId() == id) {
                     return df;
                 }
@@ -704,7 +694,7 @@ public class DefaultWM implements WorkingMemory {
             if (df == null) {
                 itr2 = this.getStaticFacts().values().iterator();
                 while (itr2.hasNext()) {
-                    df = (Fact)itr2.next();
+                    df = (Fact) itr2.next();
                     if (df.getFactId() == id) {
                         return df;
                     }
@@ -713,8 +703,8 @@ public class DefaultWM implements WorkingMemory {
         }
         return null;
     }
-    
-   	public List<Object> getObjects() {
+
+    public List<Object> getObjects() {
         ArrayList<Object> objects = new ArrayList<>();
         Iterator<?> itr = this.getDynamicFacts().keySet().iterator();
         while (itr.hasNext()) {
@@ -732,37 +722,37 @@ public class DefaultWM implements WorkingMemory {
         }
         return objects;
     }
-    
-	public List<Fact> getInitialFacts() {
+
+    public List<Fact> getInitialFacts() {
         return this.initialFacts;
     }
-    
+
     public Module getCurrentFocus() {
         return this.currentModule;
     }
-    
+
     public Module getMain() {
         return this.main;
     }
-    
-	public Map<Object, Object> getDynamicFacts() {
+
+    public Map<Object, Object> getDynamicFacts() {
         return this.dynamicFacts;
     }
-    
+
     public RuleCompiler getRuleCompiler() {
         return this.compiler;
     }
 
-	public Map<Object, Object> getStaticFacts() {
+    public Map<Object, Object> getStaticFacts() {
         return this.staticFacts;
     }
-    
+
     public Strategy getStrategy() {
         return this.theStrat;
     }
 
-	@SuppressWarnings("unchecked")
-	public Map<Index, Activation> getTerminalMemory(Object key) {
+    @SuppressWarnings("unchecked")
+    public Map<Index, Activation> getTerminalMemory(Object key) {
         Object m = this.terminalMemories.get(key);
         if (m == null) {
             m = engine.newTerminalMap();
@@ -772,13 +762,12 @@ public class DefaultWM implements WorkingMemory {
     }
 
     /**
-     * Modify will call retract with the old fact, followed by updating the fact
-     * instance and asserting the fact.
-     * 
+     * Modify will call retract with the old fact, followed by updating the fact instance and
+     * asserting the fact.
+     *
      * @param data
      */
-	public void modifyObject(Object data) throws AssertException,
-            RetractException {
+    public void modifyObject(Object data) throws AssertException, RetractException {
         if (this.getDynamicFacts().containsKey(data)) {
             Defclass dc = this.engine.findDefclass(data);
             // first we retract the fact
@@ -786,7 +775,7 @@ public class DefaultWM implements WorkingMemory {
             // check to see if the fact is a temporal fact
             boolean temporal = false;
             if (ft instanceof TemporalFact) {
-            	temporal = true;
+                temporal = true;
             }
             String tname = ft.getDeftemplate().getName();
             long fid = ft.getFactId();
@@ -797,7 +786,7 @@ public class DefaultWM implements WorkingMemory {
             this.assertFact(ft);
         }
     }
-    
+
     public boolean profileAssert() {
         return this.profileAssert;
     }
@@ -822,7 +811,7 @@ public class DefaultWM implements WorkingMemory {
         this.scopes.pop();
     }
 
-	public void pushScope(Scope s) {
+    public void pushScope(Scope s) {
         this.scopes.push(s);
     }
 
@@ -840,15 +829,13 @@ public class DefaultWM implements WorkingMemory {
             this.retractFactWProfile(fact);
         } else {
             if (watchFact) {
-                engine.writeMessage("<== " + fact.toFactString()
-                        + Constants.LINEBREAK, "t");
+                engine.writeMessage("<== " + fact.toFactString() + Constants.LINEBREAK, "t");
             }
             this.root.retractObject(fact, engine, this);
         }
     }
 
     /**
-     * 
      * @param data
      */
     public synchronized void retractObject(Object data) throws RetractException {
@@ -882,7 +869,7 @@ public class DefaultWM implements WorkingMemory {
     public void setCurrentModule(Module mod) {
         this.currentModule = mod;
     }
-    
+
     public void setProfileAssert(boolean profileAssert) {
         this.profileAssert = profileAssert;
     }
@@ -896,15 +883,14 @@ public class DefaultWM implements WorkingMemory {
     }
 
     /**
-     * the implementation sets the strategy for the current module
-     * in focus. If there are multiple modules, it does not set
-     * the strategy for the other modules.
+     * the implementation sets the strategy for the current module in focus. If there are multiple
+     * modules, it does not set the strategy for the other modules.
      */
     public void setStrategy(Strategy strategy) {
         this.theStrat = strategy;
         this.getCurrentFocus().setStrategy(strategy);
     }
-    
+
     public void setWatchFact(boolean watchFact) {
         this.watchFact = watchFact;
     }
@@ -914,7 +900,7 @@ public class DefaultWM implements WorkingMemory {
     }
 
     /// ----- helper methods that are not defined in WorkingMemory interface ----- ///
-    
+
     protected void assertFactWProfile(Fact fact) throws AssertException {
         ProfileStats.startAssert();
         this.root.assertObject(fact, engine, this);
@@ -924,9 +910,8 @@ public class DefaultWM implements WorkingMemory {
     public boolean containsFact(Fact fact) {
         return this.deffactMap.containsKey(fact.equalityIndex());
     }
-    
+
     /**
-     * 
      * @param fact
      * @throws RetractException
      */

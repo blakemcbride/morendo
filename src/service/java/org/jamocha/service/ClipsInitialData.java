@@ -1,109 +1,104 @@
 package org.jamocha.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jamocha.rete.Parameter;
+import org.jamocha.rete.Rete;
+import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
+import org.jamocha.rete.functions.io.LoadFactsFunction;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jamocha.rete.Constants;
-import org.jamocha.rete.Parameter;
-import org.jamocha.rete.Rete;
-import org.jamocha.rete.ValueParam;
-import org.jamocha.rete.functions.io.LoadFactsFunction;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.jamocha.rete.ValueType;
-
 /**
  * The implementation uses load-facts to load the data
- * 
+ *
  * @author Peter Lin
  */
 public class ClipsInitialData implements InitialData {
 
-	@JsonIgnore
-	private transient Logger log = null;
-	@JsonIgnore
-	private String data = null;
-	@JsonIgnore
-	private String cacheFile = null;
-	private String name = null;
-	private String url = null;
-	
-	public ClipsInitialData() {
-		super();
-		log = LogManager.getLogger(ClipsInitialData.class);
-	}
-	
-	public Object getData() {
-		return data;
-	}
+    @JsonIgnore private transient Logger log = null;
+    @JsonIgnore private String data = null;
+    @JsonIgnore private String cacheFile = null;
+    private String name = null;
+    private String url = null;
 
-	@JsonIgnore
-	public String getDataType() {
-		return DEFFACTS;
-	}
-	
-	public void setName(String text) {
-		this.name = text;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
+    public ClipsInitialData() {
+        super();
+        log = LogManager.getLogger(ClipsInitialData.class);
+    }
 
-	public void setURL(String text) {
-		this.url = text;
-	}
-	
-	public String getURL() {
-		return this.url;
-	}
-	
-	/**
-	 * the load process needs to be atomic, so that in the event
-	 * there is an error, the entire data set is rolled back.
-	 */
-	public boolean loadData(Rete engine) {
-		if (log == null) {
-			log = LogManager.getLogger(ClipsInitialData.class);
-		}
-		boolean loaded = true;
-		try {
-			LoadFactsFunction load = (LoadFactsFunction)engine.findFunction(LoadFactsFunction.LOAD);
-			Parameter[] parameters = new Parameter[1];
-			parameters[0] = new ValueParam(ValueType.STRING, cacheFile);
-			load.executeFunction(engine, parameters);
-		} catch (Exception e) {
-			loaded = false;
-		}
-		return loaded;
-	}
+    public Object getData() {
+        return data;
+    }
 
-	public boolean reloadData(Rete engine) {
-		engine.clearFacts();
-		engine.clearObjects();
-		return loadData(engine);
-	}
+    @JsonIgnore
+    public String getDataType() {
+        return DEFFACTS;
+    }
 
-	/**
-	 * Method writes the file to a cache directory for backup just in case
-	 */
-	protected void serializeArrayToDisk() {
-		cacheFile = "./cache/data/" + this.name + ".bin";
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream(cacheFile);
-			ObjectOutputStream output = new ObjectOutputStream(fos);
-			output.writeObject(this.data);
-			output.close();
-			data = null;
-		} catch (FileNotFoundException e) {
-			log.info(e.toString(), e);
-		} catch (IOException e) {
-			log.info(e.toString(), e);
-		}
-	}
+    public void setName(String text) {
+        this.name = text;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setURL(String text) {
+        this.url = text;
+    }
+
+    public String getURL() {
+        return this.url;
+    }
+
+    /**
+     * the load process needs to be atomic, so that in the event there is an error, the entire data
+     * set is rolled back.
+     */
+    public boolean loadData(Rete engine) {
+        if (log == null) {
+            log = LogManager.getLogger(ClipsInitialData.class);
+        }
+        boolean loaded = true;
+        try {
+            LoadFactsFunction load =
+                    (LoadFactsFunction) engine.findFunction(LoadFactsFunction.LOAD);
+            Parameter[] parameters = new Parameter[1];
+            parameters[0] = new ValueParam(ValueType.STRING, cacheFile);
+            load.executeFunction(engine, parameters);
+        } catch (Exception e) {
+            loaded = false;
+        }
+        return loaded;
+    }
+
+    public boolean reloadData(Rete engine) {
+        engine.clearFacts();
+        engine.clearObjects();
+        return loadData(engine);
+    }
+
+    /** Method writes the file to a cache directory for backup just in case */
+    protected void serializeArrayToDisk() {
+        cacheFile = "./cache/data/" + this.name + ".bin";
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(cacheFile);
+            ObjectOutputStream output = new ObjectOutputStream(fos);
+            output.writeObject(this.data);
+            output.close();
+            data = null;
+        } catch (FileNotFoundException e) {
+            log.info(e.toString(), e);
+        } catch (IOException e) {
+            log.info(e.toString(), e);
+        }
+    }
 }

@@ -1,29 +1,25 @@
 package org.jamocha.rete;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rete.util.NodeUtils;
 
-public class TemporalEqNode extends AbstractTemporalNode {
-    
-    /**
-	 * 
-	 */
+import java.util.Iterator;
+import java.util.Map;
 
-	public TemporalEqNode(int id) {
+public class TemporalEqNode extends AbstractTemporalNode {
+
+    /** */
+    public TemporalEqNode(int id) {
         super(id);
     }
-	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws AssertException {
+
+    public void assertLeft(Index linx, Rete engine, WorkingMemory mem) throws AssertException {
         long time = getRightTime();
         Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
         leftmem.put(linx, linx);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        TemporalHashedAlphaMem rightmem = mem
-                .getBetaRightMemory(this);
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getLeftValues(this.binds, linx.getFacts()));
+        TemporalHashedAlphaMem rightmem = mem.getBetaRightMemory(this);
         Iterator<?> itr = rightmem.iterator(inx);
         if (itr != null) {
             try {
@@ -42,15 +38,12 @@ public class TemporalEqNode extends AbstractTemporalNode {
                 // there shouldn't be any retract exceptions
             }
         }
-
     }
 
-    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws AssertException {
+    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
         long time = getLeftTime();
         TemporalHashedAlphaMem rightmem = mem.getBetaRightMemory(this);
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,
-                rfact));
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds, rfact));
         rightmem.addPartialMatch(inx, rfact, engine);
         // now that we've added the facts to the list, we
         // proceed with evaluating the fact
@@ -75,13 +68,11 @@ public class TemporalEqNode extends AbstractTemporalNode {
         }
     }
 
-    public void retractLeft(Index linx, Rete engine, WorkingMemory mem)
-            throws RetractException {
+    public void retractLeft(Index linx, Rete engine, WorkingMemory mem) throws RetractException {
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
-        EqHashIndex eqinx = new EqHashIndex(NodeUtils.getLeftValues(this.binds,linx.getFacts()));
-        TemporalHashedAlphaMem rightmem = mem
-                .getBetaRightMemory(this);
+        EqHashIndex eqinx = new EqHashIndex(NodeUtils.getLeftValues(this.binds, linx.getFacts()));
+        TemporalHashedAlphaMem rightmem = mem.getBetaRightMemory(this);
 
         // now we propogate the retract. To do that, we have
         // merge each item in the list with the Fact array
@@ -94,12 +85,10 @@ public class TemporalEqNode extends AbstractTemporalNode {
         }
     }
 
-    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem)
-            throws RetractException {
+    public void retractRight(Fact rfact, Rete engine, WorkingMemory mem) throws RetractException {
         long time = getLeftTime();
-        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds,rfact));
-        TemporalHashedAlphaMem rightmem = mem
-                .getBetaRightMemory(this);
+        EqHashIndex inx = new EqHashIndex(NodeUtils.getRightValues(this.binds, rfact));
+        TemporalHashedAlphaMem rightmem = mem.getBetaRightMemory(this);
         // first we remove the fact from the right
         rightmem.removePartialMatch(inx, rfact);
         // now we see the left memory matched and remove it also
@@ -107,7 +96,7 @@ public class TemporalEqNode extends AbstractTemporalNode {
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
-            if (this.evaluate(linx.getFacts(), rfact,time)) {
+            if (this.evaluate(linx.getFacts(), rfact, time)) {
                 propagateRetract(linx.add(rfact), engine, mem);
             }
         }
@@ -116,7 +105,12 @@ public class TemporalEqNode extends AbstractTemporalNode {
     public String toPPString() {
         StringBuilder buf = new StringBuilder();
         buf.append("TemporalEqNode-" + this.nodeID + "> ");
-        buf.append("left=" + this.leftElapsedTime/1000 + " s, right=" + this.rightElapsedTime/1000 + " s - ");
+        buf.append(
+                "left="
+                        + this.leftElapsedTime / 1000
+                        + " s, right="
+                        + this.rightElapsedTime / 1000
+                        + " s - ");
         for (int idx = 0; idx < this.binds.length; idx++) {
             if (idx > 0) {
                 buf.append(" && ");
@@ -132,7 +126,12 @@ public class TemporalEqNode extends AbstractTemporalNode {
     public String toString() {
         StringBuilder buf = new StringBuilder();
         buf.append("TemporalEqNode-" + this.nodeID + "> ");
-        buf.append("left=" + this.leftElapsedTime/1000 + " s, right=" + this.rightElapsedTime/1000 + " s - ");
+        buf.append(
+                "left="
+                        + this.leftElapsedTime / 1000
+                        + " s, right="
+                        + this.rightElapsedTime / 1000
+                        + " s - ");
         for (int idx = 0; idx < this.binds.length; idx++) {
             if (idx > 0) {
                 buf.append(" && ");
@@ -143,5 +142,4 @@ public class TemporalEqNode extends AbstractTemporalNode {
         }
         return buf.toString();
     }
-
 }

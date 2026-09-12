@@ -1,7 +1,5 @@
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -13,55 +11,51 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
 public class OrFunction implements Function {
-	
-	/**
-	 * 
-	 */
-	public static final String OR = "or";
 
-	public OrFunction() {
-		super();
-	}
+    /** */
+    public static final String OR = "or";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector ret = new DefaultReturnVector();
-		Boolean eq = Boolean.FALSE;
-		if (params != null && params.length > 0) {
-			for (int idx=0; idx < params.length; idx++) {
-				if (eq) {
-					break;
-				} else {
-					// or expects nested functions
-					if (params[idx] instanceof FunctionParam2) {
-						FunctionParam2 n = (FunctionParam2) params[idx];
-						n.setEngine(engine);
-						n.lookUpFunction();
-						ReturnVector rval = (ReturnVector) n.getValue();
-						eq = rval.firstReturnValue().getBooleanValue();
-					}
-				}
-			}
-		}
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, eq);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public OrFunction() {
+        super();
+    }
 
-	public String getName() {
-		return OR;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        Boolean eq = Boolean.FALSE;
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {
+                if (eq) {
+                    break;
+                } else {
+                    // or expects nested functions
+                    if (params[idx] instanceof FunctionParam2) {
+                        FunctionParam2 n = (FunctionParam2) params[idx];
+                        n.setEngine(engine);
+                        n.lookUpFunction();
+                        ReturnVector rval = (ReturnVector) n.getValue();
+                        eq = rval.firstReturnValue().getBooleanValue();
+                    }
+                }
+            }
+        }
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eq);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ ValueParam[].class };
-	}
+    public String getName() {
+        return OR;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(or <expression>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(or <expression>)";
+    }
 }

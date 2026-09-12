@@ -12,14 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.math;
 
-import java.math.BigDecimal;
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -29,78 +26,75 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.math.BigDecimal;
+
 /**
  * @author Nikolaus Koemm
  * @author Peter Lin
- * 
- * If its ony argument is even, Evenp returns true.
+ *     <p>If its ony argument is even, Evenp returns true.
  */
 public class Evenp implements Function {
 
-	/**
-	 * 
-	 */
-	
-	public static final String EVENP = "evenp";
+    /** */
+    public static final String EVENP = "evenp";
 
-	
-	public Evenp() {
-		super();
-	}
+    public Evenp() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BIG_DECIMAL;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BIG_DECIMAL;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		BigDecimal bdval = new BigDecimal(0);
-		Boolean eval = Boolean.FALSE;
-		if (params.length == 1) {
-			if (params[0] instanceof ValueParam) {
-	            bdval = (BigDecimal)params[0].getValue(engine, ValueType.BIG_DECIMAL);
-			} else {
-				bdval = new BigDecimal( params[0].getValue(engine, ValueType.BIG_DECIMAL).toString());
-			}
-			double bdh = bdval.doubleValue();
-			if (bdh % 2 == 0){
-				eval = Boolean.TRUE;
-			}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        BigDecimal bdval = new BigDecimal(0);
+        Boolean eval = Boolean.FALSE;
+        if (params.length == 1) {
+            if (params[0] instanceof ValueParam) {
+                bdval = (BigDecimal) params[0].getValue(engine, ValueType.BIG_DECIMAL);
+            } else {
+                bdval =
+                        new BigDecimal(
+                                params[0].getValue(engine, ValueType.BIG_DECIMAL).toString());
+            }
+            double bdh = bdval.doubleValue();
+            if (bdh % 2 == 0) {
+                eval = Boolean.TRUE;
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, eval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public String getName() {
+        return EVENP;
+    }
 
-	public String getName() {
-		return EVENP;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam[].class };
-	}
-
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length >= 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(evenp");
-				int idx = 0;
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else {
-					buf.append(" " + params[idx].getStringValue());
-				}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(evenp <expression>)\n" +
-			"Function description:\n" +
-			"\tReturns true, if its only argument is even.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length >= 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(evenp");
+            int idx = 0;
+            if (params[idx] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[idx];
+                buf.append(" ?" + bp.getVariableName());
+            } else if (params[idx] instanceof ValueParam) {
+                buf.append(" " + params[idx].getStringValue());
+            } else {
+                buf.append(" " + params[idx].getStringValue());
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(evenp <expression>)\n"
+                    + "Function description:\n"
+                    + "\tReturns true, if its only argument is even.";
+        }
+    }
 }

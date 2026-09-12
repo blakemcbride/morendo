@@ -6,6 +6,6 @@ public class ReadRegionCode implements ReadMacro {
     public ReadRegionCode() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getRegionCode();
+        return ((woolfel.examples.model.Account) instance).getRegionCode();
     }
 }

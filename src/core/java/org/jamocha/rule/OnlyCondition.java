@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
 
@@ -23,31 +23,25 @@ import org.jamocha.rete.compiler.ConditionCompiler;
 
 /**
  * @author Peter Lin
- *
- * OnlyCondition is a special case of exist when there is
- * only 1 match for the given pattern.
+ *     <p>OnlyCondition is a special case of exist when there is only 1 match for the given pattern.
  */
 public final class OnlyCondition extends ObjectCondition {
 
-	/**
-	 * 
-	 */
+    /** */
 
-	/**
-	 * 
-	 */
-	public OnlyCondition() {
-		super();
-	}
+    /** */
+    public OnlyCondition() {
+        super();
+    }
 
-	public String toPPString() {
+    public String toPPString() {
         StringBuilder buf = new StringBuilder();
         int start = 0;
         String pad = "  ";
         buf.append(pad + "(only" + Constants.LINEBREAK);
         pad = "    ";
         buf.append(pad + "(" + getTemplateName() + Constants.LINEBREAK);
-        for (int idx=start; idx < getConstraints().length; idx++) {
+        for (int idx = start; idx < getConstraints().length; idx++) {
             Constraint cnstr = getConstraints()[idx];
             buf.append("  " + cnstr.toPPString());
         }
@@ -55,12 +49,12 @@ public final class OnlyCondition extends ObjectCondition {
         pad = "  ";
         buf.append(pad + ")" + Constants.LINEBREAK);
         return buf.toString();
-	}
+    }
 
-	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).onlyConditionCompiler;
-	}
-    
+    public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).onlyConditionCompiler;
+    }
+
     public static OnlyCondition newOnlyCondition(ObjectCondition cond) {
         OnlyCondition only = new OnlyCondition();
         only.constraints = cond.constraints;

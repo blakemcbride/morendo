@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
 
@@ -20,90 +20,84 @@ import org.jamocha.rete.*;
 import org.jamocha.rete.compiler.CompilerProvider;
 import org.jamocha.rete.compiler.ConditionCompiler;
 
-
 /**
  * @author Peter Lin
- *
- * ObjectCondition is equivalent to RuleML 0.83 resourceType. ObjectCondition
- * matches on the fields of an object. The patterns may be simple value
- * comparisons, or joins against other objects.
+ *     <p>ObjectCondition is equivalent to RuleML 0.83 resourceType. ObjectCondition matches on the
+ *     fields of an object. The patterns may be simple value comparisons, or joins against other
+ *     objects.
  */
 public sealed class ObjectCondition extends AbstractCondition
-		permits ExistCondition, OnlyCondition, MultipleCondition, TemporalCondition, CubeQueryCondition {
-	
-	/**
-	 * 
-	 */
+        permits ExistCondition,
+                OnlyCondition,
+                MultipleCondition,
+                TemporalCondition,
+                CubeQueryCondition {
 
-	//hasNotEqual and hasPredicateJoin determine which kind of joinNode to create
+    /** */
+
+    // hasNotEqual and hasPredicateJoin determine which kind of joinNode to create
     private boolean hasNotEqual = false;
-    
+
     private boolean hasPredicateJoin = false;
 
-	/**
-	 * 
-	 */
-	public ObjectCondition() {
-		super();
-	}
-	
+    /** */
+    public ObjectCondition() {
+        super();
+    }
+
     public void addConstraint(Constraint con) {
         this.constraints.add(con);
         if (this.getNegated() && con instanceof BoundConstraint) {
-        	((BoundConstraint)con).setBindableConstraint(false);
+            ((BoundConstraint) con).setBindableConstraint(false);
         }
     }
-    
+
     public void addConstraint(Constraint con, int position) {
-        this.constraints.add(0,con);
+        this.constraints.add(0, con);
         if (this.getNegated() && con instanceof BoundConstraint) {
-        	((BoundConstraint)con).setBindableConstraint(false);
+            ((BoundConstraint) con).setBindableConstraint(false);
         }
     }
-    
-    /**
-     * TODO - currently we don't need it and it isn't implemented.
-     * should finish implementing it.
-     */
-	public boolean compare(Condition cond) {
-		return false;
-	}
 
     /**
-     * The current implementation expects the deffact or object binding
-     * constriant to be first.
+     * TODO - currently we don't need it and it isn't implemented. should finish implementing it.
      */
+    public boolean compare(Condition cond) {
+        return false;
+    }
+
+    /** The current implementation expects the deffact or object binding constriant to be first. */
     public String toPPString() {
-    	StringBuilder buf = new StringBuilder();
-    	int start = 0;
-    	// this is a hack, but it keeps the code simple for spacing
-    	// default indent for CE is 2 spaces
-    	String pad = "  ";
+        StringBuilder buf = new StringBuilder();
+        int start = 0;
+        // this is a hack, but it keeps the code simple for spacing
+        // default indent for CE is 2 spaces
+        String pad = "  ";
         boolean obind = false;
-    	Constraint cn = this.constraints.get(0);
-    	if (cn instanceof BoundConstraint bc) {
-    		if (bc.getIsObjectBinding()) {
-    			start = 1;
-    			buf.append(bc.toFactBindingPPString());
-    			// since the first Constraint is a fact binding we
-    			// change the padding to 1 space
-    			pad = " ";
+        Constraint cn = this.constraints.get(0);
+        if (cn instanceof BoundConstraint bc) {
+            if (bc.getIsObjectBinding()) {
+                start = 1;
+                buf.append(bc.toFactBindingPPString());
+                // since the first Constraint is a fact binding we
+                // change the padding to 1 space
+                pad = " ";
                 obind = true;
-    		}
-    	}
+            }
+        }
         if (this.negated) {
             buf.append(pad + "(not" + Constants.LINEBREAK);
             pad = "    ";
         }
-    	buf.append(pad + "(" + this.templateName + Constants.LINEBREAK);
-    	for (int idx=start; idx < this.constraints.size(); idx++) {
-    		Constraint cnstr = this.constraints.get(idx);
+        buf.append(pad + "(" + this.templateName + Constants.LINEBREAK);
+        for (int idx = start; idx < this.constraints.size(); idx++) {
+            Constraint cnstr = this.constraints.get(idx);
             if (this.negated) {
                 buf.append("  " + cnstr.toPPString());
             } else {
                 buf.append(cnstr.toPPString());
             }
-    	}
+        }
         if (this.negated) {
             buf.append(pad + ")" + Constants.LINEBREAK);
             pad = "  ";
@@ -113,7 +107,7 @@ public sealed class ObjectCondition extends AbstractCondition
         } else {
             buf.append(pad + ")" + Constants.LINEBREAK);
         }
-    	return buf.toString();
+        return buf.toString();
     }
 
     public String toPPString(int tabs) {
@@ -136,7 +130,7 @@ public sealed class ObjectCondition extends AbstractCondition
             tabCount++;
         }
         buf.append(padding(tabCount) + "(" + this.templateName + Constants.LINEBREAK);
-        for (int idx=start; idx < this.constraints.size(); idx++) {
+        for (int idx = start; idx < this.constraints.size(); idx++) {
             Constraint cnstr = this.constraints.get(idx);
             if (this.negated) {
                 buf.append(padding(tabCount) + cnstr.toPPString());
@@ -149,46 +143,46 @@ public sealed class ObjectCondition extends AbstractCondition
             buf.append(padding(tabCount) + ")" + Constants.LINEBREAK);
         }
         if (obind && !this.negated) {
-            buf.append(padding(tabCount +1) + ")" + Constants.LINEBREAK);
+            buf.append(padding(tabCount + 1) + ")" + Constants.LINEBREAK);
         } else {
             buf.append(padding(tabCount) + ")" + Constants.LINEBREAK);
         }
         return buf.toString();
     }
-    
+
     protected String padding(int count) {
         String pad = "";
-        for (int idx=0; idx < count; idx++) {
+        for (int idx = 0; idx < count; idx++) {
             pad += "  ";
         }
         return pad;
     }
-    
-	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
-	}
-	
-	public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
-	}
-	
-	public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
-	}
-	
-	public boolean isHasNotEqual() {
-		return hasNotEqual;
-	}
 
-	public void setHasNotEqual(boolean hasNotEqual) {
-		this.hasNotEqual = hasNotEqual;
-	}
+    public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
+    }
 
-	public boolean isHasPredicateJoin() {
-		return hasPredicateJoin;
-	}
+    public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
+    }
 
-	public void setHasPredicateJoin(boolean hasPredicateJoin) {
-		this.hasPredicateJoin = hasPredicateJoin;
-	}
+    public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).objectConditionCompiler;
+    }
+
+    public boolean isHasNotEqual() {
+        return hasNotEqual;
+    }
+
+    public void setHasNotEqual(boolean hasNotEqual) {
+        this.hasNotEqual = hasNotEqual;
+    }
+
+    public boolean isHasPredicateJoin() {
+        return hasPredicateJoin;
+    }
+
+    public void setHasPredicateJoin(boolean hasPredicateJoin) {
+        this.hasPredicateJoin = hasPredicateJoin;
+    }
 }

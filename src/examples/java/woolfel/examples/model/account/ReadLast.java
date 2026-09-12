@@ -6,6 +6,6 @@ public class ReadLast implements ReadMacro {
     public ReadLast() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getLast();
+        return ((woolfel.examples.model.Account) instance).getLast();
     }
 }

@@ -12,52 +12,46 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.exception;
 
 /**
  * @author Peter Lin
- *
  */
 public class RetractException extends Exception {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
+    /** */
+
+    /** */
+    public RetractException() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
     /**
-	 * 
-	 */
-	public RetractException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+     * @param message
+     */
+    public RetractException(String message) {
+        super(message);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param message
-	 */
-	public RetractException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param message
+     * @param cause
+     */
+    public RetractException(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public RetractException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param cause
-	 */
-	public RetractException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
-
+    /**
+     * @param cause
+     */
+    public RetractException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
 }

@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.messaging.agent;
-
-import java.util.Iterator;
-import java.util.List;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -25,52 +22,66 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import java.time.Instant;
 import org.jamocha.rete.ValueType;
+
+import java.time.Instant;
+import java.util.Iterator;
+import java.util.List;
 
 public class PrintAgentsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String PRINT_AGENTS = "pprint-agents";
+    /** */
+    public static final String PRINT_AGENTS = "pprint-agents";
 
-	public PrintAgentsFunction() {
-		super();
-	}
+    public PrintAgentsFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		List<?> agents = AgentRegistry.getAgents();
-		Iterator<?> iterator = agents.iterator();
-		while (iterator.hasNext()) {
-			AgentEntry agent = (AgentEntry)iterator.next();
-			String message = "Agent: " + Constants.LINEBREAK +
-			"  ip address: " + agent.getIPAddress() + Constants.LINEBREAK +
-			"  hostname: " + agent.getHostname() + Constants.LINEBREAK + 
-			"  Application: " + agent.getApplication() + Constants.LINEBREAK +
-			"  Agent Application Name: " + agent.getAgentApplicationName() + Constants.LINEBREAK +
-			"  Agent Application Version: " + agent.getAgentApplicationVersion() + Constants.LINEBREAK +
-			"  Timestamp: " + Instant.ofEpochMilli(agent.getTimestamp()) + Constants.LINEBREAK;
-			engine.writeMessage(message, "t");
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        List<?> agents = AgentRegistry.getAgents();
+        Iterator<?> iterator = agents.iterator();
+        while (iterator.hasNext()) {
+            AgentEntry agent = (AgentEntry) iterator.next();
+            String message =
+                    "Agent: "
+                            + Constants.LINEBREAK
+                            + "  ip address: "
+                            + agent.getIPAddress()
+                            + Constants.LINEBREAK
+                            + "  hostname: "
+                            + agent.getHostname()
+                            + Constants.LINEBREAK
+                            + "  Application: "
+                            + agent.getApplication()
+                            + Constants.LINEBREAK
+                            + "  Agent Application Name: "
+                            + agent.getAgentApplicationName()
+                            + Constants.LINEBREAK
+                            + "  Agent Application Version: "
+                            + agent.getAgentApplicationVersion()
+                            + Constants.LINEBREAK
+                            + "  Timestamp: "
+                            + Instant.ofEpochMilli(agent.getTimestamp())
+                            + Constants.LINEBREAK;
+            engine.writeMessage(message, "t");
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        return ret;
+    }
 
-	public String getName() {
-		return PRINT_AGENTS;
-	}
+    public String getName() {
+        return PRINT_AGENTS;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(pprint-agents)";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(pprint-agents)";
+    }
 }

@@ -12,10 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -23,64 +22,61 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import org.jamocha.rete.util.ProfileStats;
 import org.jamocha.rete.ValueType;
-
+import org.jamocha.rete.util.ProfileStats;
 
 /**
  * @author Peter Lin
- *
- * PrintProfileFunction will print out the profile information.
+ *     <p>PrintProfileFunction will print out the profile information.
  */
 public class PrintProfileFunction implements Function {
 
-    /**
-	 * 
-	 */
-	public static final String PRINT_PROFILE = "print-profile";
-    
-	/**
-	 * 
-	 */
-	public PrintProfileFunction() {
-		super();
-	}
+    /** */
+    public static final String PRINT_PROFILE = "print-profile";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    /** */
+    public PrintProfileFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-        engine.writeMessage("fire ET=" + ProfileStats.fireTime + 
-                " ms" + Constants.LINEBREAK,"t");
-        engine.writeMessage("assert ET=" + ProfileStats.assertTime +
-                " ms" + Constants.LINEBREAK,"t");
-        engine.writeMessage("retract ET=" + ProfileStats.retractTime +
-                " ms" + Constants.LINEBREAK,"t");
-        engine.writeMessage("add Activation ET=" + ProfileStats.addActivation +
-                " ms" + Constants.LINEBREAK,"t");
-        engine.writeMessage("remove Activation ET=" + ProfileStats.rmActivation +
-                " ms" + Constants.LINEBREAK,"t");
-        engine.writeMessage("Activation added=" + ProfileStats.addcount +
-                Constants.LINEBREAK,"t");
-        engine.writeMessage("Activation removed=" + ProfileStats.rmcount +
-                Constants.LINEBREAK,"t");
-        engine.writeMessage("Average cube query=" + ProfileStats.averageCubeQueryTime +
-        		" ms" + Constants.LINEBREAK, "t");
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        engine.writeMessage("fire ET=" + ProfileStats.fireTime + " ms" + Constants.LINEBREAK, "t");
+        engine.writeMessage(
+                "assert ET=" + ProfileStats.assertTime + " ms" + Constants.LINEBREAK, "t");
+        engine.writeMessage(
+                "retract ET=" + ProfileStats.retractTime + " ms" + Constants.LINEBREAK, "t");
+        engine.writeMessage(
+                "add Activation ET=" + ProfileStats.addActivation + " ms" + Constants.LINEBREAK,
+                "t");
+        engine.writeMessage(
+                "remove Activation ET=" + ProfileStats.rmActivation + " ms" + Constants.LINEBREAK,
+                "t");
+        engine.writeMessage("Activation added=" + ProfileStats.addcount + Constants.LINEBREAK, "t");
+        engine.writeMessage(
+                "Activation removed=" + ProfileStats.rmcount + Constants.LINEBREAK, "t");
+        engine.writeMessage(
+                "Average cube query="
+                        + ProfileStats.averageCubeQueryTime
+                        + " ms"
+                        + Constants.LINEBREAK,
+                "t");
         DefaultReturnVector ret = new DefaultReturnVector();
         return ret;
-	}
+    }
 
-	public String getName() {
-		return PRINT_PROFILE;
-	}
+    public String getName() {
+        return PRINT_PROFILE;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(print-profile)";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(print-profile)";
+    }
 }

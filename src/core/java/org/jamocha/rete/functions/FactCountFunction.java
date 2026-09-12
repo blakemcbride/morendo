@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,49 +26,44 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- * 
- * Facts function will printout all the facts, not including any
- * initial facts which are internal to the rule engine.
+ *     <p>Facts function will printout all the facts, not including any initial facts which are
+ *     internal to the rule engine.
  */
 public class FactCountFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String FACT_COUNT = "fact-count";
+    /** */
+    public static final String FACT_COUNT = "fact-count";
 
-	/**
-	 * 
-	 */
-	public FactCountFunction() {
-		super();
-	}
+    /** */
+    public FactCountFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.INTEGER_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.INTEGER_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		int count = 0;
-		count = engine.getAllFacts().size();
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.INTEGER_OBJECT, Integer.valueOf(count));
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        int count = 0;
+        count = engine.getAllFacts().size();
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv =
+                new DefaultReturnValue(ValueType.INTEGER_OBJECT, Integer.valueOf(count));
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return FACT_COUNT;
-	}
+    public String getName() {
+        return FACT_COUNT;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(fact-count)\n" +
-			"Function description:\n" +
-			"\tPrint out the number of facts in the working memory.";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(fact-count)\n"
+                + "Function description:\n"
+                + "\tPrint out the number of facts in the working memory.";
+    }
 }

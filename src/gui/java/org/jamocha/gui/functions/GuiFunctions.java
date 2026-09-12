@@ -1,11 +1,11 @@
 package org.jamocha.gui.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jamocha.rete.Function;
 import org.jamocha.rete.FunctionGroup;
 import org.jamocha.rete.Rete;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The functions the GUI module adds to an engine, registered through
@@ -13,19 +13,19 @@ import org.jamocha.rete.Rete;
  */
 public class GuiFunctions implements FunctionGroup {
 
-	private final List<Function> funcs = new ArrayList<>();
+    private final List<Function> funcs = new ArrayList<>();
 
-	public String getName() {
-		return GuiFunctions.class.getSimpleName();
-	}
+    public String getName() {
+        return GuiFunctions.class.getSimpleName();
+    }
 
-	public void loadFunctions(Rete engine) {
-		ViewFunction view = new ViewFunction();
-		engine.declareFunction(view);
-		funcs.add(view);
-	}
+    public void loadFunctions(Rete engine) {
+        ViewFunction view = new ViewFunction();
+        engine.declareFunction(view);
+        funcs.add(view);
+    }
 
-	public List<Function> listFunctions() {
-		return funcs;
-	}
+    public List<Function> listFunctions() {
+        return funcs;
+    }
 }

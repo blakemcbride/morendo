@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.memory;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -25,40 +23,35 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
-
 public class GarbageCollectFunction implements Function {
 
-	/**
-	 * 
-	 */
-	
-	public static final String GARBAGE_COLLECT = "gc";
+    /** */
+    public static final String GARBAGE_COLLECT = "gc";
 
-	public GarbageCollectFunction() {
-		super();
-	}
+    public GarbageCollectFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Runtime rt = Runtime.getRuntime();
-		rt.gc();
-		DefaultReturnVector ret = new DefaultReturnVector();
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Runtime rt = Runtime.getRuntime();
+        rt.gc();
+        DefaultReturnVector ret = new DefaultReturnVector();
+        return ret;
+    }
 
-	public String getName() {
-		return GARBAGE_COLLECT;
-	}
+    public String getName() {
+        return GARBAGE_COLLECT;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(gc)";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(gc)";
+    }
 }

@@ -12,138 +12,134 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
-
-import java.util.Iterator;
 
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 
+import java.util.Iterator;
+
 /**
  * @author Peter Lin
- * 
- * BaseAlpha is the baseAlpha node for all 1-input nodes.
+ *     <p>BaseAlpha is the baseAlpha node for all 1-input nodes.
  */
 public abstract class BaseAlpha extends BaseNode {
 
-    /**
-	 * 
-	 */
-	/**
-     * The operator to compare two values
-     */
+    /** */
+    /** The operator to compare two values */
     protected Operator operator = Operator.EQUAL;
 
-
-    public BaseAlpha(int id){
+    public BaseAlpha(int id) {
         super(id);
     }
-    
-    /**
-     * Alpha nodes must implement this method
-     * @param factInstance
-     * @param engine
-     */
-    public abstract void assertFact(Fact factInstance, Rete engine, WorkingMemory mem) 
-    throws AssertException;
 
     /**
-     * Alpha nodes must implement this method. Retract should remove
-     * a fact from the node and propogate through the RETE network.
+     * Alpha nodes must implement this method
+     *
      * @param factInstance
      * @param engine
      */
-    public abstract void retractFact(Fact factInstance, Rete engine, WorkingMemory mem) 
-    throws RetractException;
-    
+    public abstract void assertFact(Fact factInstance, Rete engine, WorkingMemory mem)
+            throws AssertException;
+
+    /**
+     * Alpha nodes must implement this method. Retract should remove a fact from the node and
+     * propogate through the RETE network.
+     *
+     * @param factInstance
+     * @param engine
+     */
+    public abstract void retractFact(Fact factInstance, Rete engine, WorkingMemory mem)
+            throws RetractException;
+
     public int successorCount() {
-    	return this.successorNodes.length;
+        return this.successorNodes.length;
     }
-    
+
     /**
      * method for propogating the retract
+     *
      * @param fact
      * @param engine
      */
     protected void propogateRetract(Fact fact, Rete engine, WorkingMemory mem)
-    throws RetractException
-    {
-        for (int idx=0; idx < this.successorNodes.length; idx++) {
+            throws RetractException {
+        for (int idx = 0; idx < this.successorNodes.length; idx++) {
             Object nNode = this.successorNodes[idx];
             if (nNode instanceof BaseAlpha next) {
-                next.retractFact(fact,engine,mem);
+                next.retractFact(fact, engine, mem);
             } else if (nNode instanceof BaseJoin next) {
                 // AlphaNodes always call retractRight in the
                 // BetaNode
-                next.retractRight(fact,engine,mem);
+                next.retractRight(fact, engine, mem);
             } else if (nNode instanceof TerminalNode terminalNode) {
-                Index inx = new Index(new Fact[]{fact});
-            	(terminalNode).retractFacts(inx,engine,mem);
+                Index inx = new Index(new Fact[] {fact});
+                (terminalNode).retractFacts(inx, engine, mem);
             }
         }
     }
 
     /**
      * Method is used to pass a fact to the successor nodes
+     *
      * @param fact
      * @param engine
      */
     protected void propogateAssert(Fact fact, Rete engine, WorkingMemory mem)
-    throws AssertException
-    {
-        for (int idx=0; idx < this.successorNodes.length; idx++) {
+            throws AssertException {
+        for (int idx = 0; idx < this.successorNodes.length; idx++) {
             Object nNode = this.successorNodes[idx];
             if (nNode instanceof BaseAlpha next) {
                 next.assertFact(fact, engine, mem);
             } else if (nNode instanceof BaseJoin next) {
-                next.assertRight(fact,engine,mem);
+                next.assertRight(fact, engine, mem);
             } else if (nNode instanceof TerminalNode next) {
-                Index inx = new Index(new Fact[]{fact});
-                next.assertFacts(inx,engine,mem);
+                Index inx = new Index(new Fact[] {fact});
+                next.assertFacts(inx, engine, mem);
             }
         }
     }
 
     /**
-     * Set the next node in the sequence of 1-input nodes.
-     * The next node can be an AlphaNode or a LIANode.
+     * Set the next node in the sequence of 1-input nodes. The next node can be an AlphaNode or a
+     * LIANode.
+     *
      * @param node
      */
-   	public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem) 
-    throws AssertException 
-    {
+    public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
+            throws AssertException {
         if (addNode(node)) {
-            // if there are matches, we propogate the facts to 
+            // if there are matches, we propogate the facts to
             // the new successor only
             AlphaMemory alpha = mem.getAlphaMemory(this);
-            if (alpha.size() > 0){
+            if (alpha.size() > 0) {
                 Iterator<?> itr = alpha.iterator();
-                while (itr.hasNext()){
+                while (itr.hasNext()) {
                     if (node instanceof BaseAlpha next) {
-                        next.assertFact((Fact)itr.next(),engine,mem);
+                        next.assertFact((Fact) itr.next(), engine, mem);
                     } else if (node instanceof BaseJoin next) {
-                        next.assertRight((Fact)itr.next(),engine,mem);
+                        next.assertRight((Fact) itr.next(), engine, mem);
                     } else if (node instanceof TerminalNode next) {
-                        Index inx = new Index(new Fact[]{(Fact)itr.next()});
-                    	next.assertFacts(inx,engine,mem);
+                        Index inx = new Index(new Fact[] {(Fact) itr.next()});
+                        next.assertFacts(inx, engine, mem);
                     }
                 }
             }
         }
     }
-    
+
     /**
      * Remove a successor node. It does not recursively tear down the network.
+     *
      * @param node
      * @param engine
      * @param mem
      * @throws AssertException
      */
-    public void removeSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem) 
-    throws RetractException
-    {
+    public void removeSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
+            throws RetractException {
         if (removeNode(node)) {
             // we retract the memories first, before removing the node
             AlphaMemory alpha = mem.getAlphaMemory(this);
@@ -151,65 +147,64 @@ public abstract class BaseAlpha extends BaseNode {
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()) {
                     if (node instanceof BaseAlpha next) {
-                        next.retractFact((Fact)itr.next(),engine,mem);
+                        next.retractFact((Fact) itr.next(), engine, mem);
                     } else if (node instanceof BaseJoin next) {
-                        next.retractRight((Fact)itr.next(),engine,mem);
+                        next.retractRight((Fact) itr.next(), engine, mem);
                     }
                 }
             }
         }
     }
-    
+
     /**
      * Get the list of facts that have matched the node
+     *
      * @return
      */
-    public AlphaMemory getMemory(WorkingMemory mem){
+    public AlphaMemory getMemory(WorkingMemory mem) {
         return mem.getAlphaMemory(this);
     }
-    
-    /**
-     * implementation simply clear the arraylist
-     */
+
+    /** implementation simply clear the arraylist */
     public void clear(WorkingMemory mem) {
         getMemory(mem).clear();
     }
-    
+
     /**
-     * Abstract implementation returns an int code for the
-     * operator. To get the string representation, it should
-     * be converted.
+     * Abstract implementation returns an int code for the operator. To get the string
+     * representation, it should be converted.
      */
     public Operator getOperator() {
         return this.operator;
     }
-    
+
     /**
-     * Subclasses need to implement this method. The hash string
-     * should be the slotId + operator + value
+     * Subclasses need to implement this method. The hash string should be the slotId + operator +
+     * value
      */
     public abstract String hashString();
+
     /**
-     * subclasses need to implement PrettyPrintString and print
-     * out user friendly representation fo the node
+     * subclasses need to implement PrettyPrintString and print out user friendly representation fo
+     * the node
      */
     public abstract String toPPString();
+
     /**
-     * subclasses need to implement the toString and return a textual
-     * form representation of the node.
+     * subclasses need to implement the toString and return a textual form representation of the
+     * node.
      */
     public abstract String toString();
-    
-	/**
-	 * Method is used to decompose the network and make sure
-	 * the nodes are detached from each other.
-	 */
-	public void removeAllSuccessors() {
-		for (int idx=0; idx < this.successorNodes.length; idx++) {
-			BaseNode bn = this.successorNodes[idx];
-			bn.removeAllSuccessors();
-		}
-		this.successorNodes = new BaseNode[0];
+
+    /**
+     * Method is used to decompose the network and make sure the nodes are detached from each other.
+     */
+    public void removeAllSuccessors() {
+        for (int idx = 0; idx < this.successorNodes.length; idx++) {
+            BaseNode bn = this.successorNodes[idx];
+            bn.removeAllSuccessors();
+        }
+        this.successorNodes = new BaseNode[0];
         this.useCount = 0;
-	}
+    }
 }

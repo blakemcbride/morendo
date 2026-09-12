@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -25,81 +23,74 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
-import org.jamocha.rule.Defrule;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rule.Defrule;
 
 /**
  * @author Peter Lin
- *
  */
 public class DefruleFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String DEFRULE = "defrule";
+    /** */
+    public static final String DEFRULE = "defrule";
 
-	public DefruleFunction() {
-		super();
-	}
+    public DefruleFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean add = Boolean.TRUE;
-		if (params.length == 1 && params[0].getValue() instanceof Defrule) {
-			Defrule rl = (Defrule) params[0].getValue();
-			if (!engine.getCurrentFocus().containsRule(rl)) {
-				add = engine.getRuleCompiler().addRule(rl);
-			}
-		} else {
-			add = Boolean.FALSE;
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, add);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean add = Boolean.TRUE;
+        if (params.length == 1 && params[0].getValue() instanceof Defrule) {
+            Defrule rl = (Defrule) params[0].getValue();
+            if (!engine.getCurrentFocus().containsRule(rl)) {
+                add = engine.getRuleCompiler().addRule(rl);
+            }
+        } else {
+            add = Boolean.FALSE;
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, add);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return DEFRULE;
-	}
+    public String getName() {
+        return DEFRULE;
+    }
 
-	/**
-	 * the input parameter is a single ValueParam containing a Defrule
-	 * instance.
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam.class };
-	}
+    /** the input parameter is a single ValueParam containing a Defrule instance. */
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null) {
-			StringBuilder buf = new StringBuilder();
-			return buf.toString();
-		} else {
-			return "(defrule <rule-name> (declare (properties)+?) (CE)+ => ([function]))" +
-					"" +
-					"(defrule <rule-name> \"optional_comment\" "+  
-					"	(pattern_1) 		; Left-Hand Side (LHS)" + 
-					"	(pattern_2) 		; of the rule consisting of elements" +
-					"	...					; before the \"=>\"" + 
-					"	...					" + 
-					"	...					" + 
-					"	(pattern_N)" +
-					"	=>" +
-					"	(action_1) 			; Right-Hand Side (RHS)" + 
-					"	(action_2) 			; of the rule consisting of elements" + 
-					"	...					; after the \"=>\"" + 
-					"	...					" + 
-					"	...					" + 
-					"	(action_M)) 		; The last \")\" balances the opening" + 
-					"						; \")\" to the left of \"defrule\"." + 
-					"" +
-					"Be sure all your parentheses balance or you will get error messages!";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null) {
+            StringBuilder buf = new StringBuilder();
+            return buf.toString();
+        } else {
+            return "(defrule <rule-name> (declare (properties)+?) (CE)+ => ([function]))"
+                    + ""
+                    + "(defrule <rule-name> \"optional_comment\" "
+                    + "	(pattern_1) 		; Left-Hand Side (LHS)"
+                    + "	(pattern_2) 		; of the rule consisting of elements"
+                    + "	...					; before the \"=>\""
+                    + "	...					"
+                    + "	...					"
+                    + "	(pattern_N)"
+                    + "	=>"
+                    + "	(action_1) 			; Right-Hand Side (RHS)"
+                    + "	(action_2) 			; of the rule consisting of elements"
+                    + "	...					; after the \"=>\""
+                    + "	...					"
+                    + "	...					"
+                    + "	(action_M)) 		; The last \")\" balances the opening"
+                    + "						; \")\" to the left of \"defrule\"."
+                    + ""
+                    + "Be sure all your parentheses balance or you will get error messages!";
+        }
+    }
 }

@@ -12,60 +12,59 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.measures;
+
+import org.jamocha.rete.Rete;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jamocha.rete.Rete;
-
 public class AggregateGroup implements MeasureGroup {
 
-	public static final String AGGREGATE_GROUP = "aggregate group";
-	private List<AggregateMeasure> measures = new ArrayList<>();
-	
-	public AggregateGroup() {
-		super();
-	}
+    public static final String AGGREGATE_GROUP = "aggregate group";
+    private List<AggregateMeasure> measures = new ArrayList<>();
 
-	public String getGroupName() {
-		return AGGREGATE_GROUP;
-	}
+    public AggregateGroup() {
+        super();
+    }
 
-	public List<AggregateMeasure> getMeasures() {
-		return measures;
-	}
+    public String getGroupName() {
+        return AGGREGATE_GROUP;
+    }
 
-	public void loadMeasures(Rete engine) {
-		AverageMeasure ave = new AverageMeasure();
-		engine.declareMeasure(ave);
-		measures.add(ave);
-		EightyPercentMeasure eightper = new EightyPercentMeasure();
-		engine.declareMeasure(eightper);
-		measures.add(eightper);
-		MedianMeasure median = new MedianMeasure();
-		engine.declareMeasure(median);
-		measures.add(median);
-		MaxMeasure max = new MaxMeasure();
-		engine.declareMeasure(max);
-		measures.add(max);
-		MinMeasure min = new MinMeasure();
-		engine.declareMeasure(min);
-		measures.add(min);
-		NinetyPercentMeasure nineper = new NinetyPercentMeasure();
-		engine.declareMeasure(nineper);
-		measures.add(nineper);
-		SeventyPercentMeasure sevenper = new SeventyPercentMeasure();
-		engine.declareMeasure(sevenper);
-		measures.add(sevenper);
-		StandardDeviationMeasure stndev = new StandardDeviationMeasure();
-		engine.declareMeasure(stndev);
-		measures.add(stndev);
-		SumMeasure sum = new SumMeasure();
-		engine.declareMeasure(sum);
-		measures.add(sum);
-	}
+    public List<AggregateMeasure> getMeasures() {
+        return measures;
+    }
 
+    public void loadMeasures(Rete engine) {
+        AverageMeasure ave = new AverageMeasure();
+        engine.declareMeasure(ave);
+        measures.add(ave);
+        EightyPercentMeasure eightper = new EightyPercentMeasure();
+        engine.declareMeasure(eightper);
+        measures.add(eightper);
+        MedianMeasure median = new MedianMeasure();
+        engine.declareMeasure(median);
+        measures.add(median);
+        MaxMeasure max = new MaxMeasure();
+        engine.declareMeasure(max);
+        measures.add(max);
+        MinMeasure min = new MinMeasure();
+        engine.declareMeasure(min);
+        measures.add(min);
+        NinetyPercentMeasure nineper = new NinetyPercentMeasure();
+        engine.declareMeasure(nineper);
+        measures.add(nineper);
+        SeventyPercentMeasure sevenper = new SeventyPercentMeasure();
+        engine.declareMeasure(sevenper);
+        measures.add(sevenper);
+        StandardDeviationMeasure stndev = new StandardDeviationMeasure();
+        engine.declareMeasure(stndev);
+        measures.add(stndev);
+        SumMeasure sum = new SumMeasure();
+        engine.declareMeasure(sum);
+        measures.add(sum);
+    }
 }

@@ -1,8 +1,5 @@
 package org.jamocha.rete.functions.temporal;
 
-import java.math.BigDecimal;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -13,46 +10,45 @@ import org.jamocha.rete.Template;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.math.BigDecimal;
+
 public class SetTemporalDistanceFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String SET_TEMPORAL_DISTANCE = "set-temporal-distance";
-	
-	public SetTemporalDistanceFunction() {
-		super();
-	}
+    /** */
+    public static final String SET_TEMPORAL_DISTANCE = "set-temporal-distance";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector rv = new DefaultReturnVector();
-		if (params != null && params.length == 2) {
-			String template = params[0].getStringValue();
-			BigDecimal sec = params[1].getBigDecimalValue();
-			Template templ = engine.findTemplate(template);
-			if (templ != null) {
-				templ.setTemporalDistance(sec.intValue() * 1000);
-				DefaultReturnValue ret = new DefaultReturnValue(ValueType.BIG_DECIMAL,sec);
-				rv.addReturnValue(ret);
-			}
-		}
-		return rv;
-	}
+    public SetTemporalDistanceFunction() {
+        super();
+    }
 
-	public String getName() {
-		return SET_TEMPORAL_DISTANCE;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector rv = new DefaultReturnVector();
+        if (params != null && params.length == 2) {
+            String template = params[0].getStringValue();
+            BigDecimal sec = params[1].getBigDecimalValue();
+            Template templ = engine.findTemplate(template);
+            if (templ != null) {
+                templ.setTemporalDistance(sec.intValue() * 1000);
+                DefaultReturnValue ret = new DefaultReturnValue(ValueType.BIG_DECIMAL, sec);
+                rv.addReturnValue(ret);
+            }
+        }
+        return rv;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class, ValueParam.class};
-	}
+    public String getName() {
+        return SET_TEMPORAL_DISTANCE;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BIG_DECIMAL;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(set-temporal-distance <deftemplate> <seconds>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.BIG_DECIMAL;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(set-temporal-distance <deftemplate> <seconds>)";
+    }
 }

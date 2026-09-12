@@ -6,6 +6,6 @@ public class ReadUsername implements ReadMacro {
     public ReadUsername() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getUsername();
+        return ((woolfel.examples.model.Account) instance).getUsername();
     }
 }

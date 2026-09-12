@@ -6,6 +6,6 @@ public class ReadAccountType implements ReadMacro {
     public ReadAccountType() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getAccountType();
+        return ((woolfel.examples.model.Account) instance).getAccountType();
     }
 }

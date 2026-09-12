@@ -12,19 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
-
 /**
- * The interface has two methods: hashcode and equals. Both have
- * to be implemented, since Sumatra uses HashMaps for indexing and
- * for memories.
- * @author pete
+ * The interface has two methods: hashcode and equals. Both have to be implemented, since Sumatra
+ * uses HashMaps for indexing and for memories.
  *
+ * @author pete
  */
 public interface HashIndex extends Print {
-	boolean equals(Object obj);
-	int hashCode();
+    boolean equals(Object obj);
+
+    int hashCode();
 }

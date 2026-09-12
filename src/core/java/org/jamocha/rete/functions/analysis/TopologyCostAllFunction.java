@@ -12,14 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.analysis;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Module;
@@ -27,61 +23,59 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 import org.jamocha.rule.Defrule;
 import org.jamocha.rule.util.TopologyCostCalculation;
-import org.jamocha.rete.ValueType;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author Peter Lin
- * 
  */
 public class TopologyCostAllFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String TOPOLOGY_COST_ALL = "topology-cost-all";
+    /** */
+    public static final String TOPOLOGY_COST_ALL = "topology-cost-all";
+
     private TopologyCostCalculation costFunction = new TopologyCostCalculation();
 
-	/**
-	 * 
-	 */
-	public TopologyCostAllFunction() {
-		super();
-	}
+    /** */
+    public TopologyCostAllFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector ret = new DefaultReturnVector();
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
         Collection<?> modules = engine.getWorkingMemory().getModules();
         Iterator<?> itr = modules.iterator();
         while (itr.hasNext()) {
-            Module m = (Module)itr.next();
+            Module m = (Module) itr.next();
             Collection<?> rules = m.getAllRules();
             Iterator<?> itrRules = rules.iterator();
             while (itrRules.hasNext()) {
-                Defrule r = (Defrule)itrRules.next();
+                Defrule r = (Defrule) itrRules.next();
                 costFunction.calculateCost(engine, r, engine.getRootNode());
             }
         }
-		return ret;
-	}
+        return ret;
+    }
 
-	public String getName() {
-		return TOPOLOGY_COST_ALL;
-	}
+    public String getName() {
+        return TOPOLOGY_COST_ALL;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam[].class };
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(topology-cost-all )\n" +
-			"Function description:\n" +
-			"\tCalculates the topology cost of all rules and sets Rule.costValue.";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(topology-cost-all )\n"
+                + "Function description:\n"
+                + "\tCalculates the topology cost of all rules and sets Rule.costValue.";
+    }
 }

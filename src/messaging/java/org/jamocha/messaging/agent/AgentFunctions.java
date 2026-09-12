@@ -12,61 +12,58 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.messaging.agent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jamocha.rete.Function;
 import org.jamocha.rete.FunctionGroup;
 import org.jamocha.rete.Rete;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AgentFunctions implements FunctionGroup {
 
-	/**
-	 * 
-	 */
-	private List<Function> funcs = new ArrayList<>();
+    /** */
+    private List<Function> funcs = new ArrayList<>();
 
-	public AgentFunctions() {
-		super();
-	}
+    public AgentFunctions() {
+        super();
+    }
 
-	public String getName() {
-		return AgentFunctions.class.getSimpleName();
-	}
+    public String getName() {
+        return AgentFunctions.class.getSimpleName();
+    }
 
-	public List<Function> listFunctions() {
-		return funcs;
-	}
+    public List<Function> listFunctions() {
+        return funcs;
+    }
 
-	public void loadFunctions(Rete engine) {
-		AddRuleStatusFunction addstatus = new AddRuleStatusFunction();
-		engine.declareFunction(addstatus);
-		funcs.add(addstatus);
-		AgentPerfSummaryFunction perfsum = new AgentPerfSummaryFunction();
-		engine.declareFunction(perfsum);
-		funcs.add(perfsum);
-		AgentStatusResponseFunction statResp = new AgentStatusResponseFunction();
-		engine.declareFunction(statResp);
-		funcs.add(statResp);
-		RegisterAgentFunction register = new RegisterAgentFunction();
-		engine.declareFunction(register);
-		funcs.add(register);
-		RemoveRuleStatusFunction removestatus = new RemoveRuleStatusFunction();
-		engine.declareFunction(removestatus);
-		funcs.add(removestatus);
-		PingAgentFunction ping = new PingAgentFunction();
-		engine.declareFunction(ping);
-		funcs.add(ping);
-		PrintAgentsFunction printagn = new PrintAgentsFunction();
-		engine.declareFunction(printagn);
-		funcs.add(printagn);
-		UnregisterAgentFunction unreg = new UnregisterAgentFunction();
-		engine.declareFunction(unreg);
-		funcs.add(unreg);
-	}
-
+    public void loadFunctions(Rete engine) {
+        AddRuleStatusFunction addstatus = new AddRuleStatusFunction();
+        engine.declareFunction(addstatus);
+        funcs.add(addstatus);
+        AgentPerfSummaryFunction perfsum = new AgentPerfSummaryFunction();
+        engine.declareFunction(perfsum);
+        funcs.add(perfsum);
+        AgentStatusResponseFunction statResp = new AgentStatusResponseFunction();
+        engine.declareFunction(statResp);
+        funcs.add(statResp);
+        RegisterAgentFunction register = new RegisterAgentFunction();
+        engine.declareFunction(register);
+        funcs.add(register);
+        RemoveRuleStatusFunction removestatus = new RemoveRuleStatusFunction();
+        engine.declareFunction(removestatus);
+        funcs.add(removestatus);
+        PingAgentFunction ping = new PingAgentFunction();
+        engine.declareFunction(ping);
+        funcs.add(ping);
+        PrintAgentsFunction printagn = new PrintAgentsFunction();
+        engine.declareFunction(printagn);
+        funcs.add(printagn);
+        UnregisterAgentFunction unreg = new UnregisterAgentFunction();
+        engine.declareFunction(unreg);
+        funcs.add(unreg);
+    }
 }

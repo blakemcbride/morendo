@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -29,50 +26,47 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 /**
  * @author Sebastian Reinartz
- * 
  */
 public class ModulesFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String MODULES = "modules";
+    /** */
+    public static final String MODULES = "modules";
 
-	public ModulesFunction() {
-		super();
-	}
+    public ModulesFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.STRING;
-	}
+    public ValueType getReturnType() {
+        return ValueType.STRING;
+    }
 
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Collection<?> modules = engine.getWorkingMemory().getModules();
+        int count = modules.size();
+        Iterator<?> itr = modules.iterator();
+        while (itr.hasNext()) {
+            Module r = (Module) itr.next();
+            engine.writeMessage(r.getModuleName() + Constants.LINEBREAK, "t");
+        }
+        engine.writeMessage("for a total of " + count + Constants.LINEBREAK, "t");
+        DefaultReturnVector rv = new DefaultReturnVector();
+        return rv;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Collection<?> modules = engine.getWorkingMemory().getModules();
-		int count = modules.size();
-		Iterator<?> itr = modules.iterator();
-		while (itr.hasNext()) {
-			Module r = (Module) itr.next();
-			engine.writeMessage(r.getModuleName() + Constants.LINEBREAK, "t");
-		}
-		engine.writeMessage("for a total of " + count + Constants.LINEBREAK,
-				"t");
-		DefaultReturnVector rv = new DefaultReturnVector();
-		return rv;
-	}
+    public String getName() {
+        return MODULES;
+    }
 
-	public String getName() {
-		return MODULES;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam.class };
-	}
-
-	public String toPPString(Parameter[] params, int indents) {
-		return "(set-focus)";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(set-focus)";
+    }
 }

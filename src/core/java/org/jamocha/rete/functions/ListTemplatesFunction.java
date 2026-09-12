@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -28,63 +25,60 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Template;
 import org.jamocha.rete.ValueType;
 
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author Peter Lin
- * 
- * ListTemplates will list all the templates and print them out.
+ *     <p>ListTemplates will list all the templates and print them out.
  */
 public class ListTemplatesFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String LISTTEMPLATES = "list-deftemplates";
-	public static final String TEMPLATES = "templates";
+    /** */
+    public static final String LISTTEMPLATES = "list-deftemplates";
 
-	/**
-	 * 
-	 */
-	public ListTemplatesFunction() {
-		super();
-	}
+    public static final String TEMPLATES = "templates";
 
-	public String getName() {
-		return LISTTEMPLATES;
-	}
+    /** */
+    public ListTemplatesFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public String getName() {
+        return LISTTEMPLATES;
+    }
 
-	/**
-	 * The current implementation will print out all the templates in
-	 * no specific order. The function does basically the same thing
-	 * as CLIPS (list-deftemplates)
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Collection<?> templates = engine.getCurrentFocus().getTemplates();
-		int count = templates.size();
-		Iterator<?> itr = templates.iterator();
-		while (itr.hasNext()) {
-			Template r = (Template)itr.next();
-			engine.writeMessage(r.getName() + Constants.LINEBREAK, "t");
-		}
-		engine.writeMessage("for a total of " + count + Constants.LINEBREAK,"t");
-		DefaultReturnVector rv = new DefaultReturnVector();
-		return rv;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { String.class };
-	}
+    /**
+     * The current implementation will print out all the templates in no specific order. The
+     * function does basically the same thing as CLIPS (list-deftemplates)
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Collection<?> templates = engine.getCurrentFocus().getTemplates();
+        int count = templates.size();
+        Iterator<?> itr = templates.iterator();
+        while (itr.hasNext()) {
+            Template r = (Template) itr.next();
+            engine.writeMessage(r.getName() + Constants.LINEBREAK, "t");
+        }
+        engine.writeMessage("for a total of " + count + Constants.LINEBREAK, "t");
+        DefaultReturnVector rv = new DefaultReturnVector();
+        return rv;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			return buf.toString();
-		} else {
-			return "(list-deftemplates)";
-		}
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String.class};
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            return buf.toString();
+        } else {
+            return "(list-deftemplates)";
+        }
+    }
 }

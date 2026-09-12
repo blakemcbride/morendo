@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -29,31 +27,28 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- *
  */
 public class LoadFunctionsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String LOAD_FUNCTION = "load-function";
-	protected UserDefinedFunctions userDefinedFunctions = null;
-	
-	public LoadFunctionsFunction() {
-		super();
-	}
+    /** */
+    public static final String LOAD_FUNCTION = "load-function";
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    protected UserDefinedFunctions userDefinedFunctions = null;
 
-	
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean load = Boolean.FALSE;
-		DefaultReturnVector ret = new DefaultReturnVector();
-		if (params != null && params.length > 0) {
-			for (int idx=0; idx < params.length; idx++) {
-				String func = params[idx].getStringValue();
+    public LoadFunctionsFunction() {
+        super();
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean load = Boolean.FALSE;
+        DefaultReturnVector ret = new DefaultReturnVector();
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {
+                String func = params[idx].getStringValue();
                 try {
                     Function f = engine.declareFunction(func);
                     this.userDefinedFunctions.addFunction(f);
@@ -61,35 +56,33 @@ public class LoadFunctionsFunction implements Function {
                 } catch (ClassNotFoundException e) {
                     load = Boolean.TRUE;
                 }
-			}
-		}
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, load);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+            }
+        }
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, load);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return LOAD_FUNCTION;
-	}
+    public String getName() {
+        return LOAD_FUNCTION;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	/* (non-Javadoc)
-	 * @see woolfel.engine.rete.Function#toPPString(woolfel.engine.rete.Parameter[], int)
-	 */
-	public String toPPString(Parameter[] params, int indents) {
-		return "(load-function [classname])";
-	}
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.Function#toPPString(woolfel.engine.rete.Parameter[], int)
+     */
+    public String toPPString(Parameter[] params, int indents) {
+        return "(load-function [classname])";
+    }
 
-	public UserDefinedFunctions getUserDefinedFunctions() {
-		return userDefinedFunctions;
-	}
+    public UserDefinedFunctions getUserDefinedFunctions() {
+        return userDefinedFunctions;
+    }
 
-	public void setUserDefinedFunctions(UserDefinedFunctions userDefinedFunctions) {
-		this.userDefinedFunctions = userDefinedFunctions;
-	}
-
+    public void setUserDefinedFunctions(UserDefinedFunctions userDefinedFunctions) {
+        this.userDefinedFunctions = userDefinedFunctions;
+    }
 }

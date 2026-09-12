@@ -7,86 +7,82 @@ import java.util.List;
 
 public class Graph {
 
-	private List<PropertyChangeListener> listeners = new ArrayList<>();
-	private String id;
-	private String label;
-	private String type;
-	private Node[] nodes = null;
-	private Edge[] edges = null;
-	
-	public Graph() {
-	}
+    private List<PropertyChangeListener> listeners = new ArrayList<>();
+    private String id;
+    private String label;
+    private String type;
+    private Node[] nodes = null;
+    private Edge[] edges = null;
 
-	public String getId() {
-		return id;
-	}
+    public Graph() {}
 
-	public void setId(String id) {
-		String old = this.id;
-		this.id = id;
-		this.notifyListener("id", old, id);
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getLabel() {
-		return label;
-	}
+    public void setId(String id) {
+        String old = this.id;
+        this.id = id;
+        this.notifyListener("id", old, id);
+    }
 
-	public void setLabel(String label) {
-		String old = this.label;
-		this.label = label;
-		this.notifyListener("label", old, label);
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setLabel(String label) {
+        String old = this.label;
+        this.label = label;
+        this.notifyListener("label", old, label);
+    }
 
-	public void setType(String type) {
-		String old = this.type;
-		this.type = type;
-		this.notifyListener("type", old, type);
-	}
+    public String getType() {
+        return type;
+    }
 
-	public Node[] getNodes() {
-		return nodes;
-	}
+    public void setType(String type) {
+        String old = this.type;
+        this.type = type;
+        this.notifyListener("type", old, type);
+    }
 
-	public void setNodes(Node[] nodes) {
-		Node[] old = this.nodes;
-		this.nodes = nodes;
-		this.notifyListener("nodes", old, nodes);
-	}
+    public Node[] getNodes() {
+        return nodes;
+    }
 
-	public Edge[] getEdges() {
-		return edges;
-	}
+    public void setNodes(Node[] nodes) {
+        Node[] old = this.nodes;
+        this.nodes = nodes;
+        this.notifyListener("nodes", old, nodes);
+    }
 
-	public void setEdges(Edge[] edges) {
-		Edge[] old = this.edges;
-		this.edges = edges;
-		this.notifyListener("edges", old, edges);
-	}
+    public Edge[] getEdges() {
+        return edges;
+    }
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		this.listeners.add(listener);
-	}
+    public void setEdges(Edge[] edges) {
+        Edge[] old = this.edges;
+        this.edges = edges;
+        this.notifyListener("edges", old, edges);
+    }
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		this.listeners.remove(listener);
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.add(listener);
+    }
 
-	protected void notifyListener(String field, Object oldValue, Object newValue) {
-		if (listeners == null || listeners.size() == 0) {
-			return;
-		} else {
-			PropertyChangeEvent event = new PropertyChangeEvent(this, field,
-					oldValue, newValue);
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.remove(listener);
+    }
 
-			for (int i = 0; i < listeners.size(); i++) {
-				(listeners.get(i))
-						.propertyChange(event);
-			}
-		}
+    protected void notifyListener(String field, Object oldValue, Object newValue) {
+        if (listeners == null || listeners.size() == 0) {
+            return;
+        } else {
+            PropertyChangeEvent event = new PropertyChangeEvent(this, field, oldValue, newValue);
 
-	}
+            for (int i = 0; i < listeners.size(); i++) {
+                (listeners.get(i)).propertyChange(event);
+            }
+        }
+    }
 }

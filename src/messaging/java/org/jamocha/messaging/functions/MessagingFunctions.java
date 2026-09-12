@@ -1,53 +1,49 @@
 package org.jamocha.messaging.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jamocha.rete.Function;
 import org.jamocha.rete.FunctionGroup;
 import org.jamocha.rete.Rete;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MessagingFunctions implements FunctionGroup {
 
-	/**
-	 * 
-	 */
-		private ArrayList<Function> funcs = new ArrayList<>();
-	
-	public MessagingFunctions() {
-	}
+    /** */
+    private ArrayList<Function> funcs = new ArrayList<>();
 
-	public String getName() {
-		return MessagingFunctions.class.getSimpleName();
-	}
+    public MessagingFunctions() {}
 
-	public List<Function> listFunctions() {
-		return funcs;
-	}
+    public String getName() {
+        return MessagingFunctions.class.getSimpleName();
+    }
 
-	public void loadFunctions(Rete engine) {
-		try {
-			CloseMessagingClientFunction closeClient = new CloseMessagingClientFunction();
-			engine.declareFunction(closeClient);
-			funcs.add(closeClient);
-			CreateMessageClientFunction createClient = new CreateMessageClientFunction();
-			engine.declareFunction(createClient);
-			funcs.add(createClient);
-			RegisterContentHandlerFunction register = new RegisterContentHandlerFunction();
-			engine.declareFunction(register);
-			funcs.add(register);
-			PrintContentHandlersFunction printch = new PrintContentHandlersFunction();
-			engine.declareFunction(printch);
-			funcs.add(printch);
-			PrintMessageClientsFunction printclients = new PrintMessageClientsFunction();
-			engine.declareFunction(printclients);
-			funcs.add(printclients);
-			SendMessageFunction sendMsg = new SendMessageFunction();
-			engine.declareFunction(sendMsg);
-			funcs.add(sendMsg);
-		} catch (Exception e) {
-			
-		}
-	}
+    public List<Function> listFunctions() {
+        return funcs;
+    }
 
+    public void loadFunctions(Rete engine) {
+        try {
+            CloseMessagingClientFunction closeClient = new CloseMessagingClientFunction();
+            engine.declareFunction(closeClient);
+            funcs.add(closeClient);
+            CreateMessageClientFunction createClient = new CreateMessageClientFunction();
+            engine.declareFunction(createClient);
+            funcs.add(createClient);
+            RegisterContentHandlerFunction register = new RegisterContentHandlerFunction();
+            engine.declareFunction(register);
+            funcs.add(register);
+            PrintContentHandlersFunction printch = new PrintContentHandlersFunction();
+            engine.declareFunction(printch);
+            funcs.add(printch);
+            PrintMessageClientsFunction printclients = new PrintMessageClientsFunction();
+            engine.declareFunction(printclients);
+            funcs.add(printclients);
+            SendMessageFunction sendMsg = new SendMessageFunction();
+            engine.declareFunction(sendMsg);
+            funcs.add(sendMsg);
+        } catch (Exception e) {
+
+        }
+    }
 }

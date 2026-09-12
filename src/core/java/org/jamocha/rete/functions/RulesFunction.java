@@ -12,71 +12,77 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import org.jamocha.rule.Rule;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rule.Rule;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author Peter Lin
- * 
- * The purpose of the function is to print out the names of the rules
- * and the comment.
+ *     <p>The purpose of the function is to print out the names of the rules and the comment.
  */
 public class RulesFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String RULES = "rules";
-	public static final String LISTRULES = "list-defrules";
-	
-	public RulesFunction() {
-		super();
-	}
+    /** */
+    public static final String RULES = "rules";
 
-	public String getName() {
-		return LISTRULES;
-	}
+    public static final String LISTRULES = "list-defrules";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public RulesFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Collection<?> rules = engine.getCurrentFocus().getAllRules();
-		int count = rules.size();
-		Iterator<?> itr = rules.iterator();
-		while (itr.hasNext()) {
-			Rule r = (Rule)itr.next();
-			engine.writeMessage(r.getName() + " \"" + r.getComment() +
-					"\" salience:" + r.getSalience() +
-					" version:" + r.getVersion() +
-					" no-agenda:" + r.getNoAgenda() +
-                    " temporal-activation:" + r.isTemporalActivation() +
-                    " cost-value:" + r.getCostValue() + "\r\n", "t");
-		}
-		engine.writeMessage("for a total of " + count +"\r\n","t");
-		DefaultReturnVector rv = new DefaultReturnVector();
-		return rv;
-	}
+    public String getName() {
+        return LISTRULES;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(list-defrules)";
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Collection<?> rules = engine.getCurrentFocus().getAllRules();
+        int count = rules.size();
+        Iterator<?> itr = rules.iterator();
+        while (itr.hasNext()) {
+            Rule r = (Rule) itr.next();
+            engine.writeMessage(
+                    r.getName()
+                            + " \""
+                            + r.getComment()
+                            + "\" salience:"
+                            + r.getSalience()
+                            + " version:"
+                            + r.getVersion()
+                            + " no-agenda:"
+                            + r.getNoAgenda()
+                            + " temporal-activation:"
+                            + r.isTemporalActivation()
+                            + " cost-value:"
+                            + r.getCostValue()
+                            + "\r\n",
+                    "t");
+        }
+        engine.writeMessage("for a total of " + count + "\r\n", "t");
+        DefaultReturnVector rv = new DefaultReturnVector();
+        return rv;
+    }
+
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(list-defrules)";
+    }
 }

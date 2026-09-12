@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
 
@@ -23,44 +23,39 @@ import org.jamocha.rete.compiler.ConditionCompiler;
 
 /**
  * @author Peter Lin
- *
- * ExistCondition for existential quantifier.
+ *     <p>ExistCondition for existential quantifier.
  */
 public final class ExistCondition extends ObjectCondition {
 
-	/**
-	 * 
-	 */
+    /** */
 
-	/**
-	 * 
-	 */
-	public ExistCondition() {
-		super();
-	}
+    /** */
+    public ExistCondition() {
+        super();
+    }
 
     public void addConstraint(Constraint con) {
         this.constraints.add(con);
         if (con instanceof BoundConstraint boundConstraint) {
-        	(boundConstraint).setBindableConstraint(false);
+            (boundConstraint).setBindableConstraint(false);
         }
     }
-    
+
     public void addConstraint(Constraint con, int position) {
-        this.constraints.add(0,con);
+        this.constraints.add(0, con);
         if (con instanceof BoundConstraint boundConstraintValue) {
-        	(boundConstraintValue).setBindableConstraint(false);
+            (boundConstraintValue).setBindableConstraint(false);
         }
     }
-    
-	public String toPPString() {
+
+    public String toPPString() {
         StringBuilder buf = new StringBuilder();
         int start = 0;
         String pad = "  ";
         buf.append(pad + "(exists" + Constants.LINEBREAK);
         pad = "    ";
         buf.append(pad + "(" + getTemplateName() + Constants.LINEBREAK);
-        for (int idx=start; idx < getConstraints().length; idx++) {
+        for (int idx = start; idx < getConstraints().length; idx++) {
             Constraint cnstr = getConstraints()[idx];
             buf.append("  " + cnstr.toPPString());
         }
@@ -68,12 +63,12 @@ public final class ExistCondition extends ObjectCondition {
         pad = "  ";
         buf.append(pad + ")" + Constants.LINEBREAK);
         return buf.toString();
-	}
+    }
 
-	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).existConditionCompiler;
-	}
-    
+    public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).existConditionCompiler;
+    }
+
     public static ExistCondition newExistCondition(ObjectCondition cond) {
         ExistCondition exc = new ExistCondition();
         exc.constraints = cond.constraints;

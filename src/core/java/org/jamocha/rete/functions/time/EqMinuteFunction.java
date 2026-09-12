@@ -12,78 +12,73 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.time;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import java.time.Instant;
-import java.time.ZonedDateTime;
 import org.jamocha.rete.ValueType;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
+
 /**
- * Function will compare two dates down to the minute. That means it will lop off the seconds
- * and milliseconds. This makes it handy for time comparisons that don't need full millisecond
+ * Function will compare two dates down to the minute. That means it will lop off the seconds and
+ * milliseconds. This makes it handy for time comparisons that don't need full millisecond
  * precision. An example would be to group facts by minute.
- * 
+ *
  * @author Peter Lin
  */
 public class EqMinuteFunction extends AbstractTimeFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String EQ_MINUTE = "eq-minute";
-	
-	public EqMinuteFunction() {
-		super();
-	}
+    /** */
+    public static final String EQ_MINUTE = "eq-minute";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean eval = Boolean.FALSE;
-		if (params != null && params.length == 2) {
-			Instant date1 = this.toInstant(params[0].getValue(engine, ValueType.OBJECT));
-			Instant date2 = this.toInstant(params[1].getValue(engine, ValueType.OBJECT));
-			if (date1 != null && date2 != null) {
-				ZonedDateTime zoned1 = zoned(date1);
-				ZonedDateTime zoned2 = zoned(date2);
-				if (zoned1.getYear() == zoned2.getYear() &&
-						zoned1.getMonthValue() == zoned2.getMonthValue() &&
-						zoned1.getDayOfMonth() == zoned2.getDayOfMonth() &&
-						zoned1.getHour() == zoned2.getHour() &&
-						zoned1.getMinute() == zoned2.getMinute()) {
-					eval = Boolean.TRUE;
-				}
-			}
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = 
-			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,eval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public EqMinuteFunction() {
+        super();
+    }
 
-	public String getName() {
-		return EQ_MINUTE;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean eval = Boolean.FALSE;
+        if (params != null && params.length == 2) {
+            Instant date1 = this.toInstant(params[0].getValue(engine, ValueType.OBJECT));
+            Instant date2 = this.toInstant(params[1].getValue(engine, ValueType.OBJECT));
+            if (date1 != null && date2 != null) {
+                ZonedDateTime zoned1 = zoned(date1);
+                ZonedDateTime zoned2 = zoned(date2);
+                if (zoned1.getYear() == zoned2.getYear()
+                        && zoned1.getMonthValue() == zoned2.getMonthValue()
+                        && zoned1.getDayOfMonth() == zoned2.getDayOfMonth()
+                        && zoned1.getHour() == zoned2.getHour()
+                        && zoned1.getMinute() == zoned2.getMinute()) {
+                    eval = Boolean.TRUE;
+                }
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{Instant.class, Instant.class};
-	}
+    public String getName() {
+        return EQ_MINUTE;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {Instant.class, Instant.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(eq-minute <date> <date>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(eq-minute <date> <date>)";
+    }
 }

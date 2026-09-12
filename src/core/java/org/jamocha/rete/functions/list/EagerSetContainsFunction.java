@@ -1,8 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.util.Set;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -12,69 +9,66 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.util.Set;
+
 /**
- * Function splits the string by space and then eagerly checks if part of the
- * string matches any entries in the Set. This is a type of fuzzy matching
- * where user response doesn't have to match the keys exactly.
- * 
- * @author peter
+ * Function splits the string by space and then eagerly checks if part of the string matches any
+ * entries in the Set. This is a type of fuzzy matching where user response doesn't have to match
+ * the keys exactly.
  *
+ * @author peter
  */
 public class EagerSetContainsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String MAPCONTAINS = "eager-set-contains";
-	
-	public EagerSetContainsFunction() {
-		super();
-	}
+    /** */
+    public static final String MAPCONTAINS = "eager-set-contains";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector rv = new DefaultReturnVector();
-		Object rl = null;
-		String key = null;
-		Boolean contain = Boolean.FALSE;
-		if (params != null && params.length == 2) {
-			Set<?> map = null;
-			rl = params[0].getValue();
-			key = params[1].getStringValue().toLowerCase();
-			if (rl instanceof Set) {
-				map = (Set<?>)rl;
-			}
-			if (map != null && key != null) {
-				String[] tokens = key.split(" ");
-				String teststr = "";
-				for (int i=0; i < tokens.length; i++) {
-					teststr += " " + tokens[i];
-					contain = map.contains(teststr.trim());
-					if (contain) {
-						break;
-					}
-				}
-			}
-		}
-		DefaultReturnValue val = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, contain);
-		rv.addReturnValue(val);
-		return rv;
-	}
+    public EagerSetContainsFunction() {
+        super();
+    }
 
-	public String getName() {
-		return MAPCONTAINS;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector rv = new DefaultReturnVector();
+        Object rl = null;
+        String key = null;
+        Boolean contain = Boolean.FALSE;
+        if (params != null && params.length == 2) {
+            Set<?> map = null;
+            rl = params[0].getValue();
+            key = params[1].getStringValue().toLowerCase();
+            if (rl instanceof Set) {
+                map = (Set<?>) rl;
+            }
+            if (map != null && key != null) {
+                String[] tokens = key.split(" ");
+                String teststr = "";
+                for (int i = 0; i < tokens.length; i++) {
+                    teststr += " " + tokens[i];
+                    contain = map.contains(teststr.trim());
+                    if (contain) {
+                        break;
+                    }
+                }
+            }
+        }
+        DefaultReturnValue val = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, contain);
+        rv.addReturnValue(val);
+        return rv;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class,ValueParam.class};
-	}
+    public String getName() {
+        return MAPCONTAINS;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(eager-set-contains <set> <string>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(eager-set-contains <set> <string>)";
+    }
 }

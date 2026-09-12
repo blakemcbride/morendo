@@ -19,155 +19,131 @@ import java.io.Serializable;
 
 /**
  * @author Peter Lin
- *
- * Abstract BaseSlot contains common attributes of Slot, multislot and
- * binding. Slot classes need to implement the clone method for
- * cloning the slots. This is necessary because slots are used to
- * parse CLIPS and for the RETE nodes.
- * <br>
- * 
+ *     <p>Abstract BaseSlot contains common attributes of Slot, multislot and binding. Slot classes
+ *     need to implement the clone method for cloning the slots. This is necessary because slots are
+ *     used to parse CLIPS and for the RETE nodes. <br>
  */
 public class BaseSlot implements Serializable, Cloneable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /** */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The name of the slot
-	 */
-	protected String name;
+    /** The name of the slot */
+    protected String name;
 
-	/**
-	 * the id of the slot
-	 */
-	private int id;
+    /** the id of the slot */
+    private int id;
 
-	/**
-	 * The type of the value
-	 */
-	private ValueType type = null;
+    /** The type of the value */
+    private ValueType type = null;
 
-	/**
-	 * in some cases, users may want a template to have a default value
-	 */
-	private boolean hasDefault = false;
+    /** in some cases, users may want a template to have a default value */
+    private boolean hasDefault = false;
 
-	/**
-	 * node count is used to keep track of how many nodes use the given
-	 * slot. This is done for statistical purposes, which serve 3 main
-	 * functions.
-	 * 1. provide a way to calculate the relative importance of a slot
-	 * with regard to the entire RETE network
-	 * 2. provide a way to optimize runtime execution
-	 * 3. provide valuable information for engine management
-	 */
-	private int nodeCount = 1;
-    
-	private long distinctCount = 0;
-	
+    /**
+     * node count is used to keep track of how many nodes use the given slot. This is done for
+     * statistical purposes, which serve 3 main functions. 1. provide a way to calculate the
+     * relative importance of a slot with regard to the entire RETE network 2. provide a way to
+     * optimize runtime execution 3. provide valuable information for engine management
+     */
+    private int nodeCount = 1;
+
+    private long distinctCount = 0;
+
     @SuppressWarnings("serial") // payload; serializable only if the value is
     protected Object value = Constants.NIL_SYMBOL;
 
-	/**
-	 * Get the name of the slot
-	 * @return
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 * Set the name of the slot
-	 * @param text
-	 */
-	public final void setName(String text) {
-		this.name = text;
-	}
-
-	public ValueType getValueType() {
-		return this.type;
-	}
-
-	public void setValueType(ValueType type) {
-		this.type = type;
-	}
-
-	/**
-	 * the id is the column id, this is the sequence java
-	 * introspection returns the fields for the object
-	 * @return
-	 */
-	public int getId() {
-		return this.id;
-	}
-
-	/**
-	 * Set the column id for the slot. the id is the position
-	 * of the slot in the deftemplate
-	 * @param id
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * return the number of nodes the given slot participates
-	 * in. It may not be a complete count. In some cases, it
-	 * may only count the direct successors of ObjectTypeNode
-	 * @return
-	 */
-	public int getNodeCount() {
-		return this.nodeCount;
-	}
-
-	/**
-	 * Increment the node count
-	 */
-	public void incrementNodeCount() {
-		this.nodeCount++;
-	}
-
-	/**
-	 * decrement the node count
-	 *
-	 */
-	public void decrementNodeCount() {
-		--this.nodeCount;
-	}
-
-	/**
-	 * A convienance method to clone slots. subclasses must implement
-	 * this method.
-	 */
-	public Object clone() {
-		return null;
-	}
-    
     /**
-     * set the default value
+     * Get the name of the slot
+     *
+     * @return
      */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Set the name of the slot
+     *
+     * @param text
+     */
+    public final void setName(String text) {
+        this.name = text;
+    }
+
+    public ValueType getValueType() {
+        return this.type;
+    }
+
+    public void setValueType(ValueType type) {
+        this.type = type;
+    }
+
+    /**
+     * the id is the column id, this is the sequence java introspection returns the fields for the
+     * object
+     *
+     * @return
+     */
+    public int getId() {
+        return this.id;
+    }
+
+    /**
+     * Set the column id for the slot. the id is the position of the slot in the deftemplate
+     *
+     * @param id
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * return the number of nodes the given slot participates in. It may not be a complete count. In
+     * some cases, it may only count the direct successors of ObjectTypeNode
+     *
+     * @return
+     */
+    public int getNodeCount() {
+        return this.nodeCount;
+    }
+
+    /** Increment the node count */
+    public void incrementNodeCount() {
+        this.nodeCount++;
+    }
+
+    /** decrement the node count */
+    public void decrementNodeCount() {
+        --this.nodeCount;
+    }
+
+    /** A convienance method to clone slots. subclasses must implement this method. */
+    public Object clone() {
+        return null;
+    }
+
+    /** set the default value */
     public void setDefaultValue(Object value) {
         if (value != null) {
             this.hasDefault = true;
             this.value = value;
         }
     }
-    
+
     public Object getDefaultValue() {
-    	return this.value;
+        return this.value;
     }
-    
+
     public boolean hasDefault() {
-    	return this.hasDefault;
+        return this.hasDefault;
     }
-    
+
     public long getDistinctCount() {
-    	return this.distinctCount;
+        return this.distinctCount;
     }
-    
+
     public void setDistinctCount(long count) {
-    	this.distinctCount = count;
+        this.distinctCount = count;
     }
 }

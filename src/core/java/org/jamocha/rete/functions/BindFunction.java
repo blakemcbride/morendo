@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,90 +26,83 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- * 
- * BindFunction is responsible for calling the appropriate method in Rete to
- * create the defglobal.
+ *     <p>BindFunction is responsible for calling the appropriate method in Rete to create the
+ *     defglobal.
  */
 public class BindFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String BIND = "bind";
+    /** */
+    public static final String BIND = "bind";
 
-	/**
-	 * 
-	 */
-	public BindFunction() {
-		super();
-	}
+    /** */
+    public BindFunction() {
+        super();
+    }
 
-	/**
-	 * the return type is Boolean. If the function was successful, it returns
-	 * true. Otherwise it returns false.
-	 */
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    /**
+     * the return type is Boolean. If the function was successful, it returns true. Otherwise it
+     * returns false.
+     */
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean bound = Boolean.FALSE;
-		if (params.length == 2) {
-			String name = params[0].getStringValue();
-			Object val = null;
-			if (params[1] instanceof ValueParam) {
-				val = params[1].getValue();
-			} else if (params[1] instanceof FunctionParam2) {
-				FunctionParam2 fp2 = (FunctionParam2) params[1];
-				fp2.setEngine(engine);
-				fp2.lookUpFunction();
-				DefaultReturnVector drv = (DefaultReturnVector) fp2.getValue();
-				val = drv.firstReturnValue().getValue();
-			}
-			engine.setBindingValue(name, val);
-			bound = Boolean.TRUE;
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, bound);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean bound = Boolean.FALSE;
+        if (params.length == 2) {
+            String name = params[0].getStringValue();
+            Object val = null;
+            if (params[1] instanceof ValueParam) {
+                val = params[1].getValue();
+            } else if (params[1] instanceof FunctionParam2) {
+                FunctionParam2 fp2 = (FunctionParam2) params[1];
+                fp2.setEngine(engine);
+                fp2.lookUpFunction();
+                DefaultReturnVector drv = (DefaultReturnVector) fp2.getValue();
+                val = drv.firstReturnValue().getValue();
+            }
+            engine.setBindingValue(name, val);
+            bound = Boolean.TRUE;
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, bound);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return BIND;
-	}
+    public String getName() {
+        return BIND;
+    }
 
-	/**
-	 * The function takes 2 parameters. The first is the name of the variable
-	 * and the second is some value. At the moment, the function does not hand
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam.class, ValueParam.class };
-	}
+    /**
+     * The function takes 2 parameters. The first is the name of the variable and the second is some
+     * value. At the moment, the function does not hand
+     */
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(bind ?" + params[0].getStringValue());
-			for (int idx = 1; idx < params.length; idx++) {
-				if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else if (params[idx] instanceof FunctionParam2) {
-					FunctionParam2 fp2 = (FunctionParam2) params[idx];
-					buf.append(" " + fp2.toPPString());
-				}
-			}
-			buf.append(" )");
-			return buf.toString();
-		} else {
-			return "(bind ?<variable-name> <expression>)\n" +
-			"Function description:\n" +
-			"\tBinds the value of the argument <expression> to the \n" + 
-			"\tvariable <variable-name>.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(bind ?" + params[0].getStringValue());
+            for (int idx = 1; idx < params.length; idx++) {
+                if (params[idx] instanceof ValueParam) {
+                    buf.append(" " + params[idx].getStringValue());
+                } else if (params[idx] instanceof FunctionParam2) {
+                    FunctionParam2 fp2 = (FunctionParam2) params[idx];
+                    buf.append(" " + fp2.toPPString());
+                }
+            }
+            buf.append(" )");
+            return buf.toString();
+        } else {
+            return "(bind ?<variable-name> <expression>)\n"
+                    + "Function description:\n"
+                    + "\tBinds the value of the argument <expression> to the \n"
+                    + "\tvariable <variable-name>.";
+        }
+    }
 }

@@ -8,81 +8,78 @@ import org.jamocha.rete.Function;
 import org.jamocha.rule.Defrule;
 
 public class ClipsRuleset implements Ruleset {
-	
-	private transient Logger log = null;
-	private String contents;
-	private String URL;
-	
-	public ClipsRuleset() {
-		super();
-		log = LogManager.getLogger(ClipsRuleset.class);
-	}
 
-	public String getContents() {
-		return contents;
-	}
+    private transient Logger log = null;
+    private String contents;
+    private String URL;
 
-	public void setContents(String contents) {
-		this.contents = contents;
-	}
+    public ClipsRuleset() {
+        super();
+        log = LogManager.getLogger(ClipsRuleset.class);
+    }
 
-	/**
-	 * for clips rulesets, the URL is the location where the ruleset
-	 * file is located.
-	 */
-	public String getURL() {
-		return URL;
-	}
+    public String getContents() {
+        return contents;
+    }
 
-	public void setURL(String url) {
-		URL = url;
-	}
-	
-	/**
-	 * Since the batch function in Jamocha handles http, and file,
-	 * there's no need to write a whole new implementation.
-	 */
-	public boolean loadRuleset(org.jamocha.rete.Rete engine) {
-		if (log == null) {
-			log = LogManager.getLogger(ClipsRuleset.class);
-		}
-		boolean loaded = false;
-		if (this.URL != null) {
-			try {
-				engine.loadRuleset(this.URL);
-				loaded = true;
-			} catch (Exception e) {
-				// we should log this
-				log.fatal(e.toString(), e);
-			}
-		} else if (this.contents != null) {
-			java.io.StringReader reader = new java.io.StringReader(this.contents);
-			CLIPSParser parser = new CLIPSParser(engine, reader);
-			Object expr = null;
-			try {
-				while ((expr = parser.basicExpr()) != null) {
-					if (expr instanceof Defrule rl) {
-						engine.getRuleCompiler().addRule(rl);
-					} else if (expr instanceof Deftemplate dft) {
-						engine.getCurrentFocus().addTemplate(dft, engine,
-								engine.getWorkingMemory());
-					} else if (expr instanceof Function fnc) {
-						fnc.executeFunction(engine, null);
-					}
-				}
-			} catch (Exception e) {
-				// we need to log the error
-				log.fatal(e.toString(), e);
-			}
-			loaded = true;
-		}
-		return loaded;
-	}
-	
-	public boolean reloadRuleset(org.jamocha.rete.Rete engine) {
-		boolean reload = false;
-		engine.clearRules();
-		reload = this.loadRuleset(engine);
-		return reload;
-	}
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    /** for clips rulesets, the URL is the location where the ruleset file is located. */
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String url) {
+        URL = url;
+    }
+
+    /**
+     * Since the batch function in Jamocha handles http, and file, there's no need to write a whole
+     * new implementation.
+     */
+    public boolean loadRuleset(org.jamocha.rete.Rete engine) {
+        if (log == null) {
+            log = LogManager.getLogger(ClipsRuleset.class);
+        }
+        boolean loaded = false;
+        if (this.URL != null) {
+            try {
+                engine.loadRuleset(this.URL);
+                loaded = true;
+            } catch (Exception e) {
+                // we should log this
+                log.fatal(e.toString(), e);
+            }
+        } else if (this.contents != null) {
+            java.io.StringReader reader = new java.io.StringReader(this.contents);
+            CLIPSParser parser = new CLIPSParser(engine, reader);
+            Object expr = null;
+            try {
+                while ((expr = parser.basicExpr()) != null) {
+                    if (expr instanceof Defrule rl) {
+                        engine.getRuleCompiler().addRule(rl);
+                    } else if (expr instanceof Deftemplate dft) {
+                        engine.getCurrentFocus()
+                                .addTemplate(dft, engine, engine.getWorkingMemory());
+                    } else if (expr instanceof Function fnc) {
+                        fnc.executeFunction(engine, null);
+                    }
+                }
+            } catch (Exception e) {
+                // we need to log the error
+                log.fatal(e.toString(), e);
+            }
+            loaded = true;
+        }
+        return loaded;
+    }
+
+    public boolean reloadRuleset(org.jamocha.rete.Rete engine) {
+        boolean reload = false;
+        engine.clearRules();
+        reload = this.loadRuleset(engine);
+        return reload;
+    }
 }

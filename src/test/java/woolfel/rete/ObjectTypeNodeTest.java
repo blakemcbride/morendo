@@ -12,24 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rete;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Peter Lin
- *
  */
 public class ObjectTypeNodeTest {
 
-
-
-	@Test
-	public void testCreate() {
-		assertTrue(true);
-	}
+    @Test
+    public void testCreate() {
+        assertTrue(true);
+    }
 }

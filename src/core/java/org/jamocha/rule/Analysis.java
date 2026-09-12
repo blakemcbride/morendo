@@ -12,38 +12,38 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
 
-
 /**
- * Validation interface defines 3 methods a basic validation component
- * would need to have. Validation can occur at any time, so it can be
- * used by the rule compiler, an IDE or a parser.
- * 
- * The product of the validation is either it passes, or a summary of
- * the errors and warnings.
- * 
- * @author Peter Lin
+ * Validation interface defines 3 methods a basic validation component would need to have.
+ * Validation can occur at any time, so it can be used by the rule compiler, an IDE or a parser.
  *
+ * <p>The product of the validation is either it passes, or a summary of the errors and warnings.
+ *
+ * @author Peter Lin
  */
 public interface Analysis {
-	
-	public static final int ANALYSIS_COMPLETE = 100;
-	public static final int ANALYSIS_INCOMPLETE = 101;
-	public static final int VALIDATION_FAILED = 1000;
-	public static final int VALIDATION_PASSED = 1001;
-	public static final int VALIDATION_WARNING = 1002;
 
-	/**
-	 * If the rule passes validation, it should return true. If the rule
-	 * was not valid for any reason, return false.
-	 * @param rule
-	 * @return
-	 */
-	int analyze(Rule rule);
-	Summary getErrors();
-	Summary getWarnings();
-	void reset();
+    public static final int ANALYSIS_COMPLETE = 100;
+    public static final int ANALYSIS_INCOMPLETE = 101;
+    public static final int VALIDATION_FAILED = 1000;
+    public static final int VALIDATION_PASSED = 1001;
+    public static final int VALIDATION_WARNING = 1002;
+
+    /**
+     * If the rule passes validation, it should return true. If the rule was not valid for any
+     * reason, return false.
+     *
+     * @param rule
+     * @return
+     */
+    int analyze(Rule rule);
+
+    Summary getErrors();
+
+    Summary getWarnings();
+
+    void reset();
 }

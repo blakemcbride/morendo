@@ -12,54 +12,51 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.analysis;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jamocha.rete.Function;
 import org.jamocha.rete.FunctionGroup;
 import org.jamocha.rete.Rete;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Peter Lin
- * 
- * RuleEngineFunction is responsible for loading all the rule functions
- * related to engine operation.
+ *     <p>RuleEngineFunction is responsible for loading all the rule functions related to engine
+ *     operation.
  */
 public class AnalysisFunctions implements FunctionGroup {
 
-	/**
-	 * 
-	 */
-	private ArrayList<Function> funcs = new ArrayList<>();
-	
-	public AnalysisFunctions() {
-		super();
-	}
-	
-	public String getName() {
-		return (AnalysisFunctions.class.getSimpleName());
-	}
-	
-	public void loadFunctions(Rete engine) {
-		AverageCostFunction aveCost = new AverageCostFunction();
-		engine.declareFunction(aveCost);
-		funcs.add(aveCost);
-		GenerateFactsFunction genff = new GenerateFactsFunction();
-		engine.declareFunction(genff);
-		funcs.add(genff);
-		PartialMatchCostFunction pmcost = new PartialMatchCostFunction();
-		engine.declareFunction(pmcost);
-		funcs.add(pmcost);
-		SetDistinctCount setCount = new SetDistinctCount();
-		engine.declareFunction(setCount);
-		funcs.add(setCount);
-		TestRuleFunction trfunc = new TestRuleFunction();
-		engine.declareFunction(trfunc);
-		funcs.add(trfunc);
+    /** */
+    private ArrayList<Function> funcs = new ArrayList<>();
+
+    public AnalysisFunctions() {
+        super();
+    }
+
+    public String getName() {
+        return (AnalysisFunctions.class.getSimpleName());
+    }
+
+    public void loadFunctions(Rete engine) {
+        AverageCostFunction aveCost = new AverageCostFunction();
+        engine.declareFunction(aveCost);
+        funcs.add(aveCost);
+        GenerateFactsFunction genff = new GenerateFactsFunction();
+        engine.declareFunction(genff);
+        funcs.add(genff);
+        PartialMatchCostFunction pmcost = new PartialMatchCostFunction();
+        engine.declareFunction(pmcost);
+        funcs.add(pmcost);
+        SetDistinctCount setCount = new SetDistinctCount();
+        engine.declareFunction(setCount);
+        funcs.add(setCount);
+        TestRuleFunction trfunc = new TestRuleFunction();
+        engine.declareFunction(trfunc);
+        funcs.add(trfunc);
         TopologyCostFunction topcostfunc = new TopologyCostFunction();
         engine.declareFunction(topcostfunc);
         funcs.add(topcostfunc);
@@ -69,10 +66,9 @@ public class AnalysisFunctions implements FunctionGroup {
         ValidateRuleFunction vrf = new ValidateRuleFunction();
         engine.declareFunction(vrf);
         funcs.add(vrf);
-	}
+    }
 
-	public List<Function> listFunctions() {
-		return funcs;
-	}
-
+    public List<Function> listFunctions() {
+        return funcs;
+    }
 }

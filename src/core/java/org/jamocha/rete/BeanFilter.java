@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -20,17 +20,15 @@ import java.beans.PropertyDescriptor;
 
 /**
  * @author Peter Lin
- *
- * Base interface for filtering PropertyDescriptor. Depending on the
- * java version, the filter may use Annotations, BeanInfo or some
- * other method like an external properties file.
+ *     <p>Base interface for filtering PropertyDescriptor. Depending on the java version, the filter
+ *     may use Annotations, BeanInfo or some other method like an external properties file.
  */
 public interface BeanFilter {
-    
+
     /**
-     * BeanFilters must implement this interface. It takes the
-     * PropertyDescriptor array returned from Introspection and
-     * removes any that should not be included.
+     * BeanFilters must implement this interface. It takes the PropertyDescriptor array returned
+     * from Introspection and removes any that should not be included.
+     *
      * @param props
      * @return
      */

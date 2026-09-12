@@ -12,27 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.parser;
 
 /**
  * @author Peter Lin
- *
- * Parser is a simple interface defining the basic parser operation
+ *     <p>Parser is a simple interface defining the basic parser operation
  */
 public interface Parser {
     /**
-     * Method is meant for cases where the system is parsing an
-     * external file.
+     * Method is meant for cases where the system is parsing an external file.
+     *
      * @return
      */
     Object parse();
+
     /**
-     * Method is meant to parse a discrete amount of input. The
-     * method takes Object input. It is up to the implementing
-     * class to determine if the input is raw text, inputstream or
-     * some other wrapper.
+     * Method is meant to parse a discrete amount of input. The method takes Object input. It is up
+     * to the implementing class to determine if the input is raw text, inputstream or some other
+     * wrapper.
+     *
      * @param input
      * @return
      */

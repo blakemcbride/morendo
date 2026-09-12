@@ -1,81 +1,80 @@
 package woolfel.examples.model;
 
 public class Hobby {
-	private String hobbyCode;
-	private String name;
-	private String longDescription;
-	private String shortDescription;
-	private String category;
-	private String subCategory;
-	private String secondaryCategory;
-	private String secondarySubCategory;
-	
-	public Hobby() {
-		super();
-	}
+    private String hobbyCode;
+    private String name;
+    private String longDescription;
+    private String shortDescription;
+    private String category;
+    private String subCategory;
+    private String secondaryCategory;
+    private String secondarySubCategory;
 
-	public String getHobbyCode() {
-		return hobbyCode;
-	}
+    public Hobby() {
+        super();
+    }
 
-	public void setHobbyCode(String hobbyCode) {
-		this.hobbyCode = hobbyCode;
-	}
+    public String getHobbyCode() {
+        return hobbyCode;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setHobbyCode(String hobbyCode) {
+        this.hobbyCode = hobbyCode;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getLongDescription() {
-		return longDescription;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setLongDescription(String longDescription) {
-		this.longDescription = longDescription;
-	}
+    public String getLongDescription() {
+        return longDescription;
+    }
 
-	public String getShortDescription() {
-		return shortDescription;
-	}
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
 
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
+    public String getShortDescription() {
+        return shortDescription;
+    }
 
-	public String getCategory() {
-		return category;
-	}
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+    public String getCategory() {
+        return category;
+    }
 
-	public String getSubCategory() {
-		return subCategory;
-	}
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-	public void setSubCategory(String subCategory) {
-		this.subCategory = subCategory;
-	}
+    public String getSubCategory() {
+        return subCategory;
+    }
 
-	public String getSecondaryCategory() {
-		return secondaryCategory;
-	}
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
+    }
 
-	public void setSecondaryCategory(String secondaryCategory) {
-		this.secondaryCategory = secondaryCategory;
-	}
+    public String getSecondaryCategory() {
+        return secondaryCategory;
+    }
 
-	public String getSecondarySubCategory() {
-		return secondarySubCategory;
-	}
+    public void setSecondaryCategory(String secondaryCategory) {
+        this.secondaryCategory = secondaryCategory;
+    }
 
-	public void setSecondarySubCategory(String secondarySubCategory) {
-		this.secondarySubCategory = secondarySubCategory;
-	}
-	
+    public String getSecondarySubCategory() {
+        return secondarySubCategory;
+    }
+
+    public void setSecondarySubCategory(String secondarySubCategory) {
+        this.secondarySubCategory = secondarySubCategory;
+    }
 }

@@ -6,55 +6,52 @@
  */
 package woolfel.rete;
 
-import java.util.Collection;
-import java.util.Iterator;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.jamocha.rete.Rete;
 import org.jamocha.rule.Defrule;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Collection;
+import java.util.Iterator;
+
 // import org.jamocha.rete.*;
 // import org.jamocha.rule.*;
 
-
-
 /**
  * @author pete
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ *     <p>TODO To change the template for this generated type comment go to Window - Preferences -
+ *     Java - Code Style - Code Templates
  */
 public class LoadRulesetTest {
 
-
-
     @SuppressWarnings("rawtypes")
-	@Test
-	public void testLoadOnlySample() {
+    @Test
+    public void testLoadOnlySample() {
         Rete engine = new Rete();
         engine.loadRuleset("./samples/only/only_1.clp");
         Collection rules = engine.getCurrentFocus().getAllRules();
         int count = rules.size();
         Iterator itr = rules.iterator();
         while (itr.hasNext()) {
-            Defrule r = (Defrule)itr.next();
+            Defrule r = (Defrule) itr.next();
             System.out.println(r.toPPString());
         }
-        assertEquals(1,count);
+        assertEquals(1, count);
     }
 
     @SuppressWarnings("rawtypes")
-	@Test
-	public void testLoadExistsSample() {
+    @Test
+    public void testLoadExistsSample() {
         Rete engine = new Rete();
         engine.loadRuleset("./samples/exists/exists_sample10.clp");
         Collection rules = engine.getCurrentFocus().getAllRules();
         int count = rules.size();
         Iterator itr = rules.iterator();
         while (itr.hasNext()) {
-            Defrule r = (Defrule)itr.next();
+            Defrule r = (Defrule) itr.next();
             System.out.println(r.toPPString());
         }
-        assertEquals(2,count);
+        assertEquals(2, count);
     }
 }

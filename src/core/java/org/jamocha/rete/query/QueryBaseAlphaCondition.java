@@ -12,29 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.query;
 
-import org.jamocha.rete.Slot;
 import org.jamocha.rete.Operator;
+import org.jamocha.rete.Slot;
 
 /**
  * @author Peter Lin
- * 
- * BaseAlpha is the baseAlpha node for all 1-input nodes.
+ *     <p>BaseAlpha is the baseAlpha node for all 1-input nodes.
  */
 public abstract class QueryBaseAlphaCondition extends QueryBaseAlpha {
 
-    /**
-	 * 
-	 */
+    /** */
+    public QueryBaseAlphaCondition(int id) {
+        super(id);
+    }
 
-	public QueryBaseAlphaCondition(int id) {
-		super(id);
-	}
-	
-	public abstract void setSlot(Slot sl);
-	
-	public abstract void setOperator(Operator operator);
+    public abstract void setSlot(Slot sl);
+
+    public abstract void setOperator(Operator operator);
 }

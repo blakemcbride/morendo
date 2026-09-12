@@ -12,14 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.math;
 
-import java.math.BigDecimal;
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -29,81 +26,77 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.math.BigDecimal;
 
 /**
  * @author Peter Lin
- *
- * Subtract will subtract one or more numeric values. for example:
- * (- 100 12 4 32)
+ *     <p>Subtract will subtract one or more numeric values. for example: (- 100 12 4 32)
  */
 public class Subtract implements Function {
 
-    /**
-	 * 
-	 */
-	
-	public static final String SUBTRACT = "subtract";
+    /** */
+    public static final String SUBTRACT = "subtract";
 
-   
-	public Subtract() {
-		super();
-	}
+    public Subtract() {
+        super();
+    }
 
-	public ValueType getReturnType() {
+    public ValueType getReturnType() {
         return ValueType.BIG_DECIMAL;
-	}
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		BigDecimal bdval = null;
-		if (params != null) {
-            bdval = (BigDecimal)params[0].getValue(engine, ValueType.BIG_DECIMAL);
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        BigDecimal bdval = null;
+        if (params != null) {
+            bdval = (BigDecimal) params[0].getValue(engine, ValueType.BIG_DECIMAL);
             BigDecimal bd = null;
-			for (int idx=1; idx < params.length; idx++) {
-				if (params[idx] instanceof ValueParam) {
-					ValueParam n = (ValueParam) params[idx];
-					bd = n.getBigDecimalValue();
-				} else {
-					bd = new BigDecimal(params[idx].getValue(engine, ValueType.BIG_DECIMAL).toString());
-				}
+            for (int idx = 1; idx < params.length; idx++) {
+                if (params[idx] instanceof ValueParam) {
+                    ValueParam n = (ValueParam) params[idx];
+                    bd = n.getBigDecimalValue();
+                } else {
+                    bd =
+                            new BigDecimal(
+                                    params[idx].getValue(engine, ValueType.BIG_DECIMAL).toString());
+                }
                 bdval = bdval.subtract(bd);
-			}
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = 
-			new DefaultReturnValue(ValueType.BIG_DECIMAL,bdval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL, bdval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return SUBTRACT;
-	}
+    public String getName() {
+        return SUBTRACT;
+    }
 
-	public Class<?>[] getParameter() {
+    public Class<?>[] getParameter() {
         return new Class<?>[] {ValueParam[].class};
-	}
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(-");
-			for (int idx=0; idx < params.length; idx++) {
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam)params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else {
-					buf.append(" " + params[idx].getStringValue());
-				}
-			}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(- (<literal> | <binding>)+)\n" +
-					"Function description:\n" +
-					"\t Returns the value of the first argument minus the " +
-					"sum of all subsequent arguments.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(-");
+            for (int idx = 0; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    buf.append(" ?" + bp.getVariableName());
+                } else if (params[idx] instanceof ValueParam) {
+                    buf.append(" " + params[idx].getStringValue());
+                } else {
+                    buf.append(" " + params[idx].getStringValue());
+                }
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(- (<literal> | <binding>)+)\n"
+                    + "Function description:\n"
+                    + "\t Returns the value of the first argument minus the "
+                    + "sum of all subsequent arguments.";
+        }
+    }
 }

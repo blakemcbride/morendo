@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.cube;
 
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Defcube;
@@ -12,47 +11,43 @@ import org.jamocha.rete.ValueType;
 
 public class IndexDimensionFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String INDEX_DIMENSION = "index-dimension";
-	
-	public IndexDimensionFunction() {
-		super();
-	}
+    /** */
+    public static final String INDEX_DIMENSION = "index-dimension";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean index = Boolean.FALSE;
-		if (params != null && params.length >= 2) {
-			String cubename = params[0].getStringValue();
-			Defcube cube = (Defcube)engine.getCube(cubename);
-			for (int i=1; i < params.length; i++) {
-				String dimension = params[i].getStringValue();
-				cube.getDimension(dimension).setAutoIndex(true);
-			}
-			index = Boolean.TRUE;
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, index);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public IndexDimensionFunction() {
+        super();
+    }
 
-	public String getName() {
-		return INDEX_DIMENSION;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean index = Boolean.FALSE;
+        if (params != null && params.length >= 2) {
+            String cubename = params[0].getStringValue();
+            Defcube cube = (Defcube) engine.getCube(cubename);
+            for (int i = 1; i < params.length; i++) {
+                String dimension = params[i].getStringValue();
+                cube.getDimension(dimension).setAutoIndex(true);
+            }
+            index = Boolean.TRUE;
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, index);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{String.class, String[].class};
-	}
+    public String getName() {
+        return INDEX_DIMENSION;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String.class, String[].class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(index-dimension <cube> <dimension>+)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(index-dimension <cube> <dimension>+)";
+    }
 }

@@ -1,31 +1,30 @@
 package org.jamocha.rete.macro;
 
 /**
- * PropertyMacro has a reference to the ReadMacro and WriteMacro
- * for a single bean property. The purpose is to encapsulate the
- * macros and make it easier to use.
- * 
+ * PropertyMacro has a reference to the ReadMacro and WriteMacro for a single bean property. The
+ * purpose is to encapsulate the macros and make it easier to use.
+ *
  * @author Peter Lin
  */
 public class PropertyMacros {
-	private ReadMacro readMacro;
-	private WriteMacro writeMacro;
-	
-	public PropertyMacros() {}
+    private ReadMacro readMacro;
+    private WriteMacro writeMacro;
 
-	public ReadMacro getReadMacro() {
-		return readMacro;
-	}
+    public PropertyMacros() {}
 
-	public void setReadMacro(ReadMacro readMacro) {
-		this.readMacro = readMacro;
-	}
+    public ReadMacro getReadMacro() {
+        return readMacro;
+    }
 
-	public WriteMacro getWriteMacro() {
-		return writeMacro;
-	}
+    public void setReadMacro(ReadMacro readMacro) {
+        this.readMacro = readMacro;
+    }
 
-	public void setWriteMacro(WriteMacro writeMacro) {
-		this.writeMacro = writeMacro;
-	}
+    public WriteMacro getWriteMacro() {
+        return writeMacro;
+    }
+
+    public void setWriteMacro(WriteMacro writeMacro) {
+        this.writeMacro = writeMacro;
+    }
 }

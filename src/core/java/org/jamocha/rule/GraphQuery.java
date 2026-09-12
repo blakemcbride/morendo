@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jamocha.rete.Fact;
 import org.jamocha.rete.Parameter;
@@ -31,24 +28,21 @@ import org.jamocha.rete.query.QueryFuncAlphaNode;
 import org.jamocha.rete.query.QueryParameterNode;
 import org.jamocha.rete.query.QueryResultNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Peter Lin
- *
- * 
  */
 public class GraphQuery extends Defquery {
 
-    /**
-	 * 
-	 */
-	private Fact[] graphData = null;
-    
-	/**
-	 * 
-	 */
-	public GraphQuery() {
-		super();
-	}
+    /** */
+    private Fact[] graphData = null;
+
+    /** */
+    public GraphQuery() {
+        super();
+    }
 
     public GraphQuery(String name) {
         this();
@@ -56,77 +50,73 @@ public class GraphQuery extends Defquery {
     }
 
     public void setGraphData(Fact[] data) {
-    	this.graphData = data;
+        this.graphData = data;
     }
-    
+
     public void clearGraphData() {
-    	this.graphData = null;
+        this.graphData = null;
     }
-    
+
     @Override
     public void setWatch(boolean watch) {
-    	this.watch = watch;
-    	for (int i=0; i < this.joins.size(); i++) {
-    		QueryBaseJoin join = this.joins.get(i);
-    		join.setWatch(watch);
-    	}
-    	for (int i=0; i < this.conditions.size(); i++) {
-    		Condition c = this.conditions.get(i);
-    		for (int n=0; n < c.getNodes().size(); n++) {
-    			QueryBaseAlpha a = (QueryBaseAlpha)c.getNodes().get(n);
-    			a.setWatch(watch);
-    		}
-    	}
+        this.watch = watch;
+        for (int i = 0; i < this.joins.size(); i++) {
+            QueryBaseJoin join = this.joins.get(i);
+            join.setWatch(watch);
+        }
+        for (int i = 0; i < this.conditions.size(); i++) {
+            Condition c = this.conditions.get(i);
+            for (int n = 0; n < c.getNodes().size(); n++) {
+                QueryBaseAlpha a = (QueryBaseAlpha) c.getNodes().get(n);
+                a.setWatch(watch);
+            }
+        }
     }
-    
-    /**
-     * 
-     */
-	@Override
-	public List<?> executeQuery(Rete engine, WorkingMemory memory, Parameter[] parameters) {
-		if (watch) {
-			startTime = System.currentTimeMillis();
-		}
-		try {
-			ArrayList<QueryBaseAlphaCondition> params = new ArrayList<>(this.queryParameterNodeMap.values());
-			for (int i=0; i < parameters.length; i++) {
-				Object node = params.get(i);
-				if (node instanceof QueryParameterNode pnode) {
-					pnode.setQueryParameterValue(parameters[i].getValue());
-				} else if (node instanceof QueryFuncAlphaNode pnode) {
-					pnode.setQueryParameterValue(parameters[i].getValue());
-				}
-			}
-			// first assert the facts
-			for (int i=0; i < this.graphData.length; i++) {
-				Fact f = this.graphData[i];
-				f.setFactId(engine);
-				this.queryRoot.assertObject(f, engine, memory);
-			}
-		} catch (AssertException e) {
-		}
-		if (watch) {
-			elapsedTime = System.currentTimeMillis() - startTime;
-			engine.setQueryTime(this.name, this.elapsedTime);
-		}
-		return this.resultNode.getResults();
-	}
-    
-	/**
-	 * Each query should use a clone of the defquery.
-	 */
-	public GraphQuery clone(Rete engine) {
-		GraphQuery clone = new GraphQuery(this.name);
-		clone.setQueryParameters(this.queryParameterNodeMap);
-		clone.bindings = this.bindings;
-		clone.comment = this.comment;
-		clone.conditions = this.conditions;
-		clone.name = this.name;
-		clone.watch = this.watch;
-		clone.queryRoot = this.queryRoot.clone(engine, clone);
-		QueryBaseJoin last = (QueryBaseJoin)clone.getLastNode();
-		clone.resultNode = (QueryResultNode)last.getSuccessorNodes()[0];
-		return clone;
-	}
 
+    /** */
+    @Override
+    public List<?> executeQuery(Rete engine, WorkingMemory memory, Parameter[] parameters) {
+        if (watch) {
+            startTime = System.currentTimeMillis();
+        }
+        try {
+            ArrayList<QueryBaseAlphaCondition> params =
+                    new ArrayList<>(this.queryParameterNodeMap.values());
+            for (int i = 0; i < parameters.length; i++) {
+                Object node = params.get(i);
+                if (node instanceof QueryParameterNode pnode) {
+                    pnode.setQueryParameterValue(parameters[i].getValue());
+                } else if (node instanceof QueryFuncAlphaNode pnode) {
+                    pnode.setQueryParameterValue(parameters[i].getValue());
+                }
+            }
+            // first assert the facts
+            for (int i = 0; i < this.graphData.length; i++) {
+                Fact f = this.graphData[i];
+                f.setFactId(engine);
+                this.queryRoot.assertObject(f, engine, memory);
+            }
+        } catch (AssertException e) {
+        }
+        if (watch) {
+            elapsedTime = System.currentTimeMillis() - startTime;
+            engine.setQueryTime(this.name, this.elapsedTime);
+        }
+        return this.resultNode.getResults();
+    }
+
+    /** Each query should use a clone of the defquery. */
+    public GraphQuery clone(Rete engine) {
+        GraphQuery clone = new GraphQuery(this.name);
+        clone.setQueryParameters(this.queryParameterNodeMap);
+        clone.bindings = this.bindings;
+        clone.comment = this.comment;
+        clone.conditions = this.conditions;
+        clone.name = this.name;
+        clone.watch = this.watch;
+        clone.queryRoot = this.queryRoot.clone(engine, clone);
+        QueryBaseJoin last = (QueryBaseJoin) clone.getLastNode();
+        clone.resultNode = (QueryResultNode) last.getSuccessorNodes()[0];
+        return clone;
+    }
 }

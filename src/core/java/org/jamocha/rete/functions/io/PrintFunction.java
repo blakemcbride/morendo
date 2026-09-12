@@ -12,11 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.io;
-
-import java.util.ArrayList;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -30,147 +28,142 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.util.ArrayList;
 
 /**
  * @author Peter Lin
- *
- * PrintFucntion is pretty simple. It can any number of parameters and
- * print it.
+ *     <p>PrintFucntion is pretty simple. It can any number of parameters and print it.
  */
 public class PrintFunction implements Function {
 
+    /** */
+    public static final String PRINTOUT = "printout";
+
+    /** */
+    public PrintFunction() {
+        super();
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
     /**
-	 * 
-	 */
-	public static final String PRINTOUT = "printout";
-    
-	/**
-	 * 
-	 */
-	public PrintFunction() {
-		super();
-	}
-
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
-
-	/**
-     * The implementation will call Rete.writeMessage(). This means that
-     * if multiple output streams are set, the message will be printed to
-     * all of them.
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+     * The implementation will call Rete.writeMessage(). This means that if multiple output streams
+     * are set, the message will be printed to all of them.
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         // print out some stuff
-		DefaultReturnVector rv = new DefaultReturnVector();
+        DefaultReturnVector rv = new DefaultReturnVector();
         if (params.length > 0) {
             String output = params[0].getStringValue();
-            for (int idx=1; idx < params.length; idx++) {
-            	if (params[idx] instanceof BoundParam) {
-            		BoundParam bp = (BoundParam)params[idx];
-            		Object v = engine.getBinding(bp.getVariableName());
-            		if (v != null) {
-            			if (v.getClass().isArray()) {
-            				Object[] ary = (Object[])v;
-            				writeArray(ary,engine,output,false);
-            			} else if (v instanceof ArrayList) {
-            				writeList((ArrayList<?>)v, engine, output, false);
-            			} else {
-            				engine.writeMessage(v.toString(),output);
-            			}
-            		} else {
-            			rv.addReturnValue(new DefaultReturnValue(ValueType.STRING,
-            					"Error: Variable " + bp.getVariableName() + " is not bound"));
-            			rv.addReturnValue(new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,
-            					Boolean.FALSE));
-            		}
-            	} else if (params[idx].getValue(engine, ValueType.OBJECT) != null &&
-                		params[idx].getValue(engine, ValueType.OBJECT).equals(Constants.CRLF)) {
-                    engine.writeMessage(Constants.LINEBREAK,output);
+            for (int idx = 1; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    Object v = engine.getBinding(bp.getVariableName());
+                    if (v != null) {
+                        if (v.getClass().isArray()) {
+                            Object[] ary = (Object[]) v;
+                            writeArray(ary, engine, output, false);
+                        } else if (v instanceof ArrayList) {
+                            writeList((ArrayList<?>) v, engine, output, false);
+                        } else {
+                            engine.writeMessage(v.toString(), output);
+                        }
+                    } else {
+                        rv.addReturnValue(
+                                new DefaultReturnValue(
+                                        ValueType.STRING,
+                                        "Error: Variable "
+                                                + bp.getVariableName()
+                                                + " is not bound"));
+                        rv.addReturnValue(
+                                new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
+                    }
+                } else if (params[idx].getValue(engine, ValueType.OBJECT) != null
+                        && params[idx].getValue(engine, ValueType.OBJECT).equals(Constants.CRLF)) {
+                    engine.writeMessage(Constants.LINEBREAK, output);
                 } else {
-                	Object val = params[idx].getValue(engine, ValueType.OBJECT);
-                	if (val instanceof String string) {
-                        engine.writeMessage(string,output);
-                	} else if (val.getClass().isArray()) {
-                		Object[] ary = (Object[])val;
-                		writeArray(ary,engine,output,true);
-                	} else {
-                		engine.writeMessage(val.toString(),output);
-                	}
+                    Object val = params[idx].getValue(engine, ValueType.OBJECT);
+                    if (val instanceof String string) {
+                        engine.writeMessage(string, output);
+                    } else if (val.getClass().isArray()) {
+                        Object[] ary = (Object[]) val;
+                        writeArray(ary, engine, output, true);
+                    } else {
+                        engine.writeMessage(val.toString(), output);
+                    }
                 }
             }
         }
-		return rv;
-	}
+        return rv;
+    }
 
-	public void writeArray(Object[] arry, Rete engine, String output, boolean linebreak) {
-		for (int idz=0; idz < arry.length; idz++) {
-			Object val = arry[idz];
-			if (val instanceof Fact f) {
-				engine.writeMessage(f.toFactString() + " ",output);
-			} else {
-				engine.writeMessage(arry[idz].toString() + " ",output);
-			}
-			if (linebreak) {
-				engine.writeMessage(Constants.LINEBREAK, output);
-			}
-		}
-	}
-	
-	public void writeList(ArrayList<?> array, Rete engine, String output, boolean linebreak) {
-		for (int i=0; i < array.size(); i++) {
-			Object val = array.get(i);
-			if (val instanceof Fact f) {
-				engine.writeMessage(f.toFactString() + " ",output);
-			} else if (val.getClass().isArray()) {
-				writeArray((Object[])val, engine, output, linebreak);
-			} else {
-				engine.writeMessage(array.get(i).toString() + " ",output);
-			}
-			if (linebreak) {
-				engine.writeMessage(Constants.LINEBREAK, output);
-			}
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see woolfel.engine.rete.Function#getName()
-	 */
-	public String getName() {
-		return PRINTOUT;
-	}
+    public void writeArray(Object[] arry, Rete engine, String output, boolean linebreak) {
+        for (int idz = 0; idz < arry.length; idz++) {
+            Object val = arry[idz];
+            if (val instanceof Fact f) {
+                engine.writeMessage(f.toFactString() + " ", output);
+            } else {
+                engine.writeMessage(arry[idz].toString() + " ", output);
+            }
+            if (linebreak) {
+                engine.writeMessage(Constants.LINEBREAK, output);
+            }
+        }
+    }
 
-	/**
-     * The implementation returns an array of size 1 with Parameter.class
-     * as the only entry. Any function that can take an unlimited number
-     * of Parameters should return new Class<?>[] {Parameter.class}.
-     * If a function doesn't take any parameters, the method should return
-     * null instead.
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[] {ValueParam[].class};
-	}
+    public void writeList(ArrayList<?> array, Rete engine, String output, boolean linebreak) {
+        for (int i = 0; i < array.size(); i++) {
+            Object val = array.get(i);
+            if (val instanceof Fact f) {
+                engine.writeMessage(f.toFactString() + " ", output);
+            } else if (val.getClass().isArray()) {
+                writeArray((Object[]) val, engine, output, linebreak);
+            } else {
+                engine.writeMessage(array.get(i).toString() + " ", output);
+            }
+            if (linebreak) {
+                engine.writeMessage(Constants.LINEBREAK, output);
+            }
+        }
+    }
 
-	/**
-	 * Note: need to handle crlf correctly, for now leave it as is.
-	 */
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(print ");
-			buf.append(params[0].getStringValue());
-			for (int idx=1; idx < params.length; idx++) {
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam)params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else {
-					buf.append(" \"" + params[idx].getStringValue() + "\"");
-				}
-			}
-			buf.append(" )");
-			return buf.toString();
-		} else {
-			return "(print)";
-		}
-	}
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.Function#getName()
+     */
+    public String getName() {
+        return PRINTOUT;
+    }
+
+    /**
+     * The implementation returns an array of size 1 with Parameter.class as the only entry. Any
+     * function that can take an unlimited number of Parameters should return new Class<?>[]
+     * {Parameter.class}. If a function doesn't take any parameters, the method should return null
+     * instead.
+     */
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
+
+    /** Note: need to handle crlf correctly, for now leave it as is. */
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(print ");
+            buf.append(params[0].getStringValue());
+            for (int idx = 1; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    buf.append(" ?" + bp.getVariableName());
+                } else {
+                    buf.append(" \"" + params[idx].getStringValue() + "\"");
+                }
+            }
+            buf.append(" )");
+            return buf.toString();
+        } else {
+            return "(print)";
+        }
+    }
 }

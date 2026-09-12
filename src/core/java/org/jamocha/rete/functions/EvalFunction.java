@@ -12,17 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
-import java.io.StringReader;
 
 import org.jamocha.messagerouter.CLIPSInterpreter;
 import org.jamocha.parser.clips.CLIPSParser;
 import org.jamocha.parser.clips.ParseException;
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
@@ -30,83 +27,79 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.io.StringReader;
+
 /**
  * @author Sebastian Reinartz
- * 
- * Functional equivalent of (eval "(+ 1 3)") in CLIPS and JESS.
+ *     <p>Functional equivalent of (eval "(+ 1 3)") in CLIPS and JESS.
  */
 public class EvalFunction implements Function {
 
-	/**
-	 * 
-	 */
+    /** */
+    public static final String EVAL = "eval";
 
-	public static final String EVAL = "eval";
+    /** */
+    public EvalFunction() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public EvalFunction() {
-		super();
-	}
+    public ValueType getReturnType() {
+        return ValueType.OBJECT;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.OBJECT;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        ReturnVector result = null;
+        if (params != null && params.length > 0) {
+            String command = (String) params[0].getValue(engine, ValueType.STRING);
+            if (command != null) {
+                result = eval(engine, command);
+            }
+        }
+        return result;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		ReturnVector result = null;
-		if (params != null && params.length > 0) {
-			String command = (String)params[0].getValue(engine, ValueType.STRING);
-			if (command != null) {
-				result = eval(engine, command);
-			}
-		}
-		return result;
-	}
+    public ReturnVector eval(Rete engine, String command) {
+        ReturnVector result = null;
+        try {
+            CLIPSParser parser = new CLIPSParser(engine, new StringReader(command));
+            CLIPSInterpreter interpreter = new CLIPSInterpreter(engine);
+            Object expr = null;
+            while ((expr = parser.basicExpr()) != null) {
+                result = interpreter.executeCommand(expr);
+            }
+        } catch (ParseException e) {
+            // we should report the error
+            e.printStackTrace();
+        }
+        return result;
+    }
 
-	public ReturnVector eval(Rete engine, String command) {
-		ReturnVector result = null;
-		try {
-			CLIPSParser parser = new CLIPSParser(engine, new StringReader(
-					command));
-			CLIPSInterpreter interpreter = new CLIPSInterpreter(engine);
-			Object expr = null;
-			while ((expr = parser.basicExpr()) != null) {
-				result = interpreter.executeCommand(expr);
-			}
-		} catch (ParseException e) {
-			// we should report the error
-			e.printStackTrace();
-		}
-		return result;
-	}
+    public String getName() {
+        return EVAL;
+    }
 
-	public String getName() {
-		return EVAL;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam.class };
-	}
-
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(eval");
-			for (int idx = 0; idx < params.length; idx++) {
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" \"" + params[idx].getStringValue() + "\"");
-				}
-			}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(eval <string expressions>)\n" + "Command description:\n"
-					+ "\tEvaluates the content of a string.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(eval");
+            for (int idx = 0; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    buf.append(" ?" + bp.getVariableName());
+                } else if (params[idx] instanceof ValueParam) {
+                    buf.append(" \"" + params[idx].getStringValue() + "\"");
+                }
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(eval <string expressions>)\n"
+                    + "Command description:\n"
+                    + "\tEvaluates the content of a string.";
+        }
+    }
 }

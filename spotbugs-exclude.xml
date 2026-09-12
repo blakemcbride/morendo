@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SpotBugs filter for ./bld spotbugs. The generated CLIPS parser is not ours to fix. -->
+<FindBugsFilter>
+  <Match>
+    <Class name="~org\.jamocha\.parser\.clips\.(CLIPSParser.*|ParseException|SimpleCharStream|Token|TokenMgrError)"/>
+  </Match>
+</FindBugsFilter>

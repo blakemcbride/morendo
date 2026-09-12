@@ -5,105 +5,103 @@ import java.util.List;
 
 /**
  * RuleApplicationBean is used to read and write the Rule application data to JSON format.
- * RuleApplicationImpl then reads the values from the bean and has the methods to handle
- * the initialization logic.
- * 
- * @author peter
+ * RuleApplicationImpl then reads the values from the bean and has the methods to handle the
+ * initialization logic.
  *
+ * @author peter
  */
 public class RuleApplicationBean implements Configuration {
 
-	private int initialPool = 1;
-	private int maxPool = 10;
-	private int minPool = 1;
-	private String name;
-	private List<ObjectModel> models;
-	private List<FunctionPackage> functionGroups = new ArrayList<>();
-	private List<ClipsRuleset> rulesets = new ArrayList<>();
-	private List<ObjectData> objectData = new ArrayList<>();
-	private List<ClipsInitialData> clipsData = new ArrayList<>();
-	private List<JSONData<?>> jsonData = new ArrayList<>();
-	
-	public RuleApplicationBean() {
-	}
+    private int initialPool = 1;
+    private int maxPool = 10;
+    private int minPool = 1;
+    private String name;
+    private List<ObjectModel> models;
+    private List<FunctionPackage> functionGroups = new ArrayList<>();
+    private List<ClipsRuleset> rulesets = new ArrayList<>();
+    private List<ObjectData> objectData = new ArrayList<>();
+    private List<ClipsInitialData> clipsData = new ArrayList<>();
+    private List<JSONData<?>> jsonData = new ArrayList<>();
 
-	public int getInitialPool() {
-		return initialPool;
-	}
+    public RuleApplicationBean() {}
 
-	public void setInitialPool(int initialPool) {
-		this.initialPool = initialPool;
-	}
+    public int getInitialPool() {
+        return initialPool;
+    }
 
-	public int getMaxPool() {
-		return maxPool;
-	}
+    public void setInitialPool(int initialPool) {
+        this.initialPool = initialPool;
+    }
 
-	public void setMaxPool(int maxPool) {
-		this.maxPool = maxPool;
-	}
+    public int getMaxPool() {
+        return maxPool;
+    }
 
-	public int getMinPool() {
-		return minPool;
-	}
+    public void setMaxPool(int maxPool) {
+        this.maxPool = maxPool;
+    }
 
-	public void setMinPool(int minPool) {
-		this.minPool = minPool;
-	}
+    public int getMinPool() {
+        return minPool;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setMinPool(int minPool) {
+        this.minPool = minPool;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public List<ObjectModel> getModels() {
-		return models;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setModels(List<ObjectModel> models) {
-		this.models = models;
-	}
+    public List<ObjectModel> getModels() {
+        return models;
+    }
 
-	public List<FunctionPackage> getFunctionGroups() {
-		return functionGroups;
-	}
+    public void setModels(List<ObjectModel> models) {
+        this.models = models;
+    }
 
-	public void setFunctionGroups(List<FunctionPackage> functionGroups) {
-		this.functionGroups = functionGroups;
-	}
+    public List<FunctionPackage> getFunctionGroups() {
+        return functionGroups;
+    }
 
-	public List<ClipsRuleset> getRulesets() {
-		return rulesets;
-	}
+    public void setFunctionGroups(List<FunctionPackage> functionGroups) {
+        this.functionGroups = functionGroups;
+    }
 
-	public void setRulesets(List<ClipsRuleset> rulesets) {
-		this.rulesets = rulesets;
-	}
+    public List<ClipsRuleset> getRulesets() {
+        return rulesets;
+    }
 
-	public List<ObjectData> getObjectData() {
-		return objectData;
-	}
+    public void setRulesets(List<ClipsRuleset> rulesets) {
+        this.rulesets = rulesets;
+    }
 
-	public void setObjectData(List<ObjectData> initialData) {
-		this.objectData = initialData;
-	}
+    public List<ObjectData> getObjectData() {
+        return objectData;
+    }
 
-	public List<ClipsInitialData> getClipsData() {
-		return clipsData;
-	}
+    public void setObjectData(List<ObjectData> initialData) {
+        this.objectData = initialData;
+    }
 
-	public void setClipsData(List<ClipsInitialData> clipsData) {
-		this.clipsData = clipsData;
-	}
+    public List<ClipsInitialData> getClipsData() {
+        return clipsData;
+    }
 
-	public List<JSONData<?>> getJsonData() {
-		return jsonData;
-	}
+    public void setClipsData(List<ClipsInitialData> clipsData) {
+        this.clipsData = clipsData;
+    }
 
-	public void setJsonData(List<JSONData<?>> jsonData) {
-		this.jsonData = jsonData;
-	}
+    public List<JSONData<?>> getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(List<JSONData<?>> jsonData) {
+        this.jsonData = jsonData;
+    }
 }

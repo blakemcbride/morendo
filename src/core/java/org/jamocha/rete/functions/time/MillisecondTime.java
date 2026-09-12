@@ -12,13 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.time;
 
-import java.math.BigDecimal;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,52 +24,47 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
+import java.math.BigDecimal;
+
 /**
  * @author Peter Lin
- * 
- * EchoFunction is used to echo variable bindings in the shell.
+ *     <p>EchoFunction is used to echo variable bindings in the shell.
  */
 public class MillisecondTime implements Function {
 
-    /**
-	 * 
-	 */
-	public static final String MSTIME = "ms-time";
+    /** */
+    public static final String MSTIME = "ms-time";
+
+    /** */
+    public MillisecondTime() {
+        super();
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.LONG_OBJECT;
+    }
 
     /**
-	 * 
-	 */
-	public MillisecondTime() {
-		super();
-	}
+     * The method expects an array of ShellBoundParam. The method will use StringBuilder to resolve
+     * the binding and print out 1 binding per line.
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        BigDecimal time = new BigDecimal(System.currentTimeMillis());
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL, time);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.LONG_OBJECT;
-	}
+    public String getName() {
+        return MSTIME;
+    }
 
-	/**
-	 * The method expects an array of ShellBoundParam. The method will use
-	 * StringBuilder to resolve the binding and print out 1 binding per
-	 * line.
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		BigDecimal time = new BigDecimal(System.currentTimeMillis());
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = 
-			new DefaultReturnValue(ValueType.BIG_DECIMAL,time);
-		ret.addReturnValue(rv);
-		return ret;
-	}
-
-	public String getName() {
-		return MSTIME;
-	}
-
-	public Class<?>[] getParameter() {
+    public Class<?>[] getParameter() {
         return new Class<?>[] {String[].class};
-	}
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(ms-time)";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(ms-time)";
+    }
 }

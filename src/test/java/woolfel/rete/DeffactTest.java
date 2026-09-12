@@ -12,32 +12,29 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rete;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.jamocha.rete.Defclass;
 import org.jamocha.rete.Deftemplate;
 import org.jamocha.rete.Fact;
+import org.junit.jupiter.api.Test;
 
 import woolfel.examples.model.TestBean2;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 
 /**
  * @author Peter Lin
- *
- * Simple testcase for deffacts
+ *     <p>Simple testcase for deffacts
  */
 public class DeffactTest {
 
-
-
     @Test
-    public void testCreateDeffact(){
+    public void testCreateDeffact() {
         Defclass dc = new Defclass(TestBean2.class);
-        Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
+        Deftemplate dtemp = (Deftemplate) dc.createDeftemplate("testBean2");
         TestBean2 bean = new TestBean2();
         bean.setAttr1("testString");
         bean.setAttr2(1);
@@ -49,16 +46,16 @@ public class DeffactTest {
         bean.setAttr5(a5);
         double a6 = 101.101;
         bean.setAttr6(a6);
-        
-        Fact fact = dtemp.createFact(bean,dc,1);
+
+        Fact fact = dtemp.createFact(bean, dc, 1);
         assertNotNull(fact);
         System.out.println(fact.toFactString());
     }
-    
+
     @Test
-    public void testCreateDeffactWithNull(){
+    public void testCreateDeffactWithNull() {
         Defclass dc = new Defclass(TestBean2.class);
-        Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
+        Deftemplate dtemp = (Deftemplate) dc.createDeftemplate("testBean2");
         TestBean2 bean = new TestBean2();
         bean.setAttr1(null);
         bean.setAttr2(1);
@@ -70,20 +67,20 @@ public class DeffactTest {
         bean.setAttr5(a5);
         double a6 = 101.101;
         bean.setAttr6(a6);
-        
-        Fact fact = dtemp.createFact(bean,dc,1);
+
+        Fact fact = dtemp.createFact(bean, dc, 1);
         assertNotNull(fact);
         System.out.println(fact.toFactString());
     }
-    
+
     @Test
-    public void testCreateDeffactWithPrimitive(){
+    public void testCreateDeffactWithPrimitive() {
         Defclass dc = new Defclass(TestBean2.class);
-        Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
+        Deftemplate dtemp = (Deftemplate) dc.createDeftemplate("testBean2");
         TestBean2 bean = new TestBean2();
         bean.setAttr1("testString");
-        
-        Fact fact = dtemp.createFact(bean,dc,1);
+
+        Fact fact = dtemp.createFact(bean, dc, 1);
         assertNotNull(fact);
         System.out.println(fact.toFactString());
     }

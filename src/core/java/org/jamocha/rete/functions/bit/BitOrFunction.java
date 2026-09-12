@@ -1,7 +1,6 @@
 package org.jamocha.rete.functions.bit;
 
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -13,59 +12,56 @@ import org.jamocha.rete.ValueType;
 
 public class BitOrFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String BIT_OR = "bit-or";
+    /** */
+    public static final String BIT_OR = "bit-or";
 
-	public BitOrFunction() {
-	}
+    public BitOrFunction() {}
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector returnVector = new DefaultReturnVector();
-		int value = 0;
-		if (params != null) {
-			if (params[0] instanceof ValueParam) {
-				value = ((ValueParam)params[0]).getIntValue();
-			} else if (params[0] instanceof BoundParam) {
-				Object v = ((BoundParam)params[0]).getValue(engine, ValueType.OBJECT);
-				if (v instanceof Number number) {
-					value = (number).intValue();
-				}
-			}
-			// iterate over the parameters
-			for (int i=1; i < params.length; i++) {
-				int intval = 0;
-				if (params[i] instanceof ValueParam) {
-					intval = ((ValueParam)params[i]).getIntValue();
-				} else if (params[i] instanceof BoundParam) {
-					Object v = ((BoundParam)params[0]).getValue(engine, ValueType.OBJECT);
-					if (v instanceof Number numberValue) {
-						intval = (numberValue).intValue();
-					}
-				}
-				value = value | intval;
-			}
-			DefaultReturnValue returnVal = new DefaultReturnValue(ValueType.INTEGER_OBJECT, Integer.valueOf(value));
-			returnVector.addReturnValue(returnVal);
-		}
-		return returnVector;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector returnVector = new DefaultReturnVector();
+        int value = 0;
+        if (params != null) {
+            if (params[0] instanceof ValueParam) {
+                value = ((ValueParam) params[0]).getIntValue();
+            } else if (params[0] instanceof BoundParam) {
+                Object v = ((BoundParam) params[0]).getValue(engine, ValueType.OBJECT);
+                if (v instanceof Number number) {
+                    value = (number).intValue();
+                }
+            }
+            // iterate over the parameters
+            for (int i = 1; i < params.length; i++) {
+                int intval = 0;
+                if (params[i] instanceof ValueParam) {
+                    intval = ((ValueParam) params[i]).getIntValue();
+                } else if (params[i] instanceof BoundParam) {
+                    Object v = ((BoundParam) params[0]).getValue(engine, ValueType.OBJECT);
+                    if (v instanceof Number numberValue) {
+                        intval = (numberValue).intValue();
+                    }
+                }
+                value = value | intval;
+            }
+            DefaultReturnValue returnVal =
+                    new DefaultReturnValue(ValueType.INTEGER_OBJECT, Integer.valueOf(value));
+            returnVector.addReturnValue(returnVal);
+        }
+        return returnVector;
+    }
 
-	public String getName() {
-		return BIT_OR;
-	}
+    public String getName() {
+        return BIT_OR;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class, ValueParam.class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.INTEGER_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.INTEGER_OBJECT;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(" + BIT_OR + " <int>*)";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(" + BIT_OR + " <int>*)";
+    }
 }

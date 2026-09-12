@@ -12,37 +12,33 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rete;
+
+import org.jamocha.rete.Rete;
+import org.junit.jupiter.api.Test;
+
+import woolfel.examples.model.Account4;
+import woolfel.examples.model.Transaction;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.jamocha.rete.Rete;
-
-import woolfel.examples.model.Account4;
-import woolfel.examples.model.Transaction;
-import org.junit.jupiter.api.Test;
-
 /**
  * @author Peter Lin
- *
- * SimpleJoin test is used to measure basic join performance for very
- * simple cases.
+ *     <p>SimpleJoin test is used to measure basic join performance for very simple cases.
  */
 public class SimpleJoinTest {
 
-
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Test
-	public void testFiveRules() {
-		int objCount = 25000;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Test
+    public void testFiveRules() {
+        int objCount = 25000;
         Random ran = new Random();
-		ArrayList facts = new ArrayList();
-		// loop and create account and transaction objects
-		for (int idx=0; idx < objCount; idx++) {
+        ArrayList facts = new ArrayList();
+        // loop and create account and transaction objects
+        for (int idx = 0; idx < objCount; idx++) {
             Account4 acc = new Account4();
             acc.setAccountId("acc" + idx);
             acc.setAccountType(String.valueOf(ran.nextInt(100000)));
@@ -54,16 +50,16 @@ public class SimpleJoinTest {
             acc.setUsername(String.valueOf(ran.nextInt(100000)));
             acc.setCountryCode("US");
             acc.setCash(1298.00);
-			facts.add(acc);
-			Transaction tx = new Transaction();
-			tx.setAccountId("acc" + idx);
-			tx.setTotal(1200000);
-			facts.add(tx);
-		}
-		System.out.println("created " + objCount + " Accounts and Transactions");
+            facts.add(acc);
+            Transaction tx = new Transaction();
+            tx.setAccountId("acc" + idx);
+            tx.setTotal(1200000);
+            facts.add(tx);
+        }
+        System.out.println("created " + objCount + " Accounts and Transactions");
         Rete engine = new Rete();
         engine.declareObject(Account4.class);
         engine.declareObject(Transaction.class);
         System.out.println("delcare the objects");
-	}
+    }
 }

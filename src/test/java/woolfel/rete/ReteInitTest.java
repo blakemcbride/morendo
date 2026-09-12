@@ -12,46 +12,40 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rete;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Rete;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 
 /**
  * @author Peter Lin
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ *     <p>TODO To change the template for this generated type comment go to Window - Preferences -
+ *     Java - Code Style - Code Templates
  */
 public class ReteInitTest {
-
-
 
     @Test
     public void testInit() {
         Rete engine = new Rete();
         assertNotNull(engine);
     }
-    
+
     @Test
     public void testInitModule() {
         Rete engine = new Rete();
         assertNotNull(engine);
         assertNotNull(engine.getCurrentFocus());
         assertNotNull(engine.getCurrentFocus().getModuleName());
-        assertEquals(engine.getCurrentFocus().getModuleName(),Constants.MAIN_MODULE);
+        assertEquals(engine.getCurrentFocus().getModuleName(), Constants.MAIN_MODULE);
         System.out.println("default module is " + engine.getCurrentFocus().getModuleName());
     }
-    
-    /**
-     * Simple test to make sure the nodeId method work correctly
-     *
-     */
+
+    /** Simple test to make sure the nodeId method work correctly */
     @Test
     public void testNodeId() {
         Rete engine = new Rete();
@@ -60,13 +54,14 @@ public class ReteInitTest {
         // (initial fact plus the Graph, Node and Edge templates), so test relative to
         // whatever the first peek returns.
         int first = engine.peakNextNodeId();
-        assertEquals(first,engine.peakNextNodeId());
-        assertEquals(first,engine.peakNextNodeId());
-        assertEquals(first,engine.nextNodeId());
-        assertEquals(first + 1,engine.nextNodeId());
-        assertEquals(first + 2,engine.nextNodeId());
+        assertEquals(first, engine.peakNextNodeId());
+        assertEquals(first, engine.peakNextNodeId());
+        assertEquals(first, engine.nextNodeId());
+        assertEquals(first + 1, engine.nextNodeId());
+        assertEquals(first + 2, engine.nextNodeId());
         int id = engine.nextNodeId();
-        assertEquals(first + 3,id);
-        System.out.println("first free node id on a fresh engine is " + first + ", last allocated is " + id);
+        assertEquals(first + 3, id);
+        System.out.println(
+                "first free node id on a fresh engine is " + first + ", last allocated is " + id);
     }
 }

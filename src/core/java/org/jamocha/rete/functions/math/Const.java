@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.math;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,61 +25,51 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Nikolaus Koemm
- *
  */
 public class Const implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String CONST = "const";
-	
-	/**
-	 * 
-	 */
-	public Const() {
-		super();
-	}
+    /** */
+    public static final String CONST = "const";
 
-	public ValueType getReturnType() {
-		return ValueType.BIG_DECIMAL;
-	}
+    /** */
+    public Const() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		double eq = 0;
-		if (params[0] != null) {
-			String val = params[0].getStringValue();
-			if (val.compareTo("pi") == 0){
-				eq = java.lang.Math.PI;
-			}
-			else if (val.compareTo("e") == 0){
-				eq = java.lang.Math.E;
-			}
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BIG_DECIMAL, Double.valueOf(eq));
-		ret.addReturnValue(rv);
-		return ret;
-	}
-	
+    public ValueType getReturnType() {
+        return ValueType.BIG_DECIMAL;
+    }
 
-	public String getName() {
-		return CONST;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        double eq = 0;
+        if (params[0] != null) {
+            String val = params[0].getStringValue();
+            if (val.compareTo("pi") == 0) {
+                eq = java.lang.Math.PI;
+            } else if (val.compareTo("e") == 0) {
+                eq = java.lang.Math.E;
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL, Double.valueOf(eq));
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class,ValueParam.class};
-	}
+    public String getName() {
+        return CONST;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(const e|pi)\n" +
-		"Function description:\n" +
-		"\te  return the value of the Euler constant,\n" +
-		"\tpi returns the value of Pi.";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(const e|pi)\n"
+                + "Function description:\n"
+                + "\te  return the value of the Euler constant,\n"
+                + "\tpi returns the value of Pi.";
+    }
 }

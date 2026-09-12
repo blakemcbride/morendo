@@ -6,6 +6,6 @@ public class WriteExchange implements WriteMacro {
     public WriteExchange() {}
 
     public void setProperty(Object instance, Object value) {
-        ((woolfel.examples.model.Account)instance).setExchange((java.lang.String)value);
+        ((woolfel.examples.model.Account) instance).setExchange((java.lang.String) value);
     }
 }

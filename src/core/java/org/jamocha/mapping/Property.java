@@ -12,23 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.mapping;
 
 public interface Property {
-	String getSlot();
-	void setSlot(String slot);
-	
-	String getSlotType();
-	void setSlotType(String type);
-	
-	String getColumn();
-	void setColumn(String column);
-	
-	String getDatabaseType();
-	void setDatabaseType(String dbtype);
-	
-	boolean isNullable();
-	void setNullable(boolean nullable);
+    String getSlot();
+
+    void setSlot(String slot);
+
+    String getSlotType();
+
+    void setSlotType(String type);
+
+    String getColumn();
+
+    void setColumn(String column);
+
+    String getDatabaseType();
+
+    void setDatabaseType(String dbtype);
+
+    boolean isNullable();
+
+    void setNullable(boolean nullable);
 }

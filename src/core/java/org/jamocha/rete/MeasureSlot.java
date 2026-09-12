@@ -17,29 +17,28 @@ package org.jamocha.rete;
 
 public class MeasureSlot extends BaseSlot {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private transient Defmeasure defmeasure = null;
+    /** */
+    private static final long serialVersionUID = 1L;
 
-	public MeasureSlot(Defmeasure measure) {
-		this.defmeasure = measure;
-		this.name = measure.getMeasureLabel();
-	}
-	
-	public Defmeasure getDefmeasure() {
-		return defmeasure;
-	}
-	
-	public Object clone() {
-		MeasureSlot clone = new MeasureSlot(this.defmeasure);
-		clone.setValueType(this.getValueType());
-		clone.setId(this.getId());
-		return clone;
-	}
-	
-	public String toPPString() {
-		return defmeasure.toPPString();
-	}
+    private transient Defmeasure defmeasure = null;
+
+    public MeasureSlot(Defmeasure measure) {
+        this.defmeasure = measure;
+        this.name = measure.getMeasureLabel();
+    }
+
+    public Defmeasure getDefmeasure() {
+        return defmeasure;
+    }
+
+    public Object clone() {
+        MeasureSlot clone = new MeasureSlot(this.defmeasure);
+        clone.setValueType(this.getValueType());
+        clone.setId(this.getId());
+        return clone;
+    }
+
+    public String toPPString() {
+        return defmeasure.toPPString();
+    }
 }

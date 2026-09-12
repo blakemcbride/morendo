@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rulebenchmark;
 
@@ -20,23 +20,21 @@ import java.io.FileWriter;
 
 /**
  * @author Peter Lin
- *
- * Feel free to use this code as you wish, consider it public domain.
+ *     <p>Feel free to use this code as you wish, consider it public domain.
  */
 public class GenerateRules {
 
     public static final String LINEBREAK = System.getProperty("line.separator");
-    
-	/**
-	 * 
-	 */
-	public GenerateRules() {
-		super();
+
+    /** */
+    public GenerateRules() {
+        super();
     }
 
     /**
-     * The method generates a rule of the following format
-     * (defrule rule0 (fact nsh00) => (printout t "rule0 was fired" crlf))
+     * The method generates a rule of the following format (defrule rule0 (fact nsh00) => (printout
+     * t "rule0 was fired" crlf))
+     *
      * @param count
      * @return
      */
@@ -47,15 +45,10 @@ public class GenerateRules {
         buf.append(" was fired\" ))" + LINEBREAK);
         return buf.toString();
     }
-    
+
     /**
-     * (defrule ruleXX
-     *   (objectXX
-     *     (attr1 "true")
-     *   )
-     * =>
-     *   (printout t "ruleXX fired" )
-     * )
+     * (defrule ruleXX (objectXX (attr1 "true") ) => (printout t "ruleXX fired" ) )
+     *
      * @param count
      * @return
      */
@@ -70,7 +63,7 @@ public class GenerateRules {
         buf.append(")" + LINEBREAK);
         return buf.toString();
     }
-    
+
     public String generateUniqueDeftRule(int count) {
         StringBuilder buf = new StringBuilder();
         buf.append("(defrule rule" + count + LINEBREAK);
@@ -85,6 +78,7 @@ public class GenerateRules {
 
     /**
      * method will generate simple rules with n number of conditions
+     *
      * @param count
      * @param conditions
      * @return
@@ -94,7 +88,7 @@ public class GenerateRules {
         buf.append("(defrule rule" + count + LINEBREAK);
         buf.append("  (object" + count + LINEBREAK);
         conditions = conditions++;
-        for (int idx=0; idx < conditions; idx++) {
+        for (int idx = 0; idx < conditions; idx++) {
             buf.append("    (attr" + idx + " \"" + idx + "\")" + LINEBREAK);
         }
         buf.append("  )" + LINEBREAK);
@@ -103,9 +97,10 @@ public class GenerateRules {
         buf.append(")" + LINEBREAK);
         return buf.toString();
     }
-    
+
     /**
      * returns the string declaring the deffact.
+     *
      * @return
      */
     public String getDeffact() {
@@ -124,9 +119,10 @@ public class GenerateRules {
         buf.append(")" + LINEBREAK);
         return buf.toString();
     }
-    
+
     /**
      * returns the string declaring the deffact.
+     *
      * @return
      */
     public String getDeffact(int count) {
@@ -168,13 +164,13 @@ public class GenerateRules {
             try {
                 FileWriter writer = new FileWriter(output);
                 if (unique) {
-                    for (int idx=0; idx < count; idx++) {
+                    for (int idx = 0; idx < count; idx++) {
                         writer.write(gen.getDeffact(idx));
                     }
                 } else {
                     writer.write(gen.getDeffact());
                 }
-                for (int idx=0; idx < count; idx++) {
+                for (int idx = 0; idx < count; idx++) {
                     if (deffact && !unique) {
                         writer.write(gen.generateDefRule(idx));
                     } else if (deffact && unique) {
@@ -192,11 +188,12 @@ public class GenerateRules {
         } else {
             System.out.println("The utility takes the following parameters");
             System.out.println(" ");
-            System.out.println("java woolfel.rulebenchmark.GenerateRules 1000 output.clp(optional) true");
+            System.out.println(
+                    "java woolfel.rulebenchmark.GenerateRules 1000 output.clp(optional) true");
             System.out.println("first parameter - number of rules");
             System.out.println("second parameter - output file");
             System.out.println("third parameter - use deffact instead of ordered facts");
             System.out.println("forth parameter - generate n deffact declaration");
         }
-	}
+    }
 }

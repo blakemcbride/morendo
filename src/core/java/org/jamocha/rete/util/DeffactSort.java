@@ -12,31 +12,29 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.util;
 
-import java.util.Comparator;
-
 import org.jamocha.rete.Deffact;
 
+import java.util.Comparator;
 
 public class DeffactSort implements Comparator<Object> {
 
-	public static DeffactSort Comparator = new DeffactSort();
-	
-	public DeffactSort() {
-		super();
-	}
+    public static DeffactSort Comparator = new DeffactSort();
 
-	public int compare(Object left, Object right) {
-		if ( ((Deffact)left).getFactId() > ((Deffact)right).getFactId()) {
-			return 1;
-		} else if (((Deffact)left).getFactId() == ((Deffact)right).getFactId()) {
-			return 0;
-		} else {
-			return -1;
-		}
-	}
+    public DeffactSort() {
+        super();
+    }
 
+    public int compare(Object left, Object right) {
+        if (((Deffact) left).getFactId() > ((Deffact) right).getFactId()) {
+            return 1;
+        } else if (((Deffact) left).getFactId() == ((Deffact) right).getFactId()) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
 }

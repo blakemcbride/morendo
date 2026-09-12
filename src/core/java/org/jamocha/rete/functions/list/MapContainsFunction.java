@@ -1,8 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.util.Map;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -12,59 +9,56 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
+import java.util.Map;
+
 /**
  * Function will test if a string is in a Map
- * 
- * @author peter
  *
+ * @author peter
  */
 public class MapContainsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String MAPCONTAINS = "map-contains";
-	
-	public MapContainsFunction() {
-		super();
-	}
+    /** */
+    public static final String MAPCONTAINS = "map-contains";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector rv = new DefaultReturnVector();
-		Object rl = null;
-		String key = null;
-		Boolean contain = Boolean.FALSE;
-		if (params != null && params.length == 2) {
-			Map<?, ?> map = null;
-			rl = params[0].getValue();
-			key = params[1].getStringValue();
-			if (rl instanceof Map) {
-				map = (Map<?, ?>)rl;
-			}
-			if (map != null && key != null) {
-				contain = map.containsKey(key);
-			}
-		}
-		DefaultReturnValue val = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, contain);
-		rv.addReturnValue(val);
-		return rv;
-	}
+    public MapContainsFunction() {
+        super();
+    }
 
-	public String getName() {
-		return MAPCONTAINS;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector rv = new DefaultReturnVector();
+        Object rl = null;
+        String key = null;
+        Boolean contain = Boolean.FALSE;
+        if (params != null && params.length == 2) {
+            Map<?, ?> map = null;
+            rl = params[0].getValue();
+            key = params[1].getStringValue();
+            if (rl instanceof Map) {
+                map = (Map<?, ?>) rl;
+            }
+            if (map != null && key != null) {
+                contain = map.containsKey(key);
+            }
+        }
+        DefaultReturnValue val = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, contain);
+        rv.addReturnValue(val);
+        return rv;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class,ValueParam.class};
-	}
+    public String getName() {
+        return MAPCONTAINS;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(map-contains <map> <string>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(map-contains <map> <string>)";
+    }
 }

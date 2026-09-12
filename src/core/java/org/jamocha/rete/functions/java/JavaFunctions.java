@@ -12,67 +12,63 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.java;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jamocha.rete.Function;
 import org.jamocha.rete.FunctionGroup;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.functions.MemberFunction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class JavaFunctions implements FunctionGroup {
 
-	/**
-	 * 
-	 */
-	private ArrayList<Function> funcs = new ArrayList<>();
-	
-	public JavaFunctions() {
-		super();
-	}
-	
-	public String getName() {
-		return (JavaFunctions.class.getSimpleName());
-	}
+    /** */
+    private ArrayList<Function> funcs = new ArrayList<>();
 
-	public void loadFunctions(Rete engine) {
-		ClassnameResolver classnameResolver = new ClassnameResolver(engine);
-		CallMethodFunction callm = new CallMethodFunction();
-		engine.declareFunction(callm);
-		funcs.add(callm);
-		DefclassFunction defcls = new DefclassFunction();
-		engine.declareFunction(defcls);
-		funcs.add(defcls);
-		DefinstanceFunction defins = new DefinstanceFunction();
-		engine.declareFunction(defins);
-		funcs.add(defins);
-		LoadPackageFunction loadpkg = new LoadPackageFunction(classnameResolver);
-		engine.declareFunction(loadpkg);
-		funcs.add(loadpkg);
-		GetMemberFunction getm = new GetMemberFunction();
-		engine.declareFunction(getm);
-		funcs.add(getm);
-		NewFunction nf = new NewFunction(classnameResolver);
-		engine.declareFunction(nf);
-		funcs.add(nf);
-		MemberFunction mf = new MemberFunction(classnameResolver);
-		engine.declareFunction(mf);
-		funcs.add(mf);
-		InstanceofFunction iof = new InstanceofFunction(classnameResolver);
-		engine.declareFunction(iof);
-		funcs.add(iof);
-		SetMemberFunction setm = new SetMemberFunction();
-		engine.declareFunction(setm);
-		funcs.add(setm);
-	}
+    public JavaFunctions() {
+        super();
+    }
 
-	public List<Function> listFunctions() {
-		return funcs;
-	}
+    public String getName() {
+        return (JavaFunctions.class.getSimpleName());
+    }
 
+    public void loadFunctions(Rete engine) {
+        ClassnameResolver classnameResolver = new ClassnameResolver(engine);
+        CallMethodFunction callm = new CallMethodFunction();
+        engine.declareFunction(callm);
+        funcs.add(callm);
+        DefclassFunction defcls = new DefclassFunction();
+        engine.declareFunction(defcls);
+        funcs.add(defcls);
+        DefinstanceFunction defins = new DefinstanceFunction();
+        engine.declareFunction(defins);
+        funcs.add(defins);
+        LoadPackageFunction loadpkg = new LoadPackageFunction(classnameResolver);
+        engine.declareFunction(loadpkg);
+        funcs.add(loadpkg);
+        GetMemberFunction getm = new GetMemberFunction();
+        engine.declareFunction(getm);
+        funcs.add(getm);
+        NewFunction nf = new NewFunction(classnameResolver);
+        engine.declareFunction(nf);
+        funcs.add(nf);
+        MemberFunction mf = new MemberFunction(classnameResolver);
+        engine.declareFunction(mf);
+        funcs.add(mf);
+        InstanceofFunction iof = new InstanceofFunction(classnameResolver);
+        engine.declareFunction(iof);
+        funcs.add(iof);
+        SetMemberFunction setm = new SetMemberFunction();
+        engine.declareFunction(setm);
+        funcs.add(setm);
+    }
 
+    public List<Function> listFunctions() {
+        return funcs;
+    }
 }

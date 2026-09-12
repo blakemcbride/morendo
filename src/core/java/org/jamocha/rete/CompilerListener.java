@@ -12,20 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
-
 /**
  * @author Peter Lin
- *
- * In the event we want to listen to events in the RuleCompiler, a class
- * should implement the interface and add itself to the RuleCompiler. When
- * a rule is added/removed/updated, an event will be fired.
+ *     <p>In the event we want to listen to events in the RuleCompiler, a class should implement the
+ *     interface and add itself to the RuleCompiler. When a rule is added/removed/updated, an event
+ *     will be fired.
  */
 public interface CompilerListener {
     void ruleAdded(CompileEvent event);
+
     void ruleRemoved(CompileEvent event);
+
     void compileError(CompileEvent event);
 }

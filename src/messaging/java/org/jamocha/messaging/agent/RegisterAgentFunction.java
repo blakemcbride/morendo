@@ -12,11 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.messaging.agent;
 
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -26,45 +25,43 @@ import org.jamocha.rete.ValueType;
 
 public class RegisterAgentFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String REGISTER_AGENT = "register-agent";
+    /** */
+    public static final String REGISTER_AGENT = "register-agent";
 
-	public RegisterAgentFunction() {
-		super();
-	}
+    public RegisterAgentFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		if (params != null && params.length == 6) {
-			AgentEntry entry = new AgentEntry();
-			entry.setIPAddress(params[0].getStringValue());
-			entry.setHostname(params[1].getStringValue());
-			entry.setApplication(params[2].getStringValue());
-			entry.setAgentApplicationName(params[3].getStringValue());
-			entry.setAgentApplicationVersion(params[4].getStringValue());
-			long time = params[5].getLongValue();
-			entry.setTimestamp(time);
-			AgentRegistry.registerAgent(entry);
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (params != null && params.length == 6) {
+            AgentEntry entry = new AgentEntry();
+            entry.setIPAddress(params[0].getStringValue());
+            entry.setHostname(params[1].getStringValue());
+            entry.setApplication(params[2].getStringValue());
+            entry.setAgentApplicationName(params[3].getStringValue());
+            entry.setAgentApplicationVersion(params[4].getStringValue());
+            long time = params[5].getLongValue();
+            entry.setTimestamp(time);
+            AgentRegistry.registerAgent(entry);
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        return ret;
+    }
 
-	public String getName() {
-		return REGISTER_AGENT;
-	}
+    public String getName() {
+        return REGISTER_AGENT;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{String[].class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String[].class};
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(register-agent <ipaddress> <hostname> <application> <agent app name> <agent app version>)";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(register-agent <ipaddress> <hostname> <application> <agent app name> <agent app"
+                + " version>)";
+    }
 }

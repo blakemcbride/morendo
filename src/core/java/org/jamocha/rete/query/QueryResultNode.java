@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.query;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jamocha.rete.BaseNode;
 import org.jamocha.rete.Index;
@@ -26,60 +23,57 @@ import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defquery;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class QueryResultNode extends BaseNode {
 
-	/**
-	 * 
-	 */
-	protected ArrayList<Object> results = new ArrayList<>();
-	private volatile Defquery query = null;
-	
-	public QueryResultNode(int id) {
-		super(id);
-	}
+    /** */
+    protected ArrayList<Object> results = new ArrayList<>();
 
-	public Defquery getQuery() {
-		return query;
-	}
+    private volatile Defquery query = null;
 
-	public void setQuery(Defquery query) {
-		this.query = query;
-	}
+    public QueryResultNode(int id) {
+        super(id);
+    }
 
-	public void addResult(Index facts, Rete engine, WorkingMemory mem) {
-		results.add(facts.getFacts());
-	}
-	
-	public List<?> getResults() {
-		return this.results;
-	}
-	
-	/**
-	 * Method is not implemented, since QueryResultNode is the end of the
-	 * discrimination network.
-	 */
-	public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
-			throws AssertException {
-	}
+    public Defquery getQuery() {
+        return query;
+    }
 
-	/**
-	 * Method is not implemented since the node has no children.
-	 */
-	public void removeAllSuccessors() {
-	}
+    public void setQuery(Defquery query) {
+        this.query = query;
+    }
 
-	public String toPPString() {
-		return this.query.toPPString();
-	}
+    public void addResult(Index facts, Rete engine, WorkingMemory mem) {
+        results.add(facts.getFacts());
+    }
 
-	public String toString() {
-		return this.query.toString();
-	}
+    public List<?> getResults() {
+        return this.results;
+    }
 
-	public QueryResultNode clone(Rete engine, Defquery query) {
-		QueryResultNode clone = new QueryResultNode(engine.nextNodeId());
-		clone.query = query;
-		query.setQueryResultNode(clone);
-		return clone;
-	}
+    /**
+     * Method is not implemented, since QueryResultNode is the end of the discrimination network.
+     */
+    public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
+            throws AssertException {}
+
+    /** Method is not implemented since the node has no children. */
+    public void removeAllSuccessors() {}
+
+    public String toPPString() {
+        return this.query.toPPString();
+    }
+
+    public String toString() {
+        return this.query.toString();
+    }
+
+    public QueryResultNode clone(Rete engine, Defquery query) {
+        QueryResultNode clone = new QueryResultNode(engine.nextNodeId());
+        clone.query = query;
+        query.setQueryResultNode(clone);
+        return clone;
+    }
 }

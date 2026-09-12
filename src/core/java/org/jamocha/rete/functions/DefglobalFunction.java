@@ -12,10 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -27,34 +26,28 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- *
  */
 public class DefglobalFunction implements Function {
 
-	/**
-	 * 
-	 */
-	private static String DEFGLOBAL = "defglobal";
-	
-	/**
-	 * 
-	 */
-	public DefglobalFunction() {
-		super();
-	}
+    /** */
+    private static String DEFGLOBAL = "defglobal";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    /** */
+    public DefglobalFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         DefaultReturnVector ret = new DefaultReturnVector();
         Object value = Constants.NIL_SYMBOL;
         if (params != null && params.length > 0) {
-            String varname = ((BoundParam)params[0]).getVariableName();
+            String varname = ((BoundParam) params[0]).getVariableName();
             if (params.length == 2) {
                 value = params[1].getValue();
             }
@@ -62,22 +55,23 @@ public class DefglobalFunction implements Function {
         } else {
             value = "false";
         }
-        DefaultReturnValue rval = new DefaultReturnValue(ValueType.OBJECT,value);
+        DefaultReturnValue rval = new DefaultReturnValue(ValueType.OBJECT, value);
         ret.addReturnValue(rval);
-		return ret;
-	}
+        return ret;
+    }
 
-	public String getName() {
-		return DEFGLOBAL;
-	}
+    public String getName() {
+        return DEFGLOBAL;
+    }
 
-	public Class<?>[] getParameter() {
-		return null;
-	}
+    public Class<?>[] getParameter() {
+        return null;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		// TODO Auto-generated method stub
-		return "(" + DEFGLOBAL + " ?*<symbol>* [value])\n create a global symbol and optionally assign a value.";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        // TODO Auto-generated method stub
+        return "("
+                + DEFGLOBAL
+                + " ?*<symbol>* [value])\n create a global symbol and optionally assign a value.";
+    }
 }

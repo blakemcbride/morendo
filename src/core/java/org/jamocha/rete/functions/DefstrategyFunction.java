@@ -12,13 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,38 +24,38 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Strategy;
 import org.jamocha.rete.ValueParam;
-import org.jamocha.rete.strategies.Strategies;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rete.strategies.Strategies;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
- * Function is used to register a new strategy defined by the user. The user
- * must implement the Strategy interface
+ * Function is used to register a new strategy defined by the user. The user must implement the
+ * Strategy interface
+ *
  * @author Peter Lin
- * 
  */
 public class DefstrategyFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String DEFSTRATEGY = "defstrategy";
+    /** */
+    public static final String DEFSTRATEGY = "defstrategy";
 
-	public DefstrategyFunction() {
-		super();
-	}
+    public DefstrategyFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean def = Boolean.TRUE;
-		if (params.length == 1) {
-			String clazz = params[0].getStringValue();
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean def = Boolean.TRUE;
+        if (params.length == 1) {
+            String clazz = params[0].getStringValue();
             Class<?> clzz;
             try {
                 clzz = Class.forName(clazz);
-                Strategy strat = (Strategy)clzz.getDeclaredConstructor().newInstance();
+                Strategy strat = (Strategy) clzz.getDeclaredConstructor().newInstance();
                 Strategies.register(strat);
                 def = Boolean.TRUE;
             } catch (ClassNotFoundException e) {
@@ -68,52 +65,50 @@ public class DefstrategyFunction implements Function {
             } catch (IllegalAccessException e) {
                 // for now we do nothing
             } catch (NoSuchMethodException e) {
-            	// for now we do nothing
+                // for now we do nothing
             } catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-		} else {
-			def = Boolean.FALSE;
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, def);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
-	public String getName() {
-		return DEFSTRATEGY;
-	}
+        } else {
+            def = Boolean.FALSE;
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, def);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	/**
-	 * defclass function expects 3 parameters. (defclass classname,
-	 * templatename, parenttemplate) parent template name is optional.
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam.class, ValueParam.class,
-				ValueParam.class };
-	}
+    public String getName() {
+        return DEFSTRATEGY;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(defstrategy");
-			for (int idx = 0; idx < params.length; idx++) {
-				buf.append(" " + params[idx].getStringValue());
-			}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(defstrategy [new classname])";
-		}
-	}
+    /**
+     * defclass function expects 3 parameters. (defclass classname, templatename, parenttemplate)
+     * parent template name is optional.
+     */
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class, ValueParam.class};
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(defstrategy");
+            for (int idx = 0; idx < params.length; idx++) {
+                buf.append(" " + params[idx].getStringValue());
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(defstrategy [new classname])";
+        }
+    }
 }

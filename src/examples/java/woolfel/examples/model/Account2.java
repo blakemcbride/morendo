@@ -12,34 +12,29 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.examples.model;
 
 /**
  * @author Peter Lin
- *
- * Account2 adds some more fields
+ *     <p>Account2 adds some more fields
  */
 public class Account2 extends Account {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	public String phoneline = null;
-    
-	/**
-	 * 
-	 */
-	public Account2() {
-		super();
-	}
-    
+    /** */
+    private static final long serialVersionUID = 1L;
+
+    public String phoneline = null;
+
+    /** */
+    public Account2() {
+        super();
+    }
+
     public String getPhoneline() {
         if (phoneline == null) {
-            phoneline = this.getAreaCode() + "-" + this.getExchange() +
-            "-" + this.getNumber();
+            phoneline = this.getAreaCode() + "-" + this.getExchange() + "-" + this.getNumber();
         }
         return phoneline;
     }

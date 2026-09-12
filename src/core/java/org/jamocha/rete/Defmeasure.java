@@ -12,71 +12,77 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
 import org.jamocha.rete.measures.Measure;
 
 /**
- * Defmeasure is used by the compiler to parse the declaration. DefmeasureFunction
- * will then use it to configure the Cube and lookup the actual measure function.
- * 
+ * Defmeasure is used by the compiler to parse the declaration. DefmeasureFunction will then use it
+ * to configure the Cube and lookup the actual measure function.
+ *
  * @author Peter Lin
  */
 public class Defmeasure {
-	
-	private String measureName;
-	private String measureLabel;
-	private String variableName;
-	private Measure measure;
-	private CubeDimension dimension;
-	
-	public Defmeasure() {
-		super();
-	}
-	
-	public String getMeasureName() {
-		return measureName;
-	}
 
-	public void setMeasureName(String measureName) {
-		this.measureName = measureName;
-	}
+    private String measureName;
+    private String measureLabel;
+    private String variableName;
+    private Measure measure;
+    private CubeDimension dimension;
 
-	public String getMeasureLabel() {
-		return measureLabel;
-	}
+    public Defmeasure() {
+        super();
+    }
 
-	public void setMeasureLabel(String measureLabel) {
-		this.measureLabel = measureLabel;
-	}
+    public String getMeasureName() {
+        return measureName;
+    }
 
-	public String getVariableName() {
-		return variableName;
-	}
+    public void setMeasureName(String measureName) {
+        this.measureName = measureName;
+    }
 
-	public void setVariableName(String variableName) {
-		this.variableName = variableName;
-	}
-	
-	public Measure getMeasure() {
-		return measure;
-	}
+    public String getMeasureLabel() {
+        return measureLabel;
+    }
 
-	public void setMeasure(Measure measure) {
-		this.measure = measure;
-	}
-	
-	public CubeDimension getDimension() {
-		return dimension;
-	}
+    public void setMeasureLabel(String measureLabel) {
+        this.measureLabel = measureLabel;
+    }
 
-	public void setDimension(CubeDimension dimension) {
-		this.dimension = dimension;
-	}
-	
-	public String toPPString() {
-		return "measure " + this.measureLabel + " (function " + this.measureName + " ?" + variableName + ")";
-	}
+    public String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(String variableName) {
+        this.variableName = variableName;
+    }
+
+    public Measure getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(Measure measure) {
+        this.measure = measure;
+    }
+
+    public CubeDimension getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(CubeDimension dimension) {
+        this.dimension = dimension;
+    }
+
+    public String toPPString() {
+        return "measure "
+                + this.measureLabel
+                + " (function "
+                + this.measureName
+                + " ?"
+                + variableName
+                + ")";
+    }
 }

@@ -12,13 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-import java.util.List;
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,31 +24,27 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
+import java.util.List;
+
 /**
- * DeffunctionFunction is used for functions that are declared in the
- * shell. It is different than a function written in java.
- * Deffunction run interpreted and are mapped to existing
- * functions.
- * 
+ * DeffunctionFunction is used for functions that are declared in the shell. It is different than a
+ * function written in java. Deffunction run interpreted and are mapped to existing functions.
+ *
  * @author Peter Lin
  */
 public class DeffunctionFunction implements Function {
 
-    /**
-	 * 
-	 */
-	protected String name = null;
+    /** */
+    protected String name = null;
+
     protected String ppString = null;
     protected Parameter[] parameters = null;
-   	protected List<?> functions = null;
+    protected List<?> functions = null;
     protected Class<?>[] functionParams = null;
     protected ValueType returnType;
-    
-    /**
-     * 
-     */
-    public DeffunctionFunction() {
-    }
+
+    /** */
+    public DeffunctionFunction() {}
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         DefaultReturnVector ret = new DefaultReturnVector();
@@ -65,15 +58,14 @@ public class DeffunctionFunction implements Function {
                 functions[i] = engine.findFunction(sf.getName());
                 parameters[i] = sf.getParameters();
             }
-            InterpretedFunction intrfunc = new InterpretedFunction(this.name,
-                    this.parameters, functions, parameters);
+            InterpretedFunction intrfunc =
+                    new InterpretedFunction(this.name, this.parameters, functions, parameters);
             intrfunc.configureFunction(engine);
             engine.declareFunction(intrfunc);
             add = Boolean.TRUE;
         }
-        
-        DefaultReturnValue rv = new DefaultReturnValue(
-                ValueType.BOOLEAN_OBJECT, add);
+
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, add);
         ret.addReturnValue(rv);
         return ret;
     }
@@ -81,12 +73,12 @@ public class DeffunctionFunction implements Function {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getName() {
         return this.name;
     }
 
-	public Class<?>[] getParameter() {
+    public Class<?>[] getParameter() {
         return this.functionParams;
     }
 
@@ -97,7 +89,7 @@ public class DeffunctionFunction implements Function {
     public void setPPString(String text) {
         this.ppString = text;
     }
-    
+
     public String toPPString(Parameter[] params, int indents) {
         return this.ppString;
     }

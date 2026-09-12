@@ -12,58 +12,57 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.mapping;
 
 public class BasicProperty implements Property {
 
-	private String column;
-	private String slot;
-	private String slotType;
-	private boolean nullable;
-	private String databaseType;
-	
-	public BasicProperty() {
-	}
+    private String column;
+    private String slot;
+    private String slotType;
+    private boolean nullable;
+    private String databaseType;
 
-	public String getColumn() {
-		return column;
-	}
+    public BasicProperty() {}
 
-	public void setColumn(String column) {
-		this.column = column;
-	}
+    public String getColumn() {
+        return column;
+    }
 
-	public String getSlot() {
-		return slot;
-	}
+    public void setColumn(String column) {
+        this.column = column;
+    }
 
-	public void setSlot(String slot) {
-		this.slot = slot;
-	}
+    public String getSlot() {
+        return slot;
+    }
 
-	public String getSlotType() {
-		return slotType;
-	}
+    public void setSlot(String slot) {
+        this.slot = slot;
+    }
 
-	public void setSlotType(String slotType) {
-		this.slotType = slotType;
-	}
+    public String getSlotType() {
+        return slotType;
+    }
 
-	public boolean isNullable() {
-		return nullable;
-	}
+    public void setSlotType(String slotType) {
+        this.slotType = slotType;
+    }
 
-	public void setNullable(boolean nullable) {
-		this.nullable = nullable;
-	}
+    public boolean isNullable() {
+        return nullable;
+    }
 
-	public String getDatabaseType() {
-		return databaseType;
-	}
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
 
-	public void setDatabaseType(String databaseType) {
-		this.databaseType = databaseType;
-	}
+    public String getDatabaseType() {
+        return databaseType;
+    }
+
+    public void setDatabaseType(String databaseType) {
+        this.databaseType = databaseType;
+    }
 }

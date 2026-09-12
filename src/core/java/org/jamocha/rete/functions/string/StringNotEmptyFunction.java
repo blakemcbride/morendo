@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.string;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,61 +26,52 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- *
  */
 public class StringNotEmptyFunction implements Function {
 
-	/**
-	 * 
-	 */
-	
-	public static final String STRING_LENGTH = "str-not-empty";
-	
-	/**
-	 * 
-	 */
-	public StringNotEmptyFunction() {
-		super();
-	}
+    /** */
+    public static final String STRING_LENGTH = "str-not-empty";
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    /** */
+    public StringNotEmptyFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		int len = 0;
-		boolean eval = false;
-		if (params != null && params.length == 1) {
-			if (params[0] instanceof BoundParam) {
-				BoundParam bp = (BoundParam)params[0];
-				bp.resolveBinding(engine);
-			}
-			String txt = params[0].getStringValue();
-			len = txt.length();
-		}
-		if (len > 0) {
-			eval = true;
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, eval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public String getName() {
-		return STRING_LENGTH;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        int len = 0;
+        boolean eval = false;
+        if (params != null && params.length == 1) {
+            if (params[0] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[0];
+                bp.resolveBinding(engine);
+            }
+            String txt = params[0].getStringValue();
+            len = txt.length();
+        }
+        if (len > 0) {
+            eval = true;
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public String getName() {
+        return STRING_LENGTH;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(str-not-empty [string])";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(str-not-empty [string])";
+    }
 }

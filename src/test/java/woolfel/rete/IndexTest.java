@@ -12,47 +12,41 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rete;
 
-import java.util.HashMap;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.jamocha.rete.Defclass;
 import org.jamocha.rete.Deftemplate;
 import org.jamocha.rete.Fact;
 import org.jamocha.rete.Index;
+import org.junit.jupiter.api.Test;
 
 import woolfel.examples.model.TestBean2;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.HashMap;
 
 /**
  * @author Peter Lin
- *
- * A basic test to validate the Index works correctly
+ *     <p>A basic test to validate the Index works correctly
  */
 public class IndexTest {
 
-
-
-    /**
-     * Startout with a simple test of 2 Long objects
-     */
+    /** Startout with a simple test of 2 Long objects */
     @Test
     public void testObjectEquals() {
         Long l1 = Long.valueOf(2);
         Long l2 = Long.valueOf(2);
-        assertEquals(true,l1.equals(l2));
+        assertEquals(true, l1.equals(l2));
     }
 
-    /**
-     * Test an Index with a Fact[] array with 1 fact
-     */
+    /** Test an Index with a Fact[] array with 1 fact */
     @Test
     public void testOneFact() {
         Defclass dc = new Defclass(TestBean2.class);
-        Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
+        Deftemplate dtemp = (Deftemplate) dc.createDeftemplate("testBean2");
         TestBean2 bean = new TestBean2();
         bean.setAttr1("testString");
         bean.setAttr2(1);
@@ -64,23 +58,21 @@ public class IndexTest {
         bean.setAttr5(a5);
         double a6 = 101.101;
         bean.setAttr6(a6);
-        
-        Fact fact = dtemp.createFact(bean,dc,1);
+
+        Fact fact = dtemp.createFact(bean, dc, 1);
         Fact[] list1 = new Fact[] {fact};
         Fact[] list2 = new Fact[] {fact};
-        
+
         Index in1 = new Index(list1);
         Index in2 = new Index(list2);
-        assertEquals(true,in1.equals(in2));
+        assertEquals(true, in1.equals(in2));
     }
-    
-    /**
-     * Test an Index with a Fact[] array with 5 fact
-     */
+
+    /** Test an Index with a Fact[] array with 5 fact */
     @Test
     public void testFiveFacts() {
         Defclass dc = new Defclass(TestBean2.class);
-        Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
+        Deftemplate dtemp = (Deftemplate) dc.createDeftemplate("testBean2");
         TestBean2 bean = new TestBean2();
         bean.setAttr1("testString");
         bean.setAttr2(1);
@@ -92,7 +84,7 @@ public class IndexTest {
         bean.setAttr5(a5);
         double a6 = 101.101;
         bean.setAttr6(a6);
-        
+
         TestBean2 bean2 = new TestBean2();
         bean2.setAttr1("testString2");
         bean2.setAttr2(12);
@@ -141,29 +133,26 @@ public class IndexTest {
         double a65 = 101.1015;
         bean5.setAttr6(a65);
 
-        Fact fact = dtemp.createFact(bean,dc,1);
-        Fact fact2 = dtemp.createFact(bean2,dc,1);
-        Fact fact3 = dtemp.createFact(bean3,dc,1);
-        Fact fact4 = dtemp.createFact(bean4,dc,1);
-        Fact fact5 = dtemp.createFact(bean5,dc,1);
+        Fact fact = dtemp.createFact(bean, dc, 1);
+        Fact fact2 = dtemp.createFact(bean2, dc, 1);
+        Fact fact3 = dtemp.createFact(bean3, dc, 1);
+        Fact fact4 = dtemp.createFact(bean4, dc, 1);
+        Fact fact5 = dtemp.createFact(bean5, dc, 1);
 
-        Fact[] list1 = new Fact[] {fact,fact2,fact3,fact4,fact5};
-        Fact[] list2 = new Fact[] {fact,fact2,fact3,fact4,fact5};
-        
+        Fact[] list1 = new Fact[] {fact, fact2, fact3, fact4, fact5};
+        Fact[] list2 = new Fact[] {fact, fact2, fact3, fact4, fact5};
+
         Index in1 = new Index(list1);
         Index in2 = new Index(list2);
-        assertEquals(true,in1.equals(in2));
+        assertEquals(true, in1.equals(in2));
     }
-    
-    /**
-     * Test the index with a HashMap and make sure it all works
-     * as expected.
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	@Test
-	public void testHashMapIndex() {
+
+    /** Test the index with a HashMap and make sure it all works as expected. */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Test
+    public void testHashMapIndex() {
         Defclass dc = new Defclass(TestBean2.class);
-        Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
+        Deftemplate dtemp = (Deftemplate) dc.createDeftemplate("testBean2");
         TestBean2 bean = new TestBean2();
         bean.setAttr1("testString");
         bean.setAttr2(1);
@@ -175,7 +164,7 @@ public class IndexTest {
         bean.setAttr5(a5);
         double a6 = 101.101;
         bean.setAttr6(a6);
-        
+
         TestBean2 bean2 = new TestBean2();
         bean2.setAttr1("testString2");
         bean2.setAttr2(12);
@@ -224,21 +213,21 @@ public class IndexTest {
         double a65 = 101.1015;
         bean5.setAttr6(a65);
 
-        Fact fact = dtemp.createFact(bean,dc,1);
-        Fact fact2 = dtemp.createFact(bean2,dc,1);
-        Fact fact3 = dtemp.createFact(bean3,dc,1);
-        Fact fact4 = dtemp.createFact(bean4,dc,1);
-        Fact fact5 = dtemp.createFact(bean5,dc,1);
+        Fact fact = dtemp.createFact(bean, dc, 1);
+        Fact fact2 = dtemp.createFact(bean2, dc, 1);
+        Fact fact3 = dtemp.createFact(bean3, dc, 1);
+        Fact fact4 = dtemp.createFact(bean4, dc, 1);
+        Fact fact5 = dtemp.createFact(bean5, dc, 1);
 
-        Fact[] list1 = new Fact[] {fact,fact2,fact3,fact4,fact5};
-        Fact[] list2 = new Fact[] {fact,fact2,fact3,fact4,fact5};
-        
+        Fact[] list1 = new Fact[] {fact, fact2, fact3, fact4, fact5};
+        Fact[] list2 = new Fact[] {fact, fact2, fact3, fact4, fact5};
+
         Index in1 = new Index(list1);
         Index in2 = new Index(list2);
-        assertEquals(true,in1.equals(in2));
-        
+        assertEquals(true, in1.equals(in2));
+
         HashMap map = new HashMap();
-        map.put(in1,list1);
+        map.put(in1, list1);
         // simple test to see if HashMap.containsKey(in1) works
         assertEquals(true, map.containsKey(in1));
         // now test with the second instance of index, this should return

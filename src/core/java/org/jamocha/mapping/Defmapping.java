@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.mapping;
 
@@ -21,89 +21,87 @@ import java.util.List;
 
 public class Defmapping implements Mapping {
 
-	/**
-	 * 
-	 */
-	private String className;
-	private List<KeyProperty> keyProperties = new ArrayList<>();
-	private String mappingName;
-	private List<Property> properties = new ArrayList<>();
-	private String sqlQuery;
-	private String tableName;
-	private String template;
-	
-	public Defmapping() {
-	}
+    /** */
+    private String className;
 
-	public String getClassName() {
-		return className;
-	}
+    private List<KeyProperty> keyProperties = new ArrayList<>();
+    private String mappingName;
+    private List<Property> properties = new ArrayList<>();
+    private String sqlQuery;
+    private String tableName;
+    private String template;
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
+    public Defmapping() {}
 
-	public List<KeyProperty> getKeyProperties() {
-		return keyProperties;
-	}
-  
-	public void setKeyProperties(List<KeyProperty> keyProperties) {
-		this.keyProperties = keyProperties;
-	}
+    public String getClassName() {
+        return className;
+    }
 
-	public String getMappingName() {
-		return mappingName;
-	}
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
-	public void setMappingName(String mappingName) {
-		this.mappingName = mappingName;
-	}
+    public List<KeyProperty> getKeyProperties() {
+        return keyProperties;
+    }
 
-	public List<Property> getProperties() {
-		return properties;
-	}
+    public void setKeyProperties(List<KeyProperty> keyProperties) {
+        this.keyProperties = keyProperties;
+    }
 
-	public void setProperties(List<Property> properties) {
-		this.properties = properties;
-	}
+    public String getMappingName() {
+        return mappingName;
+    }
 
-	public String getSqlQuery() {
-		return sqlQuery;
-	}
+    public void setMappingName(String mappingName) {
+        this.mappingName = mappingName;
+    }
 
-	public void setSqlQuery(String sqlQuery) {
-		this.sqlQuery = sqlQuery;
-	}
+    public List<Property> getProperties() {
+        return properties;
+    }
 
-	public String getTableName() {
-		return tableName;
-	}
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
+    public String getSqlQuery() {
+        return sqlQuery;
+    }
 
-	public String getTemplate() {
-		return template;
-	}
+    public void setSqlQuery(String sqlQuery) {
+        this.sqlQuery = sqlQuery;
+    }
 
-	public void setTemplate(String template) {
-		this.template = template;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 
-	public String toPPString() {
-		return null;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	public void addKeyProperty(KeyProperty key) {
-		keyProperties.add(key);
-	}
-	
-	public void addProperty(Property property) {
-		properties.add(property);
-	}
-	
-	public boolean usesCompositeKey() {
-		return this.keyProperties.size() > 1;
-	}
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public String toPPString() {
+        return null;
+    }
+
+    public void addKeyProperty(KeyProperty key) {
+        keyProperties.add(key);
+    }
+
+    public void addProperty(Property property) {
+        properties.add(property);
+    }
+
+    public boolean usesCompositeKey() {
+        return this.keyProperties.size() > 1;
+    }
 }

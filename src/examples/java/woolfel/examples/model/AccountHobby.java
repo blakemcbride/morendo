@@ -3,44 +3,44 @@ package woolfel.examples.model;
 import java.util.Date;
 
 public class AccountHobby {
-	private String accountId;
-	private String hobbyCode;
-	private Date lastUpdate;
-	private int rating;
-	
-	public AccountHobby() {
-		super();
-	}
+    private String accountId;
+    private String hobbyCode;
+    private Date lastUpdate;
+    private int rating;
 
-	public String getAccountId() {
-		return accountId;
-	}
+    public AccountHobby() {
+        super();
+    }
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
+    public String getAccountId() {
+        return accountId;
+    }
 
-	public String getHobbyCode() {
-		return hobbyCode;
-	}
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
-	public void setHobbyCode(String hobbyCode) {
-		this.hobbyCode = hobbyCode;
-	}
+    public String getHobbyCode() {
+        return hobbyCode;
+    }
 
-	public Date getLastUpdate() {
-		return lastUpdate;
-	}
+    public void setHobbyCode(String hobbyCode) {
+        this.hobbyCode = hobbyCode;
+    }
 
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
 
-	public int getRating() {
-		return rating;
-	}
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }

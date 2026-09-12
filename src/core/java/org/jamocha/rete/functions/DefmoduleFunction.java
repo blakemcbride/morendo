@@ -12,10 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -29,59 +28,55 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- *
  */
 public class DefmoduleFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String DEFMODULE = "defmodule";
+    /** */
+    public static final String DEFMODULE = "defmodule";
 
-	public DefmoduleFunction() {
-		super();
-	}
+    public DefmoduleFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean add = Boolean.TRUE;
-		if (params.length == 1) {
-			engine.addModule(params[0].getStringValue());
-			engine.writeMessage("true",Constants.DEFAULT_OUTPUT);
-		} else {
-			add = Boolean.FALSE;
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, add);
-		ret.addReturnValue(rv);
-		DefaultReturnValue rv2 = new DefaultReturnValue(
-				ValueType.STRING, params[0].getStringValue());
-		ret.addReturnValue(rv2);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean add = Boolean.TRUE;
+        if (params.length == 1) {
+            engine.addModule(params[0].getStringValue());
+            engine.writeMessage("true", Constants.DEFAULT_OUTPUT);
+        } else {
+            add = Boolean.FALSE;
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, add);
+        ret.addReturnValue(rv);
+        DefaultReturnValue rv2 =
+                new DefaultReturnValue(ValueType.STRING, params[0].getStringValue());
+        ret.addReturnValue(rv2);
+        return ret;
+    }
 
-	public String getName() {
-		return DEFMODULE;
-	}
+    public String getName() {
+        return DEFMODULE;
+    }
 
-	/**
-	 * The expected parameter is a single ValueParam containing a deftemplate
-	 * instance. The function gets the deftemplate using Parameter.getValue().
-	 */
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam.class };
-	}
+    /**
+     * The expected parameter is a single ValueParam containing a deftemplate instance. The function
+     * gets the deftemplate using Parameter.getValue().
+     */
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null) {
-			StringBuilder buf = new StringBuilder();
-			return buf.toString();
-		} else {
-			return "(defmodule name)";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null) {
+            StringBuilder buf = new StringBuilder();
+            return buf.toString();
+        } else {
+            return "(defmodule name)";
+        }
+    }
 }

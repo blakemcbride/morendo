@@ -2,25 +2,23 @@ package org.jamocha.rete;
 
 public class TemporalDeffact extends Deffact implements TemporalFact {
 
-    /**
-     * 
-     */
+    /** */
     private static final long serialVersionUID = 1L;
+
     protected long effectiveTime = 0;
     protected long expirationTime = 0;
     protected String sourceURL = null;
     protected String serviceType = null;
     protected int validity;
-    
-    public TemporalDeffact(Deftemplate template, Object instance,
-    		BaseSlot[] values, long id) {
+
+    public TemporalDeffact(Deftemplate template, Object instance, BaseSlot[] values, long id) {
         super(template, instance, values, id);
     }
 
     public long getEffectiveTime() {
-    	return this.effectiveTime;
+        return this.effectiveTime;
     }
-    
+
     public long getExpirationTime() {
         return this.expirationTime;
     }
@@ -38,9 +36,9 @@ public class TemporalDeffact extends Deffact implements TemporalFact {
     }
 
     public void setEffectiveTime(long time) {
-    	this.effectiveTime = time;
+        this.effectiveTime = time;
     }
-    
+
     public void setExpirationTime(long time) {
         this.expirationTime = time;
     }
@@ -64,9 +62,12 @@ public class TemporalDeffact extends Deffact implements TemporalFact {
             buf.append(" ");
         }
         for (int idx = 0; idx < this.slots.length; idx++) {
-            buf.append("(" + this.slots[idx].getName() + " "
-                    + ConversionUtils.formatSlot(this.slots[idx].value)
-                    + ") ");
+            buf.append(
+                    "("
+                            + this.slots[idx].getName()
+                            + " "
+                            + ConversionUtils.formatSlot(this.slots[idx].value)
+                            + ") ");
         }
         // append the temporal attributes
         buf.append("(" + TemporalFact.EFFECTIVE + " " + this.effectiveTime + ")");
@@ -78,10 +79,7 @@ public class TemporalDeffact extends Deffact implements TemporalFact {
         return buf.toString();
     }
 
-    /**
-     * the class overrides the method to include the additional
-     * attributes.
-     */
+    /** the class overrides the method to include the additional attributes. */
     public String toPPString() {
         StringBuilder buf = new StringBuilder();
         buf.append("(" + this.deftemplate.getName());
@@ -91,14 +89,14 @@ public class TemporalDeffact extends Deffact implements TemporalFact {
         for (int idx = 0; idx < this.slots.length; idx++) {
             if (this.slots[idx].value instanceof BoundParam) {
                 BoundParam bp = (BoundParam) this.slots[idx].value;
-                buf.append("(" + this.slots[idx].getName() + " ?"
-                        + bp.getVariableName() + ") ");
+                buf.append("(" + this.slots[idx].getName() + " ?" + bp.getVariableName() + ") ");
             } else {
-                buf.append("("
-                        + this.slots[idx].getName()
-                        + " "
-                        + ConversionUtils
-                                .formatSlot(this.slots[idx].value) + ") ");
+                buf.append(
+                        "("
+                                + this.slots[idx].getName()
+                                + " "
+                                + ConversionUtils.formatSlot(this.slots[idx].value)
+                                + ") ");
             }
         }
         // append the temporal attributes

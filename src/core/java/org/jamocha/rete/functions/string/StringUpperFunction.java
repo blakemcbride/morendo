@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.string;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,55 +26,47 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- *
  */
 public class StringUpperFunction implements Function {
 
-	/**
-	 * 
-	 */
-	
-	public static final String STRING_UPPER = "str-upper";
-	
+    /** */
+    public static final String STRING_UPPER = "str-upper";
 
-	public StringUpperFunction() {
-		super();
-	}
+    public StringUpperFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.STRING;
-	}
+    public ValueType getReturnType() {
+        return ValueType.STRING;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		String txt = null;
-		if (params != null && params.length == 1) {
-			if (params[0] instanceof BoundParam) {
-				BoundParam bp = (BoundParam)params[0];
-				bp.resolveBinding(engine);
-			}
-			txt = params[0].getStringValue();
-			txt = txt.toUpperCase();
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.STRING, txt);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        String txt = null;
+        if (params != null && params.length == 1) {
+            if (params[0] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[0];
+                bp.resolveBinding(engine);
+            }
+            txt = params[0].getStringValue();
+            txt = txt.toUpperCase();
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING, txt);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return STRING_UPPER;
-	}
+    public String getName() {
+        return STRING_UPPER;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(str-upper [string])";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(str-upper [string])";
+    }
 }

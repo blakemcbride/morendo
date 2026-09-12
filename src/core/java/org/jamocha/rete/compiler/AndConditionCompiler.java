@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.compiler;
 
@@ -30,37 +30,26 @@ public class AndConditionCompiler extends AbstractConditionCompiler {
         return null;
     }
 
-    /**
-     * Since a AndCondition has nested conditions, we have to handle this differently
-     */
-    public void compile(Condition condition, int position, Rule rule,
-            boolean alphaMemory) {
-    }
+    /** Since a AndCondition has nested conditions, we have to handle this differently */
+    public void compile(Condition condition, int position, Rule rule, boolean alphaMemory) {}
 
-    public void compile(Condition condition, int position, Query query) {
-    }
+    public void compile(Condition condition, int position, Query query) {}
 
-    public void compileFirstJoin(Condition condition, Rule rule)
-            throws AssertException {
-    }
+    public void compileFirstJoin(Condition condition, Rule rule) throws AssertException {}
 
-    public void compileFirstJoin(Condition condition, Query query)
-    throws AssertException {
-}
+    public void compileFirstJoin(Condition condition, Query query) throws AssertException {}
 
-    public BaseJoin compileJoin(Condition condition, int position, Rule rule,
-            Condition previousCond) {
+    public BaseJoin compileJoin(
+            Condition condition, int position, Rule rule, Condition previousCond) {
         return null;
     }
 
-    public QueryBaseJoin compileJoin(Condition condition, int position, Query query,
-            Condition previousCond) {
+    public QueryBaseJoin compileJoin(
+            Condition condition, int position, Query query, Condition previousCond) {
         return null;
     }
-    
-    public void compileSingleCE(Rule rule) throws AssertException {
-    }
 
-    public void compileSingleCE(Query query) throws AssertException {
-    }
+    public void compileSingleCE(Rule rule) throws AssertException {}
+
+    public void compileSingleCE(Query query) throws AssertException {}
 }

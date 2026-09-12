@@ -7,191 +7,184 @@ import java.util.ArrayList;
 
 /**
  * @author Peter Lin
- *
  */
-public class Security implements Serializable{
+public class Security implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	protected String countryCode = null;
-	protected double currentPrice;
-	protected int cusip;
-	protected String exchange = null;
-	protected int industryGroupID;
-	protected int industryID;
-	protected String issuer = null;
-	protected double lastPrice;
-	protected int sectorID;
-	protected int subIndustryID;
-	protected String securityType = null;
-			
+    /** */
+    private static final long serialVersionUID = 1L;
+
+    protected String countryCode = null;
+    protected double currentPrice;
+    protected int cusip;
+    protected String exchange = null;
+    protected int industryGroupID;
+    protected int industryID;
+    protected String issuer = null;
+    protected double lastPrice;
+    protected int sectorID;
+    protected int subIndustryID;
+    protected String securityType = null;
+
     @SuppressWarnings("rawtypes")
-	protected ArrayList listeners = new ArrayList();
+    protected ArrayList listeners = new ArrayList();
 
     public Security() {
-		super();
-	}
+        super();
+    }
 
     public void setCountryCode(String code) {
-    	if (!code.equals(this.countryCode)) {
-    		String old = this.countryCode;
-    		this.countryCode = code;
-    		this.notifyListener("countryCode",old,this.countryCode);
-    	}
+        if (!code.equals(this.countryCode)) {
+            String old = this.countryCode;
+            this.countryCode = code;
+            this.notifyListener("countryCode", old, this.countryCode);
+        }
     }
-    
+
     public String getCountryCode() {
-    	return this.countryCode;
+        return this.countryCode;
     }
-    
+
     public void setCurrentPrice(double price) {
-    	if (price != this.currentPrice) {
-    		Double old = Double.valueOf(this.currentPrice);
-    		this.currentPrice = price;
-    		this.notifyListener("currentPrice",old, Double.valueOf(this.currentPrice));
-    	}
+        if (price != this.currentPrice) {
+            Double old = Double.valueOf(this.currentPrice);
+            this.currentPrice = price;
+            this.notifyListener("currentPrice", old, Double.valueOf(this.currentPrice));
+        }
     }
-    
+
     public double getCurrentPrice() {
-    	return this.currentPrice;
+        return this.currentPrice;
     }
-    
+
     public void setCusip(int value) {
-    	if (value != this.cusip) {
-    		Integer old = Integer.valueOf(this.cusip);
-    		this.cusip = value;
-    		this.notifyListener("cusip",old, Integer.valueOf(this.cusip));
-    	}
+        if (value != this.cusip) {
+            Integer old = Integer.valueOf(this.cusip);
+            this.cusip = value;
+            this.notifyListener("cusip", old, Integer.valueOf(this.cusip));
+        }
     }
-    
+
     public int getCusip() {
-    	return this.cusip;
+        return this.cusip;
     }
-    
+
     public void setExchange(String exc) {
-    	if (!exc.equals(this.exchange)) {
-    		String old = this.exchange;
-    		this.exchange = exc;
-    		this.notifyListener("exchange",old,this.exchange);
-    	}
+        if (!exc.equals(this.exchange)) {
+            String old = this.exchange;
+            this.exchange = exc;
+            this.notifyListener("exchange", old, this.exchange);
+        }
     }
-    
+
     public String getExchange() {
-    	return this.exchange;
+        return this.exchange;
     }
-    
+
     public void setIndustryGroupID(int id) {
-    	if (id != this.industryGroupID) {
-    		int old = this.industryGroupID;
-    		this.industryGroupID = id;
-    		this.notifyListener("industryGroupID", 
-    			 Integer.valueOf(old), Integer.valueOf(this.industryGroupID));
-    	}
+        if (id != this.industryGroupID) {
+            int old = this.industryGroupID;
+            this.industryGroupID = id;
+            this.notifyListener(
+                    "industryGroupID", Integer.valueOf(old), Integer.valueOf(this.industryGroupID));
+        }
     }
-    
+
     public int getIndustryGroupID() {
-    	return this.industryGroupID;
+        return this.industryGroupID;
     }
-    
+
     public void setIndustryID(int id) {
-    	if (id != this.industryID) {
-    		int old = this.industryID;
-    		this.industryID = id;
-    		this.notifyListener("industryID", 
-    				Integer.valueOf(old), Integer.valueOf(this.industryID));
-    	}
+        if (id != this.industryID) {
+            int old = this.industryID;
+            this.industryID = id;
+            this.notifyListener(
+                    "industryID", Integer.valueOf(old), Integer.valueOf(this.industryID));
+        }
     }
-    
+
     public int getIndustryID() {
-    	return this.industryID;
+        return this.industryID;
     }
-    
+
     public void setIssuer(String name) {
-    	if (!name.equals(this.issuer)) {
-    		String old = this.issuer;
-    		this.issuer = name;
-    		this.notifyListener("issuer", old, this.issuer);
-    	}
+        if (!name.equals(this.issuer)) {
+            String old = this.issuer;
+            this.issuer = name;
+            this.notifyListener("issuer", old, this.issuer);
+        }
     }
-    
+
     public String getIssuer() {
-    	return this.issuer;
+        return this.issuer;
     }
-    
+
     public void setLastPrice(double price) {
-    	if (price != this.lastPrice) {
-    		Double old = Double.valueOf(this.lastPrice);
-    		this.lastPrice = price;
-    		this.notifyListener("lastPrice",old, Double.valueOf(this.lastPrice));
-    	}
+        if (price != this.lastPrice) {
+            Double old = Double.valueOf(this.lastPrice);
+            this.lastPrice = price;
+            this.notifyListener("lastPrice", old, Double.valueOf(this.lastPrice));
+        }
     }
-    
+
     public double getLastPrice() {
-    	return this.lastPrice;
+        return this.lastPrice;
     }
-    
+
     public void setSectorID(int id) {
-    	if (id != this.sectorID) {
-    		int old = this.sectorID;
-    		this.sectorID = id;
-    		this.notifyListener("sectorID", 
-    				Integer.valueOf(old), Integer.valueOf(this.sectorID));
-    	}
+        if (id != this.sectorID) {
+            int old = this.sectorID;
+            this.sectorID = id;
+            this.notifyListener("sectorID", Integer.valueOf(old), Integer.valueOf(this.sectorID));
+        }
     }
-    
+
     public int getSectorID() {
-    	return this.sectorID;
+        return this.sectorID;
     }
-    
+
     public void setSecurityType(String type) {
-    	if (!type.equals(this.securityType)) {
-    		String old = this.securityType;
-    		this.securityType = type;
-    		this.notifyListener("securityType",old,this.securityType);
-    	}
+        if (!type.equals(this.securityType)) {
+            String old = this.securityType;
+            this.securityType = type;
+            this.notifyListener("securityType", old, this.securityType);
+        }
     }
-    
+
     public String getSecurityType() {
-    	return this.securityType;
+        return this.securityType;
     }
-    
+
     public void setSubIndustryID(int id) {
-    	if (id != this.subIndustryID) {
-    		int old = this.subIndustryID;
-    		this.subIndustryID = id;
-    		this.notifyListener("subIndustryID", 
-    			 Integer.valueOf(old), Integer.valueOf(this.subIndustryID));
-    	}
+        if (id != this.subIndustryID) {
+            int old = this.subIndustryID;
+            this.subIndustryID = id;
+            this.notifyListener(
+                    "subIndustryID", Integer.valueOf(old), Integer.valueOf(this.subIndustryID));
+        }
     }
-    
+
     public int getSubIndustryID() {
-    	return this.subIndustryID;
+        return this.subIndustryID;
     }
-    
+
     @SuppressWarnings("unchecked")
-	public void addPropertyChangeListener(PropertyChangeListener listener){
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         this.listeners.add(listener);
     }
-    
-    public void removePropertyChangeListener(PropertyChangeListener listener){
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.listeners.remove(listener);
     }
-    
-    protected void notifyListener(String field, Object oldValue, Object newValue){
-        if (listeners == null || listeners.size() == 0) {
-			return;
-		} else {
-			PropertyChangeEvent event = new PropertyChangeEvent(this, field,
-					oldValue, newValue);
 
-			for (int i = 0; i < listeners.size(); i++) {
-				((java.beans.PropertyChangeListener) listeners.get(i))
-						.propertyChange(event);
-			}
-		}
-        
+    protected void notifyListener(String field, Object oldValue, Object newValue) {
+        if (listeners == null || listeners.size() == 0) {
+            return;
+        } else {
+            PropertyChangeEvent event = new PropertyChangeEvent(this, field, oldValue, newValue);
+
+            for (int i = 0; i < listeners.size(); i++) {
+                ((java.beans.PropertyChangeListener) listeners.get(i)).propertyChange(event);
+            }
+        }
     }
 }

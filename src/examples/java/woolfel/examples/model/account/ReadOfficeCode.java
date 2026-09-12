@@ -6,6 +6,6 @@ public class ReadOfficeCode implements ReadMacro {
     public ReadOfficeCode() {}
 
     public Object getProperty(Object instance) {
-        return ((woolfel.examples.model.Account)instance).getOfficeCode();
+        return ((woolfel.examples.model.Account) instance).getOfficeCode();
     }
 }

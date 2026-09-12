@@ -12,42 +12,38 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.messaging;
-
 
 import org.jamocha.rete.Rete;
 
 /**
- * ContentHandler defines what to do with a message once the message
- * client has received it. The idea is that users can implement
- * their own ContentHandler to inspect the messages and decide what
+ * ContentHandler defines what to do with a message once the message client has received it. The
+ * idea is that users can implement their own ContentHandler to inspect the messages and decide what
  * to do with it.
- * 
- * Users shouldn't need to implement a message client, they just need
- * to write a ContentHandler and register it.
- * 
- * @author Peter Lin
  *
+ * <p>Users shouldn't need to implement a message client, they just need to write a ContentHandler
+ * and register it.
+ *
+ * @author Peter Lin
  */
 public interface ContentHandler {
-	/**
-	 * classes implementing the method should provide a list of
-	 * the message types the class supports. The function will call
-	 * Message.getJMSType() and try to find a handler for it. If
-	 * no handler is registered, the jms client will simply ignore
-	 * the message.
-	 * @return
-	 */
-	String[] getMessageTypes();
-	/**
-	 * Classes implementing the method need to provide concrete
-	 * logic for extracting the contents of the message and
-	 * process it properly.
-	 * @param msg
-	 * @param engine
-	 */
-	void processMessage(jakarta.jms.Message msg, Rete engine, MessageClient client);
+    /**
+     * classes implementing the method should provide a list of the message types the class
+     * supports. The function will call Message.getJMSType() and try to find a handler for it. If no
+     * handler is registered, the jms client will simply ignore the message.
+     *
+     * @return
+     */
+    String[] getMessageTypes();
 
+    /**
+     * Classes implementing the method need to provide concrete logic for extracting the contents of
+     * the message and process it properly.
+     *
+     * @param msg
+     * @param engine
+     */
+    void processMessage(jakarta.jms.Message msg, Rete engine, MessageClient client);
 }

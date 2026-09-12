@@ -6,6 +6,6 @@ public class WriteAge implements WriteMacro {
     public WriteAge() {}
 
     public void setProperty(Object instance, Object value) {
-        ((woolfel.examples.model.Account)instance).setAge((Integer)value);
+        ((woolfel.examples.model.Account) instance).setAge((Integer) value);
     }
 }

@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.java;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -29,72 +27,69 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
 public class InstanceofFunction implements Function {
-	
-	/**
-	 * 
-	 */
 
-	public static final String INSTANCEOF = "instanceof";
-	
-	private ClassnameResolver classnameResolver;
-	
-	public InstanceofFunction(ClassnameResolver classnameResolver){
-		super();
-		this.classnameResolver = classnameResolver;
-	}
+    /** */
+    public static final String INSTANCEOF = "instanceof";
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean eval = Boolean.FALSE;
-		if (params.length == 2) {
-			Object param1 = null;
-			if (params[0] instanceof BoundParam && params[1] instanceof BoundParam) {
-				param1 = ((BoundParam) params[0]).getObjectRef();
-				try {
-					Class<?> clazz = classnameResolver.resolveClass(((BoundParam) params[1]).getStringValue());
-					eval = clazz.isInstance(param1);
-				} catch (ClassNotFoundException e) {
-					engine.writeMessage(e.getMessage());
-				}
-			} 
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, eval);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    private ClassnameResolver classnameResolver;
 
-	public String getName() {
-		return INSTANCEOF;
-	}
+    public InstanceofFunction(ClassnameResolver classnameResolver) {
+        super();
+        this.classnameResolver = classnameResolver;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] {BoundParam.class,BoundParam.class};
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean eval = Boolean.FALSE;
+        if (params.length == 2) {
+            Object param1 = null;
+            if (params[0] instanceof BoundParam && params[1] instanceof BoundParam) {
+                param1 = ((BoundParam) params[0]).getObjectRef();
+                try {
+                    Class<?> clazz =
+                            classnameResolver.resolveClass(
+                                    ((BoundParam) params[1]).getStringValue());
+                    eval = clazz.isInstance(param1);
+                } catch (ClassNotFoundException e) {
+                    engine.writeMessage(e.getMessage());
+                }
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public String getName() {
+        return INSTANCEOF;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length > 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("(instanceof");
-			for (int idx = 0; idx < params.length; idx++) {
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else {
-					buf.append(" " + params[idx].getStringValue());
-				}
-			}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(instanceof <Java-object> <class-name>)\n"; 
-		}
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {BoundParam.class, BoundParam.class};
+    }
 
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(instanceof");
+            for (int idx = 0; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    buf.append(" ?" + bp.getVariableName());
+                } else if (params[idx] instanceof ValueParam) {
+                    buf.append(" " + params[idx].getStringValue());
+                } else {
+                    buf.append(" " + params[idx].getStringValue());
+                }
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(instanceof <Java-object> <class-name>)\n";
+        }
+    }
 }

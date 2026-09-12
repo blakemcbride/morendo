@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.cube;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.Cube;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
@@ -26,65 +24,60 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defrule;
-import org.jamocha.rete.ValueType;
 
 /**
- * 
  * @author Peter Lin
  */
 public class DefcubeFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String DEFCUBE = "defcube";
+    /** */
+    public static final String DEFCUBE = "defcube";
 
-	public DefcubeFunction() {
-		super();
-	}
+    public DefcubeFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean add = Boolean.FALSE;
-		
-		if (params != null && params.length == 1) {
-			Defcube cube = (Defcube)params[0].getValue(engine, ValueType.OBJECT);
-			add = cube.compileCube(engine);
-			if (add) {
-				Defrule rule = cube.getUpdateRule();
-				// we have to add the update rule, so the engine will
-				// populate the cube
-				add = engine.getRuleCompiler().addRule(rule);
-				engine.declareCube(cube);
-				engine.addCube(cube);
-				try {
-					engine.assertObject(cube, null, false, true);
-				} catch (AssertException e) {
-				}
-			}
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, add);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean add = Boolean.FALSE;
 
-	public String getName() {
-		return DEFCUBE;
-	}
+        if (params != null && params.length == 1) {
+            Defcube cube = (Defcube) params[0].getValue(engine, ValueType.OBJECT);
+            add = cube.compileCube(engine);
+            if (add) {
+                Defrule rule = cube.getUpdateRule();
+                // we have to add the update rule, so the engine will
+                // populate the cube
+                add = engine.getRuleCompiler().addRule(rule);
+                engine.declareCube(cube);
+                engine.addCube(cube);
+                try {
+                    engine.assertObject(cube, null, false, true);
+                } catch (AssertException e) {
+                }
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, add);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{Cube.class};
-	}
+    public String getName() {
+        return DEFCUBE;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {Cube.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return null;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return null;
+    }
 }

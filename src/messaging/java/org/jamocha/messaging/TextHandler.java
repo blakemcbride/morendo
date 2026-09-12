@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.messaging;
 
@@ -25,46 +25,37 @@ import org.apache.logging.log4j.Logger;
 import org.jamocha.rete.Rete;
 
 /**
- * Basic implementation for handling text message to the rule engine.
- * The handler will use Rete.build(String) method to evaluate the
- * text, which means it can do pretty much anything.
- * 
+ * Basic implementation for handling text message to the rule engine. The handler will use
+ * Rete.build(String) method to evaluate the text, which means it can do pretty much anything.
+ *
  * @author Peter Lin
- * 
  */
 public class TextHandler implements ContentHandler {
 
-    /**
-	 * 
-	 */
+    /** */
+    protected Logger log = LogManager.getLogger(TextHandler.class);
 
-	protected Logger log = LogManager.getLogger(TextHandler.class);
+    protected String[] types = new String[] {MessageConstants.TEXT_MSG};
+    protected Message last = null;
 
-	protected String[] types = new String[]{MessageConstants.TEXT_MSG};
-	protected Message last = null;
-	/**
-	 * 
-	 */
-	public TextHandler() {
-		super();
-	}
+    /** */
+    public TextHandler() {
+        super();
+    }
 
-	public String[] getMessageTypes() {
-		return types;
-	}
+    public String[] getMessageTypes() {
+        return types;
+    }
 
-	/**
-	 * Method only handles text message and uses the batch function
-	 */
-	public void processMessage(Message msg, Rete engine, MessageClient client) {
-		if (msg != last && msg instanceof TextMessage){
-			TextMessage txtmsg = (TextMessage)msg;
-			try {
-				engine.build(txtmsg.getText());
-			} catch (JMSException e) {
-				log.info(e.toString(), e);
-			}
-		}
-	}
-
+    /** Method only handles text message and uses the batch function */
+    public void processMessage(Message msg, Rete engine, MessageClient client) {
+        if (msg != last && msg instanceof TextMessage) {
+            TextMessage txtmsg = (TextMessage) msg;
+            try {
+                engine.build(txtmsg.getText());
+            } catch (JMSException e) {
+                log.info(e.toString(), e);
+            }
+        }
+    }
 }

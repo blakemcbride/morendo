@@ -12,10 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.memory;
-
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -25,44 +24,43 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
-
 public class MemoryTotalFunction implements Function {
 
-	/**
-	 * 
-	 */
-	
-	public static final String MEMORY_TOTAL = "mem-total";
-	
-	public MemoryTotalFunction() {
-		super();
-	}
+    /** */
+    public static final String MEMORY_TOTAL = "mem-total";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public MemoryTotalFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Runtime rt = Runtime.getRuntime();
-		long total = rt.totalMemory();
-		engine.writeMessage("Total memory " +
-				String.valueOf(total/1024) + "Kb | " +
-				String.valueOf(total/1024/1024) + "Mb" +
-				Constants.LINEBREAK,"t");
-		DefaultReturnVector ret = new DefaultReturnVector();
-		return ret;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public String getName() {
-		return MEMORY_TOTAL;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Runtime rt = Runtime.getRuntime();
+        long total = rt.totalMemory();
+        engine.writeMessage(
+                "Total memory "
+                        + String.valueOf(total / 1024)
+                        + "Kb | "
+                        + String.valueOf(total / 1024 / 1024)
+                        + "Mb"
+                        + Constants.LINEBREAK,
+                "t");
+        DefaultReturnVector ret = new DefaultReturnVector();
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public String getName() {
+        return MEMORY_TOTAL;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(mem-total)";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(mem-total)";
+    }
 }

@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -28,35 +26,30 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- * 
- * WatchFunction allows users to watch different engine processes, like
- * activations, facts and rules.
+ *     <p>WatchFunction allows users to watch different engine processes, like activations, facts
+ *     and rules.
  */
 public class WatchFunction implements Function {
 
-	/**
-	 * 
-	 */
-	protected static final String WATCH = "watch";
-	
-	/**
-	 * 
-	 */
-	public WatchFunction() {
-		super();
-	}
+    /** */
+    protected static final String WATCH = "watch";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    /** */
+    public WatchFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         if (params != null) {
             // the params are not null, now check the parameter count
             if (params.length > 0) {
-                for (int idx=0; idx < params.length; idx++) {
+                for (int idx = 0; idx < params.length; idx++) {
                     String cmd = params[idx].getStringValue();
-                    setWatch(engine,cmd);
+                    setWatch(engine, cmd);
                 }
             } else {
                 // we do nothing, maybe we should return a message
@@ -64,8 +57,8 @@ public class WatchFunction implements Function {
         }
         DefaultReturnVector ret = new DefaultReturnVector();
         return ret;
-	}
-    
+    }
+
     protected void setWatch(Rete engine, String cmd) {
         if (cmd.equals("all")) {
             engine.setWatch(Rete.Watch.ALL);
@@ -78,18 +71,17 @@ public class WatchFunction implements Function {
         }
     }
 
-	public String getName() {
-		return WATCH;
-	}
+    public String getName() {
+        return WATCH;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(watch activations|all|facts|rules)\n" +
-			"Function description:\n" +
-			"\tAllows users to watch engine processes (activations, facts, rules).";
-	}
-
+    public String toPPString(Parameter[] params, int indents) {
+        return "(watch activations|all|facts|rules)\n"
+                + "Function description:\n"
+                + "\tAllows users to watch engine processes (activations, facts, rules).";
+    }
 }

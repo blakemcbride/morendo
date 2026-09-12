@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions.string;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,61 +26,54 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- *
  */
 public class StringCompareFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String STRING_COMPARE = "str-compare";
-	
-	/**
-	 * 
-	 */
-	public StringCompareFunction() {
-		super();
-	}
+    /** */
+    public static final String STRING_COMPARE = "str-compare";
 
-	public ValueType getReturnType() {
-		return ValueType.INTEGER_OBJECT;
-	}
+    /** */
+    public StringCompareFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		int eq = -1;
-		if (params != null && params.length == 2) {
-			if (params[0] instanceof BoundParam) {
-				BoundParam bp = (BoundParam)params[0];
-				bp.resolveBinding(engine);
-			}
-			if (params[1] instanceof BoundParam) {
-				BoundParam bp = (BoundParam)params[1];
-				bp.resolveBinding(engine);
-			}
-			String val = params[0].getStringValue();
-			String val2 = params[1].getStringValue();
-			eq = val.compareTo(val2);
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.INTEGER_OBJECT, Integer.valueOf(eq));
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ValueType getReturnType() {
+        return ValueType.INTEGER_OBJECT;
+    }
 
-	public String getName() {
-		return STRING_COMPARE;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        int eq = -1;
+        if (params != null && params.length == 2) {
+            if (params[0] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[0];
+                bp.resolveBinding(engine);
+            }
+            if (params[1] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[1];
+                bp.resolveBinding(engine);
+            }
+            String val = params[0].getStringValue();
+            String val2 = params[1].getStringValue();
+            eq = val.compareTo(val2);
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv =
+                new DefaultReturnValue(ValueType.INTEGER_OBJECT, Integer.valueOf(eq));
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class,ValueParam.class};
-	}
+    public String getName() {
+        return STRING_COMPARE;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(str-compare [string] [string])";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, ValueParam.class};
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(str-compare [string] [string])";
+    }
 }

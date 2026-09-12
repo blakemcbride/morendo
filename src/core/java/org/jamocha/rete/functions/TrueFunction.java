@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -30,62 +28,56 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Nikolaus Koemm
- * 
- * Min returns the smallest of two or more values.
+ *     <p>Min returns the smallest of two or more values.
  */
 public class TrueFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String TRUE = "true";
+    /** */
+    public static final String TRUE = "true";
 
-	/**
-	 * 
-	 */
-	public TrueFunction() {
-		super();
-	}
+    /** */
+    public TrueFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,
-				Boolean.TRUE);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.TRUE);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public String getName() {
-		return TRUE;
-	}
+    public String getName() {
+        return TRUE;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[] { ValueParam[].class };
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		if (params != null && params.length >= 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("("+TRUE);
-				int idx = 0;
-				if (params[idx] instanceof BoundParam) {
-					BoundParam bp = (BoundParam) params[idx];
-					buf.append(" ?" + bp.getVariableName());
-				} else if (params[idx] instanceof ValueParam) {
-					buf.append(" " + params[idx].getStringValue());
-				} else {
-					buf.append(" " + params[idx].getStringValue());
-				}
-			buf.append(")");
-			return buf.toString();
-		} else {
-			return "(true)\n" +
-			"Function description:\n" +
-			"\tRepresentation of the boolean constant true.";
-		}
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length >= 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(" + TRUE);
+            int idx = 0;
+            if (params[idx] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[idx];
+                buf.append(" ?" + bp.getVariableName());
+            } else if (params[idx] instanceof ValueParam) {
+                buf.append(" " + params[idx].getStringValue());
+            } else {
+                buf.append(" " + params[idx].getStringValue());
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(true)\n"
+                    + "Function description:\n"
+                    + "\tRepresentation of the boolean constant true.";
+        }
+    }
 }

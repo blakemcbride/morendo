@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -28,52 +26,42 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- * 
- * The function will print out the rule in a pretty format. Note the
- * format may not be identicle to what the user wrote. It is a normalized
- * and cleaned up format.
+ *     <p>The function will print out the rule in a pretty format. Note the format may not be
+ *     identicle to what the user wrote. It is a normalized and cleaned up format.
  */
 public class PPrintNodeFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String PPNODE = "ppnode";
-	
-	/**
-	 * 
-	 */
-	public PPrintNodeFunction() {
-		super();
-	}
+    /** */
+    public static final String PPNODE = "ppnode";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    /** */
+    public PPrintNodeFunction() {
+        super();
+    }
 
-	/**
-	 * TODO - I need to finish this, so it can print out a node
-	 * in a pretty format
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		if (params != null && params.length > 0) {
-			for (int idx=0; idx < params.length; idx++) {
-			}
-		}
-		DefaultReturnVector rv = new DefaultReturnVector();
-		return rv;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public String getName() {
-		return PPNODE;
-	}
+    /** TODO - I need to finish this, so it can print out a node in a pretty format */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (params != null && params.length > 0) {
+            for (int idx = 0; idx < params.length; idx++) {}
+        }
+        DefaultReturnVector rv = new DefaultReturnVector();
+        return rv;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public String getName() {
+        return PPNODE;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		StringBuilder buf = new StringBuilder();
-		return buf.toString();
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        StringBuilder buf = new StringBuilder();
+        return buf.toString();
+    }
 }

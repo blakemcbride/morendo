@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package woolfel.rulebenchmark;
 
@@ -20,32 +20,31 @@ import java.io.FileWriter;
 
 /**
  * @author Peter Lin
- *
- * Feel free to use this code as you wish, consider it public domain.
+ *     <p>Feel free to use this code as you wish, consider it public domain.
  */
 public class GenerateFacts {
 
     public static final String LINEBREAK = System.getProperty("line.separator");
-	/**
-	 * 
-	 */
-	public GenerateFacts() {
-		super();
-	}
+
+    /** */
+    public GenerateFacts() {
+        super();
+    }
 
     public String generateOrderedFact(int count) {
         return "(assert (fact nsh" + count + ") )" + LINEBREAK;
     }
-    
+
     /**
      * generate asserts for objectOne deffact
+     *
      * @param count
      * @return
      */
     public String generateFact(int count) {
         return "(assert (object1 (attr1 \"" + count + "\") )  )" + LINEBREAK;
     }
-    
+
     public String generateFactWithRun(int count) {
         return "(assert (object1 (attr1 \"" + count + "\") )  ) (run)" + LINEBREAK;
     }
@@ -53,11 +52,11 @@ public class GenerateFacts {
     public String generateFactUnique(int count) {
         return "(assert (object" + count + " (attr1 \"" + count + "\") )  )" + LINEBREAK;
     }
-    
+
     public String generateRetract(int count) {
-        return "(retract " + (count + 1)+ ")" + LINEBREAK;
+        return "(retract " + (count + 1) + ")" + LINEBREAK;
     }
-    
+
     public static void main(String[] args) {
         String output = "data.clp";
         String rfile = "data-retract.clp";
@@ -79,12 +78,12 @@ public class GenerateFacts {
             }
             if (args.length >= 4 && args[3].equals("true")) {
                 retract = true;
-                rfile = output.substring(0,output.length()-4) + "-retract.clp";
+                rfile = output.substring(0, output.length() - 4) + "-retract.clp";
             }
-            if (args.length >=5 && args[4].equals("true")) {
+            if (args.length >= 5 && args[4].equals("true")) {
                 ordered = true;
             }
-            if (args.length >=6 && args[5].equals("true")) {
+            if (args.length >= 6 && args[5].equals("true")) {
                 unique = true;
             }
             try {
@@ -93,7 +92,7 @@ public class GenerateFacts {
                 if (retract) {
                     rwriter = new FileWriter(rfile);
                 }
-                for (int idx=0; idx < count; idx++) {
+                for (int idx = 0; idx < count; idx++) {
                     if (fire) {
                         writer.write(gen.generateFactWithRun(idx));
                     } else if (ordered) {
@@ -119,7 +118,9 @@ public class GenerateFacts {
         } else {
             System.out.println("The utility takes the following parameters");
             System.out.println(" ");
-            System.out.println("java woolfel.rulebenchmark.GenerateFact 1000 output.clp(optional) true(optional) true(optional)");
+            System.out.println(
+                    "java woolfel.rulebenchmark.GenerateFact 1000 output.clp(optional)"
+                            + " true(optional) true(optional)");
             System.out.println("first parameter - number of facts");
             System.out.println("second parameter - output file");
             System.out.println("third parameter - run after each assert");
@@ -127,5 +128,5 @@ public class GenerateFacts {
             System.out.println("fifth parameter - use ordered fact");
             System.out.println("sixth parameter - use unique deffact");
         }
-	}
+    }
 }

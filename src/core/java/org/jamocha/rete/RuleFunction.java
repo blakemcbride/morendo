@@ -12,18 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
 /**
- * The only difference between a Function and RuleFunction is a rule
- * function has 1 addtional setTriggerFacts(Fact[]) method. This is
- * used to pass the facts that triggered a rule to the function. A
- * normal function doesn't need the Fact[] array to execute.
- * 
+ * The only difference between a Function and RuleFunction is a rule function has 1 addtional
+ * setTriggerFacts(Fact[]) method. This is used to pass the facts that triggered a rule to the
+ * function. A normal function doesn't need the Fact[] array to execute.
+ *
  * @author Peter Lin
  */
 public interface RuleFunction extends Function {
-	void setTriggerFacts(Fact[] facts);
+    void setTriggerFacts(Fact[] facts);
 }

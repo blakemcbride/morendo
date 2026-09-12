@@ -12,77 +12,66 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Peter Lin
- *
- * Basic implementation of ReturnVector used by functions to return
- * the results.
+ *     <p>Basic implementation of ReturnVector used by functions to return the results.
  */
 public class DefaultReturnVector implements ReturnVector {
 
-	/**
-	 * 
-	 */
-	protected List<ReturnValue> items = new ArrayList<>(2);
+    /** */
+    protected List<ReturnValue> items = new ArrayList<>(2);
 
+    /** */
+    public DefaultReturnVector() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public DefaultReturnVector() {
-		super();
-	}
-    
     public void clear() {
         this.getItems().clear();
     }
 
-	/**
-	 * Current implementation returns the size of the list
-	 */
-	public int size() {
-		return this.getItems().size();
-	}
+    /** Current implementation returns the size of the list */
+    public int size() {
+        return this.getItems().size();
+    }
 
-	/**
-	 * the implementation returns itself, since ReturnVector extends
-	 * Iterator interface.
-	 */
-	public Iterator<ReturnValue> getIterator() {
-		return getItems().iterator();
-	}
+    /** the implementation returns itself, since ReturnVector extends Iterator interface. */
+    public Iterator<ReturnValue> getIterator() {
+        return getItems().iterator();
+    }
 
-	/**
-	 * Return the first item in the vector
-	 * @return
-	 */
-	public ReturnValue firstReturnValue() {
-		return this.getItems().get(0);
-	}
+    /**
+     * Return the first item in the vector
+     *
+     * @return
+     */
+    public ReturnValue firstReturnValue() {
+        return this.getItems().get(0);
+    }
 
-	public void addReturnValue(ReturnValue val) {
-		getItems().add(val);
-	}
-	
-	public String toString() {
-		Iterator<ReturnValue> itr = getIterator();
-		StringBuilder sb = new StringBuilder();
-		while (itr.hasNext()) {
-			ReturnValue rval = itr.next();
-			sb.append(rval.getStringValue()).append('\n');
-		}
-		return sb.toString();
-	}
+    public void addReturnValue(ReturnValue val) {
+        getItems().add(val);
+    }
 
-	public List<ReturnValue> getItems() {
-		return items;
-	}
+    public String toString() {
+        Iterator<ReturnValue> itr = getIterator();
+        StringBuilder sb = new StringBuilder();
+        while (itr.hasNext()) {
+            ReturnValue rval = itr.next();
+            sb.append(rval.getStringValue()).append('\n');
+        }
+        return sb.toString();
+    }
+
+    public List<ReturnValue> getItems() {
+        return items;
+    }
 }

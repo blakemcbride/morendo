@@ -1,7 +1,6 @@
 package org.jamocha.messaging.functions;
 
 import org.jamocha.messaging.BasicClient;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -12,65 +11,69 @@ import org.jamocha.rete.ValueType;
 
 public class CreateMessageClientFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String CREATE_MESSAGE_CLIENT = "create-message-client";
+    /** */
+    public static final String CREATE_MESSAGE_CLIENT = "create-message-client";
 
-	public CreateMessageClientFunction() {
-		super();
-	}
+    public CreateMessageClientFunction() {
+        super();
+    }
 
-	/**
-	 * <ul>
-	 * <li> JNDI InitialContextFactory
-	 * <li> Provider URL
-	 * <li> connection factory: TopicConnectionFactory
-	 * <li> Topic
-	 * <li> Username
-	 * <li> Password
-	 * <li> client name
-	 * </ul>
-	 *  
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Boolean created = Boolean.FALSE;
-		if (params != null && params.length == 7) {
-			BasicClient client = new BasicClient();
-			client.setRete(engine);
-			client.setInitialContextFactory(params[0].getStringValue());
-			client.setProviderURL(params[1].getStringValue());
-			client.setConnectionFactory(params[2].getStringValue());
-			client.setTopic(params[3].getStringValue());
-			client.setSecurityPrinciple(params[4].getStringValue());
-			client.setSecurityCredentials(params[5].getStringValue());
-			client.init();
-			
-			String clientName = params[6].getStringValue();
-			engine.declareDefglobal(clientName, client);
-			created = Boolean.TRUE;
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.BOOLEAN_OBJECT, created);
-		ret.addReturnValue(rv);
-		return ret;
-	} 
+    /**
+     * <ul>
+     *   <li>JNDI InitialContextFactory
+     *   <li>Provider URL
+     *   <li>connection factory: TopicConnectionFactory
+     *   <li>Topic
+     *   <li>Username
+     *   <li>Password
+     *   <li>client name
+     * </ul>
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        Boolean created = Boolean.FALSE;
+        if (params != null && params.length == 7) {
+            BasicClient client = new BasicClient();
+            client.setRete(engine);
+            client.setInitialContextFactory(params[0].getStringValue());
+            client.setProviderURL(params[1].getStringValue());
+            client.setConnectionFactory(params[2].getStringValue());
+            client.setTopic(params[3].getStringValue());
+            client.setSecurityPrinciple(params[4].getStringValue());
+            client.setSecurityCredentials(params[5].getStringValue());
+            client.init();
 
-	public String getName() {
-		return CREATE_MESSAGE_CLIENT;
-	}
+            String clientName = params[6].getStringValue();
+            engine.declareDefglobal(clientName, client);
+            created = Boolean.TRUE;
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, created);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{String.class,String.class,String.class,String.class,String.class,String.class,String.class};
-	}
+    public String getName() {
+        return CREATE_MESSAGE_CLIENT;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {
+            String.class,
+            String.class,
+            String.class,
+            String.class,
+            String.class,
+            String.class,
+            String.class
+        };
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(create-message-client <jndi> <provider url> <connection factory> <topic> <username> <password> <*client instance name*>)";
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(create-message-client <jndi> <provider url> <connection factory> <topic>"
+                + " <username> <password> <*client instance name*>)";
+    }
 }

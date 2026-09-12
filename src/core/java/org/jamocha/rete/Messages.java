@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
@@ -21,33 +21,30 @@ import java.util.ResourceBundle;
 
 /**
  * @author Peter Lin
- *
- * Messages is a basic resource bundle. It's responsible for getting
- * the error messages and other resource bundle related values.
+ *     <p>Messages is a basic resource bundle. It's responsible for getting the error messages and
+ *     other resource bundle related values.
  */
 public class Messages {
-	private static final String BUNDLE_NAME = "org.jamocha.rete.messages";//$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.jamocha.rete.messages"; // $NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-	private Messages() {
-	}
+    private Messages() {}
 
-	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
-	}
-	
-	public static boolean getBooleanProperty(String key) {
-		String val = getString(key);
-		if (val.equals("true")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
+
+    public static boolean getBooleanProperty(String key) {
+        String val = getString(key);
+        if (val.equals("true")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

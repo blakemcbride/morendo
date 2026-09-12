@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.query;
-
-import java.util.Iterator;
-import java.util.Map;
 
 import org.jamocha.rete.BaseNode;
 import org.jamocha.rete.BetaMemory;
@@ -31,51 +28,46 @@ import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defquery;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @author Peter Lin
- * 
- * QueryOnlyFuncJoin is for only CE that use a function to
- * compare 2 slots of 2 different facts.
- * 
+ *     <p>QueryOnlyFuncJoin is for only CE that use a function to compare 2 slots of 2 different
+ *     facts.
  */
 public class QueryOnlyFuncJoin extends QueryBaseNot {
 
-	/**
-     * 
-     */
-
+    /** */
     public QueryOnlyFuncJoin(int id) {
-		super(id);
-	}
+        super(id);
+    }
 
-	/**
-	 * clear will clear the lists
-	 */
-		public void clear(WorkingMemory mem) {
-		Map<?, ?> rightmem = mem.getBetaRightMemory(this);
-		Map<?, ?> leftmem = mem.getBetaRightMemory(this);
-		Iterator<?> itr = leftmem.keySet().iterator();
-		// first we iterate over the list for each fact
-		// and clear it.
-		while (itr.hasNext()) {
-			BetaMemory bmem = (BetaMemory) leftmem.get(itr.next());
-			bmem.clear();
-		}
-		// now that we've cleared the list for each fact, we
-		// can clear the Map.
-		leftmem.clear();
-		rightmem.clear();
-	}
+    /** clear will clear the lists */
+    public void clear(WorkingMemory mem) {
+        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
+        Map<?, ?> leftmem = mem.getBetaRightMemory(this);
+        Iterator<?> itr = leftmem.keySet().iterator();
+        // first we iterate over the list for each fact
+        // and clear it.
+        while (itr.hasNext()) {
+            BetaMemory bmem = (BetaMemory) leftmem.get(itr.next());
+            bmem.clear();
+        }
+        // now that we've cleared the list for each fact, we
+        // can clear the Map.
+        leftmem.clear();
+        rightmem.clear();
+    }
 
-	/**
-	 * assertLeft takes an array of facts. Since the next join may be
-	 * joining against one or more objects, we need to pass all
-	 * previously matched facts.
-	 * @param factInstance
-	 * @param engine
-	 */
-	public void assertLeft(Index linx, Rete engine, WorkingMemory mem)
-			throws AssertException {
+    /**
+     * assertLeft takes an array of facts. Since the next join may be joining against one or more
+     * objects, we need to pass all previously matched facts.
+     *
+     * @param factInstance
+     * @param engine
+     */
+    public void assertLeft(Index linx, Rete engine, WorkingMemory mem) throws AssertException {
         Map<Index, BetaMemory> leftmem = mem.getBetaLeftMemory(this);
         BetaMemory bmem = new BetaMemoryImpl(linx, engine);
         leftmem.put(linx, bmem);
@@ -85,21 +77,20 @@ public class QueryOnlyFuncJoin extends QueryBaseNot {
             while (itr.hasNext()) {
                 Fact vl = (Fact) itr.next();
                 // we have to evaluate the function
-                if (vl != null && evaluate(linx.getFacts(),vl,engine)) {
+                if (vl != null && evaluate(linx.getFacts(), vl, engine)) {
                     bmem.addMatch(vl);
                 }
             }
         }
-	}
+    }
 
-	/**
-	 * Assert from the right side is always going to be from an
-	 * Alpha node.
-	 * @param factInstance
-	 * @param engine
-	 */
-	public void assertRight(Fact rfact, Rete engine, WorkingMemory mem)
-			throws AssertException {
+    /**
+     * Assert from the right side is always going to be from an Alpha node.
+     *
+     * @param factInstance
+     * @param engine
+     */
+    public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
         Map<Fact, Fact> rightmem = mem.getBetaRightMemory(this);
         rightmem.put(rfact, rfact);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
@@ -111,28 +102,28 @@ public class QueryOnlyFuncJoin extends QueryBaseNot {
             }
         }
     }
-	
-	public void executeJoin(Rete engine, WorkingMemory mem) throws AssertException {
-		Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-		Iterator<?> itr = leftmem.values().iterator();
-		while (itr.hasNext()) {
-			BetaMemory bmem = (BetaMemory)itr.next();
-			if (bmem.matchCount() == 1) {
-				this.propogateAssert(bmem.getIndex(), engine, mem);
-			}
-		}
-	}
 
-	/**
-	 * Method will use the right binding to perform the evaluation
-	 * of the join. Since we are building joins similar to how
-	 * CLIPS and other rule engines handle it, it means 95% of the
-	 * time the right fact list only has 1 fact.
-	 * @param leftlist
-	 * @param right
-	 * @return
-	 */
-	public boolean evaluate(Fact[] leftlist, Fact right, Rete engine) {
+    public void executeJoin(Rete engine, WorkingMemory mem) throws AssertException {
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+        Iterator<?> itr = leftmem.values().iterator();
+        while (itr.hasNext()) {
+            BetaMemory bmem = (BetaMemory) itr.next();
+            if (bmem.matchCount() == 1) {
+                this.propogateAssert(bmem.getIndex(), engine, mem);
+            }
+        }
+    }
+
+    /**
+     * Method will use the right binding to perform the evaluation of the join. Since we are
+     * building joins similar to how CLIPS and other rule engines handle it, it means 95% of the
+     * time the right fact list only has 1 fact.
+     *
+     * @param leftlist
+     * @param right
+     * @return
+     */
+    public boolean evaluate(Fact[] leftlist, Fact right, Rete engine) {
         boolean eval = true;
         // we iterate over the binds and evaluate the facts
         for (int idx = 0; idx < this.binds.length; idx++) {
@@ -147,30 +138,27 @@ public class QueryOnlyFuncJoin extends QueryBaseNot {
             }
         }
         return eval;
-	}
+    }
 
-	/**
-	 * simple implementation for toString. may need to change the format
-	 * later so it looks nicer.
-	 */
-	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("ExistPredJoin - ");
-		for (int idx = 0; idx < this.binds.length; idx++) {
-			if (idx > 0) {
-				buf.append(" && ");
-			}
-			buf.append(this.binds[idx].toBindString());
-		}
-		return buf.toString();
-	}
+    /**
+     * simple implementation for toString. may need to change the format later so it looks nicer.
+     */
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        buf.append("ExistPredJoin - ");
+        for (int idx = 0; idx < this.binds.length; idx++) {
+            if (idx > 0) {
+                buf.append(" && ");
+            }
+            buf.append(this.binds[idx].toBindString());
+        }
+        return buf.toString();
+    }
 
-	/**
-	 * The current implementation is similar to BetaNode
-	 */
-	public String toPPString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("<node-" + this.nodeID + "> Exist - ");
+    /** The current implementation is similar to BetaNode */
+    public String toPPString() {
+        StringBuilder buf = new StringBuilder();
+        buf.append("<node-" + this.nodeID + "> Exist - ");
         if (binds != null && binds.length > 0) {
             for (int idx = 0; idx < this.binds.length; idx++) {
                 if (idx > 0) {
@@ -181,27 +169,30 @@ public class QueryOnlyFuncJoin extends QueryBaseNot {
         } else {
             buf.append(" no joins ");
         }
-		return buf.toString();
-	}
+        return buf.toString();
+    }
 
-	@Override
-	public QueryBaseJoin clone(Rete engine, Defquery query) {
-		QueryOnlyFuncJoin clone = new QueryOnlyFuncJoin(engine.nextNodeId());
-		Binding[] cloneBinding = new Binding[this.binds.length];
-		for (int i=0; i < this.binds.length; i++) {
-			cloneBinding[i] = (Binding)this.binds[i].clone();
-		}
-		clone.binds = cloneBinding;
-		clone.successorNodes = new BaseNode[this.successorNodes.length];
-		for (int i=0; i < this.successorNodes.length; i++) {
-    		if (this.successorNodes[i] instanceof QueryBaseAlpha) {
-    			clone.successorNodes[i] = ((QueryBaseAlpha)this.successorNodes[i]).clone(engine, query);
-    		} else if (this.successorNodes[i] instanceof QueryBaseJoin) {
-    			clone.successorNodes[i] = ((QueryBaseJoin)this.successorNodes[i]).clone(engine, query);
-    		} else if (this.successorNodes[i] instanceof QueryResultNode) {
-    			clone.successorNodes[i] = ((QueryResultNode)this.successorNodes[i]).clone(engine, query);
-    		}
-		}
-		return clone;
-	}
+    @Override
+    public QueryBaseJoin clone(Rete engine, Defquery query) {
+        QueryOnlyFuncJoin clone = new QueryOnlyFuncJoin(engine.nextNodeId());
+        Binding[] cloneBinding = new Binding[this.binds.length];
+        for (int i = 0; i < this.binds.length; i++) {
+            cloneBinding[i] = (Binding) this.binds[i].clone();
+        }
+        clone.binds = cloneBinding;
+        clone.successorNodes = new BaseNode[this.successorNodes.length];
+        for (int i = 0; i < this.successorNodes.length; i++) {
+            if (this.successorNodes[i] instanceof QueryBaseAlpha) {
+                clone.successorNodes[i] =
+                        ((QueryBaseAlpha) this.successorNodes[i]).clone(engine, query);
+            } else if (this.successorNodes[i] instanceof QueryBaseJoin) {
+                clone.successorNodes[i] =
+                        ((QueryBaseJoin) this.successorNodes[i]).clone(engine, query);
+            } else if (this.successorNodes[i] instanceof QueryResultNode) {
+                clone.successorNodes[i] =
+                        ((QueryResultNode) this.successorNodes[i]).clone(engine, query);
+            }
+        }
+        return clone;
+    }
 }

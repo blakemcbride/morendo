@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
-import java.util.HashMap;
-import java.util.List;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -26,48 +23,45 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
-import org.jamocha.rete.util.FactUtils;
 import org.jamocha.rete.ValueType;
+import org.jamocha.rete.util.FactUtils;
 
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Peter Lin
- * 
- * Facts function will printout all the facts, not including any
- * initial facts which are internal to the rule engine.
+ *     <p>Facts function will printout all the facts, not including any initial facts which are
+ *     internal to the rule engine.
  */
 public class FactsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String FACTS = "facts";
+    /** */
+    public static final String FACTS = "facts";
 
-	/**
-	 * 
-	 */
-	public FactsFunction() {
-		super();
-	}
+    /** */
+    public FactsFunction() {
+        super();
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         boolean filter = false;
         HashMap<Object, Object> objects = new HashMap<>();
         int count = 0;
         if (params != null && params.length > 0) {
             filter = true;
-            for (int idx=0; idx < params.length; idx++) {
+            for (int idx = 0; idx < params.length; idx++) {
                 objects.put(params[idx].getValue(), null);
             }
         }
-		List<?> facts = engine.getAllFacts();
-		Object[] sorted = FactUtils.sortFacts(facts);
-		for (int idx = 0; idx < sorted.length; idx++) {
-			Fact ft = (Fact) sorted[idx];
+        List<?> facts = engine.getAllFacts();
+        Object[] sorted = FactUtils.sortFacts(facts);
+        for (int idx = 0; idx < sorted.length; idx++) {
+            Fact ft = (Fact) sorted[idx];
             if (filter) {
                 if (objects.containsKey(ft.getDeftemplate().getName())) {
                     engine.writeMessage(ft.toFactString() + Constants.LINEBREAK);
@@ -77,23 +71,23 @@ public class FactsFunction implements Function {
                 engine.writeMessage(ft.toFactString() + Constants.LINEBREAK);
                 count++;
             }
-		}
-		engine.writeMessage("for a total of " + count +
-				Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);
-		return new DefaultReturnVector();
-	}
+        }
+        engine.writeMessage(
+                "for a total of " + count + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
+        return new DefaultReturnVector();
+    }
 
-	public String getName() {
-		return FACTS;
-	}
+    public String getName() {
+        return FACTS;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(facts)\n" +
-			"Function description:\n" +
-			"\tPrints all facts except the initial facts.";
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        return "(facts)\n"
+                + "Function description:\n"
+                + "\tPrints all facts except the initial facts.";
+    }
 }

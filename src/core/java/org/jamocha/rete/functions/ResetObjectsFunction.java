@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -27,44 +25,37 @@ import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
- *
- * Reset the objects means retract all the objects and assert
- * them again.
+ *     <p>Reset the objects means retract all the objects and assert them again.
  */
 public class ResetObjectsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String RESET_OBJECTS = "reset-objects";
-	
-	/**
-	 * 
-	 */
-	public ResetObjectsFunction() {
-		super();
-	}
+    /** */
+    public static final String RESET_OBJECTS = "reset-objects";
 
-	public ValueType getReturnType() {
+    /** */
+    public ResetObjectsFunction() {
+        super();
+    }
+
+    public ValueType getReturnType() {
         return ValueType.RETURN_VOID;
-	}
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		engine.resetObjects();
-		return new DefaultReturnVector();
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        engine.resetObjects();
+        return new DefaultReturnVector();
+    }
 
-	public String getName() {
-		return RESET_OBJECTS;
-	}
+    public String getName() {
+        return RESET_OBJECTS;
+    }
 
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
-
-	public String toPPString(Parameter[] params, int indents) {
-		StringBuilder buf = new StringBuilder();
-		return buf.toString();
-	}
+    public String toPPString(Parameter[] params, int indents) {
+        StringBuilder buf = new StringBuilder();
+        return buf.toString();
+    }
 }

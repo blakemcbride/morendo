@@ -12,40 +12,44 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete;
 
-
 /**
  * @author Peter Lin
- *
- * Interface for alpha memory. Alpha memories are used to remember
- * which facts entered and match for alpha nodes.
+ *     <p>Interface for alpha memory. Alpha memories are used to remember which facts entered and
+ *     match for alpha nodes.
  */
 public interface AlphaMemory {
-	/**
-	 * Add a partial match to the memory
-	 * @param fact
-	 */
-	void addPartialMatch(Fact fact);
-	/**
-	 * clear the alpha memory for the node
-	 */
-	void clear();
-	/**
-	 * Remove a partial match from the memory
-	 * @param fact
-	 */
-	Object removePartialMatch(Fact fact);
-	/**
-	 * size returns the number of matches
-	 * @return
-	 */
-	int size();
-	/**
-	 * Return an iterator to iterate over the matches.
-	 * @return
-	 */
-	java.util.Iterator<?> iterator();
+    /**
+     * Add a partial match to the memory
+     *
+     * @param fact
+     */
+    void addPartialMatch(Fact fact);
+
+    /** clear the alpha memory for the node */
+    void clear();
+
+    /**
+     * Remove a partial match from the memory
+     *
+     * @param fact
+     */
+    Object removePartialMatch(Fact fact);
+
+    /**
+     * size returns the number of matches
+     *
+     * @return
+     */
+    int size();
+
+    /**
+     * Return an iterator to iterate over the matches.
+     *
+     * @return
+     */
+    java.util.Iterator<?> iterator();
 }

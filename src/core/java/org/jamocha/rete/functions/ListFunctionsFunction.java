@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
-
-import java.util.Iterator;
-import java.util.List;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -28,94 +25,90 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
+import java.util.Iterator;
+import java.util.List;
 
 public class ListFunctionsFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String LIST_FUNCTIONS = "list-deffunctions";
-	public static final String FUNCTIONS = "functions";
+    /** */
+    public static final String LIST_FUNCTIONS = "list-deffunctions";
 
-	public ListFunctionsFunction() {
-		super();
-	}
+    public static final String FUNCTIONS = "functions";
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public ListFunctionsFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		if (params != null && params.length > 0) {
-			java.util.HashMap<String,String> groups = new java.util.HashMap<String,String>();
-			for (Parameter p: params) {
-				groups.put(p.getStringValue(), null);
-			}
-			List<?> fgroups = engine.getFunctionGroups();
-			Iterator<?> itr = fgroups.iterator();
-			int counter = 0;
-			while (itr.hasNext()) {
-				// we iterate over the function groups and print out the
-				// functions in each group
-				FunctionGroup fg = (FunctionGroup) itr.next();
-				if (groups.containsKey(fg.getName())) {
-					engine.writeMessage("++++ " + fg.getName() + " ++++" + Constants.LINEBREAK, "t");
-					Iterator<?> listitr = fg.listFunctions().iterator();
-					while (listitr.hasNext()) {
-						Function f = (Function) listitr.next();
-						engine.writeMessage("  " + f.getName() + Constants.LINEBREAK,
-								"t");
-						counter++;
-					}
-				}
-			}
-			engine.writeMessage(counter + " functions" + Constants.LINEBREAK, "t");
-		} else {
-			List<?> fgroups = engine.getFunctionGroups();
-			Iterator<?> itr = fgroups.iterator();
-			int counter = 0;
-			while (itr.hasNext()) {
-				// we iterate over the function groups and print out the
-				// functions in each group
-				FunctionGroup fg = (FunctionGroup) itr.next();
-				engine.writeMessage("++++ " + fg.getName() + " ++++" + Constants.LINEBREAK, "t");
-				Iterator<?> listitr = fg.listFunctions().iterator();
-				while (listitr.hasNext()) {
-					Function f = (Function) listitr.next();
-					engine.writeMessage("  " + f.getName() + Constants.LINEBREAK,
-							"t");
-					counter++;
-				}
-			}
-			engine.writeMessage(counter + " functions" + Constants.LINEBREAK, "t");
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		return ret;
-	}
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
 
-	public String getName() {
-		return LIST_FUNCTIONS;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (params != null && params.length > 0) {
+            java.util.HashMap<String, String> groups = new java.util.HashMap<String, String>();
+            for (Parameter p : params) {
+                groups.put(p.getStringValue(), null);
+            }
+            List<?> fgroups = engine.getFunctionGroups();
+            Iterator<?> itr = fgroups.iterator();
+            int counter = 0;
+            while (itr.hasNext()) {
+                // we iterate over the function groups and print out the
+                // functions in each group
+                FunctionGroup fg = (FunctionGroup) itr.next();
+                if (groups.containsKey(fg.getName())) {
+                    engine.writeMessage(
+                            "++++ " + fg.getName() + " ++++" + Constants.LINEBREAK, "t");
+                    Iterator<?> listitr = fg.listFunctions().iterator();
+                    while (listitr.hasNext()) {
+                        Function f = (Function) listitr.next();
+                        engine.writeMessage("  " + f.getName() + Constants.LINEBREAK, "t");
+                        counter++;
+                    }
+                }
+            }
+            engine.writeMessage(counter + " functions" + Constants.LINEBREAK, "t");
+        } else {
+            List<?> fgroups = engine.getFunctionGroups();
+            Iterator<?> itr = fgroups.iterator();
+            int counter = 0;
+            while (itr.hasNext()) {
+                // we iterate over the function groups and print out the
+                // functions in each group
+                FunctionGroup fg = (FunctionGroup) itr.next();
+                engine.writeMessage("++++ " + fg.getName() + " ++++" + Constants.LINEBREAK, "t");
+                Iterator<?> listitr = fg.listFunctions().iterator();
+                while (listitr.hasNext()) {
+                    Function f = (Function) listitr.next();
+                    engine.writeMessage("  " + f.getName() + Constants.LINEBREAK, "t");
+                    counter++;
+                }
+            }
+            engine.writeMessage(counter + " functions" + Constants.LINEBREAK, "t");
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[0];
-	}
+    public String getName() {
+        return LIST_FUNCTIONS;
+    }
 
-	/**
-	 * for now, just return the simple form. need to implement the method
-	 * completely.
-	 */
-	public String toPPString(Parameter[] params, int indents) {
-		if (indents > 0) {
-			StringBuilder buf = new StringBuilder();
-			for (int idx = 0; idx < indents; idx++) {
-				buf.append(" ");
-			}
-			buf.append("(list-deffunctions)");
-			return buf.toString();
-		} else {
-			return "(list-deffunctions <function group>)";
-		}
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
 
+    /** for now, just return the simple form. need to implement the method completely. */
+    public String toPPString(Parameter[] params, int indents) {
+        if (indents > 0) {
+            StringBuilder buf = new StringBuilder();
+            for (int idx = 0; idx < indents; idx++) {
+                buf.append(" ");
+            }
+            buf.append("(list-deffunctions)");
+            return buf.toString();
+        } else {
+            return "(list-deffunctions <function group>)";
+        }
+    }
 }

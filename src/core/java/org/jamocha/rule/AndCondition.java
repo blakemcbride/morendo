@@ -12,12 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rule;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jamocha.rete.BaseJoin;
 import org.jamocha.rete.BaseNode;
@@ -28,84 +25,73 @@ import org.jamocha.rete.RuleCompiler;
 import org.jamocha.rete.compiler.CompilerProvider;
 import org.jamocha.rete.compiler.ConditionCompiler;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Lin
- *
- * AndCondition is specifically created to handle and conjunctions. AndConditions
- * are compiled to a BetaNode.
+ *     <p>AndCondition is specifically created to handle and conjunctions. AndConditions are
+ *     compiled to a BetaNode.
  */
 public final class AndCondition implements Condition {
 
-    /**
-     * 
-     */
-	protected List<Object> nestedCE = new ArrayList<>();
-    protected BaseJoin reteNode = null;
-    
-	/**
-	 * 
-	 */
-	public AndCondition() {
-		super();
-	}
+    /** */
+    protected List<Object> nestedCE = new ArrayList<>();
 
-	public boolean compare(Condition cond) {
-		return false;
-	}
+    protected BaseJoin reteNode = null;
+
+    /** */
+    public AndCondition() {
+        super();
+    }
+
+    public boolean compare(Condition cond) {
+        return false;
+    }
 
     public void addNestedConditionElement(Object ce) {
         this.nestedCE.add(ce);
     }
-    
+
     public void addAll(java.util.List<?> list) {
         if (list != null) {
             this.nestedCE.addAll(list);
         }
     }
-    
-	public List<Object> getNestedConditionalElement() {
+
+    public List<Object> getNestedConditionalElement() {
         return this.nestedCE;
     }
-    
+
     public Condition[] getConditions() {
         Condition[] conditions = new Condition[this.nestedCE.size()];
         return this.nestedCE.toArray(conditions);
     }
-    
-	public List<?> getNodes() {
-		return new ArrayList<>();
-	}
 
-    /**
-     * the method doesn't apply and isn't implemented currently
-     */
-	public void addNode(BaseNode node) {
-	}
-    
-    /**
-     * not implemented currently
-     */
-    public void addNewAlphaNodes(BaseNode node) {
-        
+    public List<?> getNodes() {
+        return new ArrayList<>();
     }
 
-	public BaseNode getLastNode() {
-		return reteNode;
-	}
-	
-	
-    
+    /** the method doesn't apply and isn't implemented currently */
+    public void addNode(BaseNode node) {}
+
+    /** not implemented currently */
+    public void addNewAlphaNodes(BaseNode node) {}
+
+    public BaseNode getLastNode() {
+        return reteNode;
+    }
+
     public void clear() {
-    	reteNode = null;
+        reteNode = null;
     }
-    
-	public String toPPString() {
+
+    public String toPPString() {
         StringBuilder buf = new StringBuilder();
         String pad = "  ";
         buf.append(pad + "(and" + Constants.LINEBREAK);
-        for (int idx=0; idx < this.nestedCE.size(); idx++) {
-            Condition c = (Condition)nestedCE.get(idx);
+        for (int idx = 0; idx < this.nestedCE.size(); idx++) {
+            Condition c = (Condition) nestedCE.get(idx);
             if (c instanceof TestCondition) {
                 buf.append(pad + c.toPPString());
             } else if (c instanceof ObjectCondition oc) {
@@ -113,22 +99,22 @@ public final class AndCondition implements Condition {
             }
         }
         buf.append(pad + ")" + Constants.LINEBREAK);
-		return buf.toString();
-	}
+        return buf.toString();
+    }
 
-	public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
-	}
+    public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
+    }
 
-	public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
-	}
-	
-	public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
-		return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
-	}
-	
-	public List<Object> getBindConstraints() {
-		return null;
-	}
+    public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
+    }
+
+    public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
+        return CompilerProvider.getInstance(ruleCompiler).andConditionCompiler;
+    }
+
+    public List<Object> getBindConstraints() {
+        return null;
+    }
 }

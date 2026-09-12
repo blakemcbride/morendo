@@ -12,101 +12,92 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.messaging.agent;
 
-
 public class AgentPerformanceSummary {
 
-	/**
-	 * 
-	 */
-	private String ipaddress = null;
-	private String hostname = null;
-	private String application = null;
-	private long averageRulesFired = 0;
-	private long averageResponseTime = 0;
-	private long requests = 0;
-	private long totalRulesFired = 0;
-	private long timestamp = 0;
+    /** */
+    private String ipaddress = null;
 
-	public AgentPerformanceSummary() {
-		super();
-	}
+    private String hostname = null;
+    private String application = null;
+    private long averageRulesFired = 0;
+    private long averageResponseTime = 0;
+    private long requests = 0;
+    private long totalRulesFired = 0;
+    private long timestamp = 0;
 
-	public String getKey() {
-		return this.ipaddress + "::" + this.hostname + "::" + this.application;
-	}
-	
-	public String getIPAddress() {
-		return ipaddress;
-	}
+    public AgentPerformanceSummary() {
+        super();
+    }
 
+    public String getKey() {
+        return this.ipaddress + "::" + this.hostname + "::" + this.application;
+    }
 
-	public void setIPAddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
+    public String getIPAddress() {
+        return ipaddress;
+    }
 
+    public void setIPAddress(String ipaddress) {
+        this.ipaddress = ipaddress;
+    }
 
-	public String getHostname() {
-		return hostname;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
+    public String getApplication() {
+        return application;
+    }
 
+    public void setApplication(String application) {
+        this.application = application;
+    }
 
-	public String getApplication() {
-		return application;
-	}
+    public long getAverageRulesFired() {
+        return averageRulesFired;
+    }
 
+    public void setAverageRulesFired(long averageRulesFired) {
+        this.averageRulesFired = averageRulesFired;
+    }
 
-	public void setApplication(String application) {
-		this.application = application;
-	}
+    public long getAverageResponseTime() {
+        return averageResponseTime;
+    }
 
+    public void setAverageResponseTime(long averageResponseTime) {
+        this.averageResponseTime = averageResponseTime;
+    }
 
-	public long getAverageRulesFired() {
-		return averageRulesFired;
-	}
+    public long getRequests() {
+        return requests;
+    }
 
-	public void setAverageRulesFired(long averageRulesFired) {
-		this.averageRulesFired = averageRulesFired;
-	}
+    public void setRequests(long requests) {
+        this.requests = requests;
+    }
 
-	public long getAverageResponseTime() {
-		return averageResponseTime;
-	}
+    public long getTotalRulesFired() {
+        return totalRulesFired;
+    }
 
-	public void setAverageResponseTime(long averageResponseTime) {
-		this.averageResponseTime = averageResponseTime;
-	}
+    public void setTotalRulesFired(long totalRulesFired) {
+        this.totalRulesFired = totalRulesFired;
+    }
 
-	public long getRequests() {
-		return requests;
-	}
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	public void setRequests(long requests) {
-		this.requests = requests;
-	}
-
-	public long getTotalRulesFired() {
-		return totalRulesFired;
-	}
-
-	public void setTotalRulesFired(long totalRulesFired) {
-		this.totalRulesFired = totalRulesFired;
-	}
-
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 }

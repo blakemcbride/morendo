@@ -12,16 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.measures;
 
-import java.util.List;
-
 import org.jamocha.rete.Rete;
 
+import java.util.List;
+
 public interface MeasureGroup {
-	String getGroupName();
-	void loadMeasures(Rete engine);
-	List<?> getMeasures();
+    String getGroupName();
+
+    void loadMeasures(Rete engine);
+
+    List<?> getMeasures();
 }

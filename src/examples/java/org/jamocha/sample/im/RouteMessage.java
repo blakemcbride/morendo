@@ -1,9 +1,6 @@
 package org.jamocha.sample.im;
 
-import java.io.Serializable;
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
@@ -11,58 +8,56 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueType;
 
+import java.io.Serializable;
+
 /**
- * RouteMessage is a dummy function and isn't implemented. It's here so that
- * people can run the sample rules in Jamocha. To make it work for real,
- * the executeFunction method needs to be implemented.
- * 
+ * RouteMessage is a dummy function and isn't implemented. It's here so that people can run the
+ * sample rules in Jamocha. To make it work for real, the executeFunction method needs to be
+ * implemented.
+ *
  * @author Peter Lin
  */
 public class RouteMessage implements Function, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	public static final String ROUTE_MESSAGE = "route-msg";
-	
-	public RouteMessage() {
-		super();
-	}
+    /** */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * This method is not implemented. If it was a real function, the method
-	 * would get a JMS client and route the message to the correct topic for
-	 * delivery.
-	 */
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector rv = new DefaultReturnVector();
-		if (params != null && params.length == 1) {
-			if (params[0] instanceof BoundParam) {
-				BoundParam bp = (BoundParam)params[0];
-				Message msg = (Message)bp.getObjectRef();
-				msg.setMessageStatus(Message.RECEIVED);
-				System.out.println("message recieved!");
-			}
-		}
-		return rv;
-	}
+    public static final String ROUTE_MESSAGE = "route-msg";
 
-	public String getName() {
-		return ROUTE_MESSAGE;
-	}
+    public RouteMessage() {
+        super();
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{Object.class};
-	}
+    /**
+     * This method is not implemented. If it was a real function, the method would get a JMS client
+     * and route the message to the correct topic for delivery.
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector rv = new DefaultReturnVector();
+        if (params != null && params.length == 1) {
+            if (params[0] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[0];
+                Message msg = (Message) bp.getObjectRef();
+                msg.setMessageStatus(Message.RECEIVED);
+                System.out.println("message recieved!");
+            }
+        }
+        return rv;
+    }
 
-	public ValueType getReturnType() {
-		return ValueType.RETURN_VOID;
-	}
+    public String getName() {
+        return ROUTE_MESSAGE;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(route-msg <Object>)";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {Object.class};
+    }
 
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(route-msg <Object>)";
+    }
 }

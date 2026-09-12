@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -27,52 +25,46 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
  * @author Peter Lin
- *
  */
 public class SetFocusFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String SET_FOCUS = "set-focus";
-	
-	public SetFocusFunction() {
-		super();
-	}
+    /** */
+    public static final String SET_FOCUS = "set-focus";
 
-	public ValueType getReturnType() {
-		return ValueType.STRING;
-	}
+    public SetFocusFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		String focus = null;
-		if (params != null && params.length == 1) {
-			focus = params[0].getStringValue();
-			engine.setFocus(focus);
-			focus = engine.getCurrentFocus().getModuleName();
-		} else {
-			focus = engine.getCurrentFocus().getModuleName();
-		}
-		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(
-				ValueType.STRING, focus);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ValueType getReturnType() {
+        return ValueType.STRING;
+    }
 
-	public String getName() {
-		return SET_FOCUS;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        String focus = null;
+        if (params != null && params.length == 1) {
+            focus = params[0].getStringValue();
+            engine.setFocus(focus);
+            focus = engine.getCurrentFocus().getModuleName();
+        } else {
+            focus = engine.getCurrentFocus().getModuleName();
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING, focus);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class};
-	}
+    public String getName() {
+        return SET_FOCUS;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(set-focus)";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class};
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(set-focus)";
+    }
 }

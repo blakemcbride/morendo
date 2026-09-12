@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.functions;
 
-
 import org.jamocha.rete.BoundParam;
-import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.Function;
@@ -28,62 +26,54 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.ValueType;
 
-
 /**
- * @author Peter Lin
- * Any equal is used to compare a literal value against one or more
- * bindings. If any of the bindings is equal to the constant value,
- * the function returns true.
+ * @author Peter Lin Any equal is used to compare a literal value against one or more bindings. If
+ *     any of the bindings is equal to the constant value, the function returns true.
  */
 public class AnyEqFunction implements Function {
 
-	/**
-	 * 
-	 */
-	public static final String ANYEQUAL = "any-eq";
-	
-	/**
-	 * 
-	 */
-	public AnyEqFunction() {
-		super();
-	}
+    /** */
+    public static final String ANYEQUAL = "any-eq";
 
-	public ValueType getReturnType() {
-		return ValueType.BOOLEAN_OBJECT;
-	}
+    /** */
+    public AnyEqFunction() {
+        super();
+    }
 
-	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		DefaultReturnVector ret = new DefaultReturnVector();
-		Boolean eq = Boolean.FALSE;
-		if (params != null && params.length > 1) {
-			Object constant = params[0].getValue(engine, ValueType.OBJECT);
-			for (int idx=1; idx < params.length; idx++) {
-				if (constant.equals(params[idx].getValue(engine, ValueType.OBJECT))) {
-					eq = Boolean.TRUE;
-					break;
-				}
-			}
-		}
-		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eq);
-		ret.addReturnValue(rv);
-		return ret;
-	}
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
+    }
 
-	public String getName() {
-		return ANYEQUAL;
-	}
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        Boolean eq = Boolean.FALSE;
+        if (params != null && params.length > 1) {
+            Object constant = params[0].getValue(engine, ValueType.OBJECT);
+            for (int idx = 1; idx < params.length; idx++) {
+                if (constant.equals(params[idx].getValue(engine, ValueType.OBJECT))) {
+                    eq = Boolean.TRUE;
+                    break;
+                }
+            }
+        }
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eq);
+        ret.addReturnValue(rv);
+        return ret;
+    }
 
-	public Class<?>[] getParameter() {
-		return new Class<?>[]{ValueParam.class,BoundParam.class};
-	}
+    public String getName() {
+        return ANYEQUAL;
+    }
 
-	public String toPPString(Parameter[] params, int indents) {
-		return "(any-eq (<literal> | <binding>)+)\n" +
-			"Function description:\n" +
-			"\tCompares a literal value against one or more" +
-			"bindings. \n\tIf any of the bindings is equal to the constant value," +
-			"\n\tthe function returns true.";
-	}
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam.class, BoundParam.class};
+    }
 
+    public String toPPString(Parameter[] params, int indents) {
+        return "(any-eq (<literal> | <binding>)+)\n"
+                + "Function description:\n"
+                + "\tCompares a literal value against one or more"
+                + "bindings. \n\tIf any of the bindings is equal to the constant value,"
+                + "\n\tthe function returns true.";
+    }
 }

@@ -12,46 +12,41 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.jamocha.rete.util;
+
+import org.jamocha.rete.BaseNode;
+import org.jamocha.rete.EngineEvent;
+import org.jamocha.rete.EngineEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jamocha.rete.BaseNode;
-import org.jamocha.rete.EngineEvent;
-import org.jamocha.rete.EngineEventListener;
-
-
 /**
  * @author Peter Lin
- *
- * EventCounter is a simple utility class for counting and keeping track 
- * of events. It can be used for various purposes like keeping track of
- * statistics or unit tests.
+ *     <p>EventCounter is a simple utility class for counting and keeping track of events. It can be
+ *     used for various purposes like keeping track of statistics or unit tests.
  */
 public class EventCounter implements EngineEventListener {
 
-	private ArrayList<EngineEvent> asserts = new ArrayList<>();
-	private ArrayList<EngineEvent> retracts = new ArrayList<>();
-	private ArrayList<EngineEvent> profiles = new ArrayList<>();
-	private Map<BaseNode, ArrayList<?>> nodeFilter = new HashMap<>();
-    
-	/**
-	 * 
-	 */
-	public EventCounter() {
-		super();
-	}
+    private ArrayList<EngineEvent> asserts = new ArrayList<>();
+    private ArrayList<EngineEvent> retracts = new ArrayList<>();
+    private ArrayList<EngineEvent> profiles = new ArrayList<>();
+    private Map<BaseNode, ArrayList<?>> nodeFilter = new HashMap<>();
 
-	/* (non-Javadoc)
-	 * @see woolfel.engine.rete.EngineEventListener#eventOccurred(woolfel.engine.rete.EngineEvent)
-	 */
-	@SuppressWarnings("unchecked")
-	public void eventOccurred(EngineEvent event) {
+    /** */
+    public EventCounter() {
+        super();
+    }
+
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.EngineEventListener#eventOccurred(woolfel.engine.rete.EngineEvent)
+     */
+    @SuppressWarnings("unchecked")
+    public void eventOccurred(EngineEvent event) {
         if (event.getEventType() == EngineEvent.Kind.ASSERT) {
             asserts.add(event);
         } else if (event.getEventType() == EngineEvent.Kind.ASSERT_PROFILE) {
@@ -71,31 +66,32 @@ public class EventCounter implements EngineEventListener {
         }
         Object val = this.nodeFilter.get(event.getSourceNode());
         if (val != null) {
-            ((ArrayList<EngineEvent>)val).add(event);
+            ((ArrayList<EngineEvent>) val).add(event);
         }
-	}
+    }
 
     public int getAssertCount() {
         return this.asserts.size();
     }
-    
+
     public int getProfileCount() {
         return this.profiles.size();
     }
-    
+
     public int getRetractCount() {
         return this.retracts.size();
     }
-    
+
     /**
      * To listen to a specific node, add the node to the filter
+     *
      * @param node
      */
-	public void addNodeFilter(BaseNode node) {
-        this.nodeFilter.put(node,new ArrayList<Object>());
+    public void addNodeFilter(BaseNode node) {
+        this.nodeFilter.put(node, new ArrayList<Object>());
     }
-    
-	public List<?> getNodeEvents(BaseNode node) {
+
+    public List<?> getNodeEvents(BaseNode node) {
         return this.nodeFilter.get(node);
     }
 }
