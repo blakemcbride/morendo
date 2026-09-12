@@ -37,7 +37,7 @@ public class RestFunction implements Serializable, Function {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector ret = new DefaultReturnVector();
 		Object val = new Object[0];
-		List<Object> rlist = new ArrayList<Object>();
+		List<Object> rlist = new ArrayList<>();
 		if (params != null && params.length == 1) {
 			if (params[0] instanceof BoundParam) {
 				BoundParam bp = (BoundParam) params[0];

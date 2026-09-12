@@ -43,7 +43,7 @@ public class ErrorSummary implements Summary {
 	}
 
 	public String getMessage() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int idx=0; idx < this.errors.length; idx++) {
 			buf.append(this.errors[idx] + Constants.LINEBREAK);
 		}

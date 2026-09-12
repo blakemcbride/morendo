@@ -30,7 +30,7 @@ public class Strategies {
     public static Strategy DEPTH = new DepthStrategy();
     public static Strategy BREADTH = new BreadthStrategy();
     public static Strategy RECENCY = new RecencyStrategy();
-	private static HashMap<String, Strategy> registry = new HashMap<String, Strategy>();
+	private static HashMap<String, Strategy> registry = new HashMap<>();
     static {
         registry.put(DEPTH.getName(), DEPTH);
         registry.put(BREADTH.getName(), BREADTH);

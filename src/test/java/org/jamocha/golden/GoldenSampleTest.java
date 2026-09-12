@@ -76,7 +76,7 @@ public class GoldenSampleTest {
 	}
 
 	static List<Scenario> scenarios() {
-		List<Scenario> list = new ArrayList<Scenario>();
+		List<Scenario> list = new ArrayList<>();
 		for (int i = 1; i <= 5; i++) {
 			list.add(files("only_" + i, "samples/only/only_" + i + ".clp"));
 		}
@@ -101,7 +101,7 @@ public class GoldenSampleTest {
 				},
 				new Hook() {
 					public void apply(Rete engine) throws Exception {
-						List<Object> objects = new ArrayList<Object>();
+						List<Object> objects = new ArrayList<>();
 						objects.add(account("1", "john", "doe", 35));
 						objects.add(account("2", "jane", "roe", 25));
 						objects.add(account("3", "sam", "poe", 31));

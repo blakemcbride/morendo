@@ -26,7 +26,7 @@ public class CubeQueryCondition extends ObjectCondition {
 	}
 	
 	public List<Object> getQueryConstraints() {
-        ArrayList<Object> binds = new ArrayList<Object>();
+        ArrayList<Object> binds = new ArrayList<>();
         Iterator<?> itr = constraints.iterator();
         while (itr.hasNext()) {
             Object c = itr.next();
@@ -43,7 +43,7 @@ public class CubeQueryCondition extends ObjectCondition {
         return binds;
 	}
     public String toPPString(int tabs) {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	buf.append("(cubequery" + Constants.LINEBREAK);
     	buf.append(")" + Constants.LINEBREAK);
     	return buf.toString();

@@ -178,7 +178,7 @@ public final class Index implements Serializable, HashIndex {
     }
     
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int idx=0; idx < this.facts.length; idx++) {
             if (idx > 0) {
                 buf.append(",");

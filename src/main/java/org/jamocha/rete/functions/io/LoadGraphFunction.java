@@ -71,7 +71,7 @@ public class LoadGraphFunction implements Function, Serializable {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector rv = new DefaultReturnVector();
 		// boolean loaded = true; Unused
-		List<Deffact> facts = new ArrayList<Deffact>();
+		List<Deffact> facts = new ArrayList<>();
 		if (params != null && params.length > 0) {
 			for (int idx = 0; idx < params.length; idx++) {
 				String input = null;
@@ -144,7 +144,7 @@ public class LoadGraphFunction implements Function, Serializable {
 	
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length > 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("(load-graph");
 			for (int idx = 0; idx < params.length; idx++) {
 				if (params[idx] instanceof BoundParam) {

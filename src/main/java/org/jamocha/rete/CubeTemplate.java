@@ -136,7 +136,7 @@ public class CubeTemplate implements Template {
 	}
 
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("(" + this.templateName + Constants.LINEBREAK);
 		for (int idx = 0; idx < this.slots.length; idx++) {
 			buf.append("  ("

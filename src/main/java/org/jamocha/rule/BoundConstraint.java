@@ -54,7 +54,7 @@ public class BoundConstraint implements Constraint {
      */
     protected boolean isMultislot = false;
     protected boolean intraFactJoin = false;
-	protected List<BoundConstraint> ifjoins = new ArrayList<BoundConstraint>();
+	protected List<BoundConstraint> ifjoins = new ArrayList<>();
     /**
      * Be default a variable binding is accessible from the action
      * of the rule unless it's declared by a conditional element

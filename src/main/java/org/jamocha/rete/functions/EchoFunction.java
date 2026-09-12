@@ -55,11 +55,11 @@ public class EchoFunction implements Function, Serializable {
 
 	/**
 	 * The method expects an array of ShellBoundParam. The method will use
-	 * StringBuffer to resolve the binding and print out 1 binding per
+	 * StringBuilder to resolve the binding and print out 1 binding per
 	 * line.
 	 */
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int idx = 0; idx < params.length; idx++) {
 			if (params[idx] instanceof ShellBoundParam) {
 				ShellBoundParam bp = (ShellBoundParam) params[idx];
@@ -84,7 +84,7 @@ public class EchoFunction implements Function, Serializable {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length > 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("(echo");
 			for (int idx = 0; idx < params.length; idx++) {
 				if (params[idx] instanceof BoundParam) {

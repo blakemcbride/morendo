@@ -14,7 +14,7 @@ public class MacroFunctions implements FunctionGroup {
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final String MACRO_FUNCTIONS = "Macro Functions";
-	protected ArrayList<Function> funcs = new ArrayList<Function>();
+	protected ArrayList<Function> funcs = new ArrayList<>();
 
 	public MacroFunctions() {
 		super();

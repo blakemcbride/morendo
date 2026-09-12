@@ -74,7 +74,7 @@ public class CallMethodFunction implements Function, Serializable {
 		if (engine != null && params != null && params.length >= 2) {
 			BoundParam bp = (BoundParam) params[0];
 			ValueParam slot = (ValueParam) params[1];
-			ArrayList<Object> callparam = new ArrayList<Object>();
+			ArrayList<Object> callparam = new ArrayList<>();
 			if (params.length > 2) {
 				for (int idx=2; idx < params.length; idx++) {
 					if (params[idx] instanceof BoundParam) {
@@ -171,7 +171,7 @@ public class CallMethodFunction implements Function, Serializable {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length > 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			return buf.toString();
 		} else {
 			return "(call <binding> <methodName> <parameter>)";

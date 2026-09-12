@@ -44,7 +44,7 @@ public class WarningSummary implements Summary {
 	}
 
 	public String getMessage() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int idx=0; idx < this.warnings.length; idx++) {
 			buf.append(this.warnings[idx] + Constants.LINEBREAK);
 		}

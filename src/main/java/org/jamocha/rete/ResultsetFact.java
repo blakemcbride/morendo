@@ -122,7 +122,7 @@ public class ResultsetFact implements Fact {
 	}
 
 	public String toFactString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("f-" + id + " (" + this.cubeTemplate.getName());
 		if (this.slots.length > 0) {
 			buf.append(" ");

@@ -33,7 +33,7 @@ public class CreateSetFunction implements Serializable, Function {
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector ret = new DefaultReturnVector();
-		Set<String> stringset = new HashSet<String>();
+		Set<String> stringset = new HashSet<>();
 		if (params != null && params.length > 0) {	
 			for (int idx=0; idx < params.length; idx++) {
 				if (params[idx] instanceof BoundParam) {

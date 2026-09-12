@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +94,7 @@ public class DefaultWM implements WorkingMemory, Serializable {
     /**
      * The initial facts the rule engine needs at startup
      */
-    protected ArrayList<?> initialFacts = new ArrayList<Object>();
+    protected ArrayList<?> initialFacts = new ArrayList<>();
 
     private Agenda agenda = null;
     /**
@@ -102,12 +102,12 @@ public class DefaultWM implements WorkingMemory, Serializable {
      */
     protected Map<Object, Module> modules = null;
     protected Map<Object, Object> cubes = null;
-    protected Hashtable<Object, Object> contexts = new Hashtable<Object, Object>();
-    protected ArrayList<?> focusStack = new ArrayList<Object>();
+    protected HashMap<Object, Object> contexts = new HashMap<>();
+    protected ArrayList<?> focusStack = new ArrayList<>();
     private Module main = null;
     private Module currentModule = null;
     private Strategy theStrat = null;
-    private Stack<Scope> scopes = new Stack<Scope>();
+    private Stack<Scope> scopes = new Stack<>();
 
     private boolean watchFact = false;
     private boolean watchRules = false;
@@ -181,7 +181,7 @@ public class DefaultWM implements WorkingMemory, Serializable {
     }
     
 	public List<?> getCubes() {
-    	return new ArrayList<Object>(this.cubes.keySet());
+    	return new ArrayList<>(this.cubes.keySet());
     }
     
 	public void assertFact(Fact fact) throws AssertException {
@@ -395,7 +395,7 @@ public class DefaultWM implements WorkingMemory, Serializable {
 	public void clearFacts() {
 		if (this.deffactMap.size() > 0) {
 			try {
-				List<?> facts = new ArrayList<Object>(this.deffactMap.keySet());
+				List<?> facts = new ArrayList<>(this.deffactMap.keySet());
 				Iterator<?> itr = facts.iterator();
 				while (itr.hasNext()) {
 					Object obj = itr.next();
@@ -420,7 +420,7 @@ public class DefaultWM implements WorkingMemory, Serializable {
 	public synchronized void clearObjects() {
         if (this.getDynamicFacts().size() > 0) {
             try {
-            	ArrayList<?> objects = new ArrayList<Object>(this.dynamicFacts.keySet());
+            	ArrayList<?> objects = new ArrayList<>(this.dynamicFacts.keySet());
                 Iterator<?> itr = objects.iterator();
                 while (itr.hasNext()) {
                     Object obj = itr.next();
@@ -432,7 +432,7 @@ public class DefaultWM implements WorkingMemory, Serializable {
         }
         if (this.getStaticFacts().size() > 0) {
             try {
-            	ArrayList<?> objects = new ArrayList<Object>(this.getStaticFacts().keySet());
+            	ArrayList<?> objects = new ArrayList<>(this.getStaticFacts().keySet());
                 Iterator<?> itr = objects.iterator();
                 while (itr.hasNext()) {
                     Object obj = itr.next();
@@ -673,13 +673,13 @@ public class DefaultWM implements WorkingMemory, Serializable {
     }
 
 	public List<Fact> getAllFacts() {
-        ArrayList<Fact> facts = new ArrayList<Fact>();
+        ArrayList<Fact> facts = new ArrayList<>();
         facts.addAll(this.getDeffacts());
         return facts;
     }
     
 	public List<Fact> getDeffacts() {
-        ArrayList<Fact> objects = new ArrayList<Fact>();
+        ArrayList<Fact> objects = new ArrayList<>();
         Iterator<Object> itr = this.getDeffactMap().values().iterator();
         while (itr.hasNext()) {
             Object fact = itr.next();
@@ -721,7 +721,7 @@ public class DefaultWM implements WorkingMemory, Serializable {
     }
     
    	public List<Object> getObjects() {
-        ArrayList<Object> objects = new ArrayList<Object>();
+        ArrayList<Object> objects = new ArrayList<>();
         Iterator<?> itr = this.getDynamicFacts().keySet().iterator();
         while (itr.hasNext()) {
             Object key = itr.next();

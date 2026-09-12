@@ -108,7 +108,7 @@ public class ListFunctionsFunction implements Function, Serializable {
 	 */
 	public String toPPString(Parameter[] params, int indents) {
 		if (indents > 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			for (int idx = 0; idx < indents; idx++) {
 				buf.append(" ");
 			}

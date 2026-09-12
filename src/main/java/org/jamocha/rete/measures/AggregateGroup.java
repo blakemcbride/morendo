@@ -24,7 +24,7 @@ import org.jamocha.rete.Rete;
 public class AggregateGroup implements MeasureGroup {
 
 	public static final String AGGREGATE_GROUP = "aggregate group";
-	private List<AggregateMeasure> measures = new ArrayList<AggregateMeasure>();
+	private List<AggregateMeasure> measures = new ArrayList<>();
 	
 	public AggregateGroup() {
 		super();

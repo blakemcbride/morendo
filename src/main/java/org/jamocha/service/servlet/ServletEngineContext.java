@@ -37,7 +37,7 @@ public class ServletEngineContext implements EngineContext {
 	private String version = null;
 	private long startTime = 0;
 	private long endTime = 0;
-	private List<Object> objectList = new ArrayList<Object>();
+	private List<Object> objectList = new ArrayList<>();
 	private ServletContext servletContext = null;
 	
 	protected ServletEngineContext() {

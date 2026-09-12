@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ServiceConfiguration {
 	
-	private List<RuleApplicationBean> applications = new ArrayList<RuleApplicationBean>();
+	private List<RuleApplicationBean> applications = new ArrayList<>();
 	private String serviceName;
 	
 	public ServiceConfiguration() {

@@ -108,7 +108,7 @@ public class SetMemberFunction implements Function, Serializable {
 	}
 
 	public String toPPString(Parameter[] params, int indents) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		return buf.toString();
 	}
 }

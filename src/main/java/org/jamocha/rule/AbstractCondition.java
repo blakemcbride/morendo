@@ -23,7 +23,7 @@ public abstract class AbstractCondition implements Condition {
     /**
      * the constraints for the condition element
      */
-	protected List<Constraint> constraints = new ArrayList<Constraint>(8);
+	protected List<Constraint> constraints = new ArrayList<>(8);
     /**
      * In the case the object pattern is negated, the boolean
      * would be set to true.
@@ -32,7 +32,7 @@ public abstract class AbstractCondition implements Condition {
     /**
      * a list for the RETE nodes created by RuleCompiler
      */
-	protected List<Object> nodes = new ArrayList<Object>();
+	protected List<Object> nodes = new ArrayList<>();
     /**
      * the deftemplate associated with the ObjectCondition
      */
@@ -76,7 +76,7 @@ public abstract class AbstractCondition implements Condition {
      * returns the bindings, excluding predicateConstraints
      */
 	public List<Object> getBindConstraints() {
-        ArrayList<Object> binds = new ArrayList<Object>();
+        ArrayList<Object> binds = new ArrayList<>();
         Iterator<Constraint> itr = constraints.iterator();
         while (itr.hasNext()) {
             Object c = itr.next();

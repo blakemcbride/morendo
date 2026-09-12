@@ -125,7 +125,7 @@ public class QueryHashedEqNot extends QueryBaseNot {
      * method returns a simple format for the node
      */
     public String toString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("HashedEqNJoin- ");
         for (int idx=0; idx < this.binds.length; idx++){
             if (idx > 0){
@@ -140,7 +140,7 @@ public class QueryHashedEqNot extends QueryBaseNot {
      * The current implementation is similar to BetaNode
      */
     public String toPPString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("HashedEqNJoin-" + this.nodeID + "> ");
         for (int idx=0; idx < this.binds.length; idx++){
             if (idx > 0){

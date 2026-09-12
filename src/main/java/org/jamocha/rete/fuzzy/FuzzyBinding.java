@@ -27,7 +27,7 @@ public class FuzzyBinding implements Serializable, Cloneable {
 	 */
 	public FuzzyBinding() {
 		super();
-		this.terms = new HashMap<String,Object>();
+		this.terms = new HashMap<>();
 	}
 
 	public FuzzyBinding(String variableName, double lower, double upper, String unitType) {

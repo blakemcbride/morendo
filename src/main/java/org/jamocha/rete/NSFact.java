@@ -98,7 +98,7 @@ public class NSFact implements Fact, Serializable {
      * The method will return the Fact as a string
 	 */
 	public String toFactString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(" + this.deftemplate.getName() + " ");
         for (int idx=0; idx < this.slots.length; idx++){
             buf.append("(" + this.slots[idx].getName() + " ");

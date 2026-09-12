@@ -73,7 +73,7 @@ public class MedianMeasure implements AggregateMeasure {
 	 */
 	public BigDecimal calculate(Rete engine, Cube cube, Object[] data, CubeBinding binding) {
 		if (data != null) {
-			ArrayList<BigDecimal> values = new ArrayList<BigDecimal>();
+			ArrayList<BigDecimal> values = new ArrayList<>();
 			for (int idx=0; idx < data.length; idx++) {
 				Index facts = (Index)data[idx];
 				BigDecimal value = (BigDecimal) facts.getFacts()[binding.getLeftRow()].getSlotValue(binding.getLeftIndex());

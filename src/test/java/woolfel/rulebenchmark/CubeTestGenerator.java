@@ -130,7 +130,7 @@ public class CubeTestGenerator {
 	@SuppressWarnings("rawtypes")
 	public void generateData(int count, String filename) {
 		FileWriter accountWriter = getWriter(filename + "_account_data.dat");
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int idx=0; idx < count; idx++) {
 			String account = nextAccount() + idx;
 			int ssn = nextSSN();
@@ -156,13 +156,13 @@ public class CubeTestGenerator {
 		closeWriter(stockWriter);
 	}
 	
-	public void generateAccount(StringBuffer buf, String accountid, int ssn, int counter) {
+	public void generateAccount(StringBuilder buf, String accountid, int ssn, int counter) {
 		buf.append("(Account (accountId \"" + accountid+"\") (firstName \"first" + counter + "\") (middleName \"m" + counter +"\")");
 		buf.append("(lastName \"last" + counter + "\") (ssn " + ssn + ") (age " + age() + ") (gender \"m\")	)" + LINEBREAK);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void generatePositions(StringBuffer buf, String accountid, int positions) {
+	public void generatePositions(StringBuilder buf, String accountid, int positions) {
 		for (int idx=0; idx < positions; idx++) {
 			String ticker = this.nextTicker();
 			int shares = shares();
@@ -180,13 +180,13 @@ public class CubeTestGenerator {
 		}
 	}
 	
-	public void generateStock(StringBuffer buf, String ticker, String price) {
+	public void generateStock(StringBuilder buf, String ticker, String price) {
 		buf.append("(Stock (ticker \"" + ticker +"\") (closingPrice " + price + ") (exchange \"NYSE\")");
 		buf.append("(closeDate \"2009-01-05\") )");
 		buf.append(LINEBREAK);
 	}
 	
-	public void generateRating(StringBuffer buf, String ticker) {
+	public void generateRating(StringBuilder buf, String ticker) {
 		int index = random.nextInt(7) + 2;
 		String rateCode = fitchratingcodes[index];
 		String rateValue = String.valueOf(fitchratingvalues[index]);

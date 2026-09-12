@@ -90,7 +90,7 @@ public class Shell {
 	/** Parses and executes the text, waiting for each expression's result, and prints the events. */
 	private void execute(String text) {
 		channel.executeCommand(text, true);
-		List<MessageEvent> events = new ArrayList<MessageEvent>();
+		List<MessageEvent> events = new ArrayList<>();
 		channel.fillEventList(events);
 		for (MessageEvent event : events) {
 			print(event);
@@ -109,7 +109,7 @@ public class Shell {
 		if (message instanceof DefaultReturnVector) {
 			DefaultReturnVector rv = (DefaultReturnVector) message;
 			if (rv.getItems().size() > 0) {
-				ReturnValue rval = (ReturnValue) rv.getItems().firstElement();
+				ReturnValue rval = rv.getItems().get(0);
 				if (rval.getValueType() == Constants.ARRAY_TYPE || rval.getValueType() == Constants.LIST_TYPE) {
 					System.out.println(Arrays.toString((Object[]) rval.getValue()));
 				} else {

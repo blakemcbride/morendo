@@ -11,7 +11,7 @@
 package org.jamocha.rete.visualisation;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Collection;
 
@@ -144,7 +144,7 @@ public class ViewGraphNode {
 	public static ViewGraphNode buildFromRete(RootNode root) {
 		Collection<?> firstLevel=root.getObjectTypeNodes().values();
 		ViewGraphNode res=new ViewGraphNode();
-		Hashtable<BaseNode,ViewGraphNode> ht=new Hashtable<BaseNode,ViewGraphNode>();
+		HashMap<BaseNode,ViewGraphNode> ht=new HashMap<>();
 		for (Iterator<?> iter = firstLevel.iterator(); iter.hasNext();) {
 			BaseNode b=(BaseNode)iter.next();
             res.addToChilds(buildFromRete(b,ht));
@@ -152,7 +152,7 @@ public class ViewGraphNode {
 		return res;
 	}
 
-	protected static ViewGraphNode buildFromRete(BaseNode root, Hashtable<BaseNode,ViewGraphNode> ht) {
+	protected static ViewGraphNode buildFromRete(BaseNode root, HashMap<BaseNode,ViewGraphNode> ht) {
 		Object succ[]=root.getSuccessorNodes();
 		ViewGraphNode foo=ht.get(root);
 		ViewGraphNode res=null;
@@ -177,8 +177,8 @@ public class ViewGraphNode {
 		parentsChecked=false;
 		y=-1;
 		shape=null;
-		childs=new ArrayList<ViewGraphNode>();
-		parents=new ArrayList<ViewGraphNode>();
+		childs=new ArrayList<>();
+		parents=new ArrayList<>();
 	}	
 
 	/**

@@ -159,7 +159,7 @@ public class PrintFunction implements Function, Serializable {
 	 */
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length > 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("(print ");
 			buf.append(params[0].getStringValue());
 			for (int idx=1; idx < params.length; idx++) {

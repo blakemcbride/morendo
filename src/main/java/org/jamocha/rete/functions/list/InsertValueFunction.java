@@ -37,7 +37,7 @@ public class InsertValueFunction implements Serializable, Function {
 		DefaultReturnVector ret = new DefaultReturnVector();
 		Object value = new Object[0];
 		if (params != null && params.length >= 3) {
-			List<Object> returnlist = new ArrayList<Object>();
+			List<Object> returnlist = new ArrayList<>();
 			Object list = null;
 			int idx  = 0; // change scope from per-loop so that this can be used for comparisons later (see begin-index)
 			
@@ -79,7 +79,7 @@ public class InsertValueFunction implements Serializable, Function {
 				}
 				if (add.getClass().isArray()) {
 					Object[] ar = (Object[])add;
-					List<Object> inlist = new ArrayList<Object>();
+					List<Object> inlist = new ArrayList<>();
 					for (idx=0; idx < ar.length; idx++) {
 						inlist.add(ar[idx]);
 					}

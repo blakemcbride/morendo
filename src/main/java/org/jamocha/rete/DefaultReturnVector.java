@@ -17,7 +17,8 @@
 package org.jamocha.rete;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Lin
@@ -31,7 +32,7 @@ public class DefaultReturnVector implements ReturnVector {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected Vector<ReturnValue> items = new Vector<ReturnValue>(2);
+	protected List<ReturnValue> items = new ArrayList<>(2);
 
 
 	/**
@@ -46,7 +47,7 @@ public class DefaultReturnVector implements ReturnVector {
     }
 
 	/**
-	 * Current implementation returns the size of the Vector
+	 * Current implementation returns the size of the list
 	 */
 	public int size() {
 		return this.getItems().size();
@@ -82,7 +83,7 @@ public class DefaultReturnVector implements ReturnVector {
 		return sb.toString();
 	}
 
-	public Vector<ReturnValue> getItems() {
+	public List<ReturnValue> getItems() {
 		return items;
 	}
 }

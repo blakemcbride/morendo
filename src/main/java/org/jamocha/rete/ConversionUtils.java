@@ -31,7 +31,7 @@ public class ConversionUtils {
     private static HashMap<String, String> OPR_MAP;
     
     static {
-        OPR_MAP = new HashMap<String, String>();
+        OPR_MAP = new HashMap<>();
         OPR_MAP.put(String.valueOf(Constants.ADD),Constants.ADD_STRING);
         OPR_MAP.put(String.valueOf(Constants.SUBTRACT),Constants.SUBTRACT_STRING);
         OPR_MAP.put(String.valueOf(Constants.MULTIPLY),Constants.MULTIPLY_STRING);
@@ -48,7 +48,7 @@ public class ConversionUtils {
 	private static HashMap<?, ?> STROPR_MAP = null;
     
     static {
-        STROPR_MAP = new HashMap<Object, Object>();
+        STROPR_MAP = new HashMap<>();
         OPR_MAP.put(Constants.ADD_STRING,Constants.ADD_SYMBOL);
         OPR_MAP.put(Constants.SUBTRACT_STRING,Constants.SUBTRACT_SYMBOL);
         OPR_MAP.put(Constants.MULTIPLY_STRING,Constants.MULTIPLY_SYMBOL);
@@ -401,7 +401,7 @@ public class ConversionUtils {
         	} else if (s instanceof String) {
         		return "\"" + s.toString() + "\"";
         	} else if (s.getClass() != null && s.getClass().isArray()) {
-        		StringBuffer buf = new StringBuffer();
+        		StringBuilder buf = new StringBuilder();
         		Object[] ary = (Object[])s;
         		for (int idx=0; idx < ary.length; idx++) {
         			if (idx > 0) {

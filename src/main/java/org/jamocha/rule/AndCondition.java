@@ -41,7 +41,7 @@ public class AndCondition implements Condition {
      * 
      */
     private static final long serialVersionUID = 1L;
-	protected List<Object> nestedCE = new ArrayList<Object>();
+	protected List<Object> nestedCE = new ArrayList<>();
     protected BaseJoin reteNode = null;
     
 	/**
@@ -75,7 +75,7 @@ public class AndCondition implements Condition {
     }
     
 	public List<?> getNodes() {
-		return new ArrayList<Object>();
+		return new ArrayList<>();
 	}
 
     /**
@@ -102,7 +102,7 @@ public class AndCondition implements Condition {
     }
     
 	public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         String pad = "  ";
         buf.append(pad + "(and" + Constants.LINEBREAK);
         for (int idx=0; idx < this.nestedCE.size(); idx++) {

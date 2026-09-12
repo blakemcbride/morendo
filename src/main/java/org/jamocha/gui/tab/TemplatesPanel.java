@@ -183,10 +183,10 @@ public class TemplatesPanel extends AbstractJamochaPanel implements
 
 		private static final long serialVersionUID = 1L;
 
-		private List<ExtTemplate> templates = new LinkedList<ExtTemplate>();
+		private List<ExtTemplate> templates = new LinkedList<>();
 
 		private void clear() {
-			templates = new LinkedList<ExtTemplate>();
+			templates = new LinkedList<>();
 			fireTableDataChanged();
 		}
 

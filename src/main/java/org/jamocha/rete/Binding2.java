@@ -134,7 +134,7 @@ public class Binding2 extends Binding {
     }
     
     public String toBindString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(" + this.leftrow + ")(");
         buf.append(this.leftIndex);
         if (function != null) {
@@ -148,7 +148,7 @@ public class Binding2 extends Binding {
     }
 
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (!isPredJoin) {
             buf.append("?" + varName + " (" + this.leftrow + ")(");
             buf.append(this.leftIndex);

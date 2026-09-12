@@ -40,7 +40,7 @@ public class CubeFact implements Fact {
 		this.slots = values;
 		this.id = id;
 		this.timeStamp = System.currentTimeMillis();
-		slotMap = new HashMap<String, BaseSlot>(values.length);
+		slotMap = new HashMap<>(values.length);
 		mapSlots();
 	}
 
@@ -127,7 +127,7 @@ public class CubeFact implements Fact {
 	 * isn't practical.
 	 */
 	public String toFactString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("f-" + id + " (" + this.template.getName());
 		if (this.slots.length > 0) {
 			buf.append(" ");

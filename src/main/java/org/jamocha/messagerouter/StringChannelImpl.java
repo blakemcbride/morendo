@@ -30,7 +30,7 @@ public class StringChannelImpl extends AbstractCommunicationChannel implements
 
 	private CLIPSParser parser;
 
-	private List<MessageEvent> alreadyReceived = new LinkedList<MessageEvent>();
+	private List<MessageEvent> alreadyReceived = new LinkedList<>();
 
 	public StringChannelImpl(String channelId, MessageRouter router,
 			InterestType interest) {

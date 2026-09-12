@@ -116,7 +116,7 @@ public class TemporalCondition extends ObjectCondition {
      * constriant to be first.
      */
     public String toPPString() {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	int start = 0;
     	// this is a hack, but it keeps the code simple for spacing
     	// default indent for CE is 2 spaces

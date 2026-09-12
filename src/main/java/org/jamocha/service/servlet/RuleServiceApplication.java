@@ -58,12 +58,12 @@ public class RuleServiceApplication implements RuleApplication {
 	private List<ObjectData> objectData = null;
 	private List<ClipsInitialData> clipsData = null;
 	private List<FunctionPackage> functionGroups = null;
-	private List<ClipsRuleset> rulesets = new ArrayList<ClipsRuleset>();
+	private List<ClipsRuleset> rulesets = new ArrayList<>();
 	/**
 	 * FunctionGroup just lists the names, we keep the
 	 * instances in a list to make it easier to reload.
 	 */
-	private List<Object> functionInstances = new ArrayList<Object>();
+	private List<Object> functionInstances = new ArrayList<>();
 	
 	private int minPool;
 	private int maxPool;
@@ -93,7 +93,7 @@ public class RuleServiceApplication implements RuleApplication {
 	 * @return
 	 */
 	protected URLClassLoader createURLClassLoader() {
-		ArrayList<URL> urls = new ArrayList<URL>();
+		ArrayList<URL> urls = new ArrayList<>();
 		if (this.models != null) {
 			for (int idx=0; idx < models.size(); idx++) {
 				Model m = models.get(idx);
@@ -177,7 +177,7 @@ public class RuleServiceApplication implements RuleApplication {
 	 */
 	public boolean loadFunctionGroups(Rete engine) {
 		if (this.functionInstances == null) {
-			this.functionInstances = new ArrayList<Object>();
+			this.functionInstances = new ArrayList<>();
 		}
 		boolean success = true;
 		for (int idx=0; idx < this.functionGroups.size(); idx++) {

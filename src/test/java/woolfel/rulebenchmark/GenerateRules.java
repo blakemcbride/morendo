@@ -41,7 +41,7 @@ public class GenerateRules {
      * @return
      */
     public String generateSimpleRule(int count) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(defrule rule" + count);
         buf.append(" (fact nsh" + count + ") => (printout t \"rule" + count);
         buf.append(" was fired\" ))" + LINEBREAK);
@@ -60,7 +60,7 @@ public class GenerateRules {
      * @return
      */
     public String generateDefRule(int count) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(defrule rule" + count + LINEBREAK);
         buf.append("  (object1" + LINEBREAK);
         buf.append("    (attr1 \"" + count + "\")" + LINEBREAK);
@@ -72,7 +72,7 @@ public class GenerateRules {
     }
     
     public String generateUniqueDeftRule(int count) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(defrule rule" + count + LINEBREAK);
         buf.append("  (object" + count + LINEBREAK);
         buf.append("    (attr1 \"" + count + "\")" + LINEBREAK);
@@ -90,7 +90,7 @@ public class GenerateRules {
      * @return
      */
     public String generateRuleWithConditions(int count, int conditions) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(defrule rule" + count + LINEBREAK);
         buf.append("  (object" + count + LINEBREAK);
         conditions = conditions++;
@@ -109,7 +109,7 @@ public class GenerateRules {
      * @return
      */
     public String getDeffact() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(deftemplate object1" + LINEBREAK);
         buf.append("  (slot attr1)" + LINEBREAK);
         buf.append("  (slot attr2)" + LINEBREAK);
@@ -130,7 +130,7 @@ public class GenerateRules {
      * @return
      */
     public String getDeffact(int count) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(deftemplate object" + count + LINEBREAK);
         buf.append("  (slot attr1)" + LINEBREAK);
         buf.append("  (slot attr2)" + LINEBREAK);

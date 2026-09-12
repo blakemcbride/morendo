@@ -43,7 +43,7 @@ public class GenerateFacts {
 	}
 	
 	public static ArrayList<Object> generateFacts(Rule rule, Rete engine) {
-		ArrayList<Object> facts = new ArrayList<Object>();
+		ArrayList<Object> facts = new ArrayList<>();
 		if (rule != null) {
 			Condition[] conditions = rule.getConditions();
 			for (int idx=0; idx < conditions.length; idx++) {
@@ -118,7 +118,7 @@ public class GenerateFacts {
 	 * @return
 	 */
 	public static Object generateDeffact(ObjectCondition cond, Deftemplate templ, Rete engine) {
-		ArrayList<Slot> list = new ArrayList<Slot>();
+		ArrayList<Slot> list = new ArrayList<>();
 		Constraint[] cnstr = cond.getConstraints();
 		for (int idx=0; idx < cnstr.length; idx++) {
 			Constraint cn = cnstr[idx];

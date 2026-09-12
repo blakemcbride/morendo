@@ -17,7 +17,8 @@
 package org.jamocha.gui;
 
 import java.util.Date;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.TableModel;
 import javax.swing.event.TableModelEvent;
@@ -41,7 +42,7 @@ public class TableSorter extends TableMap {
 
 	private int indexes[];
 
-	private Vector<Integer> sortingColumns = new Vector<Integer>();
+	private List<Integer> sortingColumns = new ArrayList<>();
 
 	private boolean ascending = true;
 
@@ -147,7 +148,7 @@ public class TableSorter extends TableMap {
 	public int compare(int row1, int row2) {
 		compares++;
 		for (int level = 0; level < sortingColumns.size(); level++) {
-			Integer column = (Integer) sortingColumns.elementAt(level);
+			Integer column = sortingColumns.get(level);
 			int result = compareRowsByColumn(row1, row2, column.intValue());
 			if (result != 0) {
 				return ascending ? result : -result;
@@ -244,8 +245,8 @@ public class TableSorter extends TableMap {
 
 	public void sortByColumn(int column, boolean ascending) {
 		this.ascending = ascending;
-		sortingColumns.removeAllElements();
-		sortingColumns.addElement(Integer.valueOf(column));
+		sortingColumns.clear();
+		sortingColumns.add(Integer.valueOf(column));
 		sort(this);
 		super.tableChanged(new TableModelEvent(this));
 	}

@@ -35,10 +35,10 @@ import org.jamocha.rete.EngineEventListener;
  */
 public class EventCounter implements EngineEventListener {
 
-	private ArrayList<EngineEvent> asserts = new ArrayList<EngineEvent>();
-	private ArrayList<EngineEvent> retracts = new ArrayList<EngineEvent>();
-	private ArrayList<EngineEvent> profiles = new ArrayList<EngineEvent>();
-	private Map<BaseNode, ArrayList<?>> nodeFilter = new HashMap<BaseNode, ArrayList<?>>();
+	private ArrayList<EngineEvent> asserts = new ArrayList<>();
+	private ArrayList<EngineEvent> retracts = new ArrayList<>();
+	private ArrayList<EngineEvent> profiles = new ArrayList<>();
+	private Map<BaseNode, ArrayList<?>> nodeFilter = new HashMap<>();
     
 	/**
 	 * 

@@ -70,7 +70,7 @@ public class Deffact implements Fact {
 	 * @param util
 	 */
 	public void compileBinding(Rule util) {
-		ArrayList<BaseSlot> list = new ArrayList<BaseSlot>();
+		ArrayList<BaseSlot> list = new ArrayList<>();
 		for (int idx = 0; idx < this.slots.length; idx++) {
 			if (this.slots[idx].value instanceof BoundParam) {
 				this.hasBinding = true;
@@ -162,7 +162,7 @@ public class Deffact implements Fact {
 	 * @return
 	 */
 	public String toFactString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("f-" + id + " (" + this.deftemplate.getName());
 		if (this.slots.length > 0) {
 			buf.append(" ");
@@ -177,7 +177,7 @@ public class Deffact implements Fact {
 	}
 
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("(" + this.deftemplate.getName());
 		if (this.slots.length > 0) {
 			buf.append(" ");

@@ -30,7 +30,7 @@ public class JavaFunctions implements FunctionGroup {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Function> funcs = new ArrayList<Function>();
+	private ArrayList<Function> funcs = new ArrayList<>();
 	
 	public JavaFunctions() {
 		super();

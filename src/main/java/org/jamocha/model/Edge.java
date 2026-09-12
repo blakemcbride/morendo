@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Edge {
 
-	private List<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
+	private List<PropertyChangeListener> listeners = new ArrayList<>();
 	private String id;
 	private String source;
 	private String target;

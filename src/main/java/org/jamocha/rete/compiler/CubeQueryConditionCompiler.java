@@ -154,8 +154,8 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 	 * method compiles ObjectConditions
 	 */
 	public BaseJoin compileJoin(Condition condition, int position, Rule rule, Condition previousCond) {
-		ArrayList<CubeBinding> dbindings = new ArrayList<CubeBinding>();
-		ArrayList<CubeBinding> mbindings = new ArrayList<CubeBinding>();
+		ArrayList<CubeBinding> dbindings = new ArrayList<>();
+		ArrayList<CubeBinding> mbindings = new ArrayList<>();
         getCubeBindings(condition,rule,position,dbindings,mbindings);
         ObjectCondition oc = (ObjectCondition)condition;
         BaseJoin joinNode = null;
@@ -181,8 +181,8 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 	}
 
 	public QueryBaseJoin compileJoin(Condition condition, int position, Query rule, Condition previousCond) {
-		ArrayList<CubeBinding> dbindings = new ArrayList<CubeBinding>();
-		ArrayList<CubeBinding> mbindings = new ArrayList<CubeBinding>();
+		ArrayList<CubeBinding> dbindings = new ArrayList<>();
+		ArrayList<CubeBinding> mbindings = new ArrayList<>();
         getCubeBindings(condition,rule,position,dbindings,mbindings);
         ObjectCondition oc = (ObjectCondition)condition;
         QueryBaseJoin joinNode = null;
@@ -230,7 +230,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		CubeQueryCondition cqcond = (CubeQueryCondition)getObjectCondition(condition);
 	       List<?> Constraints = cqcond.getQueryConstraints();
 	       Template tmpl = cqcond.getTemplate();
-	       ArrayList<Binding> bindlist = new ArrayList<Binding>();
+	       ArrayList<Binding> bindlist = new ArrayList<>();
         for (int idz=0; idz < Constraints.size(); idz++) {
             Object cst = Constraints.get(idz);
             if (cst instanceof BoundConstraint) {
@@ -263,7 +263,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		CubeQueryCondition cqcond = (CubeQueryCondition)getObjectCondition(condition);
 	       List<?> Constraints = cqcond.getQueryConstraints();
 	       Template tmpl = cqcond.getTemplate();
-	       ArrayList<Binding> bindlist = new ArrayList<Binding>();
+	       ArrayList<Binding> bindlist = new ArrayList<>();
         for (int idz=0; idz < Constraints.size(); idz++) {
             Object cst = Constraints.get(idz);
             if (cst instanceof BoundConstraint) {
@@ -296,7 +296,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		CubeQueryCondition cqcond = (CubeQueryCondition)getObjectCondition(condition);
 		List<?> Constraints = cqcond.getQueryConstraints();
 		Template tmpl = cqcond.getTemplate();
-		ArrayList<Binding> bindlist = new ArrayList<Binding>();
+		ArrayList<Binding> bindlist = new ArrayList<>();
 		for (int idz=0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
 	   		if (cst instanceof PredicateConstraint) {
@@ -325,7 +325,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		CubeQueryCondition cqcond = (CubeQueryCondition)getObjectCondition(condition);
 		List<?> Constraints = cqcond.getQueryConstraints();
 		Template tmpl = cqcond.getTemplate();
-		ArrayList<Binding> bindlist = new ArrayList<Binding>();
+		ArrayList<Binding> bindlist = new ArrayList<>();
 		for (int idz=0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
 	   		if (cst instanceof PredicateConstraint) {

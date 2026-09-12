@@ -179,7 +179,7 @@ public class ExistJoin extends BaseJoin {
 	 * later so it looks nicer.
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("Exist - ");
 		for (int idx = 0; idx < this.binds.length; idx++) {
 			if (idx > 0) {
@@ -194,7 +194,7 @@ public class ExistJoin extends BaseJoin {
 	 * The current implementation is similar to BetaNode
 	 */
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("<node-" + this.nodeID + "> Exist - ");
         if (binds != null && binds.length > 0) {
             for (int idx = 0; idx < this.binds.length; idx++) {

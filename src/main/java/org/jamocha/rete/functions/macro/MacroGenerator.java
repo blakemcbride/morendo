@@ -28,8 +28,8 @@ public class MacroGenerator {
 		for (int idx=0; idx < properties.length; idx++) {
 			PropertyDescriptor prop = properties[idx];
 			String formattedClassname = this.formatClassname(prop.getName());
-			StringBuffer readbuf = new StringBuffer();
-			StringBuffer writebuf = new StringBuffer();
+			StringBuilder readbuf = new StringBuilder();
+			StringBuilder writebuf = new StringBuilder();
 			String basePath = defmodule.getWorkingDirectory() + "/" + packagename.replace('.', '/') + "/";
 			String readClass = basePath + READ_PREFIX + formattedClassname + JAVA_FILE_EXT;
 			String writeClass = basePath + WRITE_PREFIX + formattedClassname + JAVA_FILE_EXT;
@@ -48,7 +48,7 @@ public class MacroGenerator {
 		}
 	}
 	
-	public void generateReadMacro(StringBuffer buf, PropertyDescriptor property, String packageName, String className, String castClassName) {
+	public void generateReadMacro(StringBuilder buf, PropertyDescriptor property, String packageName, String className, String castClassName) {
 		String readName = READ_PREFIX + className;
 		writeTabs(buf);
 		buf.append("package " + packageName + ";" + Constants.LINEBREAK);
@@ -70,7 +70,7 @@ public class MacroGenerator {
 		buf.append("}" + Constants.LINEBREAK);
 	}
 	
-	public void generateReadMethod(StringBuffer buf, String castClassName, String propertyName) {
+	public void generateReadMethod(StringBuilder buf, String castClassName, String propertyName) {
 		writeTabs(buf);
 		buf.append("public Object getProperty(Object instance) {" + Constants.LINEBREAK);
 		pushTab();
@@ -81,7 +81,7 @@ public class MacroGenerator {
 		buf.append("}" + Constants.LINEBREAK);
 	}
 	
-	public void generateWriteMacro(StringBuffer buf, PropertyDescriptor property, String packageName, String className, String castClassName) {
+	public void generateWriteMacro(StringBuilder buf, PropertyDescriptor property, String packageName, String className, String castClassName) {
 		String writeName = WRITE_PREFIX + className;
 		writeTabs(buf);
 		buf.append("package " + packageName + ";" + Constants.LINEBREAK);
@@ -103,7 +103,7 @@ public class MacroGenerator {
 		buf.append("}" + Constants.LINEBREAK);
 	}
 	
-	public void generateWriteMethod(StringBuffer buf, String castClassName, String propertyName, Class<?> propertyType) {
+	public void generateWriteMethod(StringBuilder buf, String castClassName, String propertyName, Class<?> propertyType) {
 		writeTabs(buf);
 		buf.append("public void setProperty(Object instance, Object value) {" + Constants.LINEBREAK);
 		pushTab();
@@ -135,7 +135,7 @@ public class MacroGenerator {
 		}
 	}
 	
-	public void writeTabs(StringBuffer buf) {
+	public void writeTabs(StringBuilder buf) {
 		for (int idx=0; idx < tabs; idx++) {
 			buf.append("    ");
 		}
@@ -153,7 +153,7 @@ public class MacroGenerator {
 		return propertyName.substring(0,1).toUpperCase() + propertyName.substring(1);
 	}
 	
-	public boolean writeClass(StringBuffer buf, String filename) {
+	public boolean writeClass(StringBuilder buf, String filename) {
 		try {
 			FileWriter writer = new FileWriter(filename);
 			writer.write(buf.toString());

@@ -135,7 +135,7 @@ public class QueryOnlyNeqJoin extends QueryBaseNot {
 	 * later so it looks nicer.
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("OnlyNeqJoin - ");
 		for (int idx = 0; idx < this.binds.length; idx++) {
 			if (idx > 0) {
@@ -150,7 +150,7 @@ public class QueryOnlyNeqJoin extends QueryBaseNot {
 	 * The current implementation is similar to BetaNode
 	 */
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("<node-" + this.nodeID + "> OnlyNeqJoin - ");
         if (binds != null && binds.length > 0) {
             for (int idx = 0; idx < this.binds.length; idx++) {

@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 
 public class IconLoader {
 
-	private static Map<String, ImageIcon> _iconCache = new HashMap<String, ImageIcon>();
+	private static Map<String, ImageIcon> _iconCache = new HashMap<>();
 
 	public static ImageIcon getImageIcon(String name) {
 		return getImageIcon(name, IconLoader.class, "png");

@@ -29,7 +29,7 @@ import java.util.Iterator;
  */
 public class ContentHandlerRegistry {
 	
-	private static HashMap<String, Object> REGISTRY = new HashMap<String, Object>();
+	private static HashMap<String, Object> REGISTRY = new HashMap<>();
 	
 	/**
 	 * Method will register an instance of content handler using the

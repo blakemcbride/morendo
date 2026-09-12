@@ -25,7 +25,7 @@ public class ParserUtils {
      * @return
      */
     public static String getStringLiteral(String text) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int len = text.length() - 1;
         boolean escaping = false;
         for (int i = 1; i < len; i++) {

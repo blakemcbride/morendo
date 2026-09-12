@@ -40,8 +40,8 @@ public class JShapeContainer extends JComponent {
 	protected Font font;
 	
 	public JShapeContainer() {
-		lines=new ArrayList<ConnectorLine>();
-		shapes=new ArrayList<Shape>();
+		lines=new ArrayList<>();
+		shapes=new ArrayList<>();
 		offsetX=offsetY=0;
 	}
 

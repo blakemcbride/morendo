@@ -5,7 +5,6 @@ import java.util.HashMap;
 // import java.util.HashSet;
 import java.util.Map;
 // import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -40,14 +39,12 @@ public class TokenizeFunction implements Function, Serializable {
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		Map<String,Integer> wordcount = new HashMap<String,Integer>();
+		Map<String,Integer> wordcount = new HashMap<>();
 		if (params != null && params.length == 1) {
 			try {
 				String rawText = params[0].getStringValue();
-				if (rawText == null && rawText.length() > 0) {
-					StringTokenizer toke = new StringTokenizer(rawText);
-					while (toke.hasMoreTokens()) {
-						String t = toke.nextToken();
+				if (rawText != null && rawText.length() > 0) {
+					for (String t : rawText.trim().split("\\s+")) {
 						t = t.replaceAll("[/./,/!/?/)/(/:/`/^/]]", "");
 						Integer c = wordcount.get(t);
 						if (c == null) {
@@ -70,7 +67,7 @@ public class TokenizeFunction implements Function, Serializable {
 	
 	/* TODO - check if may be needed in future
 	private Set<String> read(String[] words) {
-		Set<String> wordset = new HashSet<String>();
+		Set<String> wordset = new HashSet<>();
 		for (String s: words) {
 			wordset.add(s);
 		}
@@ -88,7 +85,7 @@ public class TokenizeFunction implements Function, Serializable {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length > 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			return buf.toString();
 		} else {
 			return "(stop-word <string>)";

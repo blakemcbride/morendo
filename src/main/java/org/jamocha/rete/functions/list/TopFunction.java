@@ -35,7 +35,7 @@ public class TopFunction implements Function, Serializable {
 			if (rl instanceof List) {
 				List<Object> list = (List<Object>)rl;
 				if (list.size() > count) {
-					List<Object> newlist = new ArrayList<Object>();
+					List<Object> newlist = new ArrayList<>();
 					for (int idx=0; idx < count; idx++) {
 						newlist.add(list.get(idx));
 					}

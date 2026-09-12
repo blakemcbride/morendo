@@ -32,7 +32,7 @@ public class CreateMSlotFunction implements Serializable, Function {
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector ret = new DefaultReturnVector();
-		List<Object> list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<>();
 		if (params != null && params.length > 0) {
 			for (int idx=0; idx < params.length; idx++) {
 				if (params[idx] instanceof ValueParam) {

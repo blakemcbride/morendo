@@ -89,7 +89,7 @@ public class GraphQuery extends Defquery {
 			startTime = System.currentTimeMillis();
 		}
 		try {
-			ArrayList<QueryBaseAlphaCondition> params = new ArrayList<QueryBaseAlphaCondition>(this.queryParameterNodeMap.values());
+			ArrayList<QueryBaseAlphaCondition> params = new ArrayList<>(this.queryParameterNodeMap.values());
 			for (int i=0; i < parameters.length; i++) {
 				Object node = params.get(i);
 				if (node instanceof QueryParameterNode) {

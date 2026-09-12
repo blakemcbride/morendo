@@ -201,7 +201,7 @@ public class LinkedActivation implements Activation {
     }
 
     public String toPPString() {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	buf.append("Activation: " + this.theRule.getName());
     	Fact[] facts = this.index.getFacts();
     	for (int idx=0; idx < facts.length; idx++) {

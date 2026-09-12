@@ -37,7 +37,7 @@ public class RuleEngineFunctions implements FunctionGroup, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Function> funcs = new ArrayList<Function>();
+	private ArrayList<Function> funcs = new ArrayList<>();
 	
 	public RuleEngineFunctions() {
 		super();

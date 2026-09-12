@@ -63,8 +63,8 @@ public class Defrule implements Rule, Scope, Serializable {
     protected boolean noAgenda = false;
     protected String version = "";
     protected Module themodule = null;
-    protected Map<Object, Object> bindValues = new HashMap<Object, Object>();
-	private LinkedHashMap<String, Binding> bindings = new LinkedHashMap<String, Binding>();
+    protected Map<Object, Object> bindValues = new HashMap<>();
+	private LinkedHashMap<String, Binding> bindings = new LinkedHashMap<>();
 	private String comment = "";
 	/**
 	 * by default a rule is active, unless set to false
@@ -103,10 +103,10 @@ public class Defrule implements Rule, Scope, Serializable {
 		super();
         this.complex = ComplexityFactory.newInstance();
         this.complex.setRule(this);
-        conditions = new ArrayList<Condition>();
-        actions = new ArrayList<Action>();
-        joins = new ArrayList<BaseJoin>();
-        modificationActions = new ArrayList<Action>();
+        conditions = new ArrayList<>();
+        actions = new ArrayList<>();
+        joins = new ArrayList<>();
+        modificationActions = new ArrayList<>();
 	}
 
     public Defrule(String name) {
@@ -537,7 +537,7 @@ public class Defrule implements Rule, Scope, Serializable {
 	}
 	
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("(defrule " + this.name + Constants.LINEBREAK);
 		// now print out the rule properties
 		buf.append("  (declare (salience " + this.salience + ") (rule-version " +

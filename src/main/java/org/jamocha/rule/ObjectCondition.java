@@ -74,7 +74,7 @@ public class ObjectCondition extends AbstractCondition {
      * constriant to be first.
      */
     public String toPPString() {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	int start = 0;
     	// this is a hack, but it keeps the code simple for spacing
     	// default indent for CE is 2 spaces
@@ -118,7 +118,7 @@ public class ObjectCondition extends AbstractCondition {
     }
 
     public String toPPString(int tabs) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int tabCount = tabs;
         int start = 0;
         boolean obind = false;

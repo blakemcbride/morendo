@@ -324,7 +324,7 @@ public class Deftemplate implements Template, Serializable {
 	
 	public Fact createFact(Object[] data, long id) {
 		BaseSlot[] values = cloneAllSlots();
-        ArrayList<Slot> bslots = new ArrayList<Slot>();
+        ArrayList<Slot> bslots = new ArrayList<>();
         boolean hasbinding = false;
 		for (int idz=0; idz < data.length; idz++) {
 			Slot s = (Slot) data[idz];
@@ -465,7 +465,7 @@ public class Deftemplate implements Template, Serializable {
 	 * type
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("(" + this.templateName + " ");
 		for (int idx = 0; idx < this.slots.length; idx++) {
 			buf.append("("
@@ -487,7 +487,7 @@ public class Deftemplate implements Template, Serializable {
 	 * @return
 	 */
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("(" + this.templateName + Constants.LINEBREAK);
 		for (int idx = 0; idx < this.slots.length; idx++) {
 			buf.append("  ("

@@ -70,13 +70,13 @@ public class FactEditor extends AbstractJamochaEditor implements
 
 	private JTextArea dumpAreaFact = new JTextArea();
 
-	private DefaultListModel<String> moduleListModel = new DefaultListModel<String>();
+	private DefaultListModel<String> moduleListModel = new DefaultListModel<>();
 
-	private DefaultListModel<String> templateListModel = new DefaultListModel<String>();
+	private DefaultListModel<String> templateListModel = new DefaultListModel<>();
 
 	private StringChannel channel;
 
-	private Map<Slot, JComponent> factComponents = new HashMap<Slot, JComponent>();
+	private Map<Slot, JComponent> factComponents = new HashMap<>();
 
 	public FactEditor(Rete engine) {
 		super(engine);
@@ -135,7 +135,7 @@ public class FactEditor extends AbstractJamochaEditor implements
 		preselectionPanel.setBorder(BorderFactory
 				.createTitledBorder("Module and Template Selection"));
 		c.fill = GridBagConstraints.BOTH;
-		moduleList = new JList<String>(moduleListModel);
+		moduleList = new JList<>(moduleListModel);
 		moduleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		moduleList.getSelectionModel().addListSelectionListener(this);
 		Collection<?> modules = engine.getWorkingMemory().getModules();
@@ -153,7 +153,7 @@ public class FactEditor extends AbstractJamochaEditor implements
 		// c.gridwidth = GridBagConstraints.RELATIVE;
 		gridbag.setConstraints(modulePanel, c);
 		preselectionPanel.add(modulePanel);
-		templateList = new JList<String>(templateListModel);
+		templateList = new JList<>(templateListModel);
 		templateList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		templateList.getSelectionModel().addListSelectionListener(this);
 		initTemplateList();
@@ -234,7 +234,7 @@ public class FactEditor extends AbstractJamochaEditor implements
 				} else if (slots[i].getValueType() == Constants.FACT_TYPE) {
 					// TODO Fact-Selector
 
-					JComboBox<?> factBox = new JComboBox<Object>();
+					JComboBox<?> factBox = new JComboBox<>();
 					factComponents.put(slots[i], factBox);
 				} else {
 					JTextField textField = new JTextField();
@@ -381,7 +381,7 @@ public class FactEditor extends AbstractJamochaEditor implements
 
 		private JList<String> list;
 
-		private DefaultListModel<String> listModel = new DefaultListModel<String>();
+		private DefaultListModel<String> listModel = new DefaultListModel<>();
 
 		private JPopupMenu popupMenu;
 
@@ -407,7 +407,7 @@ public class FactEditor extends AbstractJamochaEditor implements
 			popupMenu.add(editMenuItem);
 			popupMenu.add(deleteMenuItem);
 			popupMenu.addPopupMenuListener(this);
-			list = new JList<String>(listModel);
+			list = new JList<>(listModel);
 			list.setVisibleRowCount(4);
 			list.setComponentPopupMenu(popupMenu);
 		}

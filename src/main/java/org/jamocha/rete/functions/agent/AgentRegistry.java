@@ -34,8 +34,8 @@ import java.util.Queue;
  * @author Peter Lin
  */
 public class AgentRegistry {
-	private static Map<String, AgentEntry> agentRegistry = new HashMap<String, AgentEntry>();
-	private static Map<String, Queue<?>> agentSummaries = new HashMap<String, Queue<?>>();
+	private static Map<String, AgentEntry> agentRegistry = new HashMap<>();
+	private static Map<String, Queue<?>> agentSummaries = new HashMap<>();
 	
 	/**
 	 * The registry will only add the AgentEntry if it doesn't 
@@ -54,7 +54,7 @@ public class AgentRegistry {
 	}
 	
 	public static List<AgentEntry> getAgents() {
-		return new ArrayList<AgentEntry>(agentRegistry.values());
+		return new ArrayList<>(agentRegistry.values());
 	}
 	
 	public static AgentEntry removeAgent(AgentEntry agent) {
@@ -65,7 +65,7 @@ public class AgentRegistry {
 	public static void addSummary(AgentPerformanceSummary summary) {
 		Queue<AgentPerformanceSummary> queue = (Queue<AgentPerformanceSummary>) agentSummaries.get(summary.getKey());
 		if (queue == null) {
-			queue = new PriorityQueue<AgentPerformanceSummary>(50);
+			queue = new PriorityQueue<>(50);
 			agentSummaries.put(summary.getKey(), queue);
 		}
 		if (queue.size() == 50) {
@@ -77,7 +77,7 @@ public class AgentRegistry {
 	public Queue<?> getSummary(AgentPerformanceSummary summary) {
 		Queue<?> queue = agentSummaries.get(summary.getKey());
 		if (queue == null) {
-			queue = new PriorityQueue<Object>(50);
+			queue = new PriorityQueue<>(50);
 			agentSummaries.put(summary.getKey(), queue);
 		}
 		return queue;
@@ -90,6 +90,6 @@ public class AgentRegistry {
 	 * @return
 	 */
 	public static List<Queue<?>> getPerformanceSummaries() {
-		return new ArrayList<Queue<?>>(agentSummaries.values());
+		return new ArrayList<>(agentSummaries.values());
 	}
 }

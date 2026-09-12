@@ -59,7 +59,7 @@ public class TemplateEditor extends AbstractJamochaEditor implements
 
 	private GridBagConstraints gridbagConstraints;
 
-	private List<EditorRow> rows = new LinkedList<EditorRow>();
+	private List<EditorRow> rows = new LinkedList<>();
 
 	public TemplateEditor(Rete engine) {
 		super(engine);
@@ -86,7 +86,7 @@ public class TemplateEditor extends AbstractJamochaEditor implements
 		for (Object obj : modules) {
 			moduleNames[i++] = ((Module) obj).getModuleName();
 		}
-		moduleBox = new JComboBox<Object>(moduleNames);
+		moduleBox = new JComboBox<>(moduleNames);
 
 
 		addSlotButton = new JButton("Add Slot", IconLoader.getImageIcon("add"));
@@ -274,7 +274,7 @@ public class TemplateEditor extends AbstractJamochaEditor implements
 
 	private JComboBox<?> getNewTypesCombo() {
 		String[] types = new String[]{"NONE","STRING","LONG","DOUBLE","OBJECT","MULTISLOT"};
-		JComboBox<?> box = new JComboBox<Object>(types);
+		JComboBox<?> box = new JComboBox<>(types);
 		return box;
 	}
 

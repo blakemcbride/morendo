@@ -26,15 +26,15 @@ public class RuleServiceImpl implements RuleService {
 	private long requests = 0;
 	private long totalRulesFired = 0;
 	private String serviceName = null;
-	private List<Object> applications = new ArrayList<Object>();
-	private Map<String, RuleApplication> applicationMap = new HashMap<String, RuleApplication>();
-	private Map<String, PriorityQueue<Rete>> engineMap = new HashMap<String, PriorityQueue<Rete>>();
+	private List<Object> applications = new ArrayList<>();
+	private Map<String, RuleApplication> applicationMap = new HashMap<>();
+	private Map<String, PriorityQueue<Rete>> engineMap = new HashMap<>();
 	private ServiceConfiguration serviceConfiguration = null;
 	private ServiceAdministration administration = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	
 	public RuleServiceImpl() {
-		applications = new ArrayList<Object>();
+		applications = new ArrayList<>();
 		administration = new ServiceAdministrationImpl(this);
 	}
 

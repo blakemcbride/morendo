@@ -58,7 +58,7 @@ public class TemporalDeffact extends Deffact implements TemporalFact {
     }
 
     public String toFactString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("f-" + id + " (" + this.deftemplate.getName());
         if (this.slots.length > 0) {
             buf.append(" ");
@@ -83,7 +83,7 @@ public class TemporalDeffact extends Deffact implements TemporalFact {
      * attributes.
      */
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(" + this.deftemplate.getName());
         if (this.slots.length > 0) {
             buf.append(" ");

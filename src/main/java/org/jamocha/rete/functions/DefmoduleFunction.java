@@ -79,7 +79,7 @@ public class DefmoduleFunction implements Function, Serializable {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			return buf.toString();
 		} else {
 			return "(defmodule name)";

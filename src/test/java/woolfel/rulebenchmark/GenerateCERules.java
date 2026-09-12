@@ -28,7 +28,7 @@ public class GenerateCERules {
 		super();
 	}
 
-	public void writeDeftemplate1(StringBuffer buf) {
+	public void writeDeftemplate1(StringBuilder buf) {
 		buf.append("(deftemplate object1" + Constants.LINEBREAK);
 		buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
 		buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -63,7 +63,7 @@ public class GenerateCERules {
 		buf.append(")" + Constants.LINEBREAK);
 	}
 	
-	public void writeDeftemplate2(StringBuffer buf) {
+	public void writeDeftemplate2(StringBuilder buf) {
 		buf.append("(deftemplate object2" + Constants.LINEBREAK);
 		buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
 		buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -98,7 +98,7 @@ public class GenerateCERules {
 		buf.append(")" + Constants.LINEBREAK);
 	}
 
-    public void writeDeftemplate3(StringBuffer buf) {
+    public void writeDeftemplate3(StringBuilder buf) {
         buf.append("(deftemplate object3" + Constants.LINEBREAK);
         buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
         buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -133,7 +133,7 @@ public class GenerateCERules {
         buf.append(")" + Constants.LINEBREAK);
     }
 
-    public void writeDeftemplate4(StringBuffer buf) {
+    public void writeDeftemplate4(StringBuilder buf) {
         buf.append("(deftemplate object4" + Constants.LINEBREAK);
         buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
         buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -168,7 +168,7 @@ public class GenerateCERules {
         buf.append(")" + Constants.LINEBREAK);
     }
 
-    public void writeDeftemplate5(StringBuffer buf) {
+    public void writeDeftemplate5(StringBuilder buf) {
         buf.append("(deftemplate object5" + Constants.LINEBREAK);
         buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
         buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -203,7 +203,7 @@ public class GenerateCERules {
         buf.append(")" + Constants.LINEBREAK);
     }
 
-    public void writeDeftemplate6(StringBuffer buf) {
+    public void writeDeftemplate6(StringBuilder buf) {
         buf.append("(deftemplate object6" + Constants.LINEBREAK);
         buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
         buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -238,7 +238,7 @@ public class GenerateCERules {
         buf.append(")" + Constants.LINEBREAK);
     }
 
-    public void writeDeftemplate7(StringBuffer buf) {
+    public void writeDeftemplate7(StringBuilder buf) {
         buf.append("(deftemplate object7" + Constants.LINEBREAK);
         buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
         buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -273,7 +273,7 @@ public class GenerateCERules {
         buf.append(")" + Constants.LINEBREAK);
     }
 
-    public void writeDeftemplate8(StringBuffer buf) {
+    public void writeDeftemplate8(StringBuilder buf) {
         buf.append("(deftemplate object8" + Constants.LINEBREAK);
         buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
         buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -308,7 +308,7 @@ public class GenerateCERules {
         buf.append(")" + Constants.LINEBREAK);
     }
 
-	public void writeRightActivateFacts(int count, StringBuffer buf) {
+	public void writeRightActivateFacts(int count, StringBuilder buf) {
 		buf.append("(assert (object1 " + "(stringfield \"1" +
 				"\")(intfield 1)(longfield 1)" +
 				"(doublefield 100.00)(floatfield 100)" +
@@ -335,7 +335,7 @@ public class GenerateCERules {
 		}
 	}
 	
-	public void writeLeftActivateFacts1(int count, StringBuffer buf) {
+	public void writeLeftActivateFacts1(int count, StringBuilder buf) {
 		buf.append("(assert (object2 " + "(stringfield \"1\")" +
 				"(intfield 1)(longfield 1)" +
 				"(doublefield 100.00)(floatfield 100)" +
@@ -350,7 +350,7 @@ public class GenerateCERules {
 		}
 	}
 
-	public void writeLeftActivateFacts2(int count, StringBuffer buf) {
+	public void writeLeftActivateFacts2(int count, StringBuilder buf) {
         buf.append("(assert (object2 " + "(stringfield \"1\")" +
                 "(intfield 1)(longfield 1)" +
                 "(doublefield 100.00)(floatfield 100)" +
@@ -370,7 +370,7 @@ public class GenerateCERules {
         }
 	}
 
-    public void writeLeftActivateFacts3(int count, StringBuffer buf) {
+    public void writeLeftActivateFacts3(int count, StringBuilder buf) {
         buf.append("(assert (object2 " + "(stringfield \"1\")" +
                 "(intfield 1)(longfield 1)" +
                 "(doublefield 100.00)(floatfield 100)" +
@@ -395,7 +395,7 @@ public class GenerateCERules {
         }
     }
 
-    public void writeLeftActivateFacts4(int count, StringBuffer buf) {
+    public void writeLeftActivateFacts4(int count, StringBuilder buf) {
         buf.append("(assert (object2 " + "(stringfield \"1\")" +
                 "(intfield 1)(longfield 1)" +
                 "(doublefield 100.00)(floatfield 100)" +
@@ -425,7 +425,7 @@ public class GenerateCERules {
         }
     }
 
-    public void writeLeftActivateFacts5(int count, StringBuffer buf) {
+    public void writeLeftActivateFacts5(int count, StringBuilder buf) {
         buf.append("(assert (object2 " + "(stringfield \"1\")" +
                 "(intfield 1)(longfield 1)" +
                 "(doublefield 100.00)(floatfield 100)" +
@@ -465,7 +465,7 @@ public class GenerateCERules {
 	 * @param count
 	 * @param buf
 	 */
-	public void write1JoinRule(int count, StringBuffer buf) {
+	public void write1JoinRule(int count, StringBuilder buf) {
 		for (int idx=1; idx <= count; idx++) {
 			String intvar = "?intfld" + idx;
 			buf.append("(defrule 1joinrule" + idx + Constants.LINEBREAK);
@@ -489,7 +489,7 @@ public class GenerateCERules {
 	 * @param count
 	 * @param buf
 	 */
-	public void write2JoinRule(int count, StringBuffer buf) {
+	public void write2JoinRule(int count, StringBuilder buf) {
 		for (int idx=1; idx <= count; idx++) {
 			String intvar = "?intfld" + idx;
 			buf.append("(defrule 2joinrule" + idx + Constants.LINEBREAK);
@@ -517,7 +517,7 @@ public class GenerateCERules {
 	 * @param count
 	 * @param buf
 	 */
-	public void write3JoinRule(int count, StringBuffer buf) {
+	public void write3JoinRule(int count, StringBuilder buf) {
 		for (int idx=1; idx <= count; idx++) {
 			String intvar = "?intfld" + idx;
 			buf.append("(defrule 3joinrule" + idx + Constants.LINEBREAK);
@@ -549,7 +549,7 @@ public class GenerateCERules {
 	 * @param count
 	 * @param buf
 	 */
-	public void write4JoinRule(int count, StringBuffer buf) {
+	public void write4JoinRule(int count, StringBuilder buf) {
 		for (int idx=1; idx <= count; idx++) {
 			String intvar = "?intfld" + idx;
 			buf.append("(defrule 4joinrule" + idx + Constants.LINEBREAK);
@@ -585,7 +585,7 @@ public class GenerateCERules {
 	 * @param count
 	 * @param buf
 	 */
-	public void write5JoinRule(int count, StringBuffer buf) {
+	public void write5JoinRule(int count, StringBuilder buf) {
 		for (int idx=1; idx <= count; idx++) {
 			String intvar = "?intfld" + idx;
 			buf.append("(defrule 5joinrule" + idx + Constants.LINEBREAK);
@@ -620,15 +620,15 @@ public class GenerateCERules {
 		}
 	}
 
-	public void writeProfile(StringBuffer buf) {
+	public void writeProfile(StringBuilder buf) {
 		buf.append("(profile all)" + Constants.LINEBREAK);
 	}
 	
-	public void writeFire(StringBuffer buf) {
+	public void writeFire(StringBuilder buf) {
 		buf.append("(fire)" + Constants.LINEBREAK);
 	}
 	
-	public void writePrintProfile(StringBuffer buf) {
+	public void writePrintProfile(StringBuilder buf) {
 		buf.append("(print-profile)" + Constants.LINEBREAK);
 	}
 	
@@ -666,7 +666,7 @@ public class GenerateCERules {
 			*/
 			
 			GenerateCERules gen = new GenerateCERules();
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			gen.writeDeftemplate1(buf);
 			gen.writeDeftemplate2(buf);
             gen.writeDeftemplate3(buf);

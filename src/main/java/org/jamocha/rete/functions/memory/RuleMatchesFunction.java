@@ -45,7 +45,7 @@ public class RuleMatchesFunction extends BaseMatchFunction implements Function, 
 
     	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         if (params != null && params.length > 0) {
-            ArrayList<Defrule> rules = new ArrayList<Defrule>();
+            ArrayList<Defrule> rules = new ArrayList<>();
             for (int idx=0; idx < params.length; idx++) {
                 if (params[idx] instanceof ValueParam) {
                     String name = params[idx].getStringValue();
@@ -65,7 +65,7 @@ public class RuleMatchesFunction extends BaseMatchFunction implements Function, 
     }
 
     protected void printRuleMemories(Rete engine, Defrule rule, DefaultWM wm) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(rule.getName() + Constants.LINEBREAK);
         Condition[] conditions = rule.getConditions();
         for (int idx=0; idx < conditions.length; idx++) {

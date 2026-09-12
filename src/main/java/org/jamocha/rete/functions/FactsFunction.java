@@ -57,7 +57,7 @@ public class FactsFunction implements Function, Serializable {
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         boolean filter = false;
-        HashMap<Object, Object> objects = new HashMap<Object, Object>();
+        HashMap<Object, Object> objects = new HashMap<>();
         int count = 0;
         if (params != null && params.length > 0) {
             filter = true;

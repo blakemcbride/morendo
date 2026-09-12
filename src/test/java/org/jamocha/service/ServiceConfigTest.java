@@ -43,7 +43,7 @@ public class ServiceConfigTest {
 		
 		ObjectModel model1 = new ObjectModel();
 		app1.getModels().add(model1);
-		ArrayList<String> classList = new ArrayList<String>();
+		ArrayList<String> classList = new ArrayList<>();
 		model1.setClassList(classList);
 		classList.add("woolfel.examples.model.Account");
 		classList.add("woolfel.examples.model.Account2");
@@ -65,7 +65,7 @@ public class ServiceConfigTest {
 		jdata.setName("org.jamocha.examples.model.Account");
 		jdata.setUrl("./samples/configuration/data.json");
 		
-		List<JSONData<?>> jsondata1 = new ArrayList<JSONData<?>>();
+		List<JSONData<?>> jsondata1 = new ArrayList<>();
 		jsondata1.add(jdata);
 		app1.setJsonData(jsondata1);
 		
@@ -91,7 +91,7 @@ public class ServiceConfigTest {
 		
 		ObjectModel model1 = new ObjectModel();
 		app1.getModels().add(model1);
-		ArrayList<String> classList = new ArrayList<String>();
+		ArrayList<String> classList = new ArrayList<>();
 		model1.setClassList(classList);
 		classList.add("woolfel.examples.model.Account");
 		classList.add("woolfel.examples.model.Account2");
@@ -119,7 +119,7 @@ public class ServiceConfigTest {
 	
 	@Test
 	public void testSaveObjectData() {
-		ArrayList<Hobby> list = new ArrayList<Hobby>();
+		ArrayList<Hobby> list = new ArrayList<>();
 		Hobby hobby1 = new Hobby();
 		list.add(hobby1);
 		hobby1.setName("Hiking");

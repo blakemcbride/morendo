@@ -51,7 +51,7 @@ public class DefGraphQueryFunction implements Function {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			return buf.toString();
 		} else {
 			return "(defgraphquery <query-name> (declare (variables <binding>)+) (CE)+ )" +

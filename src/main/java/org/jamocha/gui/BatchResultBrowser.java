@@ -48,7 +48,7 @@ public class BatchResultBrowser extends JFrame implements ActionListener {
 		setSize(500, 400);
 		setLayout(new BorderLayout());
 		resultsBoxModel = new ResultBoxModel();
-		resultsBox = new JComboBox<Object>(resultsBoxModel);
+		resultsBox = new JComboBox<>(resultsBoxModel);
 		removeButton = new JButton(IconLoader.getImageIcon("delete"));
 		removeButton.addActionListener(this);
 		removeButton.setToolTipText("Remove this batch result");
@@ -126,7 +126,7 @@ public class BatchResultBrowser extends JFrame implements ActionListener {
 
 		private void removeItem(Object item) {
 			if (items != null) {
-				List<Object> temp = new LinkedList<Object>();
+				List<Object> temp = new LinkedList<>();
 				for (Object tmpItem : items) {
 					if (!tmpItem.equals(item)) {
 						temp.add(tmpItem);

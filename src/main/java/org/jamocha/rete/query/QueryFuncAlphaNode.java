@@ -136,7 +136,7 @@ public class QueryFuncAlphaNode extends QueryBaseAlphaCondition {
 
 	public String toPPString() {
 		if (function != null) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("node-" + this.nodeID + "> slot(" + this.slot.getName() + ") ");
 			buf.append(function.toPPString(params, 1));
 			buf.append(" - useCount=" + this.useCount);

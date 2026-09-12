@@ -116,7 +116,7 @@ public class TemporalEqNode extends AbstractTemporalNode {
     }
 
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("TemporalEqNode-" + this.nodeID + "> ");
         buf.append("left=" + this.leftElapsedTime/1000 + " s, right=" + this.rightElapsedTime/1000 + " s - ");
         for (int idx = 0; idx < this.binds.length; idx++) {
@@ -132,7 +132,7 @@ public class TemporalEqNode extends AbstractTemporalNode {
 
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("TemporalEqNode-" + this.nodeID + "> ");
         buf.append("left=" + this.leftElapsedTime/1000 + " s, right=" + this.rightElapsedTime/1000 + " s - ");
         for (int idx = 0; idx < this.binds.length; idx++) {

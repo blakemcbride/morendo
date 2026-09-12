@@ -170,7 +170,7 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
         // if we have partial matches and the current time is greater than
         // the last time + interval
         if (now > nextTime) {
-        	List<?> proplist = new ArrayList<Object>();
+        	List<?> proplist = new ArrayList<>();
         	// if the function is not null, we do additional filter
         	if (this.function != null) {
         		((ValueParam)params[1]).setValue(new ArrayList<Object>(this.partialMatches.values()));
@@ -217,7 +217,7 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
     }
     
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("TemporalIntervalNode-" + this.nodeID + "> ");
         buf.append("interval " + this.interval/1000 + " s, ");
         buf.append("left=" + this.leftElapsedTime/1000 + " s, right=" + 
@@ -234,7 +234,7 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
     }
 
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("TemporalIntervalNode-" + this.nodeID + "> ");
         buf.append("interval " + this.interval + " ms, ");
         buf.append("left=" + this.leftElapsedTime + " ms, right=" + this.rightElapsedTime + " ms - ");

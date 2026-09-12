@@ -266,7 +266,7 @@ public class NotJoinFrst extends BaseJoin {
     }
 
     public String toString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("NOT CE - ");
         for (int idx=0; idx < this.binds.length; idx++){
             if (idx > 0){
@@ -281,7 +281,7 @@ public class NotJoinFrst extends BaseJoin {
      * The current implementation is similar to BetaNode
      */
     public String toPPString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("node-" + this.nodeID + "> NOT CE - ");
         for (int idx=0; idx < this.binds.length; idx++){
             if (idx > 0){

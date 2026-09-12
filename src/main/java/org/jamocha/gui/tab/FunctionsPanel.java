@@ -111,7 +111,7 @@ public class FunctionsPanel extends AbstractJamochaPanel implements ActionListen
 		private void initFunctionsList() {
 		Collection<?> c = gui.getEngine().getAllFunctions();
 		Function[] func = (Function[]) c.toArray(new Function[0]);
-		List<Function> funcs = new ArrayList<Function>();
+		List<Function> funcs = new ArrayList<>();
 		boolean larger = false;
 		funcs.add(0, func[0]);
 		for(int idx = 1; idx <= func.length-1; idx++){

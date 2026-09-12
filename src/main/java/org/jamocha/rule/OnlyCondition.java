@@ -42,7 +42,7 @@ public class OnlyCondition extends ObjectCondition {
 	}
 
 	public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int start = 0;
         String pad = "  ";
         buf.append(pad + "(only" + Constants.LINEBREAK);

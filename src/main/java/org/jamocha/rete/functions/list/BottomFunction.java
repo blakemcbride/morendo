@@ -35,7 +35,7 @@ public class BottomFunction implements Function, Serializable {
 			if (rl instanceof List) {
 				List<Object> list = (List<Object>)rl;
 				if (list.size() > count) {
-					List<Object> newlist = new ArrayList<Object>();
+					List<Object> newlist = new ArrayList<>();
 					int s = list.size();
 					int c = s - count;
 					for (int idx=c; idx < s; idx++) {

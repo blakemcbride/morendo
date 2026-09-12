@@ -123,7 +123,7 @@ public class BetaOnlyImpl implements BetaMemory {
 	 * by double colon "::" and then the matches from the right
 	 */
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int idx = 0; idx < this.index.getFacts().length; idx++) {
 			if (idx > 0) {
 				buf.append(", ");

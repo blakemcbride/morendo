@@ -112,7 +112,7 @@ public class NotEqHashIndex implements HashIndex, Serializable {
     }
 
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("NotEqHashIndex2: ");
         buf.append(negindex.toPPString());
         return buf.toString();

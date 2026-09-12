@@ -57,7 +57,7 @@ public class SimpleRuleGenerator2 {
     }
     
     public String getDefTemplate() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(deftemplate transaction" + LINEBREAK);
         buf.append("  (slot accountId)" + LINEBREAK);
         buf.append("  (slot buyPrice)" + LINEBREAK);
@@ -83,7 +83,7 @@ public class SimpleRuleGenerator2 {
     }
     
     public String getDefTemplate2() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(deftemplate transaction");
         buf.append("  (slot accountId (type STRING))");
         buf.append("  (slot buyPrice (type DOUBLE))");
@@ -113,7 +113,7 @@ public class SimpleRuleGenerator2 {
     
     public void generateSimpleRule(int count) {
         for (int idx=0; idx < count; idx++) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId ?accid)" + LINEBREAK);
@@ -142,7 +142,7 @@ public class SimpleRuleGenerator2 {
      */
     public void generateSimpleRuleIncreaseOrder(int count) {
         for (int idx=0; idx < count; idx++) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId ?accid)" + LINEBREAK);
@@ -172,7 +172,7 @@ public class SimpleRuleGenerator2 {
 
     public void generateSimpleRuleRandomOrder(int count) {
         for (int idx=0; idx < count; idx++) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId ?accid)" + LINEBREAK);
@@ -208,7 +208,7 @@ public class SimpleRuleGenerator2 {
      */
     public void generateSimpleRuleDecreaseOrder(int count) {
         for (int idx=0; idx < count; idx++) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx + LINEBREAK);
             buf.append(" (transaction" + LINEBREAK);
             buf.append("    (accountId ?accid)" + LINEBREAK);
@@ -238,7 +238,7 @@ public class SimpleRuleGenerator2 {
     
     public void generateSequentialRule(int count, boolean memory) {
         for (int idx=0; idx < count; idx++) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("(defrule rule" + idx);
             if (!memory) {
                 buf.append(" (declare (remember-match FALSE))" + LINEBREAK);

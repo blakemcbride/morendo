@@ -43,7 +43,7 @@ public class OrLiteralConstraint implements Constraint {
 	private static final long serialVersionUID = 1L;
 	
 	protected String name;
-	protected ArrayList<MultiValue> value = new ArrayList<MultiValue>();
+	protected ArrayList<MultiValue> value = new ArrayList<>();
     protected boolean negated = false;
     
 	
@@ -109,7 +109,7 @@ public class OrLiteralConstraint implements Constraint {
 	}
 	
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		Iterator<MultiValue> itr = this.value.iterator();
 		buf.append("    (" + this.name + " ");
 		int count = 0;

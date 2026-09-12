@@ -154,7 +154,7 @@ public class TemporalHashedAlphaMem implements Serializable {
             // possibly a concurrent modification exception, since
             // the node could be still iterating over the facts
             // as stale facts are removed.
-            ArrayList<?> rlist = new ArrayList<Object>(list.values());
+            ArrayList<?> rlist = new ArrayList<>(list.values());
 	        return rlist.iterator();
 		} else {
 			return null;

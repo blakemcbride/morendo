@@ -157,7 +157,7 @@ public class QueryHashedNeqJoin extends QueryBaseJoin {
      * Basic implementation will return string format of the betaNode
      */
     public String toString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int idx=0; idx < this.binds.length; idx++){
             if (idx > 0){
                 buf.append(" && ");
@@ -171,7 +171,7 @@ public class QueryHashedNeqJoin extends QueryBaseJoin {
      * returs the node name + id and bindings
      */
     public String toPPString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("HashedNotEqBNode-" + this.nodeID + "> ");
         for (int idx=0; idx < this.binds.length; idx++){
             if (idx > 0){

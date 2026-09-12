@@ -29,7 +29,7 @@ public class AgentFunctions implements FunctionGroup {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Function> funcs = new ArrayList<Function>();
+	private List<Function> funcs = new ArrayList<>();
 
 	public AgentFunctions() {
 		super();

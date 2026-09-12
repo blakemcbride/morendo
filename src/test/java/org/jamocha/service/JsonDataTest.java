@@ -12,7 +12,7 @@ public class JsonDataTest {
 
 	@Test
 	public void testLoadJson() {
-		JSONData<Object> jdata = new JSONData<Object>();
+		JSONData<Object> jdata = new JSONData<>();
 		jdata.setName("org.jamocha.examples.model.Account");
 		jdata.setUrl("./samples/configuration/accounts.json");
 		

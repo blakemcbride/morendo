@@ -49,7 +49,7 @@ public class SettingsPanel extends AbstractJamochaPanel implements
 
 	private JButton saveButton;
 
-	private List<AbstractSettingsPanel> panels = new LinkedList<AbstractSettingsPanel>();
+	private List<AbstractSettingsPanel> panels = new LinkedList<>();
 
 	public SettingsPanel(JamochaGui gui) {
 		super(gui);

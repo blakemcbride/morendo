@@ -158,7 +158,7 @@ public class SimpleDataGenerator2 {
             String iss = issuers[ran.nextInt(issuers.length -1)];
             String ex = exchange[ran.nextInt(exchange.length -1)];
             String csip = cusips[ran.nextInt(cusips.length -1)];
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("(assert (transaction");
             buf.append(" (accountId \"" + idx + "\")");
             buf.append(" (buyPrice 55.23)");

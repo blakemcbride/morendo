@@ -48,7 +48,7 @@ public class InterpretedFunction implements Function, Scope {
      * function.
      */
     private Parameter[][] functionParams = null;
-	private HashMap<String, Object> bindings = new HashMap<String, Object>();
+	private HashMap<String, Object> bindings = new HashMap<>();
 
     /**
      * 

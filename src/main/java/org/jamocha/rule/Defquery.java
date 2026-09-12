@@ -56,14 +56,14 @@ public class Defquery implements Query, Serializable {
     protected ArrayList<Condition> conditions = null;
 	protected ArrayList<QueryBaseJoin> joins = null;
 	protected ArrayList<QueryBaseJoin> notJoins = null;
-	protected Map<String, String> variables = new HashMap<String, String>();
+	protected Map<String, String> variables = new HashMap<>();
     protected boolean auto = false;
     /**
      * by default noAgenda is false
      */
     protected String version = "";
-    protected Map<?, ?> bindValues = new HashMap<Object, Object>();
-    protected LinkedHashMap<String, Binding> bindings = new LinkedHashMap<String, Binding>();
+    protected Map<?, ?> bindValues = new HashMap<>();
+    protected LinkedHashMap<String, Binding> bindings = new LinkedHashMap<>();
     protected String comment = "";
 
     protected QueryRootNode queryRoot = null;
@@ -72,7 +72,7 @@ public class Defquery implements Query, Serializable {
 	 * We use LinkedHashMap to keep the parameters in the order
 	 * they were declared.
 	 */
-    protected Map<String, QueryBaseAlphaCondition> queryParameterNodeMap = new LinkedHashMap<String, QueryBaseAlphaCondition>();
+    protected Map<String, QueryBaseAlphaCondition> queryParameterNodeMap = new LinkedHashMap<>();
 	
     /**
      * by default watch is off
@@ -86,9 +86,9 @@ public class Defquery implements Query, Serializable {
 	 */
 	public Defquery() {
 		super();
-        conditions = new ArrayList<Condition>();
-        joins = new ArrayList<QueryBaseJoin>();
-        notJoins = new ArrayList<QueryBaseJoin>();
+        conditions = new ArrayList<>();
+        joins = new ArrayList<>();
+        notJoins = new ArrayList<>();
 	}
 
     public Defquery(String name) {
@@ -344,7 +344,7 @@ public class Defquery implements Query, Serializable {
 	}
 	
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		return buf.toString();
 	}
 
@@ -398,7 +398,7 @@ public class Defquery implements Query, Serializable {
 			startTime = System.currentTimeMillis();
 		}
 		try {
-			ArrayList<QueryBaseAlphaCondition> params = new ArrayList<QueryBaseAlphaCondition>(this.queryParameterNodeMap.values());
+			ArrayList<QueryBaseAlphaCondition> params = new ArrayList<>(this.queryParameterNodeMap.values());
 			for (int i=0; i < parameters.length; i++) {
 				Object node = params.get(i);
 				if (node instanceof QueryParameterNode) {

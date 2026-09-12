@@ -148,7 +148,7 @@ public class CubeQueryBNode extends BaseJoin {
         	// if the EqHashIndex has values, we execute the query once
         	if (values.size() > 0) {
         		// we create a new 
-        		ArrayList<?> matchValues = new ArrayList<Object>(values.values());
+        		ArrayList<?> matchValues = new ArrayList<>(values.values());
         		// get the first match, so we can use it to query the cube
         		Index linx = (Index)matchValues.get(0);
     			// create the ResultsetFact
@@ -337,7 +337,7 @@ public class CubeQueryBNode extends BaseJoin {
      * Basic implementation will return string format of the betaNode
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int idx = 0; idx < this.binds.length; idx++) {
             if (idx > 0) {
                 buf.append(" && ");
@@ -351,7 +351,7 @@ public class CubeQueryBNode extends BaseJoin {
      * returns the node named + node id and the bindings in a string format
      */
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("CubeQueryBNode-" + this.nodeID + "> ");
         for (int idx = 0; idx < this.binds.length; idx++) {
             if (idx > 0) {

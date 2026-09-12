@@ -143,7 +143,7 @@ public class QueryExistNeqJoin extends QueryBaseJoin {
 	 * later so it looks nicer.
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("ExistNeqJoin - ");
 		for (int idx = 0; idx < this.binds.length; idx++) {
 			if (idx > 0) {
@@ -158,7 +158,7 @@ public class QueryExistNeqJoin extends QueryBaseJoin {
 	 * The current implementation is similar to BetaNode
 	 */
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("<node-" + this.nodeID + "> Exist - ");
         if (binds != null && binds.length > 0) {
             for (int idx = 0; idx < this.binds.length; idx++) {

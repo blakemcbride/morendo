@@ -36,7 +36,7 @@ public class RunGraphQueryFunction implements Function {
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector ret = new DefaultReturnVector();
-		List<?> results = new ArrayList<Object>();
+		List<?> results = new ArrayList<>();
 		if (params.length > 0) {
 			String bindname = ((BoundParam)params[0]).getVariableName();
 			String name = params[1].getStringValue();

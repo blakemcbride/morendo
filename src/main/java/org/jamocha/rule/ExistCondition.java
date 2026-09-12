@@ -55,7 +55,7 @@ public class ExistCondition extends ObjectCondition {
     }
     
 	public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int start = 0;
         String pad = "  ";
         buf.append(pad + "(exists" + Constants.LINEBREAK);

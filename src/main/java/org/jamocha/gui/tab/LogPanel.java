@@ -80,7 +80,7 @@ public class LogPanel extends AbstractJamochaPanel implements ActionListener,
 
 		Thread logThread = new Thread() {
 			public void run() {
-				List<MessageEvent> msgEvents = new LinkedList<MessageEvent>();
+				List<MessageEvent> msgEvents = new LinkedList<>();
 				while (running) {
 					logChannel.fillEventList(msgEvents);
 					if (!msgEvents.isEmpty()) {
@@ -275,7 +275,7 @@ public class LogPanel extends AbstractJamochaPanel implements ActionListener,
 
 		private static final long serialVersionUID = 1L;
 
-		private List<LogMessageEvent> events = new LinkedList<LogMessageEvent>();
+		private List<LogMessageEvent> events = new LinkedList<>();
 
 		private int maxEventCount = 1000;
 

@@ -33,7 +33,7 @@ public abstract class BaseMatchFunction {
     private static NodeComparator compare = new NodeComparator();
 
 	protected ArrayList<Object> getSortedAlphaNodes(DefaultWM wm) {
-        ArrayList<Object> alphaNodes = new ArrayList<Object>();
+        ArrayList<Object> alphaNodes = new ArrayList<>();
         Iterator<?> itr = wm.getAllAlphaMemories().keySet().iterator();
         while (itr.hasNext()) {
             alphaNodes.add(itr.next());
@@ -43,7 +43,7 @@ public abstract class BaseMatchFunction {
     }
     
 	protected ArrayList<Object> getSortedBetaNodes(DefaultWM wm) {
-        ArrayList<Object> betaNodes = new ArrayList<Object>();
+        ArrayList<Object> betaNodes = new ArrayList<>();
         Iterator<?> itr = wm.getAllBetaLeftMemories().keySet().iterator();
         while (itr.hasNext()) {
             Object n = itr.next();

@@ -66,7 +66,7 @@ public class JamochaGui extends JFrame implements ChangeListener {
 
 	private JTabbedPane tabbedPane;
 
-	private List<AbstractJamochaPanel> panels = new LinkedList<AbstractJamochaPanel>();
+	private List<AbstractJamochaPanel> panels = new LinkedList<>();
 
 	private boolean exitOnClose = false;
 

@@ -88,7 +88,7 @@ public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 	 * The Queue for incoming KeyEvents. We process them in an own Thread to
 	 * prevent strange, concurrent behaviours.
 	 */
-	private Queue<KeyEvent> keyEventQueue = new ConcurrentLinkedQueue<KeyEvent>();
+	private Queue<KeyEvent> keyEventQueue = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * The Area to display our keypresses and results from the engine.
@@ -119,7 +119,7 @@ public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 	/**
 	 * A history limited to history_max_size entries.
 	 */
-	private List<String> history = new LinkedList<String>();
+	private List<String> history = new LinkedList<>();
 
 	/**
 	 * The last position of the Prompt or in case of a new line the position of
@@ -404,7 +404,7 @@ public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 			 * Simply runs the ChannelListener and lets it process Events.
 			 */
 			public void run() {
-				List<MessageEvent> msgEvents = new ArrayList<MessageEvent>();
+				List<MessageEvent> msgEvents = new ArrayList<>();
 				boolean printPrompt = false;
 
 				while (running) {
@@ -431,7 +431,7 @@ public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 								if(event.getMessage() instanceof DefaultReturnVector) {
 									DefaultReturnVector rv = (DefaultReturnVector) event.getMessage();			
 									if (rv.getItems().size() > 0) {
-										ReturnValue rval = (ReturnValue) rv.getItems().firstElement();
+										ReturnValue rval = rv.getItems().get(0);
 										if ((rval.getValueType() == Constants.ARRAY_TYPE) ||
 												(rval.getValueType() == Constants.LIST_TYPE))
 										{

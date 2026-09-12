@@ -51,16 +51,16 @@ public class RuleStartupService implements ServletContextListener, RuleService {
 	private long requests = 0;
 	private long totalRulesFired = 0;
 	private String serviceName = null;
-	private List<RuleApplicationImpl> applications = new ArrayList<RuleApplicationImpl>();
-	private Map<String, RuleApplication> applicationMap = new HashMap<String, RuleApplication>();
-	private Map<String, List<Rete>> engineMap = new HashMap<String, List<Rete>>();
+	private List<RuleApplicationImpl> applications = new ArrayList<>();
+	private Map<String, RuleApplication> applicationMap = new HashMap<>();
+	private Map<String, List<Rete>> engineMap = new HashMap<>();
 	protected ServiceConfiguration serviceConfiguration = null;
 	private ServletServiceAdmin administration = null;
 	protected ServletContext servletContext = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	
 	public RuleStartupService() {
-		applications = new ArrayList<RuleApplicationImpl>();
+		applications = new ArrayList<>();
 		administration = new ServletServiceAdmin(this);
 	}
 
@@ -176,7 +176,7 @@ public class RuleStartupService implements ServletContextListener, RuleService {
 			RuleApplication application = this.applications.get(idx);
 			((RuleApplicationImpl)application).setServletContext(this.servletContext);
 			String key = application.getName() + "::" + application.getVersion();
-			List<Rete> queue = new ArrayList<Rete>();
+			List<Rete> queue = new ArrayList<>();
 			this.applicationMap.put(key, application);
 			this.engineMap.put(key, queue);
 			int initialCount = application.getInitialPool();

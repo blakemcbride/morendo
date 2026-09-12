@@ -86,7 +86,7 @@ public class AfterFunction extends AbstractTimeFunction implements Function, Ser
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length > 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("(after ");
 			for (int idx=0; idx < params.length; idx++) {
 				if (idx > 0) {

@@ -174,7 +174,7 @@ public class HashedEqBNode extends BaseJoin {
      * Basic implementation will return string format of the betaNode
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int idx = 0; idx < this.binds.length; idx++) {
             if (idx > 0) {
                 buf.append(" && ");
@@ -188,7 +188,7 @@ public class HashedEqBNode extends BaseJoin {
      * returns the node named + node id and the bindings in a string format
      */
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("HashedEqBNode-" + this.nodeID + "> ");
         for (int idx = 0; idx < this.binds.length; idx++) {
             if (idx > 0) {

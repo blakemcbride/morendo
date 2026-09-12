@@ -20,7 +20,7 @@ public class EngineContextImpl implements EngineContext {
 	private String version = null;
 	private long startTime = 0;
 	private long endTime = 0;
-	private List<?> objectList = new ArrayList<Object>();
+	private List<?> objectList = new ArrayList<>();
 	
 	public EngineContextImpl(RuleServiceImpl service, org.jamocha.rete.Rete engine, String name, String version) {
 		this.ruleService = service;

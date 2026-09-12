@@ -122,7 +122,7 @@ public class OnlyJoinFrst extends BaseJoin {
 	 * method returns string format for the node
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("Exist - (no bindings)");
 		return buf.toString();
 	}
@@ -131,7 +131,7 @@ public class OnlyJoinFrst extends BaseJoin {
 	 * The current implementation is similar to BetaNode
 	 */
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("<node-" + this.nodeID + "> Exist - ");
         buf.append(" (no bindings) ");
 		return buf.toString();

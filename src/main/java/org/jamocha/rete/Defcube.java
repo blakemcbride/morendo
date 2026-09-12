@@ -190,7 +190,7 @@ public class Defcube implements Cube {
 	 * Method is responsible for 
 	 */
 	public boolean compileCube(Rete engine) {
-		ArrayList<Deftemplate> templatelist = new ArrayList<Deftemplate>();
+		ArrayList<Deftemplate> templatelist = new ArrayList<>();
 		for (int idx=0; idx < objectConditionList.size(); idx++) {
 			ObjectCondition oc = (ObjectCondition)this.objectConditionList.get(idx);
 			Deftemplate templ = (Deftemplate)engine.getCurrentFocus().getTemplate(oc.getTemplateName());
@@ -352,7 +352,7 @@ public class Defcube implements Cube {
 	}
 	
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("(" + this.name + Constants.LINEBREAK);
 		for (int idx=0; idx < dimensions.length; idx++) {
 			buf.append("  (" + dimensions[idx].toPPString() + ")" + Constants.LINEBREAK);

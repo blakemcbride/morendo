@@ -35,7 +35,7 @@ public class UnionFunction implements Serializable, Function {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector ret = new DefaultReturnVector();
 		Object[] value = null;
-		ArrayList<Object> list = new ArrayList<Object>();
+		ArrayList<Object> list = new ArrayList<>();
 		if (params != null && params.length > 0) {
 			for (int idx=0; idx < params.length; idx++) {
 				Object v = params[idx].getValue(engine, Constants.OBJECT_TYPE);

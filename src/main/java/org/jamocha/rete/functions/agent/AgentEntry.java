@@ -26,7 +26,7 @@ public class AgentEntry {
 	private String agentApplicationName;
 	private String agentApplicationVersion;
 	private long timestamp;
-	private List<String> ruleNames = new ArrayList<String>();
+	private List<String> ruleNames = new ArrayList<>();
 	
 	public AgentEntry() {
 		super();

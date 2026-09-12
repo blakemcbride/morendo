@@ -40,7 +40,7 @@ public class OrCondition implements Condition {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected List<Object> nestedCE = new ArrayList<Object>();
+	protected List<Object> nestedCE = new ArrayList<>();
     protected BaseJoin reteNode = null;
     
 	/**
@@ -71,7 +71,7 @@ public class OrCondition implements Condition {
     }
     
 	public List<?> getNodes() {
-		return new ArrayList<Object>();
+		return new ArrayList<>();
 	}
 
     /**

@@ -35,7 +35,7 @@ public class DeleteRangeFunction implements Serializable, Function {
 		DefaultReturnVector ret = new DefaultReturnVector();
 		Object value = new Object[0];
 		if (params != null && params.length > 0) {
-			List<Object> rlist = new ArrayList<Object>();
+			List<Object> rlist = new ArrayList<>();
 			Object list = null;
 			if (params[0] instanceof ValueParam) {
 				list = params[0].getValue();

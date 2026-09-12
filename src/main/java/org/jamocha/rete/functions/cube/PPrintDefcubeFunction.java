@@ -64,7 +64,7 @@ public class PPrintDefcubeFunction implements Function {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length == 1) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("(ppdefcube " + params[0].getStringValue());
 			buf.append(")");
 			return buf.toString();

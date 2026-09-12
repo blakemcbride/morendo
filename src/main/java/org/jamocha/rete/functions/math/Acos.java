@@ -85,7 +85,7 @@ public class Acos implements Function, Serializable {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null && params.length >= 0) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("(acos");
 				int idx = 0;
 				if (params[idx] instanceof BoundParam) {

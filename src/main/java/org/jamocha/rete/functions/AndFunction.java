@@ -63,7 +63,7 @@ public class AndFunction implements Function, Serializable {
 
 	public String toPPString(Parameter[] params, int indents) {
 		if (params != null) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			for (int idx=0; idx < params.length; idx++) {
 				if (idx > 0) {
 					buf.append(" && ");

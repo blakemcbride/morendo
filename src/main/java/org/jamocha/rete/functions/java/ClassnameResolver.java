@@ -25,9 +25,9 @@ import org.jamocha.rete.Rete;
 
 public class ClassnameResolver {
 
-	private List<String> packages = new ArrayList<String>();
+	private List<String> packages = new ArrayList<>();
 
-	private List<String> classes = new ArrayList<String>();
+	private List<String> classes = new ArrayList<>();
 
 	private static final Pattern classnamePattern = Pattern
 			.compile("([\\w_][\\w_\\d]*\\.)*([\\w_][\\w_\\d]*)");
@@ -58,7 +58,7 @@ public class ClassnameResolver {
 			throw new ClassNotFoundException("\"" + name
 					+ "\" is not a valid class name.");
 		}
-		List<String> possibleNames = new ArrayList<String>();
+		List<String> possibleNames = new ArrayList<>();
 		possibleNames.add(name);
 		if (!isQualifiedClassname(name)) {
 			for (String className : classes) {

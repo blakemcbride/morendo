@@ -110,31 +110,31 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 	 * the key is the Class object. The value is the defclass. the defclass is
 	 * then used to lookup the deftemplate in the current Module.
 	 */
-	protected Map<Object, Defclass> defclass = new HashMap<Object, Defclass>();
-	protected Map<String, Defclass> defclassByName = new HashMap<String, Defclass>();
-	protected Map<String, Defclass> templateToDefclass = new HashMap<String, Defclass>();
-	protected Map<Object, Template> classToTemplate = new HashMap<Object, Template>();
+	protected Map<Object, Defclass> defclass = new HashMap<>();
+	protected Map<String, Defclass> defclassByName = new HashMap<>();
+	protected Map<String, Defclass> templateToDefclass = new HashMap<>();
+	protected Map<Object, Template> classToTemplate = new HashMap<>();
 
 	/**
 	 * this is the HashMap for all functions. This means all function names are
 	 * unique.
 	 */
-	protected Map<String, Function> functions = new HashMap<String, Function>();
+	protected Map<String, Function> functions = new HashMap<>();
 
 	/**
 	 * The HashMap for all measures
 	 */
-	protected Map<String, Measure> measures = new HashMap<String, Measure>();
+	protected Map<String, Measure> measures = new HashMap<>();
 	
-	protected Map<String, Writer> outputStreams = new HashMap<String, Writer>();
+	protected Map<String, Writer> outputStreams = new HashMap<>();
 
 	/**
 	 * an ArrayList for the listeners
 	 */
-	protected ArrayList<EngineEventListener> listeners = new ArrayList<EngineEventListener>();
+	protected ArrayList<EngineEventListener> listeners = new ArrayList<>();
 
-	private ArrayList<FunctionGroup> functionGroups = new ArrayList<FunctionGroup>();
-	private ArrayList<MeasureGroup> measureGroups = new ArrayList<MeasureGroup>();
+	private ArrayList<FunctionGroup> functionGroups = new ArrayList<>();
+	private ArrayList<MeasureGroup> measureGroups = new ArrayList<>();
 
 	private long lastFactId = 1;
 
@@ -147,11 +147,11 @@ public class Rete implements PropertyChangeListener, CompilerListener,
     private DeffunctionGroup deffunctions = new DeffunctionGroup();
     private RootNode root = new RootNode(this);
     private RuleCompiler compiler = null;
-    private Map<Rule, Object> rulesFired = new HashMap<Rule, Object>();
+    private Map<Rule, Object> rulesFired = new HashMap<>();
     private QueryCompiler queryCompiler = null;
     private GraphQueryCompiler graphQueryCompiler = null;
-    private Map<String, Query> queries = new HashMap<String, Query>();
-    private Map<String, GraphQuery> graphQueries = new HashMap<String, GraphQuery>();
+    private Map<String, Query> queries = new HashMap<>();
+    private Map<String, GraphQuery> graphQueries = new HashMap<>();
 
 	/**
 	 * 
@@ -342,7 +342,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 		 * upsets the iteration, so build a list of module names and then
 		 * remove by name, except MAIN.
 		 */
-		ArrayList<String> modNames = new ArrayList<String>();
+		ArrayList<String> modNames = new ArrayList<>();
 		Collection<Module> modules = this.workingMem.getModules();	
 		String modName;
 		for (Module mod : modules) {
@@ -506,7 +506,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
      * @return
      */
 	public List<Rule> getRulesFired() {
-        ArrayList<Rule> list = new ArrayList<Rule>();
+        ArrayList<Rule> list = new ArrayList<>();
         list.addAll(this.rulesFired.keySet());
         return list;
     }
@@ -1030,7 +1030,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 	}
 	
 	public List<Measure> getAllMeasures() {
-		return new ArrayList<Measure>(this.measures.values());
+		return new ArrayList<>(this.measures.values());
 	}
 	
 	public Measure findMeasure(String name) {
@@ -1608,7 +1608,7 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 		try {
 			this.workingMem.getAgenda().startReset();
 			
-            List<?> facts = new ArrayList<Object>(this.workingMem.getDeffactMap().values());
+            List<?> facts = new ArrayList<>(this.workingMem.getDeffactMap().values());
 			Iterator<?> itr = facts.iterator();
 			while (itr.hasNext()) {
 				Fact ft = (Fact) itr.next();
@@ -1701,31 +1701,31 @@ public class Rete implements PropertyChangeListener, CompilerListener,
 	
 	/// Map methods
 	public Map<?, ?> newMap() {
-		return new HashMap<Object, Object>();
+		return new HashMap<>();
 	}
 	
 	public Map<?, ?> newLocalMap() {
-		return new HashMap<Object, Object>();
+		return new HashMap<>();
 	}
 	
     public Map<?, ?> newAlphaMemoryMap(String name) {
-        return new HashMap<Object, Object>();
+        return new HashMap<>();
     }
     
     public Map<?, ?> newLinkedHashmap(String name) {
-        return new LinkedHashMap<Index, Index>();
+        return new LinkedHashMap<>();
     }
     
     public Map<?, ?> newBetaMemoryMap(String name) {
-        return new HashMap<Object, Object>();
+        return new HashMap<>();
     }
     
     public Map<?, ?> newTerminalMap() {
-    	return new HashMap<Object, Object>();
+    	return new HashMap<>();
     }
     
     public Map<?, ?> newClusterableMap(String name) {
-        return new HashMap<Object, Object>();
+        return new HashMap<>();
     }
     
 	/**

@@ -53,7 +53,7 @@ public class TestCondition implements Condition {
 	private static final long serialVersionUID = 1L;
 	protected Function func = null;
     protected TestNode node = null;
-	protected ArrayList<Object> binds = new ArrayList<Object>();
+	protected ArrayList<Object> binds = new ArrayList<>();
     protected boolean negated = false;
 
     
@@ -96,7 +96,7 @@ public class TestCondition implements Condition {
      * TestNode to it and returns the list.
      */
 	public List<TestNode> getNodes() {
-        List<TestNode> n = new ArrayList<TestNode>();
+        List<TestNode> n = new ArrayList<>();
         n.add(node);
         return n;
     }    
@@ -163,7 +163,7 @@ public class TestCondition implements Condition {
     }
     
     public String toPPString() {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	String pad = "  ";
     	buf.append(pad + "(test (" + this.func.getName());
     	if (this.func instanceof ShellFunction) {

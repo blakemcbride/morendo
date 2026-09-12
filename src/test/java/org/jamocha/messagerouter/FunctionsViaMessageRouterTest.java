@@ -40,7 +40,7 @@ public class FunctionsViaMessageRouterTest{
 				.executeCommand("(deftemplate ass_tst(slot name)(slot size))");
 		
         
-		List<MessageEvent> messages = new ArrayList<MessageEvent>();
+		List<MessageEvent> messages = new ArrayList<>();
 		do {
 	        try{
 	            Thread.sleep(2000);
@@ -109,7 +109,7 @@ public class FunctionsViaMessageRouterTest{
 		Rete engine = new Rete();
 		MessageRouter router = engine.getMessageRouter();
 		StringChannel stringChannel = router.openChannel("TestChannel");
-		List<MessageEvent> messages = new ArrayList<MessageEvent>();
+		List<MessageEvent> messages = new ArrayList<>();
 		// (templates) also lists the built-in templates (initial fact, Graph, Node, Edge)
 		int builtInTemplates = engine.getCurrentFocus().getTemplateCount();
 
@@ -160,7 +160,7 @@ public class FunctionsViaMessageRouterTest{
 		Rete engine = new Rete();
 		MessageRouter router = engine.getMessageRouter();
 		StringChannel stringChannel = router.openChannel("TestChannel");
-		List<MessageEvent> messages = new ArrayList<MessageEvent>();
+		List<MessageEvent> messages = new ArrayList<>();
 		
 		stringChannel.executeCommand("(deftemplate tst (slot name)(slot size))");
 		
@@ -214,7 +214,7 @@ public class FunctionsViaMessageRouterTest{
 		Rete engine = new Rete();
 		MessageRouter router = engine.getMessageRouter();
 		StringChannel stringChannel = router.openChannel("TestChannel");
-		List<MessageEvent> messages = new ArrayList<MessageEvent>();
+		List<MessageEvent> messages = new ArrayList<>();
 		
 		String command = "(deftemplate fa_sl_tst";
 		
@@ -278,7 +278,7 @@ public class FunctionsViaMessageRouterTest{
 		Rete engine = new Rete();
 		MessageRouter router = engine.getMessageRouter();
 		StringChannel stringChannel = router.openChannel("TestChannel");
-		List<MessageEvent> messages = new ArrayList<MessageEvent>();
+		List<MessageEvent> messages = new ArrayList<>();
 		
 		int loop = 10;
 		for (int i = 1; i <= loop; ++i) {

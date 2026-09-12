@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Node {
 
-	private List<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
+	private List<PropertyChangeListener> listeners = new ArrayList<>();
 	private String id;
 	private String label;
 	private String nodeType;

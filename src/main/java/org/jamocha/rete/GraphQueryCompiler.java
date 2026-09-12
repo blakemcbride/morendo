@@ -59,7 +59,7 @@ public class GraphQueryCompiler implements QueryCompiler {
     private Rete engine = null;
    	private Map<Template, QueryObjTypeNode> objectTypeNodesMap = null;
     
-    private ArrayList<CompilerListener> listener = new ArrayList<CompilerListener>();
+    private ArrayList<CompilerListener> listener = new ArrayList<>();
     protected boolean validate = true;
     protected TemplateValidation tval = null;
     
@@ -79,7 +79,7 @@ public class GraphQueryCompiler implements QueryCompiler {
 	public GraphQueryCompiler(Rete engine) {
 		super();
         this.engine = engine;
-        this.objectTypeNodesMap = new HashMap<Template, QueryObjTypeNode>();
+        this.objectTypeNodesMap = new HashMap<>();
         this.tval = new TemplateValidation(engine);
 	}
 
@@ -172,7 +172,7 @@ public class GraphQueryCompiler implements QueryCompiler {
 
 	public Condition[] getRuleConditions(Query query) {
         Condition[] conditions = query.getConditions();
-        ArrayList<Object> conditionList = new ArrayList<Object>();
+        ArrayList<Object> conditionList = new ArrayList<>();
         boolean hasAnd = false;
         for (int idx=0; idx < conditions.length; idx++) {
             if (conditions[idx] instanceof AndCondition) {

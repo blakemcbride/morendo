@@ -53,8 +53,8 @@ public class Defclass implements Serializable {
 	private boolean ISBEAN = false;
 	private Method addListener = null;
 	private Method removeListener = null;
-	private Map<String, PropertyDescriptor> methods = new HashMap<String, PropertyDescriptor>();
-	private Map<String, Method> callMethods = new HashMap<String, Method>();
+	private Map<String, PropertyDescriptor> methods = new HashMap<>();
+	private Map<String, Method> callMethods = new HashMap<>();
 	private PropertyMacros[] macros = null;
 	private boolean useMacros = false;
 
@@ -78,7 +78,7 @@ public class Defclass implements Serializable {
 			this.INFO = Introspector.getBeanInfo(this.OBJECT_CLASS);
 			// we have to filter out the class PropertyDescriptor
 			PropertyDescriptor[] pd = this.INFO.getPropertyDescriptors();
-			ArrayList<PropertyDescriptor> list = new ArrayList<PropertyDescriptor>();
+			ArrayList<PropertyDescriptor> list = new ArrayList<>();
 			for (int idx = 0; idx < pd.length; idx++) {
 				if (pd[idx].getName().equals("class")) {
 					// don't add
@@ -322,7 +322,7 @@ public class Defclass implements Serializable {
 		// are in the same column
 		// now check to see if the new class has more fields
 		if (newprops.length > pslots.length) {
-			desc = new ArrayList<String>();
+			desc = new ArrayList<>();
 			add = true;
 		}
 		for (int idx = 0; idx < pslots.length; idx++) {
@@ -332,7 +332,7 @@ public class Defclass implements Serializable {
 			}
 		}
 		if (add) {
-			ArrayList<PropertyDescriptor> newfields = new ArrayList<PropertyDescriptor>();
+			ArrayList<PropertyDescriptor> newfields = new ArrayList<>();
 			for (int idz = 0; idz < this.PROPS.length; idz++) {
 				if (!desc.contains(this.PROPS[idz].getName())) {
 					// we add it to the new fields
@@ -446,7 +446,7 @@ public class Defclass implements Serializable {
 	 */
 	public void loadMacros(ClassLoader cl) {
 		String packageName = OBJECT_CLASS.getName().toLowerCase();
-		ArrayList<PropertyMacros> macrolist = new ArrayList<PropertyMacros>();
+		ArrayList<PropertyMacros> macrolist = new ArrayList<>();
 		for (int idx=0; idx < PROPS.length; idx++) {
 			PropertyMacros macro = new PropertyMacros();
 			try {

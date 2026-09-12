@@ -30,7 +30,7 @@ public class Defdimension implements CubeDimension {
 	private boolean joined = false;
 	private boolean autoIndex = false;
 	private Binding binding = null;
-	private List<Deftemplate> deftemplates = new ArrayList<Deftemplate>();
+	private List<Deftemplate> deftemplates = new ArrayList<>();
 	private String variableName;
 	private Map<Object, Object> tokenIndex = null;
 	private boolean profile = false;
@@ -129,7 +129,7 @@ public class Defdimension implements CubeDimension {
 		if (!negated) {
 			return (Map<Object, Object>)tokenIndex.get(value);
 		} else {
-			Map<Object, Object> results = new HashMap<Object, Object>();
+			Map<Object, Object> results = new HashMap<>();
 			Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 			while (keyIterator.hasNext()) {
 				String key = (String)keyIterator.next();
@@ -170,7 +170,7 @@ public class Defdimension implements CubeDimension {
 
 	@SuppressWarnings({ "unchecked" })
 	protected Map<Object, Object> queryGreater(Number value) {
-		Map<Object, Object> matches = new HashMap<Object, Object>();
+		Map<Object, Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			Object key = keyIterator.next();
@@ -191,7 +191,7 @@ public class Defdimension implements CubeDimension {
 
 	@SuppressWarnings({ "unchecked" })
 	protected Map<Object, Object> queryLesser(Number value) {
-		Map<Object, Object> matches = new HashMap<Object, Object>();
+		Map<Object, Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			Object key = keyIterator.next();
@@ -212,7 +212,7 @@ public class Defdimension implements CubeDimension {
 	
 	@SuppressWarnings({ "unchecked" })
 	protected Map<Object, Object> queryGreaterEqual(Number value) {
-		Map<Object, Object> matches = new HashMap<Object, Object>();
+		Map<Object, Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			Object key = keyIterator.next();
@@ -233,7 +233,7 @@ public class Defdimension implements CubeDimension {
 	
 	@SuppressWarnings({ "unchecked" })
 	protected Map<Object,Object> queryLesserEqual(Number value) {
-		Map<Object,Object> matches = new HashMap<Object, Object>();
+		Map<Object,Object> matches = new HashMap<>();
 		Iterator<Object> keyIterator = this.tokenIndex.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			Object key = keyIterator.next();
@@ -253,7 +253,7 @@ public class Defdimension implements CubeDimension {
 	}
 	
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("dimension " + this.name + " ?" + this.variableName);
 		buf.append(" : autoIndex(" + this.autoIndex + ")");
 		if (tokenIndex != null) {

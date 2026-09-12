@@ -52,7 +52,7 @@ public class BetweenFunction extends AbstractTimeFunction implements Function, S
 
 	/**
 	 * The method expects an array of ShellBoundParam. The method will use
-	 * StringBuffer to resolve the binding and print out 1 binding per
+	 * StringBuilder to resolve the binding and print out 1 binding per
 	 * line.
 	 */
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {

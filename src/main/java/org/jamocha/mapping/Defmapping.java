@@ -26,9 +26,9 @@ public class Defmapping implements Mapping {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String className;
-	private List<KeyProperty> keyProperties = new ArrayList<KeyProperty>();
+	private List<KeyProperty> keyProperties = new ArrayList<>();
 	private String mappingName;
-	private List<Property> properties = new ArrayList<Property>();
+	private List<Property> properties = new ArrayList<>();
 	private String sqlQuery;
 	private String tableName;
 	private String template;

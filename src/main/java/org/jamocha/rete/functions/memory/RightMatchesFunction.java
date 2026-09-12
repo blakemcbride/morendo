@@ -84,7 +84,7 @@ public class RightMatchesFunction extends BaseMatchFunction implements Function,
     }
     
     public void printBetaNodeDetailInfo(BaseJoin betaNode, Rete engine, DefaultWM wm) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(betaNode.toPPString());
         // Map lmem = (Map)wm.getBetaLeftMemory(betaNode); Unused
         Object rmem = wm.getBetaRightMemory(betaNode);

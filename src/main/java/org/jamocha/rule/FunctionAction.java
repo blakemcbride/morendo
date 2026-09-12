@@ -186,7 +186,7 @@ public class FunctionAction implements Action {
 	 * method implements the necessary logic to print out the action
 	 */
 	public String toPPString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("  " + faction.toPPString(this.parameters,1) + Constants.LINEBREAK);
 		return buf.toString();
 	}

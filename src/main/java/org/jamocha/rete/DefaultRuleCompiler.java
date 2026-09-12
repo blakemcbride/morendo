@@ -44,7 +44,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
 	private Map<Template, ObjectTypeNode> inputnodes = null;
     private Module currentMod = null;
     
-	private ArrayList<CompilerListener> listener = new ArrayList<CompilerListener>();
+	private ArrayList<CompilerListener> listener = new ArrayList<>();
     protected boolean validate = true;
     protected TemplateValidation tval = null;
     
@@ -189,7 +189,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
 
 	public Condition[] getRuleConditions(Rule rule) {
         Condition[] conditions = rule.getConditions();
-        ArrayList<Object> conditionList = new ArrayList<Object>();
+        ArrayList<Object> conditionList = new ArrayList<>();
         boolean hasAnd = false;
         for (int idx=0; idx < conditions.length; idx++) {
             if (conditions[idx] instanceof AndCondition) {

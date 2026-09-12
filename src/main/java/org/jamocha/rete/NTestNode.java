@@ -159,7 +159,7 @@ public class NTestNode extends BaseJoin {
 	 */
 	public String toPPString() {
 		if (ppstring == null) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("TestNode-" + this.nodeID + "> (test (" + this.func.getName());
 			for (int idx = 0; idx < this.params.length; idx++) {
 				if (params[idx] instanceof BoundParam) {

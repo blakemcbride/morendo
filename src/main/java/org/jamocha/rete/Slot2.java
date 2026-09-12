@@ -40,8 +40,8 @@ public class Slot2 extends Slot {
      * 
      */
     private static final long serialVersionUID = 1L;
-   	private List<Object> equalsList = new ArrayList<Object>();
-    private List<Object> notEqualList = new ArrayList<Object>();
+   	private List<Object> equalsList = new ArrayList<>();
+    private List<Object> notEqualList = new ArrayList<>();
 
     public Slot2(){
     }
@@ -122,7 +122,7 @@ public class Slot2 extends Slot {
     }
     
     public String toString(String andOr) {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	if (this.equalsList.size() > 0) {
     		buf.append("(");
     		Iterator<Object> itr = this.equalsList.iterator();

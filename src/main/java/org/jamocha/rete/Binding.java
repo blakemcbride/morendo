@@ -217,7 +217,7 @@ public class Binding implements Serializable, Cloneable {
      * @return
      */
     public String toBindString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("(" + this.leftrow + ")(");
         buf.append(this.leftIndex);
         if (this.negated) {
@@ -231,7 +231,7 @@ public class Binding implements Serializable, Cloneable {
     }
     
     public String toPPString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("?" + varName + " (" + this.leftrow + ")(");
         buf.append(this.leftIndex);
         if (this.negated) {

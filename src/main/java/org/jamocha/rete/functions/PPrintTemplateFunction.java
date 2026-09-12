@@ -62,7 +62,7 @@ public class PPrintTemplateFunction implements Function, Serializable {
 	 * function does the following: (ppdeftemplate &lt;deftemplate-name>)
 	 */
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		HashMap<Object, Object> filter = new HashMap<Object, Object>();
+		HashMap<Object, Object> filter = new HashMap<>();
 		if (params != null && params.length > 0) {
 			for (int idx=0; idx < params.length; idx++) {
 				if (params[idx] instanceof ValueParam) {

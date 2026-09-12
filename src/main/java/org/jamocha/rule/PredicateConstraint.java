@@ -57,7 +57,7 @@ public class PredicateConstraint implements Constraint {
 
     protected Object value = null;
     
-	protected ArrayList<Object> parameters = new ArrayList<Object>(); // Should be Parameter, but needs re-factor parser
+	protected ArrayList<Object> parameters = new ArrayList<>(); // Should be Parameter, but needs re-factor parser
     
     protected boolean isPredicateJoin = false;
     
@@ -194,7 +194,7 @@ public class PredicateConstraint implements Constraint {
             " " + this.value.toString() +
             ") )" + Constants.LINEBREAK;
         } else {
-        	StringBuffer buf = new StringBuffer();
+        	StringBuilder buf = new StringBuilder();
             if (this.parameters != null & this.parameters.size() > 0) {
             	buf.append("    (" + this.name + " ?" + this.varName +
             			"&:(" + function + " ");

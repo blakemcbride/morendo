@@ -28,7 +28,7 @@ public class GeneratePropogateRules {
 		super();
 	}
 
-	public void writeDeftemplate1(StringBuffer buf) {
+	public void writeDeftemplate1(StringBuilder buf) {
 		buf.append("(deftemplate object1" + Constants.LINEBREAK);
 		buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
 		buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -39,7 +39,7 @@ public class GeneratePropogateRules {
 		buf.append(")" + Constants.LINEBREAK);
 	}
 	
-	public void writeDeftemplate2(StringBuffer buf) {
+	public void writeDeftemplate2(StringBuilder buf) {
 		buf.append("(deftemplate object2" + Constants.LINEBREAK);
 		buf.append("  (slot stringfield (type STRING) )" + Constants.LINEBREAK);
 		buf.append("  (slot intfield (type INTEGER) )" + Constants.LINEBREAK);
@@ -50,7 +50,7 @@ public class GeneratePropogateRules {
 		buf.append(")" + Constants.LINEBREAK);
 	}
 
-	public void writeRightActivateFacts(int count, StringBuffer buf) {
+	public void writeRightActivateFacts(int count, StringBuilder buf) {
 		buf.append("(assert (object1 " + "(stringfield \"1" +
 				"\")(intfield 1)(longfield 1)" +
 				"(doublefield 100.00)(floatfield 100)" +
@@ -65,7 +65,7 @@ public class GeneratePropogateRules {
 		}
 	}
 	
-	public void writeLeftActivateFacts(int count, StringBuffer buf) {
+	public void writeLeftActivateFacts(int count, StringBuilder buf) {
 		buf.append("(assert (object2 " + "(stringfield \"1\")" +
 				"(intfield 1)(longfield 1)" +
 				"(doublefield 100.00)(floatfield 100)" +
@@ -80,7 +80,7 @@ public class GeneratePropogateRules {
 		}
 	}
 
-	public void writeZeroJoinRule(int count, StringBuffer buf) {
+	public void writeZeroJoinRule(int count, StringBuilder buf) {
 		for (int idx=1; idx <= count; idx++) {
 			buf.append("(defrule zerojrule" + idx + Constants.LINEBREAK);
 			buf.append("  (object1" + Constants.LINEBREAK);
@@ -102,15 +102,15 @@ public class GeneratePropogateRules {
 		}
 	}
 	
-	public void writeProfile(StringBuffer buf) {
+	public void writeProfile(StringBuilder buf) {
 		buf.append("(profile all)" + Constants.LINEBREAK);
 	}
 	
-	public void writeFire(StringBuffer buf) {
+	public void writeFire(StringBuilder buf) {
 		buf.append("(fire)" + Constants.LINEBREAK);
 	}
 	
-	public void writePrintProfile(StringBuffer buf) {
+	public void writePrintProfile(StringBuilder buf) {
 		buf.append("(print-profile)" + Constants.LINEBREAK);
 	}
 	
@@ -137,7 +137,7 @@ public class GeneratePropogateRules {
 			}
 			
 			GeneratePropogateRules gen = new GeneratePropogateRules();
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			gen.writeDeftemplate1(buf);
 			gen.writeDeftemplate2(buf);
 			gen.writeZeroJoinRule(rules,buf);

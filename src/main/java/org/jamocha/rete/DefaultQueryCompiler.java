@@ -57,7 +57,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
     private Rete engine = null;
    	private Map<Template, QueryObjTypeNode> objectTypeNodesMap = null;
     
-    private ArrayList<CompilerListener> listener = new ArrayList<CompilerListener>();
+    private ArrayList<CompilerListener> listener = new ArrayList<>();
     protected boolean validate = true;
     protected TemplateValidation tval = null;
     
@@ -150,7 +150,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
     /* Eclipse will compile with ConditionsList as Arraylist<Condition and cast for addAll. JDK does not */
 	public Condition[] getRuleConditions(Query query) {
         Condition[] conditions = query.getConditions();
-        ArrayList<Object> conditionList = new ArrayList<Object>();
+        ArrayList<Object> conditionList = new ArrayList<>();
         boolean hasAnd = false;
         for (int idx=0; idx < conditions.length; idx++) {
             if (conditions[idx] instanceof AndCondition) {

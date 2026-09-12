@@ -106,7 +106,7 @@ public class EqHashIndex implements HashIndex, Serializable {
     }
 
     public String toPPString() {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	for (int i=0; i < values.length; i++) {
     		buf.append(values[i].toString());
     	}

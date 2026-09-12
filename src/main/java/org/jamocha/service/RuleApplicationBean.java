@@ -18,11 +18,11 @@ public class RuleApplicationBean implements Configuration {
 	private int minPool = 1;
 	private String name;
 	private List<ObjectModel> models;
-	private List<FunctionPackage> functionGroups = new ArrayList<FunctionPackage>();
-	private List<ClipsRuleset> rulesets = new ArrayList<ClipsRuleset>();
-	private List<ObjectData> objectData = new ArrayList<ObjectData>();
-	private List<ClipsInitialData> clipsData = new ArrayList<ClipsInitialData>();
-	private List<JSONData<?>> jsonData = new ArrayList<JSONData<?>>();
+	private List<FunctionPackage> functionGroups = new ArrayList<>();
+	private List<ClipsRuleset> rulesets = new ArrayList<>();
+	private List<ObjectData> objectData = new ArrayList<>();
+	private List<ClipsInitialData> clipsData = new ArrayList<>();
+	private List<JSONData<?>> jsonData = new ArrayList<>();
 	
 	public RuleApplicationBean() {
 	}

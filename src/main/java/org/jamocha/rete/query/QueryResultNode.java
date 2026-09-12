@@ -32,7 +32,7 @@ public class QueryResultNode extends BaseNode {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected ArrayList<Object> results = new ArrayList<Object>();
+	protected ArrayList<Object> results = new ArrayList<>();
 	private volatile Defquery query = null;
 	
 	public QueryResultNode(int id) {

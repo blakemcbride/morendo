@@ -43,9 +43,9 @@ public class MessageRouter implements Serializable {
 	/**
 	 * The List of MessageListeners
 	 */
-	private Map<String, CommunicationChannel> idToChannel = new HashMap<String, CommunicationChannel>();
+	private Map<String, CommunicationChannel> idToChannel = new HashMap<>();
 
-	private Map<String, List<MessageEvent>> idToMessages = new LinkedHashMap<String, List<MessageEvent>>();
+	private Map<String, List<MessageEvent>> idToMessages = new LinkedHashMap<>();
 
 	private volatile String currentChannelId = "";
 
@@ -55,9 +55,9 @@ public class MessageRouter implements Serializable {
 	private Rete engine;
 
 	// TODO is this threadsafe?
-	private Queue<CommandObject> commandQueue = new LinkedList<CommandObject>();
+	private Queue<CommandObject> commandQueue = new LinkedList<>();
 
-	private Queue<MessageEvent> messageQueue = new LinkedList<MessageEvent>();
+	private Queue<MessageEvent> messageQueue = new LinkedList<>();
 
 	private CLIPSInterpreter interpreter;
 
@@ -96,7 +96,7 @@ public class MessageRouter implements Serializable {
 						}
 					}
 				}
-				List<MessageEvent> allMessages = new ArrayList<MessageEvent>(
+				List<MessageEvent> allMessages = new ArrayList<>(
 						messageQueue);
 				messageQueue.clear();
 				for (int i = 0; i < allMessages.size(); ++i) {

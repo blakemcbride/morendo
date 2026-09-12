@@ -52,7 +52,7 @@ public class IntersectionFunction implements Serializable, Function {
 	}
 
 	protected Set<Object> convertToList(Object[] array) {
-		Set<Object> data = new HashSet<Object>();
+		Set<Object> data = new HashSet<>();
 		for (int idx=0; idx < array.length; idx++) {
 			data.add(array[idx]);
 		}

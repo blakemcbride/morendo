@@ -23,7 +23,7 @@ import java.awt.event.MouseListener;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -76,7 +76,7 @@ public class Visualiser implements ActionListener, MouseListener, EngineEventLis
 	protected final int nodeHorizontal=45;
 	protected final int nodeVertical=16;
 	protected SimpleAttributeSet even,odd,actAttributes;
-   	protected Hashtable<String, Shape> coordinates = new Hashtable<String, Shape>();
+   	protected HashMap<String, Shape> coordinates = new HashMap<>();
 	
 	protected Color getBackgroundColorForNode(ViewGraphNode node) {
 		Color bg=Color.black;
@@ -122,7 +122,7 @@ public class Visualiser implements ActionListener, MouseListener, EngineEventLis
 		Color border=getBorderColorForNode(act);
 		String desc="";
 		BaseNode reteNode=act.getReteNode();
-		HashSet<BaseNode> terminalNodes=new HashSet<BaseNode>();
+		HashSet<BaseNode> terminalNodes=new HashSet<>();
 		getCorrespondingTerminalNodes(act, terminalNodes);
 		if (reteNode!=null) desc=String.valueOf(reteNode.getNodeId());
 		Shape s;
@@ -180,7 +180,7 @@ public class Visualiser implements ActionListener, MouseListener, EngineEventLis
 	}
 	
 	protected void createPrimitives(ViewGraphNode root){
-		LinkedList<ViewGraphNode> queue=new LinkedList<ViewGraphNode>();
+		LinkedList<ViewGraphNode> queue=new LinkedList<>();
 		queue.offer(root);
 		while (!queue.isEmpty()) {
 			ViewGraphNode act=queue.poll();

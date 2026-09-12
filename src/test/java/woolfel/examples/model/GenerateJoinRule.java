@@ -8,7 +8,7 @@ public class GenerateJoinRule {
 		super();
 	}
 	
-	public void writeTemplates(StringBuffer buf) {
+	public void writeTemplates(StringBuilder buf) {
 		buf.append("(deftemplate transaction" + LINEBREAK);
 		buf.append("  (slot accountId (type STRING))" + LINEBREAK);
 		buf.append("  (slot buyPrice (type DOUBLE))" + LINEBREAK);
@@ -35,7 +35,7 @@ public class GenerateJoinRule {
 		buf.append(")");		
 	}
 
-	public void writeTransactions(StringBuffer buf) {
+	public void writeTransactions(StringBuilder buf) {
 		
 	}
 	

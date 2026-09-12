@@ -40,7 +40,7 @@ public class MessageRouterTest {
 		// try {
 		stringChannel
 				.executeCommand("(deftemplate wurst(slot name)(slot size))");
-		List<MessageEvent> messages = new ArrayList<MessageEvent>();
+		List<MessageEvent> messages = new ArrayList<>();
 		do {
 			messages.clear();
 			Thread.yield();

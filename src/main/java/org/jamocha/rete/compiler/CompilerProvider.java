@@ -38,7 +38,7 @@ import org.jamocha.rete.RuleCompiler;
  */
 public class CompilerProvider {
 
-	private static final Map<Rete, CompilerProvider> providers = new WeakHashMap<Rete, CompilerProvider>();
+	private static final Map<Rete, CompilerProvider> providers = new WeakHashMap<>();
 
 	public final ConditionCompiler objectConditionCompiler;
 	public final ConditionCompiler existConditionCompiler;

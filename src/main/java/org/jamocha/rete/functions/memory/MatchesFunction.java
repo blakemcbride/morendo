@@ -56,7 +56,7 @@ public class MatchesFunction extends BaseMatchFunction implements Function, Seri
 	 * filtered.
 	 */
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-		HashMap<String, ?> filter = new HashMap<String, Object>();
+		HashMap<String, ?> filter = new HashMap<>();
 		if (params != null && params.length > 0) {
 			// now we populate the filter
 			for (int idx=0; idx < params.length; idx++) {
@@ -91,7 +91,7 @@ public class MatchesFunction extends BaseMatchFunction implements Function, Seri
     
     protected void printAlphaNodeInfo(BaseAlpha alphaNode, Rete engine, DefaultWM wm) {
         if (!(alphaNode instanceof ObjectTypeNode) && !(alphaNode instanceof LIANode) && !(alphaNode instanceof IFLIANode)) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append(alphaNode.toPPString());
             AlphaMemory alphaMem = (AlphaMemory)wm.getAlphaMemory(alphaNode);
             buf.append(" - Total Memories: " + alphaMem.size());
@@ -101,7 +101,7 @@ public class MatchesFunction extends BaseMatchFunction implements Function, Seri
     }
     
     protected void printBetaNodeInfo(BaseJoin betaNode, Rete engine, DefaultWM wm) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(betaNode.toPPString());
         Map<?, ?> lmem = (Map<?, ?>)wm.getBetaLeftMemory(betaNode);
         Object rmem = wm.getBetaRightMemory(betaNode);
