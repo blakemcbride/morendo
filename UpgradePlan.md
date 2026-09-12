@@ -230,7 +230,35 @@ each), then the structural ones. Run the golden suite after every commit.
   `rete/sc` (unreferenced), and the never-constructed, never-referenced `OrderedFactTypeNode`,
   `TemporalTNode`, `CountFact`, `ObjectFilter`. Re-check references before each deletion.
 
-### 3b. Structural (needs judgment, medium risk)
+### 3b - DONE 2026-09-12
+
+Delivered in nine commits, goldens unchanged throughout and `./bld lint` at zero:
+
+- `Evaluate` rewritten with pattern-matching switches (1000 lines to 210); numbers compare
+  exactly as longs when both are integral, as doubles otherwise.
+- 264 `instanceof` blocks use pattern variables, 22 iterator loops are for-each (automated pass;
+  casts applied to a longer expression, blocks that reassign the tested variable and reused
+  iterators were left alone).
+- `Condition`, `Constraint`, `Parameter`/`ReturnValue` are sealed with final leaves.
+- Records: `BindValue`, `CompositeIndex`, `MessageRouter.CommandObject`. The hashed index
+  classes stayed classes: their cached hash codes matter in the join paths.
+- Enums: `ValueType` and `Operator` replace the `Constants` int codes (303 files);
+  `Rete.Watch`/`Rete.Profile`; `AbstractEvent.Kind`, `EngineEvent.Kind`, `MessageEvent.Type`.
+- `MessageRouter` on a `LinkedBlockingQueue` with a daemon thread and immediate delivery (the
+  race from the Phase 0 list is gone); `(exit)` closes the engine instead of the JVM; `Rete`
+  has `isClosed()` and close hooks; `Morendo` runs the shell on the main thread and the GUI on
+  the event dispatch thread; helper threads are daemon threads.
+- `TemplateRegistry`, `FunctionRegistry` (with `ServiceLoader` for extra function groups) and
+  `EngineOutput` split out of `Rete` (1804 to 1516 lines, API unchanged).
+- Fixed on the way: `eq-*`/`add-*` time functions and `printout` now resolve nested calls in
+  their arguments (they read parameters without the engine).
+
+Deliberately not done: enums for `RuleProperty` names (they are strings the grammar matches
+directly) and for `Constants.ACTION_*`; the remaining `synchronized` blocks were left in place
+with the threading contract documented on `Rete` instead.
+
+Original plan:
+
 
 - Pattern matching. `Evaluate.java` (303 `instanceof`, 54 static comparison methods) and the
   `compileConstraint` / `getCompiler` dispatch in `DefaultRuleCompiler`, `ObjectConditionCompiler`
@@ -305,7 +333,7 @@ The Swing GUI stays (decided); the JMS messaging package stays until decided oth
 | 1 Build system | done | low | 0 |
 | 2 Libraries | done | low | 1 |
 | 3a Mechanical | done | low | 0 |
-| 3b Structural | 1-2 weeks | medium | 3a |
+| 3b Structural | done | medium | 3a |
 | 4 Modules | 1-2 days | low | 2, 3a |
 | 5 Tooling/docs | 1 day | none | any |
 

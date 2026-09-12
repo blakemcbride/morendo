@@ -92,18 +92,30 @@ is an unused variant of the grammar.
 
 ### Everything is a Function
 
-`org.jamocha.rete.Rete` is the engine facade. All shell/CLIPS-level operations (`batch`, `build`, `eval`,
-`deftemplate`, `defrule`, `fire`, `assert`, ...) are `Function` implementations:
+`org.jamocha.rete.Rete` is the engine facade; it delegates to `TemplateRegistry` (declared classes
+and templates), `FunctionRegistry` (functions, function groups, measures; also loads any
+`FunctionGroup` listed in `META-INF/services/org.jamocha.rete.FunctionGroup`) and `EngineOutput`
+(print writers and the message router). A `Rete` instance is not thread-safe: drive it from one
+thread, or through the `MessageRouter` command thread as the shell and GUI do. `Rete.close()`
+marks the engine closed, stops the router and runs registered close hooks; `(exit)` only
+closes the engine (nothing calls `System.exit` except the GUI window). All shell/CLIPS-level
+operations (`batch`, `build`, `eval`, `deftemplate`, `defrule`, `fire`, `assert`, ...) are
+`Function` implementations:
 
 - `Function`: `getName()`, `executeFunction(Rete, Parameter[])` returning a `ReturnVector`
-  (`DefaultReturnVector` of `DefaultReturnValue` tagged with `Constants.*_TYPE`), `getReturnType()`,
-  `getParameter()`, `toPPString()`.
+  (`DefaultReturnVector` of `DefaultReturnValue` tagged with a `ValueType`), `getReturnType()`
+  (a `ValueType`), `getParameter()`, `toPPString()`. Comparison operators are the `Operator`
+  enum; both replaced int codes in `Constants`.
 - Functions are bundled in `FunctionGroup`s (`functions/list/ListFunctions`, `functions/math/MathFunctions`,
   ...). Each group's `loadFunctions(engine)` calls `engine.declareFunction(f)`. All built-in groups are
   registered in `Rete.loadBuiltInFunctions()`. To add a built-in: write the class, add it to the right
   group's `loadFunctions`.
 - Parameters arrive as `ValueParam` (literal), `BoundParam` (call `resolveBinding(engine)` first),
-  `FunctionParam2` (nested call), `SlotParam`, etc.
+  `FunctionParam2` (nested call), `SlotParam`, etc. Read arguments with
+  `params[i].getValue(engine, ValueType.OBJECT)`, never the engine-less `getValue()`: only the
+  former resolves bindings and nested calls. `Parameter`/`ReturnValue`, `Condition` and
+  `Constraint` are sealed hierarchies with final leaves, so a new parameter kind or conditional
+  element is an explicit change to the closed set.
 
 Even `Rete.loadRuleset()` and `Rete.build()` just invoke `BatchFunction` / `BuildFunction`.
 
@@ -112,9 +124,10 @@ Even `Rete.loadRuleset()` and `Rete.build()` just invoke `BatchFunction` / `Buil
 Text -> `CLIPSParser` (JavaCC) -> builds `Defrule`/`Defquery`/`GraphQuery`/`Deftemplate`/`Defcube` objects
 or `Function` + `Parameter[]` calls -> executed against `Rete`. The shell (`rete/Shell`, JLine
 line editing, collects input until the parentheses balance) does not call the parser directly: it
-sends each expression through a `StringChannel` on `messagerouter/MessageRouter`, whose command
-thread hands it to `CLIPSInterpreter`, which parses and executes it, and reads the result events
-back from the channel. `service/` wraps the same engine
+sends each expression through a `StringChannel` on `messagerouter/MessageRouter`, whose daemon
+command thread takes it from a blocking queue, hands it to `CLIPSInterpreter`, and posts
+`MessageEvent`s (COMMAND, ENGINE output, RESULT or ERROR) that the channel reads back. The
+shell returns when the input ends or the engine is closed. `service/` wraps the same engine
 for embedding (`RuleService` -> `RuleApplication` -> `EngineContext`, JSON config in
 `samples/configuration`, plus a `servlet/` variant).
 
@@ -152,6 +165,9 @@ query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`,
   dates), `NoAgendaTNode` (fires immediately, no agenda), `MLTerminalNode` (modification logic).
 - Only `Fact`, `Template`, the slot classes and the fact implementations are `Serializable`;
   nodes, compilers, rules, functions and the GUI are not.
+- `Evaluate` compares slot values with pattern-matching switches: strings and booleans by text,
+  numbers exactly as longs when both are integral and as doubles otherwise, temporal values by
+  epoch millisecond, anything else by `equals`.
 - Node memories are NOT stored in nodes. `WorkingMemory` (`DefaultWM`) owns them via the generic
   `getAlphaMemory / getBetaLeftMemory / getBetaRightMemory` (`<T> T`, keyed by node; the node that
   created a memory knows its type), plus facts, deffacts, defglobals, modules, cubes, and the
