@@ -342,6 +342,7 @@ public class Tasks {
 		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar");
 		dep.add(LIBS, MAVEN + "jakarta/jms/jakarta.jms-api/3.1.0/jakarta.jms-api-3.1.0.jar");
 		dep.add(LIBS, MAVEN + "jakarta/servlet/jakarta.servlet-api/6.1.0/jakarta.servlet-api-6.1.0.jar");
+		dep.add(LIBS, MAVEN + "org/jline/jline/4.4.3/jline-4.4.3.jar");
 		// tests only (JUnit 6 platform, Jupiter and console launcher in one jar); dist() leaves it out
 		dep.add(LIBS, MAVEN + "org/junit/platform/junit-platform-console-standalone/6.1.3/" + JUNIT);
 		return dep;
