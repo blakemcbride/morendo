@@ -9,10 +9,10 @@ Jamocha/Sumatra engine; the package root was `org.jamocha` until 2.0.0 and is no
 ordered facts. Comments in `.clp` files are `;;` (a single `;` is a token in this grammar). Added on top of plain RETE: MOLAP cubes, graph queries, temporal facts/rules,
 `only`/`multiple` conditional elements, no-agenda (event-driven) rules, fuzzy bindings, and a
 rule cost function. Design notes for these live in `doc/*.pdf|odt` and `classdiagrams/`. The
-version is 2.1.0 (`Constants.VERSION`). Documents at the root: `README.md` (the GitHub page:
+version is 3.0.0 (`Constants.VERSION`; the original code was 2.0.0-SNAPSHOT, the modernization 2.0.0). Documents at the root: `README.md` (the GitHub page:
 origins, what changed from Peter Lin's original, where things are), `README2.md` (the original
 README, kept as is), `BUILDING.md`, `USAGE.md`, this file, and `UpgradePlan.md` (the 2.0.0
-modernization plan). `FeaturePlan.md`, the 2.1.0 feature plan, is Blake's local working file and
+modernization plan). `FeaturePlan.md`, the 3.0.0 feature plan, is Blake's local working file and
 is not committed; neither are changes to `UpgradePlan.md`.
 
 ## Build and run
@@ -52,7 +52,11 @@ compiling each against only its own dependencies, see `MODULES` in `Tasks.java`)
 
 `src/core/javacc/clips.jj` is the grammar; tests are in `src/test/java` (goldens and scenario
 scripts in `src/test/resources`) and compile against every module. The version is
-`Constants.VERSION`; `Tasks.java` reads it for jar and zip names.
+`Constants.VERSION`; `Tasks.java` reads it for jar and zip names by parsing the source, so keep it
+a string literal. Do not use `VERSION` directly from other classes: it is a compile-time constant
+and javac inlines it, and since bld recompiles only changed sources the copy goes stale until a
+clean build (the shell banner showed 2.0.0 for that reason). Print `Constants.SHELL_MESSAGE` or
+call `Constants.version()`, which are read at run time.
 
 bld runs one task per invocation (`./bld clean test` only cleans). It compiles only sources newer
 than their class files, so after changing a method or field signature run `./bld clean` and then
@@ -161,7 +165,7 @@ operations (`batch`, `build`, `eval`, `deftemplate`, `defrule`, `fire`, `assert`
   ...). Each group's `loadFunctions(engine)` calls `engine.declareFunction(f)` and records the
   function in the group's list, which is what `(list-deffunctions)` prints. All built-in groups
   are registered in `FunctionRegistry.loadBuiltIns()` (called from `Rete.loadBuiltInFunctions()`);
-  the groups added in 2.1.0 are `functions/control` and `functions/type`. To add a built-in: write
+  the groups added in 3.0.0 are `functions/control` and `functions/type`. To add a built-in: write
   the class, add it to the right group's `loadFunctions`.
 - Parameters arrive as `ValueParam` (literal), `BoundParam` (call `resolveBinding(engine)` first),
   `FunctionParam2` (nested call), `SlotParam`, etc. Read arguments with

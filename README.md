@@ -58,7 +58,7 @@ language additions and the documentation described below are the fork's.
    transcripts are real output replayed against every build, a developer guide (`CLAUDE.md`),
    and the plan that drove the modernization (`UpgradePlan.md`).
 
-The version is 2.1.0.
+The version is 3.0.0; the original code was 2.0.0-SNAPSHOT and the modernization was 2.0.0.
 
 ## Where things are
 

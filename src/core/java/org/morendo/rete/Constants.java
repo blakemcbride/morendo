@@ -75,14 +75,25 @@ public class Constants {
     public static final String SHELL_PROMPT = "Morendo> ";
     public static final String DEFAULT_OUTPUT = "t";
     public static final String VERSION =
-            "2.1.0"; // the single source of the version; builder/Tasks.java reads it
+            "3.0.0"; // the single source of the version; builder/Tasks.java reads it
     public static final String INITIAL_FACT = "_initialFact";
     public static final String COUNT_FACT = "_countFact";
     public static final String COUNT_SLOT = "count";
     public static final String COUNT_VALUE = "value";
     public static final String PROJECT_MESSAGE =
             "Copyright Jamocha Project http://sourceforge.net/projects/jamocha";
-    public static final String SHELL_MESSAGE = "Morendo Version " + VERSION;
+
+    /**
+     * Built with concat so that it is not a compile-time constant: a constant expression would be
+     * inlined into every class that prints it, and bld recompiles only changed sources, so the
+     * banner would keep an old version until a clean build.
+     */
+    public static final String SHELL_MESSAGE = "Morendo Version ".concat(VERSION);
+
+    /** The version, read at run time rather than inlined at compile time; see SHELL_MESSAGE. */
+    public static String version() {
+        return VERSION;
+    }
 
     /// --------------- working directory ----------------- ///
     /**

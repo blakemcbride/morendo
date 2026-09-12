@@ -44,7 +44,7 @@ public class VersionFunction implements Function {
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         DefaultReturnVector ret = new DefaultReturnVector();
-        engine.writeMessage(Constants.VERSION + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
+        engine.writeMessage(Constants.version() + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
         return ret;
     }
 
