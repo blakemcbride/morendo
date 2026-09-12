@@ -12,30 +12,40 @@ rule cost function. Design notes for these live in `doc/*.pdf|odt` and `classdia
 
 ## Build and run
 
-Plain Ant + `lib/*.jar` (log4j 1.2, JUnit 4.1, Jackson, JMS, servlet API). No Maven/Gradle.
-Sources compile cleanly on JDK 21 (deprecation/unchecked notes only).
+The build is Blake's `bld` tool: `./bld <task>` (`bld.cmd` on Windows) compiles and runs
+`builder/Tasks.java`, which is the whole build definition (`builder/BuildUtils.java` is bld's
+generic helper library; do not edit it). Requires JDK 21; the first build downloads the jars listed
+in `Tasks.java` from Maven Central into `libs/` (git-ignored). Everything built goes under `target/`.
 
 ```sh
-ant compile            # src/main -> bin/ (also copies non-.java resources: gui icons, Messages.properties)
-ant compile-tests      # + src/test -> bin/
-ant jars               # -> jamocha.jar (manifest Main-Class org.jamocha.Jamocha is stale; real main is org.jamocha.Morendo)
-ant clean | distclean
+./bld build                 # download libs, generate the parser, compile, copy resources
+./bld test                  # + compile tests, run org.jamocha.AllTests through JUnitCore
+./bld test woolfel.rete.SimpleJoinTest      # one test class
+./bld golden-update [only_1,manners16]      # regenerate golden files (all, or some)
+./bld jar | dist | javadoc  # target/morendo-<version>.jar / .zip / javadoc
+./bld clean | realclean     # remove target/ (+ generated parser); + libs/
+./bld list-tasks
+./morendo -shell            # interactive shell from a checkout (or -gui); needs a prior build
 ```
 
-`ant test` compiles and runs the suite defined in `src/test/org/jamocha/AllTests.java` through
-`JUnitCore` (the older `ant run-tests` target needs Ant's optional junit jar, which is not
-installed here). CI (`.github/workflows/ci.yml`) runs the same target on JDK 21. Run one class with:
+Layout: `src/main/java` (engine), `src/main/resources` (gui icons, `messages.properties`),
+`src/main/javacc/clips.jj` (grammar), `src/test/java` (tests, sample beans, example code),
+`src/test/resources` (goldens, scenario scripts). The version is `Constants.VERSION`;
+`Tasks.java` reads it for jar and zip names.
 
-```sh
-java -cp "bin:lib/*" org.junit.runner.JUnitCore woolfel.rete.SimpleJoinTest
-```
+bld compiles only sources newer than their class files, so after changing a method or field
+signature run `./bld clean test` to avoid stale-class errors. A failed task exits non-zero
+(the `guard` wrapper in `Tasks.java`; bld itself would exit 0). `run` and `test` spawn the JVM
+without a console, so the interactive shell must be started with `./morendo`, not `bld run`.
 
-Tests are JUnit 3 style (`extends TestCase`) run under the JUnit 4.1 runner. Engine tests are in
-`src/test/woolfel/rete`; `src/test/woolfel/examples/model` holds the bean classes (`Account`, `Hobby`,
-...) that samples and tests assert as facts. Only classes listed in `AllTests` are tests; the rest of
-`src/test` (`*Benchmark*`, `rulebenchmark`, `hashtest`, `cube`) are benchmarks and generators.
-File paths in tests and `.clp` files are relative to the repo root. `InitServiceTest` is excluded
-from the suite because the service package never builds applications from its JSON config.
+CI (`.github/workflows/ci.yml`) runs `./bld test` on JDK 21. The suite is
+`src/test/java/org/jamocha/AllTests.java`; only classes listed there are tests, the rest of
+`src/test` (`*Benchmark*`, `rulebenchmark`, `hashtest`, `cube`, `sample`) are benchmarks,
+generators and examples. Tests are JUnit 3 style (`extends TestCase`) under the JUnit 4.1 runner.
+Engine tests live in `src/test/java/woolfel/rete`; `src/test/java/woolfel/examples/model` has the
+bean classes (`Account`, `Hobby`, ...) that samples and tests assert as facts. File paths in tests
+and `.clp` files are relative to the repo root. `InitServiceTest` is excluded from the suite
+because the service package never builds applications from its JSON config.
 
 ### Golden (characterization) tests
 
@@ -44,19 +54,13 @@ scenario scripts in `src/test/resources/scenarios/` (Manners 16 guests, MOLAP, g
 `(watch rules)` on, and compares the printed output, the firing trace and template/rule/fact/node
 counts with `src/test/resources/golden/<name>.txt`. This is the safety net for the modernization
 work in `UpgradePlan.md`: any engine change must keep it green, or the golden diff must be reviewed
-and regenerated on purpose:
+and regenerated on purpose with `./bld golden-update`. Dates and activation timestamps are masked,
+so the files are stable across runs and platforms.
+
+Shell usage (run from the repo root):
 
 ```sh
-java -Dgolden.update=true -cp "bin:lib/*" org.junit.runner.JUnitCore org.jamocha.golden.GoldenSampleTest
-java -Dgolden.only=only_1,manners16 -cp "bin:lib/*" org.junit.runner.JUnitCore org.jamocha.golden.GoldenSampleTest
-```
-
-Dates and activation timestamps are masked, so the files are stable across runs and platforms.
-
-Interactive shell / GUI (run from the repo root):
-
-```sh
-java -cp "bin:lib/*" org.jamocha.Morendo -shell     # or -gui
+./morendo -shell
 Morendo> (batch samples/only/only_1.clp)
 Morendo> (facts)
 Morendo> (fire)          # NOT (run); the function is named "fire"
@@ -64,19 +68,17 @@ Morendo> (exit)
 ```
 
 Run from the repo root: `LogFactory` loads `log4j.properties` from the working directory, and log4j
-then writes `./logs/SystemOut.log`. `.gitignore` covers `logs/`, `cache/`, `bin/` and built jars
-(`bin/` has two stray tracked `.class` files; leave them alone).
+then writes `./logs/SystemOut.log` (git-ignored, as are `cache/`, `libs/`, `target/`).
 
-`morendo.sh` / `.bat` / `.ps1` launch `org.jamocha.Morendo` from `./morendo.jar`. `morendo.wasjar` is the
-committed prebuilt jar (no manifest main class); Eclipse `.classpath` points at `build/` as output.
+### Parser generation
 
-### Parser regeneration
-
-The CLIPS grammar is `src/main/org/jamocha/parser/clips/clips.jj` (JavaCC 7.0.10). The generated
-`CLIPSParser*.java`, `Token*.java`, `ParseException.java`, `SimpleCharStream.java` are committed even
-though that directory's `.gitignore` lists them. Never hand-edit generated files; edit `clips.jj` and
-re-run `javacc clips.jj` in that directory. The `ant parser` target is stale (hardcoded javacc paths,
-references SL/COOL grammars that no longer exist). `clips-experimental.jj` is excluded from the build.
+The CLIPS grammar is `src/main/javacc/clips.jj`. `./bld build` (via the `parser` task) runs
+JavaCC 7.0.13 from `libs/tools/` and writes `CLIPSParser*.java`, `Token*.java`,
+`ParseException.java`, `SimpleCharStream.java` into `src/main/java/org/jamocha/parser/clips/`,
+where that directory's `.gitignore` hides them. Never hand-edit generated files; edit `clips.jj`
+and rebuild (JavaCC regenerates only when the grammar is newer; `./bld clean` removes them).
+`ParserUtils.java` in the same package is hand-written. `src/main/javacc/clips-experimental.jj`
+is an unused variant of the grammar.
 
 ## Architecture
 

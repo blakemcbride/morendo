@@ -18,5 +18,18 @@ Morendo provides some **temporal logic features** to make it easier to reason ov
 
 Two features from Haley enterprise **ONLY and MULTIPLE** adds some second order logic support.
 
+## Building and running
+Requires JDK 21. The build is driven by `bld` (see `builder/Tasks.java`); the first build
+downloads the dependencies into `libs/`.
+
+```
+./bld build      # generate the CLIPS parser, compile (bld.cmd on Windows)
+./bld test       # run the test suite
+./bld dist       # target/morendo-<version>.zip with the jar, libraries, launcher and samples
+./morendo -shell # interactive shell from a checkout; ./morendo -gui for the Swing GUI
+```
+
+Inside the shell: `(batch samples/only/only_1.clp)`, `(facts)`, `(fire)`, `(exit)`.
+
 ## Acknowledgements
 Morendo wouldn't be possible without the work by Dr. Forgy, Paul Haley, Gary Riley and Ernest Friedman-Hill. Even though morendo is a clean room implementation of RETE, the lessons learned from OPS5, CLIPS, JESS and half dozen other RETE rule engines influenced the implementation. The rule engine is open source, so that anyone can learn from it.

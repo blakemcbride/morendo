@@ -10,8 +10,8 @@ buildable and the samples behaving identically.
 | Area | Finding |
 |---|---|
 | Sources | 643 main, 95 test, 8 sample `.java` files; compiles clean on JDK 21 with `--release 21` |
-| Build | Ant `build.xml` (stale `parser` target, stale jar Main-Class), Eclipse `.classpath`; `ant run-tests` needs an Ant optional jar that is not installed |
-| Committed binaries | `lib/*.jar` 2.7 MB, `morendo.wasjar` 1.4 MB prebuilt jar, two stray `bin/*.class`; no `.gitignore` |
+| Build | Ant `build.xml` (stale `parser` target, stale jar Main-Class), Eclipse `.classpath`; `ant run-tests` needs an Ant optional jar that is not installed. Replaced by bld in Phase 1 |
+| Committed binaries | `lib/*.jar` 2.7 MB, `morendo.wasjar` 1.4 MB prebuilt jar, two stray `bin/*.class`; no `.gitignore`. Removed in Phase 1 |
 | log4j 1.2.14 | Only 3 files touch it, all in `org.jamocha.logging` (own `Logger` interface + `LogFactory`) |
 | JUnit 4.1 | 24 JUnit 3 style `TestCase` classes, 2 files with `@Test`; stale expectations and missing fixture files repaired in Phase 0 |
 | Jackson 2.12.3 | 7 files: `ObjectMapper`, `@JsonIgnore`, `TypeReference` (service package config) |
@@ -19,7 +19,7 @@ buildable and the samples behaving identically.
 | `servlet-api` (javax.servlet) | 7 files: `service/servlet/*`, `logging/ServletLogger`, `service/RuleServiceImpl` |
 | `xpp3`, `jackson-dataformat-xml` | Unreferenced |
 | JLine | Referenced by launch scripts; jar was deleted from `lib/` |
-| JavaCC | Grammar `clips.jj`; generated parser (JavaCC 7.0.10, ~6.5k lines) is committed |
+| JavaCC | Grammar `clips.jj`; generated parser (JavaCC 7.0.10, ~6.5k lines) was committed; generated at build time since Phase 1 |
 | `-Xlint:all` on main | 256 rawtypes, 140 serial, 114 cast, 45 this-escape, 12 deprecation (all `new URL(String)`), 10 lossy-conversions, 5 unchecked, 4 static, 1 fallthrough |
 | Legacy idioms | 1316 `instanceof`, 236 `StringBuffer`, 130 `List<?>`, 124 `@SuppressWarnings`, 34 `synchronized`, 8 `Hashtable`, 2 `Vector`, 7 boxed-primitive constructors, 4 `StringTokenizer`, `java.util.Date` in 24 files |
 | Dead code | `rete/util` custom `HashMap`/`AbstractMap`/`Map`/`Entry`/`Iterator`/`Value` and `CollectionsFactory` have no callers outside `rete/util` (only `StringDataTest` benchmarks them) |
@@ -76,7 +76,24 @@ Original plan:
 4. Add a GitHub Actions workflow that builds and runs the suite on JDK 21. Everything after this
    point must keep it green.
 
-## Phase 1: Build system and repository hygiene
+## Phase 1: Build system and repository hygiene - DONE 2026-09-12
+
+Delivered: bld installed (`bld`, `bld.cmd`, `builder/`), `builder/Tasks.java` with `build`, `test
+[class]`, `golden-update`, `run`, `parser`, `jar`, `dist`, `javadoc`, `clean`, `realclean`,
+`ideclean`; sources moved to `src/main/java`, `src/main/resources`, `src/main/javacc`,
+`src/test/java` (samples included); dependencies downloaded from Maven Central at the same
+versions as before (`lib/` deleted; unused `xpp3` and `jackson-dataformat-xml` dropped; the
+unlabeled `jms.jar` and `servlet-api.jar` identified as JMS 1.1 and Servlet 2.5); parser generated
+at build time by JavaCC 7.0.13 (generated files removed from git; the 7.0.13 output differs from
+the committed 7.0.10 output only in helper-class boilerplate, and all goldens pass); `build.xml`,
+`.classpath`, `.project`, `morendo.wasjar`, `bin/*.class` and the old launch scripts deleted;
+`morendo` / `morendo.cmd` launcher works from a checkout and from the unpacked zip;
+`Constants.VERSION` is `2.0.0-SNAPSHOT` and the only place the version is written; CI runs
+`./bld test`. Note for bld itself: its dispatcher exits 0 when a task throws, so `Tasks.java`
+wraps every task in a `guard` that exits 1.
+
+Original plan:
+
 
 Build tool: bld (decided). Install it with bld's `install` script, which adds `bld`, `bld.cmd` and
 `builder/` (`Tasks.java`, `BuildUtils.java`, the three commons jars); `builder/Tasks.java` is the
@@ -238,7 +255,7 @@ The Swing GUI stays (decided); the JMS messaging package stays until decided oth
 | Phase | Effort | Risk | Depends on |
 |---|---|---|---|
 | 0 Safety net | done | none | - |
-| 1 Build system | 1 day | low | 0 |
+| 1 Build system | done | low | 0 |
 | 2 Libraries | 1-2 days | low | 1 |
 | 3a Mechanical | 2-3 days | low | 0 |
 | 3b Structural | 1-2 weeks | medium | 3a |

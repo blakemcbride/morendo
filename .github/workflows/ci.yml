@@ -16,8 +16,11 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Install Ant if the runner image lacks it
-        run: command -v ant >/dev/null || (sudo apt-get update && sudo apt-get install -y --no-install-recommends ant)
+      - name: Cache downloaded dependencies
+        uses: actions/cache@v4
+        with:
+          path: libs
+          key: libs-${{ hashFiles('builder/Tasks.java') }}
 
       - name: Build and run the test suite
-        run: ant test
+        run: ./bld test

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Starts Morendo:  ./morendo -shell   (interactive CLIPS shell)
+#                  ./morendo -gui     (Swing GUI)
+# Works from a checkout after "./bld build" (target/classes) and from an unpacked
+# distribution (morendo.jar). Run it from this directory: log4j.properties is read
+# from the current directory.
+DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -f "$DIR/morendo.jar" ]; then
+    CP="$DIR/morendo.jar:$DIR/libs/*"
+else
+    CP="$DIR/target/classes:$DIR/libs/*"
+fi
+exec java -Xms256m -Xmx1g -cp "$CP" org.jamocha.Morendo "$@"
