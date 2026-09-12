@@ -2,18 +2,18 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Function;
-import org.jamocha.rete.Parameter;
-import org.jamocha.rete.ValueParam;
-import org.jamocha.rete.ValueType;
-import org.jamocha.rete.functions.io.BatchFunction;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.ValueParam;
+import org.morendo.rete.ValueType;
+import org.morendo.rete.functions.io.BatchFunction;
 
 public class ExecutionTest {
 
     @Test
     public void testExecution() {
-        org.jamocha.rete.Rete engine = new org.jamocha.rete.Rete();
+        org.morendo.rete.Rete engine = new org.morendo.rete.Rete();
         // exists_sample15 defines one rule and asserts its facts; the batch function
         // is exercised explicitly the way the original test did.
         Function batch = engine.findFunction(BatchFunction.BATCH);

@@ -1,0 +1,102 @@
+/*
+ * Copyright 2002-2008 Jamocha
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://ruleml-dev.sourceforge.net/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.morendo.rete.functions.math;
+
+import org.morendo.rete.BoundParam;
+import org.morendo.rete.DefaultReturnValue;
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.ValueParam;
+import org.morendo.rete.ValueType;
+
+import java.math.BigDecimal;
+
+/**
+ * @author Peter Lin
+ *     <p>Subtract will subtract one or more numeric values. for example: (- 100 12 4 32)
+ */
+public class Subtract implements Function {
+
+    /** */
+    public static final String SUBTRACT = "subtract";
+
+    public Subtract() {
+        super();
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.BIG_DECIMAL;
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        BigDecimal bdval = null;
+        if (params != null) {
+            bdval = (BigDecimal) params[0].getValue(engine, ValueType.BIG_DECIMAL);
+            BigDecimal bd = null;
+            for (int idx = 1; idx < params.length; idx++) {
+                if (params[idx] instanceof ValueParam) {
+                    ValueParam n = (ValueParam) params[idx];
+                    bd = n.getBigDecimalValue();
+                } else {
+                    bd =
+                            new BigDecimal(
+                                    params[idx].getValue(engine, ValueType.BIG_DECIMAL).toString());
+                }
+                bdval = bdval.subtract(bd);
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL, bdval);
+        ret.addReturnValue(rv);
+        return ret;
+    }
+
+    public String getName() {
+        return SUBTRACT;
+    }
+
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        if (params != null && params.length > 0) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("(-");
+            for (int idx = 0; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
+                    buf.append(" ?" + bp.getVariableName());
+                } else if (params[idx] instanceof ValueParam) {
+                    buf.append(" " + params[idx].getStringValue());
+                } else {
+                    buf.append(" " + params[idx].getStringValue());
+                }
+            }
+            buf.append(")");
+            return buf.toString();
+        } else {
+            return "(- (<literal> | <binding>)+)\n"
+                    + "Function description:\n"
+                    + "\t Returns the value of the first argument minus the "
+                    + "sum of all subsequent arguments.";
+        }
+    }
+}

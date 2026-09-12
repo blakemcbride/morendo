@@ -1,0 +1,97 @@
+/*
+ * Copyright 2002-2006 Peter Lin
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://ruleml-dev.sourceforge.net/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.morendo.rete.util;
+
+import org.morendo.rete.BaseNode;
+import org.morendo.rete.EngineEvent;
+import org.morendo.rete.EngineEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author Peter Lin
+ *     <p>EventCounter is a simple utility class for counting and keeping track of events. It can be
+ *     used for various purposes like keeping track of statistics or unit tests.
+ */
+public class EventCounter implements EngineEventListener {
+
+    private ArrayList<EngineEvent> asserts = new ArrayList<>();
+    private ArrayList<EngineEvent> retracts = new ArrayList<>();
+    private ArrayList<EngineEvent> profiles = new ArrayList<>();
+    private Map<BaseNode, ArrayList<?>> nodeFilter = new HashMap<>();
+
+    /** */
+    public EventCounter() {
+        super();
+    }
+
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.EngineEventListener#eventOccurred(woolfel.engine.rete.EngineEvent)
+     */
+    @SuppressWarnings("unchecked")
+    public void eventOccurred(EngineEvent event) {
+        if (event.getEventType() == EngineEvent.Kind.ASSERT) {
+            asserts.add(event);
+        } else if (event.getEventType() == EngineEvent.Kind.ASSERT_PROFILE) {
+            asserts.add(event);
+            profiles.add(event);
+        } else if (event.getEventType() == EngineEvent.Kind.ASSERT_RETRACT) {
+            asserts.add(event);
+            retracts.add(event);
+        } else if (event.getEventType() == EngineEvent.Kind.ASSERT_RETRACT_PROFILE) {
+            asserts.add(event);
+            profiles.add(event);
+            retracts.add(event);
+        } else if (event.getEventType() == EngineEvent.Kind.PROFILE) {
+            profiles.add(event);
+        } else if (event.getEventType() == EngineEvent.Kind.RETRACT) {
+            retracts.add(event);
+        }
+        Object val = this.nodeFilter.get(event.getSourceNode());
+        if (val != null) {
+            ((ArrayList<EngineEvent>) val).add(event);
+        }
+    }
+
+    public int getAssertCount() {
+        return this.asserts.size();
+    }
+
+    public int getProfileCount() {
+        return this.profiles.size();
+    }
+
+    public int getRetractCount() {
+        return this.retracts.size();
+    }
+
+    /**
+     * To listen to a specific node, add the node to the filter
+     *
+     * @param node
+     */
+    public void addNodeFilter(BaseNode node) {
+        this.nodeFilter.put(node, new ArrayList<Object>());
+    }
+
+    public List<?> getNodeEvents(BaseNode node) {
+        return this.nodeFilter.get(node);
+    }
+}

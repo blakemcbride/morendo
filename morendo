@@ -8,4 +8,4 @@ CP="$DIR/libs/*"
 for d in "$DIR"/target/*/classes; do
     [ -d "$d" ] && CP="$d:$CP"
 done
-exec java -Xms256m -Xmx1g -cp "$CP" org.jamocha.Morendo "$@"
+exec java -Xms256m -Xmx1g -cp "$CP" org.morendo.Morendo "$@"

@@ -1,0 +1,63 @@
+package org.morendo.sample.im;
+
+import org.morendo.rete.BoundParam;
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.ValueType;
+
+import java.io.Serializable;
+
+/**
+ * RouteMessage is a dummy function and isn't implemented. It's here so that people can run the
+ * sample rules in Jamocha. To make it work for real, the executeFunction method needs to be
+ * implemented.
+ *
+ * @author Peter Lin
+ */
+public class RouteMessage implements Function, Serializable {
+
+    /** */
+    private static final long serialVersionUID = 1L;
+
+    public static final String ROUTE_MESSAGE = "route-msg";
+
+    public RouteMessage() {
+        super();
+    }
+
+    /**
+     * This method is not implemented. If it was a real function, the method would get a JMS client
+     * and route the message to the correct topic for delivery.
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector rv = new DefaultReturnVector();
+        if (params != null && params.length == 1) {
+            if (params[0] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[0];
+                Message msg = (Message) bp.getObjectRef();
+                msg.setMessageStatus(Message.RECEIVED);
+                System.out.println("message recieved!");
+            }
+        }
+        return rv;
+    }
+
+    public String getName() {
+        return ROUTE_MESSAGE;
+    }
+
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {Object.class};
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(route-msg <Object>)";
+    }
+}

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * src/<module>/resources, compiled to target/<module>/classes and packaged as
  * target/morendo-<module>-<version>.jar. Tests are in src/test/java (goldens and scenario scripts
  * in src/test/resources) and compile against every module. The CLIPS grammar is
- * src/core/javacc/clips.jj; the parser is generated into src/core/java/org/jamocha/parser/clips
+ * src/core/javacc/clips.jj; the parser is generated into src/core/java/org/morendo/parser/clips
  * (git-ignored there). libs/ holds the downloaded jars (libs/tools the build-time tools).
  *
  * <p>The version number lives in one place: Constants.VERSION in the core module.
@@ -37,12 +37,12 @@ public class Tasks {
     static final String TEST_CLASSES = BUILDDIR + "/test-classes";
     static final String TEST_SRC = "src/test/java";
     static final String GRAMMAR = "src/core/javacc/clips.jj";
-    static final String PARSER_DIR = "src/core/java/org/jamocha/parser/clips";
+    static final String PARSER_DIR = "src/core/java/org/morendo/parser/clips";
     static final String GENERATED_PARSER_FILES =
             "CLIPSParser.*\\.java|ParseException\\.java|SimpleCharStream\\.java|Token\\.java|TokenMgrError\\.java";
-    static final String CONSTANTS = "src/core/java/org/jamocha/rete/Constants.java";
-    static final String MAIN_CLASS = "org.jamocha.Morendo";
-    static final String GOLDEN_TESTS = "org.jamocha.golden.GoldenSampleTest";
+    static final String CONSTANTS = "src/core/java/org/morendo/rete/Constants.java";
+    static final String MAIN_CLASS = "org.morendo.Morendo";
+    static final String GOLDEN_TESTS = "org.morendo.golden.GoldenSampleTest";
     static final String MAVEN = "https://repo1.maven.org/maven2/";
     static final String JAVACC = "javacc-7.0.13.jar";
     static final String JUNIT = "junit-platform-console-standalone-6.1.3.jar";
@@ -144,7 +144,7 @@ public class Tasks {
                 "golden-update [names]    regenerate the golden files (all, or a comma-separated"
                         + " list of scenarios)");
         println(
-                "run <class> [argument]... build and run a class, e.g. bld run org.jamocha.Morendo"
+                "run <class> [argument]... build and run a class, e.g. bld run org.morendo.Morendo"
                         + " -gui");
         println(
                 "                         (for the interactive shell use ./morendo -shell"

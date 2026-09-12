@@ -18,8 +18,8 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Evaluate;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Evaluate;
 
 /**
  * @author Peter Lin

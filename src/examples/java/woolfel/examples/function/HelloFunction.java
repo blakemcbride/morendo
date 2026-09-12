@@ -1,13 +1,13 @@
 package woolfel.examples.function;
 
-import org.jamocha.rete.DefaultReturnValue;
-import org.jamocha.rete.DefaultReturnVector;
-import org.jamocha.rete.Function;
-import org.jamocha.rete.Parameter;
-import org.jamocha.rete.Rete;
-import org.jamocha.rete.ReturnVector;
-import org.jamocha.rete.ValueParam;
-import org.jamocha.rete.ValueType;
+import org.morendo.rete.DefaultReturnValue;
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.ValueParam;
+import org.morendo.rete.ValueType;
 
 public class HelloFunction implements Function {
 

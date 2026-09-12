@@ -6,4 +6,4 @@ rem distribution (module jars in libs\). Logging options: see log4j2.xml in the 
 set DIR=%~dp0
 set CP=%DIR%libs\*
 for /d %%m in ("%DIR%target\*") do if exist "%%m\classes" set CP=%%m\classes;%CP%
-java -Xms256m -Xmx1g -cp "%CP%" org.jamocha.Morendo %*
+java -Xms256m -Xmx1g -cp "%CP%" org.morendo.Morendo %*

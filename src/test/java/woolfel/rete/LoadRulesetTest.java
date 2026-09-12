@@ -8,15 +8,15 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Rete;
-import org.jamocha.rule.Defrule;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Rete;
+import org.morendo.rule.Defrule;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-// import org.jamocha.rete.*;
-// import org.jamocha.rule.*;
+// import org.morendo.rete.*;
+// import org.morendo.rule.*;
 
 /**
  * @author pete

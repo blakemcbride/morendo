@@ -18,9 +18,9 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Constants;
-import org.jamocha.rete.Rete;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Constants;
+import org.morendo.rete.Rete;
 
 /**
  * @author Peter Lin

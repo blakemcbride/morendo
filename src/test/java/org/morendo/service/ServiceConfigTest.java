@@ -1,0 +1,156 @@
+package org.morendo.service;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import woolfel.examples.model.Hobby;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ServiceConfigTest {
+
+    /**
+     * Files written by these tests go to a temporary directory so that running the suite never
+     * modifies the checked-in samples.
+     */
+    private static String tempFile(String name) {
+        try {
+            java.nio.file.Path dir =
+                    java.nio.file.Files.createTempDirectory("morendo-service-test");
+            dir.toFile().deleteOnExit();
+            return dir.resolve(name).toString();
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testSaveServiceConfig() {
+        ServiceConfiguration config = new ServiceConfiguration();
+        config.setServiceName("sample");
+        RuleApplicationBean app1 = new RuleApplicationBean();
+        config.setApplications(new ArrayList<RuleApplicationBean>());
+        config.getApplications().add(app1);
+        app1.setMinPool(1);
+        app1.setMaxPool(10);
+        app1.setInitialPool(1);
+        app1.setName("test");
+
+        app1.setFunctionGroups(new ArrayList<FunctionPackage>());
+        app1.setObjectData(new ArrayList<ObjectData>());
+        app1.setRulesets(new ArrayList<ClipsRuleset>());
+        app1.setModels(new ArrayList<ObjectModel>());
+
+        ObjectModel model1 = new ObjectModel();
+        app1.getModels().add(model1);
+        ArrayList<String> classList = new ArrayList<>();
+        model1.setClassList(classList);
+        classList.add("woolfel.examples.model.Account");
+        classList.add("woolfel.examples.model.Account2");
+
+        FunctionPackage functionGroup = new FunctionPackage();
+        app1.getFunctionGroups().add(functionGroup);
+        String[] functionList = new String[] {"woolfel.examples.function.HelloFunction"};
+        functionGroup.setClassNames(functionList);
+
+        ClipsRuleset ruleset1 = new ClipsRuleset();
+        app1.getRulesets().add(ruleset1);
+        ruleset1.setURL("./samples/join_sample1.clp");
+
+        ClipsInitialData initialData1 = new ClipsInitialData();
+        app1.getClipsData().add(initialData1);
+        initialData1.setURL("./samples/data/data.dat");
+
+        JSONData<?> jdata = new JSONData<>();
+        jdata.setName("org.morendo.examples.model.Account");
+        jdata.setUrl("./samples/configuration/data.json");
+
+        List<JSONData<?>> jsondata1 = new ArrayList<>();
+        jsondata1.add(jdata);
+        app1.setJsonData(jsondata1);
+
+        RuleServiceImpl.saveConfiguration(tempFile("test_config.json"), config);
+    }
+
+    @Test
+    public void testSaveServiceConfig2() {
+        ServiceConfiguration config = new ServiceConfiguration();
+        config.setServiceName("sample");
+        RuleApplicationBean app1 = new RuleApplicationBean();
+        config.setApplications(new ArrayList<RuleApplicationBean>());
+        config.getApplications().add(app1);
+        app1.setMinPool(1);
+        app1.setMaxPool(10);
+        app1.setInitialPool(1);
+        app1.setName("test");
+
+        app1.setFunctionGroups(new ArrayList<FunctionPackage>());
+        app1.setObjectData(new ArrayList<ObjectData>());
+        app1.setRulesets(new ArrayList<ClipsRuleset>());
+        app1.setModels(new ArrayList<ObjectModel>());
+
+        ObjectModel model1 = new ObjectModel();
+        app1.getModels().add(model1);
+        ArrayList<String> classList = new ArrayList<>();
+        model1.setClassList(classList);
+        classList.add("woolfel.examples.model.Account");
+        classList.add("woolfel.examples.model.Account2");
+
+        FunctionPackage functionGroup = new FunctionPackage();
+        app1.getFunctionGroups().add(functionGroup);
+        String[] functionList = new String[] {"woolfel.examples.function.HelloFunction"};
+        functionGroup.setClassNames(functionList);
+
+        ClipsRuleset ruleset1 = new ClipsRuleset();
+        app1.getRulesets().add(ruleset1);
+        ruleset1.setURL("./samples/join_sample1.clp");
+
+        ClipsInitialData initialData1 = new ClipsInitialData();
+        app1.getClipsData().add(initialData1);
+        initialData1.setURL("./samples/data/data.dat");
+
+        ObjectData objectData1 = new ObjectData();
+        objectData1.setName("generic");
+        app1.getObjectData().add(objectData1);
+        objectData1.setUrl("./samples/data/hobbies.xml");
+
+        RuleServiceImpl.saveConfiguration(tempFile("test_config2.json"), config);
+    }
+
+    @Test
+    public void testSaveObjectData() {
+        ArrayList<Hobby> list = new ArrayList<>();
+        Hobby hobby1 = new Hobby();
+        list.add(hobby1);
+        hobby1.setName("Hiking");
+        hobby1.setHobbyCode("0101");
+        hobby1.setCategory("Sport");
+        hobby1.setSubCategory("Outdoor");
+
+        Hobby hobby2 = new Hobby();
+        list.add(hobby2);
+        hobby2.setName("Climbing");
+        hobby2.setHobbyCode("0201");
+        hobby2.setCategory("Sport");
+        hobby2.setSubCategory("Outdoor");
+
+        Hobby hobby3 = new Hobby();
+        list.add(hobby3);
+        hobby3.setName("Swimming");
+        hobby3.setCategory("Sport");
+        hobby3.setSubCategory("Indoor/Outdoor");
+
+        ObjectData.saveObjectData(tempFile("data1.json"), list);
+    }
+
+    @Test
+    public void testCreateServiceInstance() {
+        RuleService service =
+                RuleServiceImpl.createInstance("./samples/configuration/sample_config.json");
+        assertNotNull(service);
+        System.out.println(service.getServiceName());
+        assertNotNull(service.getServiceName());
+    }
+}

@@ -18,11 +18,11 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Defclass;
-import org.jamocha.rete.Deftemplate;
-import org.jamocha.rete.Fact;
-import org.jamocha.rete.Index;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Defclass;
+import org.morendo.rete.Deftemplate;
+import org.morendo.rete.Fact;
+import org.morendo.rete.Index;
 
 import woolfel.examples.model.TestBean2;
 

@@ -18,10 +18,10 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Defclass;
-import org.jamocha.rete.Deftemplate;
-import org.jamocha.rete.Rete;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Defclass;
+import org.morendo.rete.Deftemplate;
+import org.morendo.rete.Rete;
 
 import woolfel.examples.model.Account;
 import woolfel.examples.model.IAccount;

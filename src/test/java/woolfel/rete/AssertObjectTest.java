@@ -18,9 +18,9 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Rete;
-import org.jamocha.rete.exception.AssertException;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Rete;
+import org.morendo.rete.exception.AssertException;
 
 import woolfel.examples.model.Account;
 import woolfel.examples.model.BackupAccount;

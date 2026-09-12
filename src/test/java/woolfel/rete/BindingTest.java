@@ -18,11 +18,11 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Binding;
-import org.jamocha.rete.HashedEqBNode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Binding;
+import org.morendo.rete.HashedEqBNode;
 
 /**
  * @author Peter Lin

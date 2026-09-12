@@ -16,7 +16,7 @@
  */
 package woolfel.rulebenchmark;
 
-import org.jamocha.rete.Constants;
+import org.morendo.rete.Constants;
 
 import java.io.FileWriter;
 import java.io.IOException;

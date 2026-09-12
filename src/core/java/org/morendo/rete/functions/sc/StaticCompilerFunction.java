@@ -1,0 +1,57 @@
+package org.morendo.rete.functions.sc;
+
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.ValueType;
+
+public class StaticCompilerFunction implements Function {
+
+    /**
+     * StaticCompiler will take the current RETE network and produce a statically compiled version,
+     * which uses the objects directly. An important note about statically compiled RETE networks
+     * that use the object directly, it is not thread safe! This means modifications to java object
+     * instances must first retract the object before making any changes. If this rule is violated,
+     * retract will fail. If some other thread modifies the object, it is the user's responsibility
+     * handle it appropriately. Failure to follow these rules will result in memory leaks and
+     * incorrect results. In other words, the application won't get the results you expect.
+     *
+     * <p>Statically compiled RETE is an advanced feature for advanced users that have a solid
+     * understanding of expert systems. Users that are not familiar with expert systems or do not
+     * have a deep understanding, should not use statically compiled RETE.
+     *
+     * <p>For applications that need to notify the rule engine of changes, the set methods must do
+     * the following.
+     *
+     * <p>1. compare the new value to the old value. 2. if the new value is different, retract the
+     * object 3. replace the existing value with the new value 4. assert the object
+     *
+     * <p>For statically compiled RETE, the activation will call the rule engine methods directly
+     * instead of using the built-in functions used by the interpreted engine.
+     */
+    public static final String STATIC_COMPILER = "static-compiler";
+
+    public StaticCompilerFunction() {}
+
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        return new DefaultReturnVector();
+    }
+
+    public String getName() {
+        return STATIC_COMPILER;
+    }
+
+    public Class<?>[] getParameter() {
+        return new Class<?>[0];
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(" + STATIC_COMPILER + ")";
+    }
+}

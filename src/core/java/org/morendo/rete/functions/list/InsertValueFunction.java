@@ -1,0 +1,112 @@
+package org.morendo.rete.functions.list;
+
+import org.morendo.rete.BoundParam;
+import org.morendo.rete.DefaultReturnValue;
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Function;
+import org.morendo.rete.FunctionParam2;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.ValueParam;
+import org.morendo.rete.ValueType;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Peter Lin
+ */
+public class InsertValueFunction implements Function {
+
+    /** */
+    public static final String INSERT_VALUE = "insert$";
+
+    public InsertValueFunction() {
+        super();
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        Object value = new Object[0];
+        if (params != null && params.length >= 3) {
+            List<Object> returnlist = new ArrayList<>();
+            Object list = null;
+            int idx =
+                    0; // change scope from per-loop so that this can be used for comparisons later
+            // (see begin-index)
+
+            // Target multifield
+            if (params[0] instanceof ValueParam) {
+                list = params[0].getValue();
+            } else {
+                list = params[0].getValue(engine, ValueType.ARRAY);
+            }
+            if (list.getClass().isArray()) {
+                Object[] r = (Object[]) list;
+                for (idx = 0; idx < r.length; idx++) {
+                    returnlist.add(r[idx]);
+                }
+            } else {
+                returnlist.add(list);
+            }
+
+            // Begin-index
+            int startIndex = 0;
+            if (params[1] instanceof ValueParam) {
+                startIndex = params[1].getBigDecimalValue().intValue();
+            } else {
+                BigDecimal bval =
+                        new BigDecimal(params[1].getValue(engine, ValueType.INT_PRIM).toString());
+                startIndex = bval.intValue();
+            }
+            if (startIndex > idx)
+                startIndex =
+                        idx; // Check to see if we need to place at end (behaviour as per CLIPS)
+            else startIndex--; // Make 1 based
+
+            // Items to insert
+            Object add = null;
+            for (int p = params.length - 1; p >= 2; p--) { // loop over remaining arguments
+                if (params[p] instanceof ValueParam) {
+                    add = params[p].getValue();
+                } else if (params[p] instanceof BoundParam) {
+                    add = ((BoundParam) params[p]).getValue(engine, ValueType.ARRAY);
+                } else if (params[p] instanceof FunctionParam2) {
+                    add = ((FunctionParam2) params[p]).getValue(engine, ValueType.ARRAY);
+                }
+                if (add.getClass().isArray()) {
+                    Object[] ar = (Object[]) add;
+                    List<Object> inlist = new ArrayList<>();
+                    for (idx = 0; idx < ar.length; idx++) {
+                        inlist.add(ar[idx]);
+                    }
+                    returnlist.addAll(startIndex, inlist);
+                } else {
+                    returnlist.add(startIndex, add);
+                }
+            }
+            value = returnlist.toArray();
+        }
+        DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY, value);
+        ret.addReturnValue(rv);
+        return ret;
+    }
+
+    public String getName() {
+        return INSERT_VALUE;
+    }
+
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.ARRAY;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(insert$ <list> <begin-index> <sing-or-list>)+";
+    }
+}

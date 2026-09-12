@@ -1,0 +1,59 @@
+/*
+ * Copyright 2002-2007 Peter Lin
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://ruleml-dev.sourceforge.net/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.morendo.rete.functions;
+
+import org.morendo.rete.Function;
+import org.morendo.rete.FunctionGroup;
+import org.morendo.rete.Rete;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author pete
+ */
+public class DeffunctionGroup implements FunctionGroup {
+
+    /** */
+    private List<Function> funcs = new ArrayList<>();
+
+    /** */
+    public DeffunctionGroup() {}
+
+    public String getName() {
+        return DeffunctionGroup.class.getSimpleName();
+    }
+
+    /* (non-Javadoc)
+     * @see org.morendo.rete.FunctionGroup#listFunctions()
+     */
+    public List<Function> listFunctions() {
+        return funcs;
+    }
+
+    /** At engine initialization time, the function group doesn't have any functions. */
+    public void loadFunctions(Rete engine) {}
+
+    /**
+     * Add a function to the group
+     *
+     * @param f
+     */
+    public void addFunction(Function f) {
+        this.funcs.add(f);
+    }
+}

@@ -39,7 +39,7 @@
 			],
 			"jsonData": [
 				{
-					"name": "org.jamocha.examples.model.Account",
+					"name": "org.morendo.examples.model.Account",
 					"url": "./samples/configuration/data.json",
 					"data": null
 				}

@@ -1,0 +1,102 @@
+/*
+ * Copyright 2002-2010 Peter Lin
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://ruleml-dev.sourceforge.net/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.morendo.rete.functions.java;
+
+import org.morendo.rete.BoundParam;
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Defclass;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.StringParam;
+import org.morendo.rete.ValueParam;
+import org.morendo.rete.ValueType;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+/**
+ * @author Peter Lin
+ *     <p>SetMemberFunction is equivalent to JESS set-member function. This is a completely clean
+ *     implementation from scratch. The name and function signature are similar, but the design and
+ *     implementation are different. The design of the function is strongly influenced by CLIPS,
+ *     since the primary goal is full CLIPS compatability.
+ */
+public class SetMemberFunction implements Function {
+
+    /** */
+    public static final String SET_MEMBER = "set-member";
+
+    /** */
+    public SetMemberFunction() {
+        super();
+    }
+
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.Function#getReturnType()
+     */
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.Function#executeFunction(woolfel.engine.rete.Rete, woolfel.engine.rete.Parameter[])
+     */
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (engine != null && params != null && params.length == 3) {
+            BoundParam bp = (BoundParam) params[0];
+            ValueParam slot = (ValueParam) params[1];
+            ValueParam val = (ValueParam) params[2];
+            Object instance = bp.getValue(engine, ValueType.OBJECT);
+            Defclass dc = engine.findDefclass(instance);
+            // we check to make sure the Defclass exists
+            if (dc != null) {
+                Method setm = dc.getWriteMethod(slot.getStringValue());
+                try {
+                    setm.invoke(instance, new Object[] {val.getValue()});
+                } catch (IllegalAccessException e) {
+                    engine.writeMessage(e.getMessage());
+                } catch (InvocationTargetException e) {
+                    engine.writeMessage(e.getMessage());
+                }
+            }
+        }
+        return new DefaultReturnVector();
+    }
+
+    /* (non-Javadoc)
+     * @see woolfel.engine.rete.Function#getName()
+     */
+    public String getName() {
+        return SET_MEMBER;
+    }
+
+    /**
+     * The current implementation expects 3 parameters in the following sequence:<br>
+     * BoundParam StringParam ValueParam <br>
+     * Example: (set-member ?objectVariable slotName value)
+     */
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {BoundParam.class, StringParam.class, ValueParam.class};
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        StringBuilder buf = new StringBuilder();
+        return buf.toString();
+    }
+}

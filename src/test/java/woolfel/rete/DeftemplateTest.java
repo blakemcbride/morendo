@@ -18,11 +18,11 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Defclass;
-import org.jamocha.rete.Deftemplate;
-import org.jamocha.rete.Slot;
-import org.jamocha.rete.ValueType;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Defclass;
+import org.morendo.rete.Deftemplate;
+import org.morendo.rete.Slot;
+import org.morendo.rete.ValueType;
 
 import woolfel.examples.model.Account;
 import woolfel.examples.model.TestBean2;
@@ -103,7 +103,7 @@ public class DeftemplateTest {
         bean.setAttr4(l);
         bean.setAttr5(1010101);
         bean.setAttr6(1001.1001);
-        org.jamocha.rete.Fact fact = dtemp.createFact(bean, dc, 0);
+        org.morendo.rete.Fact fact = dtemp.createFact(bean, dc, 0);
         assertNotNull(fact);
         System.out.println(fact.toFactString());
     }

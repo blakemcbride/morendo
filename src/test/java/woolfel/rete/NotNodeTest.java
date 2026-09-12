@@ -18,17 +18,17 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.*;
-import org.jamocha.rete.BetaMemory;
-import org.jamocha.rete.Binding;
-import org.jamocha.rete.Defclass;
-import org.jamocha.rete.Deftemplate;
-import org.jamocha.rete.Fact;
-import org.jamocha.rete.NotJoin;
-import org.jamocha.rete.Rete;
-import org.jamocha.rete.exception.AssertException;
-import org.jamocha.rete.exception.RetractException;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.*;
+import org.morendo.rete.BetaMemory;
+import org.morendo.rete.Binding;
+import org.morendo.rete.Defclass;
+import org.morendo.rete.Deftemplate;
+import org.morendo.rete.Fact;
+import org.morendo.rete.NotJoin;
+import org.morendo.rete.Rete;
+import org.morendo.rete.exception.AssertException;
+import org.morendo.rete.exception.RetractException;
 
 import woolfel.examples.model.TestBean2;
 

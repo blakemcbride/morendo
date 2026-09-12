@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 Morendo is a RETE inference engine in Java that speaks the CLIPS rule language (a fork of the
-Jamocha/Sumatra engine, so the package root is still `org.jamocha`). Deliberately unsupported:
+Jamocha/Sumatra engine; the package root was `org.jamocha` until 2.0.0 and is now `org.morendo`). Deliberately unsupported:
 ordered facts. Comments in `.clp` files are `;;` (a single `;` is a token in this grammar). Added on top of plain RETE: MOLAP cubes, graph queries, temporal facts/rules,
 `only`/`multiple` conditional elements, no-agenda (event-driven) rules, fuzzy bindings, and a
 rule cost function. Design notes for these live in `doc/*.pdf|odt` and `classdiagrams/`.
@@ -37,11 +37,11 @@ compiling each against only its own dependencies, see `MODULES` in `Tasks.java`)
 | module | packages | third-party |
 |---|---|---|
 | `core` | `rete`, `rule`, `parser`, `model`, `mapping`, `messagerouter`, `nn`, `fuzzy` | Log4j only |
-| `examples` | `woolfel.examples.*` beans and the `org.jamocha.sample.im` example | - |
+| `examples` | `woolfel.examples.*` beans and the `org.morendo.sample.im` example | - |
 | `messaging` | `messaging`, `messaging.functions`, `messaging.agent` | Jakarta JMS |
 | `gui` | `gui`, `gui.visualisation`, `gui.functions` (Swing) | - |
 | `service` | `service`, `service.servlet` | Jackson, Jakarta Servlet |
-| `shell` | `org.jamocha.Morendo`, `shell.Shell` (depends on `gui`) | JLine |
+| `shell` | `org.morendo.Morendo`, `shell.Shell` (depends on `gui`) | JLine |
 
 `src/core/javacc/clips.jj` is the grammar; tests are in `src/test/java` (goldens and scenario
 scripts in `src/test/resources`) and compile against every module. The version is
@@ -68,7 +68,7 @@ the messaging sample's rule file is not in the repository).
 
 ### Golden (characterization) tests
 
-`org.jamocha.golden.GoldenSampleTest` runs every self-contained sample under `samples/` plus the
+`org.morendo.golden.GoldenSampleTest` runs every self-contained sample under `samples/` plus the
 scenario scripts in `src/test/resources/scenarios/` (Manners 16 guests, MOLAP, graph query) with
 `(watch rules)` on, and compares the printed output, the firing trace and template/rule/fact/node
 counts with `src/test/resources/golden/<name>.txt`. This is the safety net for the modernization
@@ -95,7 +95,7 @@ there is no logging wrapper any more. `logs/`, `cache/`, `libs/` and `target/` a
 
 The CLIPS grammar is `src/core/javacc/clips.jj`. `./bld build` (via the `parser` task) runs
 JavaCC 7.0.13 from `libs/tools/` and writes `CLIPSParser*.java`, `Token*.java`,
-`ParseException.java`, `SimpleCharStream.java` into `src/core/java/org/jamocha/parser/clips/`,
+`ParseException.java`, `SimpleCharStream.java` into `src/core/java/org/morendo/parser/clips/`,
 where that directory's `.gitignore` hides them. Never hand-edit generated files; edit `clips.jj`
 and rebuild (JavaCC regenerates only when the grammar is newer; `./bld clean` removes them).
 `ParserUtils.java` in the same package is hand-written. `src/core/javacc/clips-experimental.jj`
@@ -105,9 +105,9 @@ is an unused variant of the grammar.
 
 ### Everything is a Function
 
-`org.jamocha.rete.Rete` is the engine facade; it delegates to `TemplateRegistry` (declared classes
+`org.morendo.rete.Rete` is the engine facade; it delegates to `TemplateRegistry` (declared classes
 and templates), `FunctionRegistry` (functions, function groups, measures; also loads any
-`FunctionGroup` listed in `META-INF/services/org.jamocha.rete.FunctionGroup`, which is how the
+`FunctionGroup` listed in `META-INF/services/org.morendo.rete.FunctionGroup`, which is how the
 `gui` module contributes `view` and the `messaging` module its messaging and agent functions) and
 `EngineOutput`
 (print writers and the message router). A `Rete` instance is not thread-safe: drive it from one
@@ -162,12 +162,12 @@ for embedding (`RuleService` -> `RuleApplication` -> `EngineContext`, JSON confi
 3. `compileJoins` links `BaseJoin` nodes; then a `TerminalNode` is attached and actions compiled;
    the rule is added to its `Module`.
 
-Adding a new conditional element touches: a `Condition` class in `org.jamocha.rule`, a `ConditionCompiler`
+Adding a new conditional element touches: a `Condition` class in `org.morendo.rule`, a `ConditionCompiler`
 in `rete/compiler` wired into all three `CompilerProvider.getInstance` overloads (rule, query, graph
 query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`, and a production in
 `clips.jj`.
 
-### Node hierarchy (`org.jamocha.rete`)
+### Node hierarchy (`org.morendo.rete`)
 
 - `RootNode` -> `ObjectTypeNode` per template -> alpha nodes (`BaseAlpha`, `BaseAlpha2`) -> `LIANode`
   (left input adapter) -> joins (`BaseJoin`) -> terminal.

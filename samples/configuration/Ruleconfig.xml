@@ -1,10 +1,10 @@
-<org.jamocha.service.ServiceConfiguration>
+<org.morendo.service.ServiceConfiguration>
   <applications>
-    <org.jamocha.service.servlet.RuleServiceApplication>
+    <org.morendo.service.servlet.RuleServiceApplication>
       <applicationName>demo</applicationName>
       <version>1.0</version>
       <models>
-        <org.jamocha.service.ObjectModel>
+        <org.morendo.service.ObjectModel>
           <classList>
             <string>woolfel.examples.model.Account</string>
             <string>woolfel.examples.model.Account2</string>
@@ -12,26 +12,26 @@
             <string>woolfel.examples.model.AccountHobby</string>
             <string>woolfel.examples.model.Address</string>
           </classList>
-        </org.jamocha.service.ObjectModel>
+        </org.morendo.service.ObjectModel>
       </models>
       <initialData>
       </initialData>
       <functionGroups>
-        <org.jamocha.service.FunctionPackage>
+        <org.morendo.service.FunctionPackage>
           <classNames>
             <string>woolfel.examples.function.HelloFunction</string>
           </classNames>
-        </org.jamocha.service.FunctionPackage>
+        </org.morendo.service.FunctionPackage>
       </functionGroups>
       <rulesets>
-        <org.jamocha.service.ClipsRuleset>
+        <org.morendo.service.ClipsRuleset>
           <URL>E:/workspace/TestWeb/WebContent/sample_1.clp</URL>
-        </org.jamocha.service.ClipsRuleset>
+        </org.morendo.service.ClipsRuleset>
       </rulesets>
       <minPool>1</minPool>
       <maxPool>10</maxPool>
       <initialPool>1</initialPool>
-    </org.jamocha.service.servlet.RuleServiceApplication>
+    </org.morendo.service.servlet.RuleServiceApplication>
   </applications>
   <serviceName>SampleService</serviceName>
-</org.jamocha.service.ServiceConfiguration>
+</org.morendo.service.ServiceConfiguration>

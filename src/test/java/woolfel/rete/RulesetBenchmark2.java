@@ -16,17 +16,17 @@
  */
 package woolfel.rete;
 
-import org.jamocha.parser.clips.CLIPSParser;
-import org.jamocha.rete.Deftemplate;
-import org.jamocha.rete.Function;
-import org.jamocha.rete.Rete;
-import org.jamocha.rete.ReturnValue;
-import org.jamocha.rete.ReturnVector;
-import org.jamocha.rete.exception.AssertException;
-import org.jamocha.rete.functions.AssertFunction;
-import org.jamocha.rete.functions.ShellFunction;
-import org.jamocha.rule.Defrule;
-import org.jamocha.rule.FunctionAction;
+import org.morendo.parser.clips.CLIPSParser;
+import org.morendo.rete.Deftemplate;
+import org.morendo.rete.Function;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnValue;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.exception.AssertException;
+import org.morendo.rete.functions.AssertFunction;
+import org.morendo.rete.functions.ShellFunction;
+import org.morendo.rule.Defrule;
+import org.morendo.rule.FunctionAction;
 
 import woolfel.examples.model.Account;
 import woolfel.examples.model.Transaction;

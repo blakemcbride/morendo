@@ -18,10 +18,10 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Rete;
-import org.jamocha.rete.exception.AssertException;
-import org.jamocha.rete.exception.RetractException;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Rete;
+import org.morendo.rete.exception.AssertException;
+import org.morendo.rete.exception.RetractException;
 
 import woolfel.examples.model.Account;
 

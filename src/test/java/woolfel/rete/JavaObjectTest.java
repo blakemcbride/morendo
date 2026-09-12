@@ -2,8 +2,8 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.Rete;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Rete;
 
 import woolfel.examples.model.Account4;
 

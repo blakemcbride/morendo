@@ -1,0 +1,64 @@
+package org.morendo.rete.functions.list;
+
+import org.morendo.rete.BoundParam;
+import org.morendo.rete.DefaultReturnValue;
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.ValueParam;
+import org.morendo.rete.ValueType;
+
+/**
+ * Function for creating a multifield from a string. This extends the CLIPS function of the same
+ * name by taking multiple strings as parameters as opposed to a single string.
+ *
+ * @author Dave Woodman
+ */
+public class ExplodeFunction implements Function {
+
+    /** Creates a muitiield from a string */
+    public static final String EXPLODE = "explode$";
+
+    public ExplodeFunction() {
+        super();
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        DefaultReturnVector ret = new DefaultReturnVector();
+        String sourceStr = new String();
+        for (int idx = 0; idx < params.length; idx++) {
+            if (params[idx] instanceof BoundParam) {
+                BoundParam bp = (BoundParam) params[idx];
+                bp.resolveBinding(engine);
+            }
+            sourceStr =
+                    sourceStr
+                            .concat(" ")
+                            .concat(params[idx].getValue(engine, ValueType.OBJECT).toString());
+        }
+        DefaultReturnValue rv =
+                new DefaultReturnValue(ValueType.ARRAY, sourceStr.trim().split(" +"));
+
+        ret.addReturnValue(rv);
+
+        return ret;
+    }
+
+    public String getName() {
+        return EXPLODE;
+    }
+
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {ValueParam[].class};
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.ARRAY;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(explode$ <string-expression>+)";
+    }
+}

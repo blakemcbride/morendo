@@ -1,6 +1,6 @@
 package woolfel.examples.model.account;
 
-import org.jamocha.rete.macro.WriteMacro;
+import org.morendo.rete.macro.WriteMacro;
 
 public class WriteAccountType implements WriteMacro {
     public WriteAccountType() {}

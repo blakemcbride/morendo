@@ -1,0 +1,49 @@
+package org.morendo.messaging.functions;
+
+import org.morendo.rete.Function;
+import org.morendo.rete.FunctionGroup;
+import org.morendo.rete.Rete;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MessagingFunctions implements FunctionGroup {
+
+    /** */
+    private ArrayList<Function> funcs = new ArrayList<>();
+
+    public MessagingFunctions() {}
+
+    public String getName() {
+        return MessagingFunctions.class.getSimpleName();
+    }
+
+    public List<Function> listFunctions() {
+        return funcs;
+    }
+
+    public void loadFunctions(Rete engine) {
+        try {
+            CloseMessagingClientFunction closeClient = new CloseMessagingClientFunction();
+            engine.declareFunction(closeClient);
+            funcs.add(closeClient);
+            CreateMessageClientFunction createClient = new CreateMessageClientFunction();
+            engine.declareFunction(createClient);
+            funcs.add(createClient);
+            RegisterContentHandlerFunction register = new RegisterContentHandlerFunction();
+            engine.declareFunction(register);
+            funcs.add(register);
+            PrintContentHandlersFunction printch = new PrintContentHandlersFunction();
+            engine.declareFunction(printch);
+            funcs.add(printch);
+            PrintMessageClientsFunction printclients = new PrintMessageClientsFunction();
+            engine.declareFunction(printclients);
+            funcs.add(printclients);
+            SendMessageFunction sendMsg = new SendMessageFunction();
+            engine.declareFunction(sendMsg);
+            funcs.add(sendMsg);
+        } catch (Exception e) {
+
+        }
+    }
+}

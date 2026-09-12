@@ -16,8 +16,8 @@
  */
 package woolfel.rete;
 
-import org.jamocha.rete.Rete;
-import org.jamocha.rete.exception.AssertException;
+import org.morendo.rete.Rete;
+import org.morendo.rete.exception.AssertException;
 
 import woolfel.examples.model.Account;
 

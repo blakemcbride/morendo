@@ -3,7 +3,7 @@
 <FindBugsFilter>
   <!-- The generated CLIPS parser is not ours to fix. -->
   <Match>
-    <Class name="~org\.jamocha\.parser\.clips\.(CLIPSParser.*|ParseException|SimpleCharStream|Token|TokenMgrError)"/>
+    <Class name="~org\.morendo\.parser\.clips\.(CLIPSParser.*|ParseException|SimpleCharStream|Token|TokenMgrError)"/>
   </Match>
   <!-- The engine's clone() methods are deliberate deep copies built with constructors and
        setters (bindings, slots, parameters, activations, rules); none of them goes through
@@ -13,7 +13,7 @@
   </Match>
   <!-- (gc) exists to force a collection from the shell; that is its whole purpose. -->
   <Match>
-    <Class name="org.jamocha.rete.functions.memory.GarbageCollectFunction"/>
+    <Class name="org.morendo.rete.functions.memory.GarbageCollectFunction"/>
     <Bug pattern="DM_GC"/>
   </Match>
 </FindBugsFilter>

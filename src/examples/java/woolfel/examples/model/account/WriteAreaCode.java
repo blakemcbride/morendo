@@ -1,6 +1,6 @@
 package woolfel.examples.model.account;
 
-import org.jamocha.rete.macro.WriteMacro;
+import org.morendo.rete.macro.WriteMacro;
 
 public class WriteAreaCode implements WriteMacro {
     public WriteAreaCode() {}

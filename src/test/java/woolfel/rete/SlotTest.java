@@ -18,15 +18,15 @@ package woolfel.rete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jamocha.rete.AlphaNode;
-import org.jamocha.rete.ConversionUtils;
-import org.jamocha.rete.Defclass;
-import org.jamocha.rete.Deftemplate;
-// import org.jamocha.rete.ObjectTypeNode;
-// import org.jamocha.rete.Rete;
-import org.jamocha.rete.Operator;
-import org.jamocha.rete.Slot;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.AlphaNode;
+import org.morendo.rete.ConversionUtils;
+import org.morendo.rete.Defclass;
+import org.morendo.rete.Deftemplate;
+// import org.morendo.rete.ObjectTypeNode;
+// import org.morendo.rete.Rete;
+import org.morendo.rete.Operator;
+import org.morendo.rete.Slot;
 
 import woolfel.examples.model.TestBean2;
 

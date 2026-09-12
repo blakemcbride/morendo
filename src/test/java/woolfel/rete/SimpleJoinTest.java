@@ -16,8 +16,8 @@
  */
 package woolfel.rete;
 
-import org.jamocha.rete.Rete;
 import org.junit.jupiter.api.Test;
+import org.morendo.rete.Rete;
 
 import woolfel.examples.model.Account4;
 import woolfel.examples.model.Transaction;

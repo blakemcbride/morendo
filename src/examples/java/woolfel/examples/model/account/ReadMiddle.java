@@ -1,6 +1,6 @@
 package woolfel.examples.model.account;
 
-import org.jamocha.rete.macro.ReadMacro;
+import org.morendo.rete.macro.ReadMacro;
 
 public class ReadMiddle implements ReadMacro {
     public ReadMiddle() {}

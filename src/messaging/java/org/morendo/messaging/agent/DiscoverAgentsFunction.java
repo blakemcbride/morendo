@@ -1,0 +1,86 @@
+/*
+ * Copyright 2002-2010 Jamocha
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://ruleml-dev.sourceforge.net/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+/*
+ * Copyright 2002-2010 Jamocha
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://ruleml-dev.sourceforge.net/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.morendo.messaging.agent;
+
+import org.morendo.messaging.MessageClient;
+import org.morendo.rete.DefaultReturnVector;
+import org.morendo.rete.Function;
+import org.morendo.rete.Parameter;
+import org.morendo.rete.Rete;
+import org.morendo.rete.ReturnVector;
+import org.morendo.rete.ValueType;
+
+/**
+ * DiscoverAgent will send (refresh-channels) command to the message channel. All active agents will
+ * respond with the register-agent command.
+ *
+ * @author Peter Lin
+ */
+public class DiscoverAgentsFunction implements Function {
+
+    /** */
+    public static final String DISCOVER_AGENTS = "discover-agents";
+
+    public DiscoverAgentsFunction() {
+        super();
+    }
+
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        if (params != null && params.length == 1) {
+            String clientName = params[0].getStringValue();
+            Object value = engine.getDefglobalValue(clientName);
+            if (value instanceof MessageClient messageClient) {
+                String message = "(refresh-channels)";
+                (messageClient).publish(message);
+            }
+        }
+        DefaultReturnVector ret = new DefaultReturnVector();
+        return ret;
+    }
+
+    public String getName() {
+        return DISCOVER_AGENTS;
+    }
+
+    public Class<?>[] getParameter() {
+        return new Class<?>[] {String.class};
+    }
+
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
+    }
+
+    public String toPPString(Parameter[] params, int indents) {
+        return "(" + DISCOVER_AGENTS + "<*client instance name*>)";
+    }
+}
