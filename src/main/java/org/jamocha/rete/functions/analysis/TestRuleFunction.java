@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.analysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -38,12 +37,11 @@ import org.jamocha.rule.util.GenerateFacts;
  *
  * ClearFunction will call Rete.clear()
  */
-public class TestRuleFunction implements Function, Serializable {
+public class TestRuleFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String TESTRULE = "test-rule";
 

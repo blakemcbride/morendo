@@ -15,7 +15,6 @@ public class GenerateMacroFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String GENERATE_MACRO = "generate-macro";
 
 	public GenerateMacroFunction() {

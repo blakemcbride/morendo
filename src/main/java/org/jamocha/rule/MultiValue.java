@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -25,12 +24,11 @@ import java.io.Serializable;
  * In those cases, we don't want to create a Literal constraint, since
  * they are all for the same slot.
  */
-public class MultiValue implements Serializable {
+public class MultiValue {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected Object value = null;
 	protected boolean negated = false;

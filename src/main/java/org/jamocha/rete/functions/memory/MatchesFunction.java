@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.memory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +29,11 @@ import org.jamocha.rete.functions.BaseMatchFunction;
  * MatchesFunction will print out all partial matches including alpha and 
  * beta nodes.
  */
-public class MatchesFunction extends BaseMatchFunction implements Function, Serializable {
+public class MatchesFunction extends BaseMatchFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String MATCHES = "matches";
     

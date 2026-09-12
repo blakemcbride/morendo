@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.io.StringReader;
 
 import org.jamocha.messagerouter.CLIPSInterpreter;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Functional equivalent of (eval "(+ 1 3)") in CLIPS and JESS.
  */
-public class EvalFunction implements Function, Serializable {
+public class EvalFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String EVAL = "eval";
 

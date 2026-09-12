@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -25,7 +24,7 @@ import java.io.Serializable;
  * should implement the interface and add itself to the RuleCompiler. When
  * a rule is added/removed/updated, an event will be fired.
  */
-public interface CompilerListener extends Serializable {
+public interface CompilerListener {
     void ruleAdded(CompileEvent event);
     void ruleRemoved(CompileEvent event);
     void compileError(CompileEvent event);

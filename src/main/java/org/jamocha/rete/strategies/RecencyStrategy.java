@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.strategies;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Activation;
 import org.jamocha.rete.ActivationList;
@@ -29,12 +28,11 @@ import org.jamocha.rete.Strategy;
  *
  * 
  */
-public class RecencyStrategy implements Strategy, Serializable {
+public class RecencyStrategy implements Strategy {
 
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * 

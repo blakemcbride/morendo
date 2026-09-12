@@ -41,7 +41,6 @@ public class GraphQuery extends Defquery {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private Fact[] graphData = null;
     
 	/**

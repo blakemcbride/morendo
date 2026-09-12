@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.text;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +15,11 @@ import org.jamocha.rete.Rete;
  * @author peter
  *
  */
-public class TextFunctions implements FunctionGroup, Serializable {
+public class TextFunctions implements FunctionGroup {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private ArrayList<Function> funcs = new ArrayList<>();
 	
 	public TextFunctions() {

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -31,12 +30,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class GetStrategyFunction implements Function, Serializable {
+public class GetStrategyFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String GET_STRATEGY = "get-strategy";
 	
 	public GetStrategyFunction() {

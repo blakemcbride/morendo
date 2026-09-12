@@ -42,7 +42,6 @@ public class EqDayFunction extends AbstractTimeFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String EQ_DAY = "eq-day";
 	protected GregorianCalendar calendar1 = new GregorianCalendar();
 	protected GregorianCalendar calendar2 = new GregorianCalendar();

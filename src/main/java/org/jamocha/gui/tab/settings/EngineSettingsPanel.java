@@ -29,10 +29,10 @@ import javax.swing.JPanel;
 import org.jamocha.gui.JamochaGui;
 import org.jamocha.messagerouter.StringChannel;
 
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class EngineSettingsPanel extends AbstractSettingsPanel implements
 		ActionListener {
 
-	private static final long serialVersionUID = -7136144663514250335L;
 
 	private JCheckBox evaluationCheckBox;
 	

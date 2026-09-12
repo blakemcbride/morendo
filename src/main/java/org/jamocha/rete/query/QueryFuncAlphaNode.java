@@ -47,7 +47,6 @@ public class QueryFuncAlphaNode extends QueryBaseAlphaCondition {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The function to call

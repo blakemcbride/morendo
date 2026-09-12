@@ -22,7 +22,6 @@ import java.beans.Introspector;
 import java.beans.MethodDescriptor;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,12 +40,11 @@ import org.jamocha.rete.util.ReflectionUtil;
  * propertyChangeListener support. If it does, the Method object for those
  * two are cached.
  */
-public class Defclass implements Serializable {
+public class Defclass {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private Class<?> OBJECT_CLASS = null;
 	private BeanInfo INFO = null;
 	private PropertyDescriptor[] PROPS = null;

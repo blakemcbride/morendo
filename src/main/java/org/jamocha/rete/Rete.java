@@ -20,7 +20,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -84,13 +83,11 @@ import org.jamocha.rule.Rule;
  * This is the main Rete engine class. For now it's called Rete, but I may
  * change it to Engine to be more generic.
  */
-public class Rete implements PropertyChangeListener, CompilerListener,
-		Serializable {
+public class Rete implements PropertyChangeListener, CompilerListener {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final int WATCH_ACTIVATIONS = 001;
 	public static final int WATCH_ALL = 002;
 	public static final int WATCH_FACTS = 003;

@@ -44,7 +44,6 @@ public class AgentStatusResponseFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String AGENT_STATUS_RESPONSE = "agent-status-response";
 
 	public AgentStatusResponseFunction() {

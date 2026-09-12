@@ -42,7 +42,6 @@ public class QueryOnlyNeqJoin extends QueryBaseNot {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryOnlyNeqJoin(int id) {
 		super(id);

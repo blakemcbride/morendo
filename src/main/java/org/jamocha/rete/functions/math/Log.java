@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.lang.Math;
 
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Log returns the natural logarithm of a double value.
  */
-public class Log implements Function, Serializable {
+public class Log implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LOG = "log";
 
 	

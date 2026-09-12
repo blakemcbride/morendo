@@ -42,7 +42,6 @@ public class QueryMultipleJoin extends QueryBaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryMultipleJoin(int id) {
 		super(id);

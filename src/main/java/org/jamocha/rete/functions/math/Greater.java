@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -36,9 +35,8 @@ import org.jamocha.rete.ValueParam;
  * Greater will compare 2 or more numeric values and return true if the (n-1)th value
  * is greater than the nth.
  */
-public class Greater implements Function, Serializable {
+public class Greater implements Function {
 
-	private static final long serialVersionUID = 1L;
 	
 	public static final String GREATER = "greater";
 

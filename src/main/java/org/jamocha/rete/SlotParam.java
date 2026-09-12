@@ -25,7 +25,6 @@ public class SlotParam extends AbstractParam {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     protected int valueType = Constants.SLOT_TYPE;
 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * BindFunction is responsible for calling the appropriate method in Rete to
  * create the defglobal.
  */
-public class BindFunction implements Function, Serializable {
+public class BindFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BIND = "bind";
 
 	/**

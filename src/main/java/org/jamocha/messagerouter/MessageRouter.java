@@ -18,7 +18,6 @@ package org.jamocha.messagerouter;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,9 +36,8 @@ import org.jamocha.rete.ReturnVector;
  * 
  * @author Alexander Wilden, Christoph Emonds, Sebastian Reinartz
  */
-public class MessageRouter implements Serializable {
+public class MessageRouter {
 
-	private static final long serialVersionUID = 1L;
 	/**
 	 * The List of MessageListeners
 	 */

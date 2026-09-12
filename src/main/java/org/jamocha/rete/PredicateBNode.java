@@ -32,7 +32,6 @@ public class PredicateBNode extends BaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public PredicateBNode(int id) {
         super(id);

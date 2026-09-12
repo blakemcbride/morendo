@@ -43,7 +43,6 @@ public class QueryOnlyFuncJoin extends QueryBaseNot {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryOnlyFuncJoin(int id) {
 		super(id);

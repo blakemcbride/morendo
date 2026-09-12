@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Floor returns the greatest integer smaller or equal to a value.
  */
-public class Floor implements Function, Serializable {
+public class Floor implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String FLOOR = "floor";
 

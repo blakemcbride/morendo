@@ -28,7 +28,6 @@ public abstract class QueryBaseAlphaCondition extends QueryBaseAlpha {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public QueryBaseAlphaCondition(int id) {
 		super(id);

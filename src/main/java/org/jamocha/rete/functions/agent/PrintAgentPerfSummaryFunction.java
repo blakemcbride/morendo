@@ -32,7 +32,6 @@ public class PrintAgentPerfSummaryFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PRINT_AGENT_PERF = "pprint-agent-perf-summary";
 
 	public PrintAgentPerfSummaryFunction() {

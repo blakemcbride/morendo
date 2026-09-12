@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -32,12 +31,11 @@ import org.jamocha.rete.util.ProfileStats;
  *
  * PrintProfileFunction will print out the profile information.
  */
-public class PrintProfileFunction implements Function, Serializable {
+public class PrintProfileFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PRINT_PROFILE = "print-profile";
     
 	/**

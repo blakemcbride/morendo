@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.java;
 
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,12 +37,11 @@ import org.jamocha.rete.ValueParam;
  */
 
 
-public class NewFunction implements Function, Serializable {
+public class NewFunction implements Function {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String NEW = "new";
 	

@@ -17,7 +17,6 @@
 package org.jamocha.rete;
 
 import java.beans.PropertyDescriptor;
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -26,7 +25,7 @@ import java.io.Serializable;
  * java version, the filter may use Annotations, BeanInfo or some
  * other method like an external properties file.
  */
-public interface BeanFilter extends Serializable {
+public interface BeanFilter {
     
     /**
      * BeanFilters must implement this interface. It takes the

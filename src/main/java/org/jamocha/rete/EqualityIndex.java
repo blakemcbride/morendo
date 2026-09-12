@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin<p/>
@@ -24,12 +23,11 @@ import java.io.Serializable;
  * EqualityIndex is used specifically for deffacts to check if 2 facts are
  * equal. By equal, we mean the values of the facts are equal.
  */
-public class EqualityIndex implements Serializable {
+public class EqualityIndex {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     private Fact fact = null;
     private int hashCode;
     

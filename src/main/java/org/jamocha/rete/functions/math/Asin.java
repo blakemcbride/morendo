@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Returns the trigonometric arc sine of an angle.
  */
-public class Asin implements Function, Serializable {
+public class Asin implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String ASIN = "asin";
 
 	/**

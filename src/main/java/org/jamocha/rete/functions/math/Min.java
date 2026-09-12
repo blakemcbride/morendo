@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Min returns the smallest of two or more values.
  */
-public class Min implements Function, Serializable {
+public class Min implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String MIN = "min";
 

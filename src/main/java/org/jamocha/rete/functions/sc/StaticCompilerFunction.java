@@ -40,7 +40,6 @@ public class StaticCompilerFunction implements Function {
 	 * functions used by the interpreted engine.
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String STATIC_COMPILER = "static-compiler";
 
 	public StaticCompilerFunction() {

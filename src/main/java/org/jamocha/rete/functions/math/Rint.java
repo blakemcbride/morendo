@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Rint returns the double value closest to the argument.
  */
-public class Rint implements Function, Serializable {
+public class Rint implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String RINT = "rint";
 

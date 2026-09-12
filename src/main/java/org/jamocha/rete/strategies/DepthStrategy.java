@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.strategies;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Activation;
 import org.jamocha.rete.ActivationList;
@@ -42,12 +41,11 @@ import org.jamocha.rete.Strategy;
  * order is not critical. In other words, regardless of the sequence the
  * facts are asserted, the correct result is produced.
  */
-public class DepthStrategy implements Strategy, Serializable {
+public class DepthStrategy implements Strategy {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public DepthStrategy() {
 		super();

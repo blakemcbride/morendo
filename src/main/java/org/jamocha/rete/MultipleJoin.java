@@ -34,7 +34,6 @@ public class MultipleJoin extends BaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public MultipleJoin(int id) {
 		super(id);

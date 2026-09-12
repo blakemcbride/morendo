@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.jamocha.rete.Constants;
@@ -12,12 +11,11 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 
-public class MemberTestFunction implements Serializable, Function {
+public class MemberTestFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String MEMBER_TEST = "member$";
 	
 	public MemberTestFunction() {

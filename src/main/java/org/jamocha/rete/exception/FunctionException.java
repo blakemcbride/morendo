@@ -8,11 +8,11 @@ package org.jamocha.rete.exception;
  * @author Peter Lin
  */
 public class FunctionException extends Exception {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public FunctionException() {
 	}

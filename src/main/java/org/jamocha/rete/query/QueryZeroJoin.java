@@ -41,7 +41,6 @@ public class QueryZeroJoin extends QueryBaseJoin {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public QueryZeroJoin(int id) {
 		super(id);

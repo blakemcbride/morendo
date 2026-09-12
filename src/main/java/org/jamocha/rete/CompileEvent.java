@@ -23,17 +23,17 @@ import org.jamocha.rule.Rule;
  *
  */
 public class CompileEvent extends AbstractEvent {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	private int type = -1;
 
 	private String message = "";
 
-	private Rule rule = null;
+	private transient Rule rule = null;
 
 	/**
 	 * @param source

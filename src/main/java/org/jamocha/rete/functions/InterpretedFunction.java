@@ -37,7 +37,6 @@ public class InterpretedFunction implements Function, Scope {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private String name = null;
     protected String ppString = null;
     protected Parameter[] inputParams = null;

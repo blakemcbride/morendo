@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -20,12 +19,11 @@ import org.jamocha.rete.ValueParam;
  * @author Dave Woodman
  *
  */
-public class ExplodeFunction implements Serializable, Function {
+public class ExplodeFunction implements Function {
 
 	/**
 	 * Creates a muitiield from a string
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String EXPLODE = "explode$";
 
 	public ExplodeFunction() {

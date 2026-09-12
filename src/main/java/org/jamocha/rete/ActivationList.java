@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -30,7 +29,7 @@ import java.io.Serializable;
  * implement different versions and benchmark them. This way, I can use the
  * one that works the better.
  */
-public interface ActivationList extends Serializable {
+public interface ActivationList {
 	/**
 	 * Depending on whether lazy is set or not, the activation list may
 	 * assume the activations are ordered by priority and should just

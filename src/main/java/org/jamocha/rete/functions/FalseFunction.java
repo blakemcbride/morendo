@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -33,12 +32,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Min returns the smallest of two or more values.
  */
-public class FalseFunction implements Function, Serializable {
+public class FalseFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String FALSE = "false";
 
 	/**

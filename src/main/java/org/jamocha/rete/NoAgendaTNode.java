@@ -32,7 +32,6 @@ public class NoAgendaTNode extends TerminalNode2 {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * @param id

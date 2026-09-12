@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * bindings. If any of the bindings is equal to the constant value,
  * the function returns true.
  */
-public class AnyEqFunction implements Function, Serializable {
+public class AnyEqFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String ANYEQUAL = "any-eq";
 	
 	/**

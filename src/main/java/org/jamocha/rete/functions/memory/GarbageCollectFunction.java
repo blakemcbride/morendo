@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.memory;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -26,12 +25,11 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 
 
-public class GarbageCollectFunction implements Function, Serializable {
+public class GarbageCollectFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String GARBAGE_COLLECT = "gc";
 

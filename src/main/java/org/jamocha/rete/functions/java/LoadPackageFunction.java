@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.java;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jamocha.rete.BoundParam;
@@ -37,12 +36,11 @@ import org.jamocha.rete.ValueParam;
  * Creates a Java Object and returns it.
  */
 
-public class LoadPackageFunction implements Function, Serializable {
+public class LoadPackageFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String FUNCTION_NAME = "load-package";
 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -28,7 +27,7 @@ import java.io.Serializable;
  * then evaluated against 1 or more operations.
  * 
  */
-public interface Constraint extends Serializable {
+public interface Constraint {
     /**
      * This should be the name of the constraint. In the case of an
      * object, it is the field's name

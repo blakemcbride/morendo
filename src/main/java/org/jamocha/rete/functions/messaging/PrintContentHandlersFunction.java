@@ -32,7 +32,6 @@ public class PrintContentHandlersFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PRINT_CONTENT_HANDLERS = "print-content-handlers";
 
 	public PrintContentHandlersFunction() {

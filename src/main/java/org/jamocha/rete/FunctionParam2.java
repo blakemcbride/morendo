@@ -29,7 +29,6 @@ public class FunctionParam2 extends AbstractParam {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     protected Function func = null;
     protected String funcName = null;
     private Parameter[] params = null;

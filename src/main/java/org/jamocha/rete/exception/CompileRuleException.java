@@ -23,11 +23,11 @@ package org.jamocha.rete.exception;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class CompileRuleException extends Exception {
+	private static final long serialVersionUID = 1L;
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     public static final String ADD_FAILURE = "Unable to add the rule, due to compilation.";
     public static final String INVALID_RULE = "The rule was not added because it is invalid";
     

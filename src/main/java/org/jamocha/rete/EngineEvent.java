@@ -25,11 +25,11 @@ import java.util.EventObject;
  * event subclasses, the current design uses event type code.
  */
 public class EngineEvent extends EventObject {
+	private static final long serialVersionUID = 1L;
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     public static final int ASSERT_EVENT = 0;
     public static final int RETRACT_EVENT = 1;
     public static final int PROFILE_EVENT = 2;
@@ -41,7 +41,7 @@ public class EngineEvent extends EventObject {
      * the default value is assert event
      */
     private int typeCode = ASSERT_EVENT;
-    private BaseNode sourceNode = null;
+    private transient BaseNode sourceNode = null;
     private Fact[] facts = null;
 
     /**

@@ -40,7 +40,6 @@ public class PredicateConstraint implements Constraint {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	/**
      * the name of the slot

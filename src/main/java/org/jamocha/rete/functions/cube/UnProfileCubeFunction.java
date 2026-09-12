@@ -14,7 +14,6 @@ public class UnProfileCubeFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String UNPROFILE_CUBE = "unprofile-cube";
 
 	public UnProfileCubeFunction() {

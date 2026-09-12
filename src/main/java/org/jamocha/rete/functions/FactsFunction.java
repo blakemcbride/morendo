@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,12 +35,11 @@ import org.jamocha.rete.util.FactUtils;
  * Facts function will printout all the facts, not including any
  * initial facts which are internal to the rule engine.
  */
-public class FactsFunction implements Function, Serializable {
+public class FactsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String FACTS = "facts";
 
 	/**

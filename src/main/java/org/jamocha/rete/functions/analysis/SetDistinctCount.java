@@ -18,7 +18,6 @@ public class SetDistinctCount implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String SET_DISTINCT_COUNT = "set-distinct-count";
 	
 	public SetDistinctCount() {

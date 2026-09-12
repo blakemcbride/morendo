@@ -8,12 +8,12 @@ import javax.swing.JFrame;
 
 import org.jamocha.rete.Rete;
 
+@SuppressWarnings("serial") // Swing components are never serialized here
 public abstract class AbstractJamochaEditor extends JFrame {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected Rete engine;
 
 	public AbstractJamochaEditor(Rete engine) {

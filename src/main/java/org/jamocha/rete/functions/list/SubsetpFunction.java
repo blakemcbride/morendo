@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import org.jamocha.rete.BoundParam;
@@ -13,12 +12,11 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 
-public class SubsetpFunction  implements Serializable, Function {
+public class SubsetpFunction  implements Function {
 
 	/**
 	 * Checks if one multifield is a subset of the other
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String SUBSETP = "subsetp";
 
 	public SubsetpFunction() {

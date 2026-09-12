@@ -32,7 +32,6 @@ public class PrintAgentsFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PRINT_AGENTS = "pprint-agents";
 
 	public PrintAgentsFunction() {

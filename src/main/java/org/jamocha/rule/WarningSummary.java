@@ -27,7 +27,6 @@ public class WarningSummary implements Summary {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private String[] warnings = new String[0];
 
 

@@ -27,7 +27,6 @@ public class ErrorSummary implements Summary {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	private String[] errors = new String[0];
 

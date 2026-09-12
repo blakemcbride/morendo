@@ -24,11 +24,11 @@ package org.jamocha.rete.exception;
  * in the core RETE nodes.
  */
 public class AssertException extends Exception {
+	private static final long serialVersionUID = 1L;
 
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Returns the hyperbolic cosine of an angle.
  */
-public class Cosh implements Function, Serializable {
+public class Cosh implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String COSH = "cosh";
 
 	/**

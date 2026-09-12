@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -39,12 +38,11 @@ import org.jamocha.rete.ValueParam;
  * and make it easier to record what happens. This is inspired by
  * Oracle SqlPlus spool function.
  */
-public class SpoolFunction implements Function, Serializable {
+public class SpoolFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String SPOOL = "spool";
 	public static final String DRIBBLE = "dribble";
 	

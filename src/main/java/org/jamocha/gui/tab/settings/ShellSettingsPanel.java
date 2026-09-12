@@ -38,10 +38,10 @@ import javax.swing.JTextField;
 import org.jamocha.gui.JamochaGui;
 import org.jamocha.gui.icons.IconLoader;
 
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class ShellSettingsPanel extends AbstractSettingsPanel implements
 		ActionListener {
 
-	private static final long serialVersionUID = -7136144663514250335L;
 
 	private JComboBox<?> fonts;
 
@@ -136,7 +136,6 @@ public class ShellSettingsPanel extends AbstractSettingsPanel implements
 
 	private class FontListCellRenderer extends DefaultListCellRenderer {
 
-		private static final long serialVersionUID = 1L;
 
 		public FontListCellRenderer() {
 			super();

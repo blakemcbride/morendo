@@ -21,7 +21,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.RetractException;
 
-public class RetractFunction implements Function, Serializable {
+public class RetractFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String RETRACT = "retract";
 
 	public RetractFunction() {

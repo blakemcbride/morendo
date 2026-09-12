@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ReturnVector;
  * @author Peter Lin
  *
  */
-public class DefglobalFunction implements Serializable, Function {
+public class DefglobalFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private static String DEFGLOBAL = "defglobal";
 	
 	/**

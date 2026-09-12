@@ -19,7 +19,6 @@ public class CompileClassMacroFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String COMPILE_MACRO = "compile-class-macro";
 
 	public CompileClassMacroFunction() {

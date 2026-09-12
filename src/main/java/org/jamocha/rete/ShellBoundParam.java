@@ -29,7 +29,6 @@ public class ShellBoundParam extends AbstractParam {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     /**
      * the int value defining the valueType
      */

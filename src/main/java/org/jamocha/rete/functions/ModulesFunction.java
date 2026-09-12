@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -33,12 +32,11 @@ import org.jamocha.rete.ValueParam;
  * @author Sebastian Reinartz
  * 
  */
-public class ModulesFunction implements Function, Serializable {
+public class ModulesFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String MODULES = "modules";
 
 	public ModulesFunction() {

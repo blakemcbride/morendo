@@ -12,7 +12,6 @@ public class RemoveRuleStatusFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String REMOVE_RULE_STATUS = "remove-rule-status";
 
 	public RemoveRuleStatusFunction() {

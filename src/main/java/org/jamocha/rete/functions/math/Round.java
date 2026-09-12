@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Round returns the closest int to the argument.
  */
-public class Round implements Function, Serializable {
+public class Round implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String ROUND = "round";
 

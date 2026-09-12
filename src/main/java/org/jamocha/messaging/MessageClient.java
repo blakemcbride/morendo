@@ -27,7 +27,7 @@ import org.jamocha.rete.Rete;
  * 
  * MessageClient is used to 
  */
-public interface MessageClient extends Serializable, MessageListener, Runnable {
+public interface MessageClient extends MessageListener, Runnable {
 	/**
 	 * Classes implementing the method must provide concrete logic for closing
 	 * the connection and cleaning up the references.

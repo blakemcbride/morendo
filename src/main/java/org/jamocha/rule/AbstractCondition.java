@@ -14,7 +14,6 @@ public abstract class AbstractCondition implements Condition {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	/**
      * The string template name from the parser, before we
      * resolve it to the Template object

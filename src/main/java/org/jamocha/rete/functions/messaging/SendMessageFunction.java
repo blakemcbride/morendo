@@ -30,7 +30,6 @@ public class SendMessageFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String SEND_MSG = "send-msg";
 
 	public SendMessageFunction() {

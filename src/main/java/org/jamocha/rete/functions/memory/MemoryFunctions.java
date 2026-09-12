@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.memory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +29,11 @@ import org.jamocha.rete.Rete;
  * RuleEngineFunction is responsible for loading all the rule functions
  * related to engine operation.
  */
-public class MemoryFunctions implements FunctionGroup, Serializable {
+public class MemoryFunctions implements FunctionGroup {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	private ArrayList<Function> funcs = new ArrayList<>();
 	

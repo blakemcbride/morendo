@@ -53,7 +53,6 @@ public class DiscoverAgentsFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String DISCOVER_AGENTS = "discover-agents";
 
 	public DiscoverAgentsFunction() {

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -24,12 +23,11 @@ import java.io.Serializable;
  * this class is used by hash not equal beta node. It uses to create
  * the Hash index to look up the matches on the right.
  */
-public class BindValue implements Serializable {
+public class BindValue {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected Object value = null;
 

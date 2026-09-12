@@ -40,10 +40,10 @@ import org.jamocha.gui.tab.settings.ShellSettingsPanel;
  * @author Karl-Heinz Krempels <krempels@cs.rwth-aachen.de>
  * @author Alexander Wilden <october.rust@gmx.de>
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class SettingsPanel extends AbstractJamochaPanel implements
 		ActionListener {
 
-	private static final long serialVersionUID = 1934727733895902279L;
 
 	private JTabbedPane tabbedPane;
 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 /**
@@ -26,7 +25,7 @@ import java.util.Iterator;
  * the implementation, so the interface has the important methods. Hopefully
  * I won't need to change this interface much in the future.
  */
-public interface BetaMemory extends Serializable {
+public interface BetaMemory {
 	/**
 	 * clear the beta memory
 	 */

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.analysis;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ValueParam;
  * WatchFunction allows users to watch different engine process, like
  * activations, facts and rules.
  */
-public class ValidateRuleFunction implements Function, Serializable {
+public class ValidateRuleFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected static final String VALIDATE_RULE = "validate-rule";
 	

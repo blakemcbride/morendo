@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -35,12 +34,11 @@ import java.io.Serializable;
  * could be a very costly process. More thought and research is needed
  * to figure out the best way to handle re-declaring deftemplates.
  */
-public class Binding implements Serializable, Cloneable {
+public class Binding implements Cloneable {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
      * This is the name of the variable. Every binding must

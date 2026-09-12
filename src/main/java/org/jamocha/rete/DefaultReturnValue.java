@@ -36,7 +36,6 @@ public class DefaultReturnValue extends ValueParam {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

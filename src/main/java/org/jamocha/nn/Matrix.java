@@ -1,6 +1,5 @@
 package org.jamocha.nn;
 
-import java.io.Serializable;
 
 /**
  * <p>
@@ -35,12 +34,11 @@ import java.io.Serializable;
  * @author peter
  *
  */
-public class Matrix implements Serializable, Cloneable {
+public class Matrix implements Cloneable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	// to be memory efficient, always initialize with zero cols and rows
 	
 	

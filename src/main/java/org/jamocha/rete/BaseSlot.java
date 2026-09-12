@@ -67,6 +67,7 @@ public class BaseSlot implements Serializable, Cloneable {
     
 	private long distinctCount = 0;
 	
+    @SuppressWarnings("serial") // payload; serializable only if the value is
     protected Object value = Constants.NIL_SYMBOL;
 
 	/**

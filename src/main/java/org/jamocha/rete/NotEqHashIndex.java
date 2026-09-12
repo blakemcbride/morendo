@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin<p/>
@@ -26,12 +25,11 @@ import java.io.Serializable;
  * equal values. The second is it takes BindValue[] instead of just
  * Object[].
  */
-public class NotEqHashIndex implements HashIndex, Serializable {
+public class NotEqHashIndex implements HashIndex {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     private BindValue[] values = null;
     private int eqhashCode;
     private EqHashIndex negindex;

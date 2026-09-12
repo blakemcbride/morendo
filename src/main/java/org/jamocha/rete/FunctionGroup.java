@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ import java.util.List;
  * one might want to group mathematic functions together. Or IO functions together
  * into a group.
  */
-public interface FunctionGroup extends Serializable {
+public interface FunctionGroup {
 	String getName();
 
 	/**

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -26,7 +25,7 @@ import java.io.Serializable;
  * The design of Function is very similar to Methods, since a function is
  * basically a stand alone method.
  */
-public interface Function extends Serializable {
+public interface Function {
 	/**
 	 * every function needs to declare what the return type is.
 	 * @return

@@ -33,7 +33,6 @@ public class HashedEqBNode extends BaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public HashedEqBNode(int id) {
         super(id);

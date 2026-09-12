@@ -45,7 +45,6 @@ public class QueryNotJoinFrst extends QueryBaseNot {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryNotJoinFrst(int id){
         super(id);

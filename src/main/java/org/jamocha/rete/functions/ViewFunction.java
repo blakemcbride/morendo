@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BaseNode;
 import org.jamocha.rete.Constants;
@@ -34,12 +33,11 @@ import org.jamocha.rete.visualisation.Visualiser;
  * 
  * Opens a visualisation window for the rete net
  */
-public class ViewFunction implements Function, Serializable {
+public class ViewFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String VIEW = "view";
 
 	/**

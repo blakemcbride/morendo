@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.memory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,12 +48,11 @@ import org.jamocha.rete.functions.BaseMatchFunction;
  * matches, RightMatches prints out all the facts on the right side
  * and doesn't show which facts it matches on the left.
  */
-public class RightMatchesFunction extends BaseMatchFunction implements Function, Serializable {
+public class RightMatchesFunction extends BaseMatchFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String RIGHT_MATCHES = "right-matches";
 	

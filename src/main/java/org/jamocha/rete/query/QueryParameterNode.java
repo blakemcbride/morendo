@@ -42,7 +42,6 @@ public class QueryParameterNode extends QueryBaseAlphaCondition {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * The use of Slot(s) is similar to CLIPS design

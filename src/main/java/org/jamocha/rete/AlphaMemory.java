@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -24,7 +23,7 @@ import java.io.Serializable;
  * Interface for alpha memory. Alpha memories are used to remember
  * which facts entered and match for alpha nodes.
  */
-public interface AlphaMemory extends Serializable {
+public interface AlphaMemory {
 	/**
 	 * Add a partial match to the memory
 	 * @param fact

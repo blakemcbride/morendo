@@ -31,7 +31,6 @@ public class MLTerminalNode extends TerminalNode2 {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private boolean noAgenda = false;
 
 	/**

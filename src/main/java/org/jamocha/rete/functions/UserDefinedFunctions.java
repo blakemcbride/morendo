@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +7,11 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.FunctionGroup;
 import org.jamocha.rete.Rete;
 
-public class UserDefinedFunctions implements FunctionGroup, Serializable {
+public class UserDefinedFunctions implements FunctionGroup {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private ArrayList<Function> funcs = new ArrayList<>();
 	public static final String USER_DEFINED_FUNCTIONS = "User Defined Functions";
 	

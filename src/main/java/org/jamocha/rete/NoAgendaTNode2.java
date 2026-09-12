@@ -32,7 +32,6 @@ public class NoAgendaTNode2 extends NoAgendaTNode {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * @param id

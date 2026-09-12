@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.strategies;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Activation;
 import org.jamocha.rete.ActivationList;
@@ -39,12 +38,11 @@ import org.jamocha.rete.Strategy;
  * 5.3.2 Breadth Strategy
  * Newly activated rules are placed below all rules of the same salience.
  */
-public class BreadthStrategy implements Strategy, Serializable {
+public class BreadthStrategy implements Strategy {
 
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * 

@@ -27,7 +27,6 @@ public class BoundParam extends AbstractParam {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
      * The fact

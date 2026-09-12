@@ -36,7 +36,6 @@ public class QueryAndAlphaNode extends QueryBaseAlphaCondition {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
 	/**
 	 * The useCount is used to keep track of how many times

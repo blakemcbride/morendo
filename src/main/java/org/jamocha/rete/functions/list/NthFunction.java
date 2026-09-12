@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -18,12 +17,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class NthFunction implements Serializable, Function {
+public class NthFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String NTH = "nth$";
 	
 	public NthFunction() {

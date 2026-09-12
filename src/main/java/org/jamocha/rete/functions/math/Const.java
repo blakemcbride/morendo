@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ValueParam;
  * @author Nikolaus Koemm
  *
  */
-public class Const implements Function, Serializable {
+public class Const implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String CONST = "const";
 	
 	/**

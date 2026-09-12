@@ -21,11 +21,12 @@ public class ResultsetFact implements Fact {
 	private static final long serialVersionUID = 1L;
 
 	protected Template cubeTemplate = null;
+    @SuppressWarnings("serial") // payload; serializable only if the value is
     protected Object objInstance;
     protected BaseSlot[] slots = null;
     protected long id;
 	private long timeStamp = 0;
-	private EqualityIndex Eindex = null;
+	private transient EqualityIndex Eindex = null;
 	
 	public ResultsetFact(Template template, Object instance, BaseSlot[] values, long id) {
 		super();

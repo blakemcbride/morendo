@@ -40,7 +40,6 @@ public class QueryLIANode extends QueryBaseAlpha {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryLIANode(int id){
         super(id);

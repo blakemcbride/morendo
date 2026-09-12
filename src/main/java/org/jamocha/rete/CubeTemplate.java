@@ -22,7 +22,7 @@ public class CubeTemplate implements Template {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Cube cube = null;
+	private transient Cube cube = null;
 	private String templateName;
 	private String defclass = null;
 	protected BaseSlot[] slots;

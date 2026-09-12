@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin<p/>
@@ -24,12 +23,11 @@ import java.io.Serializable;
  * EqHashIndex is used by the BetaNode for indexing the facts that
  * enter from the right.
  */
-public class EqHashIndex implements HashIndex, Serializable {
+public class EqHashIndex implements HashIndex {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     private Object[] values = null;
     private int hashCode;
     

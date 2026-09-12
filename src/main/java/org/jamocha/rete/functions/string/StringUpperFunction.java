@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.string;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -33,12 +32,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class StringUpperFunction implements Function, Serializable {
+public class StringUpperFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String STRING_UPPER = "str-upper";
 	

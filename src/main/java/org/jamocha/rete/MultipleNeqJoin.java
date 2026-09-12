@@ -35,7 +35,6 @@ public class MultipleNeqJoin extends BaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public MultipleNeqJoin(int id) {
 		super(id);

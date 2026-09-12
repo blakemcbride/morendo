@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Iterator;
@@ -51,12 +50,11 @@ import java.util.Iterator;
  * maintain 10,000,000 timestamps. clearly that isn't scalable and
  * would have a significant impact.
  */
-public class TemporalHashedAlphaMem implements Serializable {
+public class TemporalHashedAlphaMem {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected Map<HashIndex, Map<Object, Object>> memory = null;
     

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class Multiply implements Function, Serializable {
+public class Multiply implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String MULTIPLY = "multiply";
 

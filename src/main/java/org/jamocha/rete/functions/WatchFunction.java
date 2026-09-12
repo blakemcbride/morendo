@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ValueParam;
  * WatchFunction allows users to watch different engine processes, like
  * activations, facts and rules.
  */
-public class WatchFunction implements Function, Serializable {
+public class WatchFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected static final String WATCH = "watch";
 	
 	/**

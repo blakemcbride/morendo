@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 /**
@@ -28,7 +27,7 @@ import java.util.Iterator;
  * results of a function.
  * The interface extends Iterator, so 
  */
-public interface ReturnVector extends Serializable {
+public interface ReturnVector {
     
     void clear();
     /**

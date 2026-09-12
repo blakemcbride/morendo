@@ -27,7 +27,6 @@ public class Binding2 extends Binding {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected int operator = Constants.EQUAL;
     protected Function function = null;
     protected Parameter[] params = null;

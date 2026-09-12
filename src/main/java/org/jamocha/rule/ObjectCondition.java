@@ -33,7 +33,6 @@ public class ObjectCondition extends AbstractCondition {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	//hasNotEqual and hasPredicateJoin determine which kind of joinNode to create
     private boolean hasNotEqual = false;

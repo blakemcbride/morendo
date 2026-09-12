@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -27,7 +26,7 @@ import java.math.BigInteger;
  * the return value. Since users will be able to use CLIPS syntax
  * to define functions, we provide this functionality.
  */
-public interface ReturnValue extends Serializable {
+public interface ReturnValue {
     int getValueType();
     
     Object getValue();

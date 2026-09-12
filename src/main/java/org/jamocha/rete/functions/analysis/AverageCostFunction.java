@@ -33,7 +33,6 @@ public class AverageCostFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String AVERAGE_COST = "average-cost";
 
 	public AverageCostFunction() {

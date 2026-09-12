@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,12 +18,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class CreateSetFunction implements Serializable, Function {
+public class CreateSetFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String CREATE_SET = "create-set$";
 	
 	public CreateSetFunction() {

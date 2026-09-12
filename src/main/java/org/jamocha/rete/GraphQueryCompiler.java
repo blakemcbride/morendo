@@ -55,7 +55,6 @@ public class GraphQueryCompiler implements QueryCompiler {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
     private Rete engine = null;
    	private Map<Template, QueryObjTypeNode> objectTypeNodesMap = null;
     

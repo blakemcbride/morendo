@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -33,12 +32,11 @@ import org.jamocha.rule.Defrule;
  * @author Peter Lin
  *
  */
-public class UnDefruleFunction implements Function, Serializable {
+public class UnDefruleFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String UNDEFRULE = "undefrule";
 
 	public UnDefruleFunction() {

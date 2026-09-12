@@ -34,7 +34,6 @@ public class BoundConstraint implements Constraint {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	/**
      * the name is the slot name
      */

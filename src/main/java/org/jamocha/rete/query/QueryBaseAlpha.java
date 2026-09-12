@@ -37,7 +37,6 @@ public abstract class QueryBaseAlpha extends BaseNode {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	/**
      * The operator to compare two values
      */

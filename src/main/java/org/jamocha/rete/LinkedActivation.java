@@ -34,7 +34,6 @@ public class LinkedActivation implements Activation {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     private LinkedActivation prev = null;
 

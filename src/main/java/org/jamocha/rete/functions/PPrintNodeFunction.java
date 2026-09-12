@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -33,12 +32,11 @@ import org.jamocha.rete.ValueParam;
  * format may not be identicle to what the user wrote. It is a normalized
  * and cleaned up format.
  */
-public class PPrintNodeFunction implements Function, Serializable {
+public class PPrintNodeFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PPNODE = "ppnode";
 	
 	/**

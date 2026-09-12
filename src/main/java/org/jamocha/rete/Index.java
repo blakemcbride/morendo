@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin<p/>
@@ -31,12 +30,11 @@ import java.io.Serializable;
  * The implementation for now is very simple. Later on, we may need to update
  * it and make sure it works for memory snapshots and other features.
  */
-public final class Index implements Serializable, HashIndex {
+public final class Index implements HashIndex {
 
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     private Fact[] facts = null;
 

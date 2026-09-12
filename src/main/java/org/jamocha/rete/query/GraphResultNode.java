@@ -36,7 +36,6 @@ public class GraphResultNode extends QueryResultNode {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private volatile GraphQuery gquery = null;
 	
 	public GraphResultNode(int id) {

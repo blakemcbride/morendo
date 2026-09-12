@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.temporal;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +7,11 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.FunctionGroup;
 import org.jamocha.rete.Rete;
 
-public class TemporalFunctions implements Serializable, FunctionGroup {
+public class TemporalFunctions implements FunctionGroup {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 		private ArrayList<Function> funcs = new ArrayList<>();
 
 	public TemporalFunctions() {

@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.text;
 
-import java.io.Serializable;
 import java.util.HashMap;
 // import java.util.HashSet;
 import java.util.Map;
@@ -23,12 +22,11 @@ import org.jamocha.rete.ValueParam;
  * @author peter
  *
  */
-public class TokenizeFunction implements Function, Serializable {
+public class TokenizeFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String TOKENIZE = "tokenize";
 
 	public TokenizeFunction() {

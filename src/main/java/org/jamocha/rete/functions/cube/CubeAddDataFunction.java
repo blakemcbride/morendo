@@ -47,7 +47,6 @@ public class CubeAddDataFunction implements RuleFunction {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String CUBE_ADD_DATA = "cube-add-data";
 	private Fact[] triggerFacts = null;
 

@@ -24,11 +24,11 @@ package org.jamocha.messagerouter;
  * 
  */
 public class LanguageNotSupportedException extends Exception {
+	private static final long serialVersionUID = 1L;
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public LanguageNotSupportedException(String language) {
 	super(language);

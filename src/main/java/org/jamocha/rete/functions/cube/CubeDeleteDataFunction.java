@@ -38,7 +38,6 @@ public class CubeDeleteDataFunction implements RuleFunction {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String CUBE_DELETE_DATA = "cube-delete-data";
 	private Fact[] triggerFacts = null;
 

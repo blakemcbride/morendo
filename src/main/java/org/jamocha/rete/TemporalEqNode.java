@@ -12,7 +12,6 @@ public class TemporalEqNode extends AbstractTemporalNode {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public TemporalEqNode(int id) {
         super(id);

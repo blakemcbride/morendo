@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.jamocha.rete.exception.AssertException;
@@ -27,12 +26,11 @@ import org.jamocha.rete.exception.AssertException;
  * BaseNode is meant to define common logic that all nodes must have
  * and implement common logic.
  */
-public abstract class BaseNode implements Serializable, Print {
+public abstract class BaseNode implements Print {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected int nodeID;
 

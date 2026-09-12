@@ -34,7 +34,6 @@ public class ModificationActivation extends LinkedActivation {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

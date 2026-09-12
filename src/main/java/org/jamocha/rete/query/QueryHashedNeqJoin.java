@@ -45,7 +45,6 @@ public class QueryHashedNeqJoin extends QueryBaseJoin {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public QueryHashedNeqJoin(int id){
         super(id);

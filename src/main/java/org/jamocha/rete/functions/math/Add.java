@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Add will add one or more numbers and return the result.
  */
-public class Add implements Function, Serializable {
+public class Add implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String ADD = "add";
 
 	/**

@@ -19,7 +19,6 @@ package org.jamocha.rete.functions.io;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.Serializable;
 
 import org.jamocha.parser.clips.CLIPSParser;
 import org.jamocha.parser.clips.ParseException;
@@ -42,12 +41,11 @@ import org.jamocha.rete.util.IOUtilities;
  *
  * Functional equivalent of (batch file.clp) in CLIPS and JESS.
  */
-public class BatchFunction implements Function, Serializable {
+public class BatchFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BATCH = "batch";
 
 	/**

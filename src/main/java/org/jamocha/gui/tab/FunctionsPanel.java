@@ -49,10 +49,10 @@ import org.jamocha.rete.Function;
  * 
  * @author Nikolaus Koemm
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class FunctionsPanel extends AbstractJamochaPanel implements ActionListener,
 		ListSelectionListener {
 
-	private static final long serialVersionUID = 23;
 	
 	private JTextArea dumpAreaFunction;
 	
@@ -164,7 +164,6 @@ public class FunctionsPanel extends AbstractJamochaPanel implements ActionListen
 	
 	private final class FunctionsTableModel extends AbstractTableModel {
 
-		private static final long serialVersionUID = 1L;
 
 		private List<Function> funclist = Collections.emptyList();
 		

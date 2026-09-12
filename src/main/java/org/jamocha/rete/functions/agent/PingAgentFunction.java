@@ -41,7 +41,6 @@ public class PingAgentFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PING_AGENT = "ping-agent";
 
 	public PingAgentFunction() {

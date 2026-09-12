@@ -41,7 +41,6 @@ public class QueryMultipleFrst extends QueryBaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryMultipleFrst(int id) {
 		super(id);

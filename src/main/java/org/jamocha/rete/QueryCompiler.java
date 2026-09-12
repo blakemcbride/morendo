@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.query.QueryObjTypeNode;
 import org.jamocha.rule.Query;
@@ -29,7 +28,7 @@ import org.jamocha.rule.Query;
  * network and doesn't use terminal node. Instead it ends with
  * a QueryNode, which gathers the results.
  */
-public interface QueryCompiler extends Serializable {
+public interface QueryCompiler {
 	/**
 	 * for the runtime, the default should be false. For the development
 	 * the setting should be set to true.

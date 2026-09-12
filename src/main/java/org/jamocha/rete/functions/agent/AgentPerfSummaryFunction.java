@@ -28,7 +28,6 @@ public class AgentPerfSummaryFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String AGENT_PERF_SUMMARY = "agent-perf-summary";
 
 	public AgentPerfSummaryFunction() {

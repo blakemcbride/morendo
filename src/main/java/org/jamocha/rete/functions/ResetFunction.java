@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ReturnVector;
  * Reset will reset all deffacts and objects. To reset just the objects,
  * call reset-objects
  */
-public class ResetFunction implements Function, Serializable {
+public class ResetFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String RESET = "reset";
 	
 	/**

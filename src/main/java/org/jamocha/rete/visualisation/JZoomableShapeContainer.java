@@ -18,11 +18,11 @@ import java.util.Iterator;
  * A special JShapeContainer which can zoom.
  */
 public class JZoomableShapeContainer extends JShapeContainer {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected JMiniRadarShapeContainer radarShapeContainer;
 	int zoomLevel;

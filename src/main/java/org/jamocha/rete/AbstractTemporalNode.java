@@ -30,7 +30,6 @@ public abstract class AbstractTemporalNode extends BaseJoin {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	/**
      * The relative elapsed time for the left side of the join.
      * The default value is 0 to indicate it has no time window

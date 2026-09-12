@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -34,12 +33,11 @@ import org.jamocha.rete.util.ProfileStats;
  * given module.
  * Only the activations of the current module will be fired.
  */
-public class Agenda implements Serializable {
+public class Agenda {
 
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * The ArrayList for the modules.

@@ -27,7 +27,6 @@ public abstract class BaseAlpha2 extends BaseAlpha {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param id

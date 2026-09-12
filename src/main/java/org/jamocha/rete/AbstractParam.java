@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -24,11 +23,10 @@ import java.math.BigInteger;
  * @author Peter Lin AbstractParam provides the common implementation of
  *         Parameter interface.
  */
-public abstract class AbstractParam implements Parameter, Serializable {
+public abstract class AbstractParam implements Parameter {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected boolean objBinding = false;
 
 	/**

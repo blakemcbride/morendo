@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.jamocha.rete.BoundParam;
@@ -18,12 +17,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class LengthFunction implements Serializable, Function {
+public class LengthFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LENGTH = "length$";
 	
 	public LengthFunction() {

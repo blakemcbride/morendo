@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -25,12 +24,11 @@ import java.io.Serializable;
  * in a HashTable. This should improve the performance over the proof-of-concept
  * implementation using Strings.
  */
-public class CompositeIndex implements Serializable {
+public class CompositeIndex {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	private String name = null;
 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 
 /**
  * The purpose of Summary interface is to define common methods for
@@ -28,7 +27,7 @@ import java.io.Serializable;
  * @author Peter Lin
  *
  */
-public interface Summary extends Serializable {
+public interface Summary {
 	/**
 	 * add a message about the error or warning
 	 * @param reason

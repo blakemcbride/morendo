@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -25,13 +24,11 @@ import java.io.Serializable;
  * strategy for the activation list. Creating new activationList
  * implementations should extend this class.
  */
-public abstract class AbstractActivationList implements ActivationList,
-		Serializable {
+public abstract class AbstractActivationList implements ActivationList {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected Strategy stratey = null;
     

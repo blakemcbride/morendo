@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -33,12 +32,11 @@ import org.jamocha.rete.ReturnVector;
  * @author Peter Lin
  *
  */
-public class ResetFactsFunction implements Function, Serializable {
+public class ResetFactsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String RESET_FACTS = "reset-facts";
 	
 	/**

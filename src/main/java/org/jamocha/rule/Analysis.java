@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 
 /**
  * Validation interface defines 3 methods a basic validation component
@@ -29,7 +28,7 @@ import java.io.Serializable;
  * @author Peter Lin
  *
  */
-public interface Analysis extends Serializable {
+public interface Analysis {
 	
 	public static final int ANALYSIS_COMPLETE = 100;
 	public static final int ANALYSIS_INCOMPLETE = 101;

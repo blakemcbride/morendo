@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Function;
@@ -30,12 +29,11 @@ import org.jamocha.rete.ReturnVector;
  * 
  * ExitFunction is used to call Rete.close() and then it calls System.exit(0).
  */
-public class ExitFunction implements Function, Serializable {
+public class ExitFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String EXIT = "exit";
 
 	/**

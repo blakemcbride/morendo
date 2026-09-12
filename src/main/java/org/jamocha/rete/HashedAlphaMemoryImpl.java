@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Iterator;
 
@@ -26,12 +25,11 @@ import java.util.Iterator;
  * Basic implementation of Alpha memory. It uses HashMap for storing
  * the indexes.
  */
-public class HashedAlphaMemoryImpl implements Serializable {
+public class HashedAlphaMemoryImpl {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     protected Map memory = null;
     

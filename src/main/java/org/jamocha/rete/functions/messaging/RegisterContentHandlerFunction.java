@@ -17,7 +17,6 @@ public class RegisterContentHandlerFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String REGISTER_CONTENT_HANDLER = "register-content-handler";
 
 	public RegisterContentHandlerFunction() {

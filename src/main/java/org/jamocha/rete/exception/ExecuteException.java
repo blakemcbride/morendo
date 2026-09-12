@@ -24,11 +24,11 @@ package org.jamocha.rete.exception;
  * sufficient details to debug the issue.
  */
 public class ExecuteException extends Exception {
+	private static final long serialVersionUID = 1L;
 
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
     public static final String NULL_ACTION = "Could not execute the action. "
 			+ "The action was NULL";
 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -30,12 +29,11 @@ import org.jamocha.rete.ReturnVector;
  *
  * ClearFunction will call Rete.clear()
  */
-public class VersionFunction implements Function, Serializable {
+public class VersionFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String VERSION = "version";
 
 	/**

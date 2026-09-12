@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,12 +39,11 @@ import org.jamocha.rete.Template;
  *
  * A basic implementation of the Rule interface
  */
-public class Defrule implements Rule, Scope, Serializable {
+public class Defrule implements Rule, Scope {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected String name = null;
     protected ArrayList<Condition> conditions = null;

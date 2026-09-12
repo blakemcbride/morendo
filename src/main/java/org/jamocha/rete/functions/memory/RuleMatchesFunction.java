@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.memory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,12 +30,11 @@ import org.jamocha.rete.functions.BaseMatchFunction;
 import org.jamocha.rule.Condition;
 import org.jamocha.rule.Defrule;
 
-public class RuleMatchesFunction extends BaseMatchFunction implements Function, Serializable {
+public class RuleMatchesFunction extends BaseMatchFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String RULE_MATCHES = "rule-matches";
     

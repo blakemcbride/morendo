@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jamocha.rete.BaseSlot;
@@ -45,12 +44,11 @@ import org.jamocha.rete.exception.RetractException;
  *         Modified by Dave Woodman 21/06/21 to permit (bind ?fred (assert...
  *         (modify ?fred ....
  */
-public class ModifyFunction implements RuleFunction, Serializable {
+public class ModifyFunction implements RuleFunction {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String MODIFY = "modify";
 

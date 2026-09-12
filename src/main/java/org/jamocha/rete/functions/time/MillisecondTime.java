@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.Constants;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ReturnVector;
  * 
  * EchoFunction is used to echo variable bindings in the shell.
  */
-public class MillisecondTime implements Function, Serializable {
+public class MillisecondTime implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String MSTIME = "ms-time";
 
     /**

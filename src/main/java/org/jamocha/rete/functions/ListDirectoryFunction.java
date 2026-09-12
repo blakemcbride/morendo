@@ -17,7 +17,6 @@
 package org.jamocha.rete.functions;
 
 import java.io.File;
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ReturnVector;
  * @author Peter Lin
  *
  */
-public class ListDirectoryFunction implements Function, Serializable {
+public class ListDirectoryFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LIST_DIR = "list-dir";
 
 	public ListDirectoryFunction() {

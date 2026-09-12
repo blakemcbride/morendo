@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.jamocha.rete.Constants;
@@ -33,12 +32,11 @@ import org.jamocha.rete.ReturnVector;
  * 
  * Now will create a new Date object and return it.
  */
-public class NowFunction implements Function, Serializable {
+public class NowFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String NOW = "now";
 
     /**

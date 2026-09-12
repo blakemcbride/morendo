@@ -13,7 +13,6 @@ public class CloseMessagingClientFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String CLOSE_MSG_CLIENT = "close-message-client";
 
 	public CloseMessagingClientFunction() {

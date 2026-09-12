@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * than 1.0. Returned values are chosen pseudorandomly with (approximately)
  * uniform distribution from that range.
  */
-public class Random implements Function, Serializable {
+public class Random implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String RANDOM = "random";
 

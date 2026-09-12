@@ -34,7 +34,6 @@ public class TemporalCondition extends ObjectCondition {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected String varname = null;
     protected int relativeTime = 0;

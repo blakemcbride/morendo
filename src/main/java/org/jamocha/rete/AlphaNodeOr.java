@@ -29,7 +29,6 @@ public class AlphaNodeOr extends BaseAlpha2 {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The use of Slot(s) is similar to CLIPS design

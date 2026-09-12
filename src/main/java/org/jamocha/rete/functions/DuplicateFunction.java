@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BaseSlot;
 import org.jamocha.rete.BoundParam;
@@ -40,12 +39,11 @@ import org.jamocha.rete.exception.AssertException;
  *
  * ModifyFunction is equivalent to CLIPS modify function.
  */
-public class DuplicateFunction implements RuleFunction, Serializable {
+public class DuplicateFunction implements RuleFunction {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String DUPLICATE = "duplicate";
     

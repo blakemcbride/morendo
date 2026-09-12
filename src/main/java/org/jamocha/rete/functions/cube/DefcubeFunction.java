@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.cube;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Cube;
@@ -34,12 +33,11 @@ import org.jamocha.rule.Defrule;
  * 
  * @author Peter Lin
  */
-public class DefcubeFunction implements Function, Serializable {
+public class DefcubeFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String DEFCUBE = "defcube";
 
 	public DefcubeFunction() {

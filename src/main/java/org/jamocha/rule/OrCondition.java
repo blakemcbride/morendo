@@ -38,7 +38,6 @@ public class OrCondition implements Condition {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected List<Object> nestedCE = new ArrayList<>();
     protected BaseJoin reteNode = null;

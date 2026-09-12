@@ -43,7 +43,6 @@ public class QueryMultipleNeqJoin extends QueryBaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryMultipleNeqJoin(int id) {
 		super(id);

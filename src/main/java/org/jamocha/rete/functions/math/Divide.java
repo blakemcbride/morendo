@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  *
  * Divide will divide one or more numbers and return a Double value
  */
-public class Divide implements Function, Serializable {
+public class Divide implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String DIVIDE = "divide";
 

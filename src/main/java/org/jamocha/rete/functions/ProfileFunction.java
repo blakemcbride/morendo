@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ValueParam;
  * profiling of assert, retract, add activation, remove activation
  * and fire.
  */
-public class ProfileFunction implements Function, Serializable {
+public class ProfileFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PROFILE = "profile";
     
 	/**

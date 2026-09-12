@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Returns the trigonometric cosine of an angle.
  */
-public class Cos implements Function, Serializable {
+public class Cos implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String COS = "cos";
 
 	/**

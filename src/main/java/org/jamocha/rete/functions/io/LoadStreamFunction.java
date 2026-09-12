@@ -19,7 +19,6 @@ package org.jamocha.rete.functions.io;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 
 import org.jamocha.parser.clips.CLIPSParser;
 import org.jamocha.parser.clips.ParseException;
@@ -45,12 +44,11 @@ import org.jamocha.rete.util.IOUtilities;
  * In contrast, Batch function will read the entire file before 
  * it starts asserting the facts.
  */
-public class LoadStreamFunction implements Function, Serializable {
+public class LoadStreamFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LOAD_STREAM = "load-stream";
 
 	/**

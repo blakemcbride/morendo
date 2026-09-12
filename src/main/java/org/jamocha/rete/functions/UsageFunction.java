@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * @param the name of a function.
  */
-public class UsageFunction implements Function, Serializable {
+public class UsageFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String USAGE = "usage";
 	
 	/**

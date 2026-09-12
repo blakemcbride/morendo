@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.lang.Math;
 
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Log10 returns the logarithm of a double value to the base 10.
  */
-public class Log10 implements Function, Serializable {
+public class Log10 implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String LOG10 = "log10";
 

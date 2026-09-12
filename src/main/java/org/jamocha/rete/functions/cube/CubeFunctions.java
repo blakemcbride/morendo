@@ -31,12 +31,11 @@ import org.jamocha.rete.exception.FunctionException;
  * RuleEngineFunction is responsible for loading all the rule functions
  * related to engine operation.
  */
-public class CubeFunctions implements FunctionGroup, Serializable {
+public class CubeFunctions implements FunctionGroup {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private ArrayList<Function> funcs = new ArrayList<>();
 	
 	public CubeFunctions() {

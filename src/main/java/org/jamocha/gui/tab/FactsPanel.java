@@ -56,10 +56,10 @@ import org.jamocha.rete.exception.RetractException;
  * @author Karl-Heinz Krempels <krempels@cs.rwth-aachen.de>
  * @author Alexander Wilden <october.rust@gmx.de>
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class FactsPanel extends AbstractJamochaPanel implements ActionListener,
 		ListSelectionListener {
 
-	private static final long serialVersionUID = -5732131176258158968L;
 
 	private JSplitPane pane;
 	
@@ -173,7 +173,6 @@ public class FactsPanel extends AbstractJamochaPanel implements ActionListener,
 
 	private final class FactsTableModel extends AbstractTableModel {
 
-		private static final long serialVersionUID = 1L;
 
 		private List<Fact> facts = Collections.emptyList();
 

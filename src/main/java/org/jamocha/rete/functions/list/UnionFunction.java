@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.jamocha.rete.Constants;
@@ -20,12 +19,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class UnionFunction implements Serializable, Function {
+public class UnionFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String UNION = "union$";
 	
 	public UnionFunction() {

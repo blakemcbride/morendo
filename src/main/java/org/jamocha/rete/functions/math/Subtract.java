@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * Subtract will subtract one or more numeric values. for example:
  * (- 100 12 4 32)
  */
-public class Subtract implements Function, Serializable {
+public class Subtract implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String SUBTRACT = "subtract";
 

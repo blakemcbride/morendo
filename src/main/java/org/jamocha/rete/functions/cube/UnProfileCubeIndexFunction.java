@@ -14,7 +14,6 @@ public class UnProfileCubeIndexFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String UNPROFILE_CUBE_INDEX = "unprofile-cube-index";
 
 	public UnProfileCubeIndexFunction() {

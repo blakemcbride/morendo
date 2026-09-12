@@ -21,7 +21,7 @@ public class MeasureSlot extends BaseSlot {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Defmeasure defmeasure = null;
+	private transient Defmeasure defmeasure = null;
 
 	public MeasureSlot(Defmeasure measure) {
 		this.defmeasure = measure;

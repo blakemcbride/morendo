@@ -34,7 +34,6 @@ public class IntraFactNode extends BaseAlpha2 {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     private Slot leftSlot = null;
     private Slot rightSlot = null;
     protected String hashstring = null;

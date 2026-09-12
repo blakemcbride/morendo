@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -28,12 +27,11 @@ import java.util.Map;
  * in a convienant class that can be serialized easily from one engine
  * to another.
  */
-public class DefglobalMap implements Serializable {
+public class DefglobalMap {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	/**
 	 * later on we should replace this and have it
 	 */

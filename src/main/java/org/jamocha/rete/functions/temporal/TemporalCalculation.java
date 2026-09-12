@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.temporal;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -17,12 +16,11 @@ import org.jamocha.rule.TemporalCondition;
  * 
  * @author Peter Lin
  */
-public class TemporalCalculation implements Serializable {
+public class TemporalCalculation {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public TemporalCalculation() {
 	}

@@ -30,9 +30,9 @@ import org.jamocha.rete.visualisation.Visualiser;
  * @author Karl-Heinz Krempels <krempels@cs.rwth-aachen.de>
  * @author Alexander Wilden <october.rust@gmx.de>
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class RetePanel extends AbstractJamochaPanel {
 
-	private static final long serialVersionUID = -651077761699385096L;
 
 	/**
 	 * The Visualiser Object.

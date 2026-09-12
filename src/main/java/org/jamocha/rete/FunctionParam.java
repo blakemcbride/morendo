@@ -34,7 +34,6 @@ public class FunctionParam extends AbstractParam {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     /**
      * The function to call
      */

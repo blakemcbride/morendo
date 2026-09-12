@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.text;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -26,12 +25,11 @@ import org.jamocha.rete.ValueParam;
  * @author peter
  *
  */
-public class TokenMatchFunction implements Function, Serializable {
+public class TokenMatchFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String TOKENMATCH = "token-match";
 
 	public TokenMatchFunction() {

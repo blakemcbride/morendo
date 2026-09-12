@@ -35,7 +35,6 @@ public class QueryIntraFactNode extends QueryBaseAlphaCondition {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     private Slot leftSlot = null;
     private Slot rightSlot = null;
     protected String hashstring = null;

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.Constants;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ReturnVector;
  * FactIdFunction will lookup a fact by the id and try to print out the
  * string form of the given fact.
  */
-public class FactIdFunction implements Function, Serializable {
+public class FactIdFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String FACT_ID = "fact-id";
 
 	/**

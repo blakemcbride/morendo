@@ -18,11 +18,11 @@ import java.awt.event.MouseMotionListener;
  * the new offset is given to the MasterShapeContainer.
  */
 public class JMiniRadarShapeContainer extends JShapeContainer implements MouseListener, MouseMotionListener, ComponentListener{
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected JZoomableShapeContainer masterShapeContainer;
 	protected int offsetX;

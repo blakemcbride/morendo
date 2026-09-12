@@ -36,7 +36,6 @@ public class ExistPredJoin extends BaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public ExistPredJoin(int id) {
 		super(id);

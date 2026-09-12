@@ -34,7 +34,6 @@ public class OnlyFuncJoin extends BaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public OnlyFuncJoin(int id) {
 		super(id);

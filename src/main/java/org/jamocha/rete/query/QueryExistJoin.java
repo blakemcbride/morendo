@@ -45,7 +45,6 @@ public class QueryExistJoin extends QueryBaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryExistJoin(int id) {
 		super(id);

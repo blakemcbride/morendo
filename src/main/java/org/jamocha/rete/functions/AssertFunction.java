@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -36,12 +35,11 @@ import org.jamocha.rete.exception.AssertException;
  * @author Peter Lin
  *
  */
-public class AssertFunction implements RuleFunction, Serializable {
+public class AssertFunction implements RuleFunction {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String ASSERT = "assert";
 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,12 +49,11 @@ import org.jamocha.rete.util.ProfileStats;
  * it organized. The old one was getting a bit messy and refactoring it was becoming
  * a pain.
  */
-public class DefaultWM implements WorkingMemory, Serializable {
+public class DefaultWM implements WorkingMemory {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected Rete engine = null;
 

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.query;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import org.jamocha.rete.AlphaMemory;
@@ -35,12 +34,11 @@ import org.jamocha.rule.GraphQuery;
  * 
  * @author Peter Lin
  */
-public class QueryObjTypeNode extends QueryBaseAlpha implements Serializable {
+public class QueryObjTypeNode extends QueryBaseAlpha {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
      * The Class that defines object type

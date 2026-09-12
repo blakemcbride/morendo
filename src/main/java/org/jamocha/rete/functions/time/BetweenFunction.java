@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -31,12 +30,11 @@ import org.jamocha.rete.ReturnVector;
  * 
  * Now will create a new Date object and return it.
  */
-public class BetweenFunction extends AbstractTimeFunction implements Function, Serializable {
+public class BetweenFunction extends AbstractTimeFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BETWEEN = "between";
 
     /**

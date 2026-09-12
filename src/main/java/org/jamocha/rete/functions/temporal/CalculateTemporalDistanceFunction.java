@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.temporal;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.jamocha.rete.Constants;
@@ -12,13 +11,11 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 
-public class CalculateTemporalDistanceFunction implements Serializable,
-		Function {
+public class CalculateTemporalDistanceFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String CALCULATE_DISTANCE = "calculate-temporal-distance";
 	
 	public CalculateTemporalDistanceFunction() {

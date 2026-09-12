@@ -21,7 +21,7 @@ public class DimensionSlot extends BaseSlot {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private CubeDimension dimension = null;
+	private transient CubeDimension dimension = null;
 	
 	public DimensionSlot(CubeDimension dimension) {
 		this.dimension = dimension;

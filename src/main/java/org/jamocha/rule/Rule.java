@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,7 +41,7 @@ import org.jamocha.rete.Scope;
  * method are present to make it easier to write rule parsers and
  * compilers.
  */
-public interface Rule extends Scope, Serializable {
+public interface Rule extends Scope {
 	/**
 	 * if the rule is set to autofocus, it returns true
 	 * @return

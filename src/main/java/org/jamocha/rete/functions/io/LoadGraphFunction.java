@@ -19,7 +19,6 @@ package org.jamocha.rete.functions.io;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,12 +48,11 @@ import org.jamocha.rete.util.IOUtilities;
  * use it with a graph query.
  * 
  */
-public class LoadGraphFunction implements Function, Serializable {
+public class LoadGraphFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LOAD = "load-graph";
 
 	/**

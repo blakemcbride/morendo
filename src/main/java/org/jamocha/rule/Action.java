@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Fact;
 import org.jamocha.rete.Rete;
@@ -35,7 +34,7 @@ import org.jamocha.rete.exception.ExecuteException;
  * Part of the responsibility of the action is to know how to get
  * the a fact or binding.
  */
-public interface Action extends Serializable {
+public interface Action {
     /**
      * The purpose of configure is to setup the action when the rule
      * is loaded to the rule engine. When the parser parses the rule,

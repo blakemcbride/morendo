@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
@@ -31,12 +30,11 @@ import org.jamocha.rete.ReturnVector;
  * Reset the objects means retract all the objects and assert
  * them again.
  */
-public class ResetObjectsFunction implements Function, Serializable {
+public class ResetObjectsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String RESET_OBJECTS = "reset-objects";
 	
 	/**

@@ -42,7 +42,6 @@ public class EqYearFunction extends AbstractTimeFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String EQ_YEAR = "eq-year";
 	protected GregorianCalendar calendar1 = new GregorianCalendar();
 	protected GregorianCalendar calendar2 = new GregorianCalendar();

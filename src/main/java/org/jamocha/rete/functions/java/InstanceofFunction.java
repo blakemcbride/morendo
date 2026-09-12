@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.java;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -28,12 +27,11 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 
-public class InstanceofFunction implements Function, Serializable {
+public class InstanceofFunction implements Function {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String INSTANCEOF = "instanceof";
 	

@@ -34,7 +34,6 @@ public class AddHoursFunction extends AbstractTimeFunction implements
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String ADD_HOURS = "add-hours";
 	protected GregorianCalendar calendar = new GregorianCalendar();
 

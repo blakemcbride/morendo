@@ -23,11 +23,11 @@ import java.util.EventObject;
  * 
  */
 public abstract class AbstractEvent extends EventObject {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final int ADD_RULE_EVENT = 0;
 

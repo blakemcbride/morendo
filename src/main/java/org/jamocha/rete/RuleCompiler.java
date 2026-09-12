@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 import org.jamocha.rule.Rule;
 
@@ -28,7 +27,7 @@ import org.jamocha.rule.Rule;
  * the appropriate RETE network. We have a generic interface, so
  * that others can implement their own RuleCompiler.
  */
-public interface RuleCompiler extends Serializable {
+public interface RuleCompiler {
     void setWorkingMemory(WorkingMemory wm);
 	/**
 	 * for the runtime, the default should be false. For the development

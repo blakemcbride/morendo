@@ -16,12 +16,11 @@
  */
 package org.jamocha.mapping;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.jamocha.rete.Print;
 
-public interface Mapping extends Serializable, Print {
+public interface Mapping extends Print {
 	public static final String PROPERTY = "property";
 	public static final String KEY_PROPERTY = "key-property";
 	

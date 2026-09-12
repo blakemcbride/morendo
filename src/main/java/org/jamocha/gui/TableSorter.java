@@ -36,9 +36,9 @@ import javax.swing.table.TableColumnModel;
  * @author Karl-Heinz Krempels <krempels@cs.rwth-aachen.de>
  * @author Alexander Wilden <october.rust@gmx.de>
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class TableSorter extends TableMap {
 
-	private static final long serialVersionUID = -1884558901554019827L;
 
 	private int indexes[];
 

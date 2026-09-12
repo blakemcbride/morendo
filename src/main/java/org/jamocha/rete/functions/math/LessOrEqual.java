@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.jamocha.rete.BoundParam;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * LessOrEqual will compare 2 or more numeric values and return true if the (n-1)th
  * value is less or equal to the nth value.
  */
-public class LessOrEqual implements Function, Serializable {
+public class LessOrEqual implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String LESSOREQUAL = "lessOrEqual";
 

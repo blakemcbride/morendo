@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.io;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.jamocha.rete.BoundParam;
@@ -37,12 +36,11 @@ import org.jamocha.rete.ValueParam;
  * PrintFucntion is pretty simple. It can any number of parameters and
  * print it.
  */
-public class PrintFunction implements Function, Serializable {
+public class PrintFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PRINTOUT = "printout";
     
 	/**

@@ -37,7 +37,6 @@ public class TextHandler implements ContentHandler {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected Logger log = LogManager.getLogger(TextHandler.class);
 

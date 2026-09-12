@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import org.jamocha.rete.Constants;
@@ -20,12 +19,11 @@ import org.jamocha.rete.ValueParam;
  * @author peter
  *
  */
-public class EagerSetContainsFunction implements Function, Serializable {
+public class EagerSetContainsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String MAPCONTAINS = "eager-set-contains";
 	
 	public EagerSetContainsFunction() {

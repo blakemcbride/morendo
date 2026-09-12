@@ -37,7 +37,6 @@ public class ExistNeqJoin extends BaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public ExistNeqJoin(int id) {
 		super(id);

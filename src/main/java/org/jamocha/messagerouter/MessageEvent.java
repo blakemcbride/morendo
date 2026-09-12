@@ -25,11 +25,11 @@ import org.jamocha.rete.AbstractEvent;
  * 
  */
 public class MessageEvent extends AbstractEvent {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final int COMMAND = 101;
 	
@@ -42,7 +42,7 @@ public class MessageEvent extends AbstractEvent {
 	/**
 	 * The message that was send.
 	 */
-	private Object message;
+	private transient Object message;
 	
 	private int type;
 

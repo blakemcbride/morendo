@@ -36,7 +36,6 @@ public class TemplateValidation implements Analysis {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	private Rete engine = null;
 	private ErrorSummary error = null;

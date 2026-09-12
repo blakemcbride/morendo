@@ -31,7 +31,6 @@ public class DefaultReturnVector implements ReturnVector {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected List<ReturnValue> items = new ArrayList<>(2);
 
 

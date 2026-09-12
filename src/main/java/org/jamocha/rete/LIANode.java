@@ -34,7 +34,6 @@ public class LIANode extends BaseAlpha {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public LIANode(int id){
         super(id);

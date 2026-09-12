@@ -42,7 +42,6 @@ public class QueryFuncJoin extends QueryBaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryFuncJoin(int id) {
         super(id);

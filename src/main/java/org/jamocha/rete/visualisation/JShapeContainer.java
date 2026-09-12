@@ -25,14 +25,14 @@ import java.util.Iterator;
  * and draws them
  */
 public class JShapeContainer extends JComponent {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
-	protected List<ConnectorLine> lines;
-	protected List<Shape> shapes;
+	protected transient List<ConnectorLine> lines;
+	protected transient List<Shape> shapes;
 	protected int graphwidth;
 	protected int graphheight;
 	protected int offsetX;

@@ -33,7 +33,6 @@ public class IFLIANode extends LIANode {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public IFLIANode(int id) {
         super(id);

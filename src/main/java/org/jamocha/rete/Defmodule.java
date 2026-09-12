@@ -37,12 +37,11 @@ import org.jamocha.rule.Rule;
  * A module represents a set of rulesets. The concept is from CLIPS and provides
  * a way to isolate the rule activation and pattern matching.
  */
-public class Defmodule implements Module, Serializable {
+public class Defmodule implements Module {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected int id;
 

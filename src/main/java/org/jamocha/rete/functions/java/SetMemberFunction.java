@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.java;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
@@ -40,12 +39,11 @@ import org.jamocha.rete.ValueParam;
  * but the design and implementation are different. The design of the function is
  * strongly influenced by CLIPS, since the primary goal is full CLIPS compatability.
  */
-public class SetMemberFunction implements Function, Serializable {
+public class SetMemberFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String SET_MEMBER = "set-member";
     
 	/**

@@ -15,7 +15,6 @@ public class BitOrFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BIT_OR = "bit-or";
 
 	public BitOrFunction() {

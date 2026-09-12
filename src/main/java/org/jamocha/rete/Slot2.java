@@ -40,7 +40,9 @@ public class Slot2 extends Slot {
      * 
      */
     private static final long serialVersionUID = 1L;
+   	@SuppressWarnings("serial") // payload; serializable only if the value is
    	private List<Object> equalsList = new ArrayList<>();
+    @SuppressWarnings("serial") // payload; serializable only if the value is
     private List<Object> notEqualList = new ArrayList<>();
 
     public Slot2(){

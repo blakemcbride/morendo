@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * The interface has two methods: hashcode and equals. Both have
@@ -25,7 +24,7 @@ import java.io.Serializable;
  * @author pete
  *
  */
-public interface HashIndex extends Serializable, Print {
+public interface HashIndex extends Print {
 	boolean equals(Object obj);
 	int hashCode();
 }

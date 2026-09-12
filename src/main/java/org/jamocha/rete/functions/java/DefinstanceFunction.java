@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.java;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -42,12 +41,11 @@ import org.jamocha.rete.exception.AssertException;
  *
  * Definstance will assert an object instance using Rete.assert(Object).
  */
-public class DefinstanceFunction implements Function, Serializable {
+public class DefinstanceFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String DEFINSTANCE = "definstance";
 	private Logger log = LogManager.getLogger(DefinstanceFunction.class);
 

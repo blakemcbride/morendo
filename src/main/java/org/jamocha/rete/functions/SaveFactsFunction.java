@@ -18,7 +18,6 @@ package org.jamocha.rete.functions;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import org.jamocha.rete.Constants;
@@ -38,12 +37,11 @@ import org.jamocha.rete.util.FactUtils;
  * Facts function will printout all the facts, not including any
  * initial facts which are internal to the rule engine.
  */
-public class SaveFactsFunction implements Function, Serializable {
+public class SaveFactsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String SAVE_FACTS = "save-facts";
 
 	/**

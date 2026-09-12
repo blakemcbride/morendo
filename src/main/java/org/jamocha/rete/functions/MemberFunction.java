@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -22,12 +21,11 @@ import org.jamocha.rete.functions.java.ClassnameResolver;
  * Calls a method of a specified object.
  */
 
-public class MemberFunction implements Function, Serializable {
+public class MemberFunction implements Function {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String MEMBER = "member";
 	
 	public MemberFunction(ClassnameResolver classnameResolver){

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.analysis;
 
-import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,12 +41,11 @@ import org.jamocha.rete.util.IOUtilities;
  * there should be one or more deffacts or object instances. The way
  * to use this is to bind the result or add it to a list.
  */
-public class GenerateFactsFunction implements Function, Serializable {
+public class GenerateFactsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String GENERATEFACTS = "generate-facts";
 

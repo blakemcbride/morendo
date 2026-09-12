@@ -15,7 +15,6 @@ public class BitNotFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BIT_NOT = "bit-not";
 
 	public BitNotFunction() {

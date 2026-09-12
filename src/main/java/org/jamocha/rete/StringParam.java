@@ -28,7 +28,6 @@ public class StringParam extends AbstractParam {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected int valueType;
 

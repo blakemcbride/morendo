@@ -20,7 +20,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import org.jamocha.rete.BoundParam;
@@ -43,12 +42,11 @@ import org.jamocha.rete.util.IOUtilities;
  * object. I assumes the data file is in binary format and the root
  * object is List<Object>.
  */
-public class BatchObjectsFunction implements Function, Serializable {
+public class BatchObjectsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BATCH = "batch-objects";
 
 	/**

@@ -15,7 +15,6 @@ public class ListMeasuresFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String MEASURES = "measures";
 	
 	public ListMeasuresFunction() {

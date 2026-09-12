@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -43,12 +42,11 @@ import org.jamocha.rete.query.QueryObjTypeNode;
  * match
  * </ul>
  */
-public class ObjectTypeNode extends BaseAlpha implements Serializable {
+public class ObjectTypeNode extends BaseAlpha {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
      * The Class that defines object type

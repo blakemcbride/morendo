@@ -17,7 +17,6 @@
 package org.jamocha.rete.functions.io;
 
 import java.io.Reader;
-import java.io.Serializable;
 import java.io.StringReader;
 
 import org.jamocha.parser.clips.CLIPSParser;
@@ -38,12 +37,11 @@ import org.jamocha.rule.*;
  *
  * Functional equivalent of (batch file.clp) in CLIPS and JESS.
  */
-public class BuildFunction implements Function, Serializable {
+public class BuildFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BUILD = "build";
 
 	/**

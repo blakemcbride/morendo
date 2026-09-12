@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.java;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class GetMemberFunction implements Function, Serializable {
+public class GetMemberFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String GET_MEMBER = "get-member";
 
 	/**

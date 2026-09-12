@@ -5,7 +5,6 @@ public class CubeBinding extends Binding {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private String templateName = null;
 	private String slotName = null;
 	private boolean join = false;

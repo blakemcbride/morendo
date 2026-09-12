@@ -31,7 +31,6 @@ import org.jamocha.rete.exception.RetractException;
  */
 public class ZJBetaNode extends BaseJoin {
 
-	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * The operator for the join by default is equal. The the join

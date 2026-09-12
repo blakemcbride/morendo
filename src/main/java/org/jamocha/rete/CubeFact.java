@@ -26,13 +26,14 @@ public class CubeFact implements Fact {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected Template template = null;
+    @SuppressWarnings("serial") // payload; serializable only if the value is
     protected Object objInstance;
     protected BaseSlot[] slots = null;
     protected long id;
 	private long timeStamp = 0;
 	protected boolean hasBinding = false;
-	private EqualityIndex Eindex = null;
-	private Map<String, BaseSlot> slotMap = null;
+	private transient EqualityIndex Eindex = null;
+	private transient Map<String, BaseSlot> slotMap = null;
 	
 	public CubeFact(Template template, Object instance, BaseSlot[] values, long id) {
 		this.template = template;

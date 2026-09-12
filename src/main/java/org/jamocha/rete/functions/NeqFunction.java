@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ValueParam;
  * @author Nikolaus Koemm
  * 
  */
-public class NeqFunction implements Function, Serializable {
+public class NeqFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String NEQUAL = "neq";
 
 	/**

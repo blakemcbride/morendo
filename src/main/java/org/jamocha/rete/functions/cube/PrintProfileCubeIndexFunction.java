@@ -29,7 +29,6 @@ public class PrintProfileCubeIndexFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PRINT_PROFILE_CUBE_INDEX = "print-profile-cube-index";
 
 	public PrintProfileCubeIndexFunction() {

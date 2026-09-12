@@ -36,7 +36,6 @@ public class NTestNode extends BaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     /**
 	 * TestNode can only have 1 top level function

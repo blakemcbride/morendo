@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jamocha.rete.Constants;
@@ -36,12 +35,11 @@ import org.jamocha.rete.strategies.Strategies;
  * @author Peter Lin
  * 
  */
-public class DefstrategyFunction implements Function, Serializable {
+public class DefstrategyFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String DEFSTRATEGY = "defstrategy";
 
 	public DefstrategyFunction() {

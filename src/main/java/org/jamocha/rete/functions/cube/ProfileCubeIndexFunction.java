@@ -30,7 +30,6 @@ public class ProfileCubeIndexFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PROFILE_CUBE_INDEX = "profile-cube-index";
 
 	public ProfileCubeIndexFunction() {

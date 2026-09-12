@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.io;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +30,11 @@ import org.jamocha.rete.Rete;
  * IO Functions will initialize the IO related functions like printout,
  * batch, etc.
  */
-public class IOFunctions implements FunctionGroup, Serializable {
+public class IOFunctions implements FunctionGroup {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private ArrayList<Function> funcs = new ArrayList<>();
 
 	/**

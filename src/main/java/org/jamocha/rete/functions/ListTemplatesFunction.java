@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -34,12 +33,11 @@ import org.jamocha.rete.Template;
  * 
  * ListTemplates will list all the templates and print them out.
  */
-public class ListTemplatesFunction implements Function, Serializable {
+public class ListTemplatesFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LISTTEMPLATES = "list-deftemplates";
 	public static final String TEMPLATES = "templates";
 

@@ -14,7 +14,6 @@ public class UnWatchQueryFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String WATCH_QUERY = "unwatch-query";
 	
 	public UnWatchQueryFunction() {

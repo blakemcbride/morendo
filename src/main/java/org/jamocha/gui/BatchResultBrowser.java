@@ -19,9 +19,9 @@ import javax.swing.JTextArea;
 
 import org.jamocha.gui.icons.IconLoader;
 
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class BatchResultBrowser extends JFrame implements ActionListener {
 
-	private static final long serialVersionUID = 1L;
 
 	private JPanel topPanel;
 
@@ -112,7 +112,6 @@ public class BatchResultBrowser extends JFrame implements ActionListener {
 
 	private class ResultBoxModel extends DefaultComboBoxModel<Object> {
 
-		private static final long serialVersionUID = 1L;
 
 		private Object[] items;
 

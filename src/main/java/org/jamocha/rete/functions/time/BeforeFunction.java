@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.time;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -42,12 +41,11 @@ import org.jamocha.rete.ReturnVector;
  * 
  * @author Peter Lin
  */
-public class BeforeFunction extends AbstractTimeFunction implements Function, Serializable {
+public class BeforeFunction extends AbstractTimeFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String BEFORE = "before";
 	
 	public BeforeFunction() {

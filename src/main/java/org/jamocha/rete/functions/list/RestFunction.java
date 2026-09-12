@@ -3,7 +3,6 @@
  */
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +24,8 @@ import org.jamocha.rete.ValueParam;
  * Returns all but fist value from a multifield value
  *
  */
-public class RestFunction implements Serializable, Function {
+public class RestFunction implements Function {
 	
-	private static final long serialVersionUID = 1L;
 	public static final String REST = "rest$";
 
 	public RestFunction() {

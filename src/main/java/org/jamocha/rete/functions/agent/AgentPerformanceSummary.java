@@ -16,14 +16,12 @@
  */
 package org.jamocha.rete.functions.agent;
 
-import java.io.Serializable;
 
-public class AgentPerformanceSummary implements Serializable {
+public class AgentPerformanceSummary {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private String ipaddress = null;
 	private String hostname = null;
 	private String application = null;

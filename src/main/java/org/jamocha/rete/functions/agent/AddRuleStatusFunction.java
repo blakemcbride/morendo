@@ -12,7 +12,6 @@ public class AddRuleStatusFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String ADD_RULE_STATUS = "add-rule-status";
 
 	public AddRuleStatusFunction() {

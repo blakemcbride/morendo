@@ -43,7 +43,6 @@ public class WithinHoursFunction extends AbstractTimeFunction implements Functio
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String WITHIN_HOURS = "within-hours";
 	protected GregorianCalendar calendar1 = new GregorianCalendar();
 	protected GregorianCalendar calendar2 = new GregorianCalendar();

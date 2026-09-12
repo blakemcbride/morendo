@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +31,7 @@ import org.jamocha.rete.exception.RetractException;
  * related to the node memories, profiling, binding and scopes.
  * 
  */
-public interface WorkingMemory extends Serializable {
+public interface WorkingMemory {
 
     /// ----- assert and retract methods ----- ///
 	void assertFact(Fact fact) throws AssertException;

@@ -15,7 +15,6 @@ public class ListCubesFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LIST_DEFCUBES = "list-defcubes";
 	public static final String CUBES = "cubes";
 	

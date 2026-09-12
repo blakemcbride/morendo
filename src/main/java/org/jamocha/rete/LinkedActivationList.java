@@ -29,7 +29,6 @@ public class LinkedActivationList extends AbstractActivationList {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     private int count = 0;
 

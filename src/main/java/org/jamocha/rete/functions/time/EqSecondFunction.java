@@ -42,7 +42,6 @@ public class EqSecondFunction extends AbstractTimeFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String EQ_SECOND = "eq-second";
 	protected GregorianCalendar calendar1 = new GregorianCalendar();
 	protected GregorianCalendar calendar2 = new GregorianCalendar();

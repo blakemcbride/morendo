@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,12 +28,11 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 
 
-public class ListFunctionsFunction implements Function, Serializable {
+public class ListFunctionsFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LIST_FUNCTIONS = "list-deffunctions";
 	public static final String FUNCTIONS = "functions";
 

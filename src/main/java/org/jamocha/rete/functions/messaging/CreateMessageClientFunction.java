@@ -14,7 +14,6 @@ public class CreateMessageClientFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String CREATE_MESSAGE_CLIENT = "create-message-client";
 
 	public CreateMessageClientFunction() {

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.java;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  * 
  */
-public class DefclassFunction implements Function, Serializable {
+public class DefclassFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String DEFCLASS = "defclass";
 
 	public DefclassFunction() {

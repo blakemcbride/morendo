@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.analysis;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -33,12 +32,11 @@ import org.jamocha.rule.util.TopologyCostCalculation;
  * @author Peter Lin
  * 
  */
-public class TopologyCostFunction implements Function, Serializable {
+public class TopologyCostFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String TOPOLOGY_COST = "topology-cost";
     TopologyCostCalculation costFunction = new TopologyCostCalculation();
 

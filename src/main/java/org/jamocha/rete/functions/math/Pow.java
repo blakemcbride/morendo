@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import java.lang.Math;
@@ -38,7 +37,7 @@ import org.jamocha.rete.ValueParam;
  * Returns the value of the first argument raised to the power of the following arguments.
  */
 @SuppressWarnings("serial")
-public class Pow implements Function, Serializable {
+public class Pow implements Function {
 
 	public static final String POW = "pow";
 

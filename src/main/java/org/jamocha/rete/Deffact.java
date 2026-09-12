@@ -35,6 +35,7 @@ public class Deffact implements Fact {
 
 	protected Template deftemplate = null;
 
+    @SuppressWarnings("serial") // payload; serializable only if the value is
     protected Object objInstance;
 
     protected BaseSlot[] slots = null;
@@ -50,7 +51,7 @@ public class Deffact implements Fact {
 
 	protected boolean hasBinding = false;
 
-	private EqualityIndex Eindex = null;
+	private transient EqualityIndex Eindex = null;
 
 	/**
 	 * this is the default constructor

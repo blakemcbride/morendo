@@ -28,7 +28,6 @@ public class RegisterAgentFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String REGISTER_AGENT = "register-agent";
 
 	public RegisterAgentFunction() {

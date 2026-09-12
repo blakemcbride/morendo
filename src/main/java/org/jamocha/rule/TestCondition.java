@@ -50,7 +50,6 @@ public class TestCondition implements Condition {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected Function func = null;
     protected TestNode node = null;
 	protected ArrayList<Object> binds = new ArrayList<>();

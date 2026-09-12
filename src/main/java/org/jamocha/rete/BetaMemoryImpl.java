@@ -29,7 +29,6 @@ public class BetaMemoryImpl implements BetaMemory {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	protected Index index = null;
 

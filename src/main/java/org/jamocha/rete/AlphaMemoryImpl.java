@@ -30,7 +30,6 @@ public class AlphaMemoryImpl implements AlphaMemory {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private Map<Fact, Fact> memory = null;
 
 	/**

@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.exception.ExecuteException;
 import org.jamocha.rule.Rule;
@@ -29,7 +28,7 @@ import org.jamocha.rule.Rule;
  * of Activation. The important thing about the activation is it knows which
  * facts trigger a single rule.
  */
-public interface Activation extends Serializable {
+public interface Activation {
     /**
      * The aggregate time is the sum of the Fact timestamps
      * @return

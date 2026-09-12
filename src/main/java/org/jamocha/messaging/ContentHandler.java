@@ -16,7 +16,6 @@
  */
 package org.jamocha.messaging;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Rete;
 
@@ -32,7 +31,7 @@ import org.jamocha.rete.Rete;
  * @author Peter Lin
  *
  */
-public interface ContentHandler extends Serializable {
+public interface ContentHandler {
 	/**
 	 * classes implementing the method should provide a list of
 	 * the message types the class supports. The function will call

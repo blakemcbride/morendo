@@ -27,9 +27,9 @@ import javax.swing.event.TableModelEvent;
  * @author Karl-Heinz Krempels <krempels@cs.rwth-aachen.de>
  * @author Alexander Wilden <october.rust@gmx.de>
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class TableMap extends AbstractTableModel implements TableModelListener {
 
-	private static final long serialVersionUID = 4007086145879578418L;
 	
 	protected TableModel model;
 

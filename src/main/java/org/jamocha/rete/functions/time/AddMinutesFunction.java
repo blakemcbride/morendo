@@ -34,7 +34,6 @@ public class AddMinutesFunction extends AbstractTimeFunction implements
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String ADD_MINUTES = "add-minutes";
 	protected GregorianCalendar calendar = new GregorianCalendar();
 

@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +18,11 @@ import org.jamocha.rete.ValueParam;
  * @author Peter Lin
  *
  */
-public class DeleteRangeFunction implements Serializable, Function {
+public class DeleteRangeFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String DELETE_RANGE = "delete$";
 	
 	public DeleteRangeFunction() {

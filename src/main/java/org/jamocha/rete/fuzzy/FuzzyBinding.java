@@ -1,6 +1,5 @@
 package org.jamocha.rete.fuzzy;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -11,12 +10,11 @@ import java.util.HashMap;
  * @author peter
  *
  */
-public class FuzzyBinding implements Serializable, Cloneable {
+public class FuzzyBinding implements Cloneable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private String variableName;
 	private String unitType; // the user can define what ever type they want for units like C for celsius
 	private double[] doubleBoundry = new double[2];

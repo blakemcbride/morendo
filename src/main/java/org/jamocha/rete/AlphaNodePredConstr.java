@@ -32,7 +32,6 @@ public class AlphaNodePredConstr extends BaseAlpha {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The function to call

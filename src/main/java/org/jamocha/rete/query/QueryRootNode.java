@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.query;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -45,12 +44,11 @@ import org.jamocha.rule.Defquery;
  * 
  * @author Peter Lin
  */
-public class QueryRootNode implements Serializable {
+public class QueryRootNode {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 	protected Map<Template, QueryObjTypeNode> queryObjTypeNodeMap = null;
     protected RootNode root = null;
     protected QueryObjTypeNode initialFactObjTypeNode = null;

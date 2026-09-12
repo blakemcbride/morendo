@@ -45,7 +45,6 @@ public class QueryHashedEqNot extends QueryBaseNot {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryHashedEqNot(int id){
         super(id);

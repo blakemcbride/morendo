@@ -35,7 +35,6 @@ public abstract class QueryBaseJoin extends BaseNode {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	/**
      * binding for the join
      */

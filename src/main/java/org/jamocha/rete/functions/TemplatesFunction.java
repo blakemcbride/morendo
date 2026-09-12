@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -34,12 +33,11 @@ import org.jamocha.rete.Template;
  * The purpose of the function is to print out the names of the rules
  * and the comment.
  */
-public class TemplatesFunction implements Function, Serializable {
+public class TemplatesFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String TEMPLATES = "templates";
 	public static final String LISTTEMPLATES = "list-deftemplates";
 	

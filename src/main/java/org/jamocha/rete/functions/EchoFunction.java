@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ShellBoundParam;
  * 
  * EchoFunction is used to echo variable bindings in the shell.
  */
-public class EchoFunction implements Function, Serializable {
+public class EchoFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String ECHO = "echo";
 
 	/**

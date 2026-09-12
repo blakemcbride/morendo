@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import org.jamocha.rete.query.QueryBaseNot;
  * Instead, it simply gathers the results and returns an ArrayList. Queries
  * also do not have the same properties as a rule.
  */
-public interface Query extends Serializable {
+public interface Query {
     /**
      * if users want to give a rule a comment, the method will return it.
      * otherwise it should return zero length string

@@ -43,7 +43,6 @@ public class QueryOnlyFrst extends QueryBaseNot {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public QueryOnlyFrst(int id) {
 		super(id);

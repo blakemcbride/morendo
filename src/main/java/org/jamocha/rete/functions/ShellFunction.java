@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -34,12 +33,11 @@ import org.jamocha.rete.ReturnVector;
  * and execute the real function. ShellFunction expects the parser to pass
  * the name of the real function and parameter values.
  */
-public class ShellFunction implements Function, Serializable {
+public class ShellFunction implements Function {
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public String funcName = null;
     

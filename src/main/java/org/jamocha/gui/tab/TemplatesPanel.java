@@ -58,10 +58,10 @@ import org.jamocha.rete.Template;
  * @author Alexander Wilden <october.rust@gmx.de>
  * @version 0.01
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class TemplatesPanel extends AbstractJamochaPanel implements
 		ListSelectionListener, ActionListener {
 
-	private static final long serialVersionUID = -5732131176258158968L;
 
 	private JSplitPane pane;
 
@@ -181,7 +181,6 @@ public class TemplatesPanel extends AbstractJamochaPanel implements
 
 	private final class TemplatesTableModel extends AbstractTableModel {
 
-		private static final long serialVersionUID = 1L;
 
 		private List<ExtTemplate> templates = new LinkedList<>();
 

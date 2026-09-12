@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -37,12 +36,11 @@ import org.jamocha.rete.query.QueryRootNode;
  * In the future, the design may change. For now, I've decided to keep
  * it as simple as necessary.
  */
-public class RootNode implements Serializable {
+public class RootNode {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
    	protected Map<Template, ObjectTypeNode> inputNodes = null;
 
     /**

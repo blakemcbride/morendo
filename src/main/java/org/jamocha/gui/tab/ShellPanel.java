@@ -73,10 +73,10 @@ import org.jamocha.rete.ReturnValue;
  * @author Alexander Wilden <october.rust@gmx.de>
  * Modified - Dave Woodman 23/05/21 - send currline with line end so that comments are recognised
  */
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class ShellPanel extends AbstractJamochaPanel implements ActionListener,
 		FocusListener, AdjustmentListener {
 
-	private static final long serialVersionUID = 1777454004380892575L;
 
 	/**
 	 * Flag for the ChannelListener and the eventThread to know if they should

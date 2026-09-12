@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.jamocha.rule.Rule;
@@ -29,7 +28,7 @@ import org.jamocha.rule.Rule;
  * rules. It is responsible for keeping track of the Activations
  * and adding the activation to the list.
  */
-public interface Module extends Serializable {
+public interface Module {
     /**
      * Add a new activation. Classes implementing the Agenda should
      * check to make sure the activation is new. If it isn't new,

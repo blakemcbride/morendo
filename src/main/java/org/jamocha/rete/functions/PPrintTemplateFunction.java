@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * PPrintTemplate stands for Pretty Print deftemplate. It does the same
  * thing as (ppdeftemplate <deftemplate-name>) in CLIPS.
  */
-public class PPrintTemplateFunction implements Function, Serializable {
+public class PPrintTemplateFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String PPTEMPLATES = "ppdeftemplate";
 	
 	/**

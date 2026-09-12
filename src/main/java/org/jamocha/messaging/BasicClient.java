@@ -48,7 +48,6 @@ public class BasicClient implements MessageClient {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private Rete ENGINE = null;
 	private Context CTX = null;
 	private TopicConnection CONN = null;

@@ -43,10 +43,10 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.Slot;
 import org.jamocha.rete.Template;
 
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class FactEditor extends AbstractJamochaEditor implements
 		ActionListener, ListSelectionListener {
 
-	private static final long serialVersionUID = 6037731034903564707L;
 
 	private int step = 0;
 

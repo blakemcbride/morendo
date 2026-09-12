@@ -39,7 +39,6 @@ public class NotJoin extends BaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public NotJoin(int id){
         super(id);

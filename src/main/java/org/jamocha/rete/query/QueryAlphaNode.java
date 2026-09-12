@@ -43,7 +43,6 @@ public class QueryAlphaNode extends QueryBaseAlphaCondition {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
 	protected String hashstring = null;
 

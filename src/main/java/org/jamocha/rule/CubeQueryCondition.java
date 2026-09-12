@@ -14,7 +14,6 @@ public class CubeQueryCondition extends ObjectCondition {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public CubeQueryCondition() {
 		super();

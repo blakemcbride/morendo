@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -35,12 +34,11 @@ import org.jamocha.rete.exception.AssertException;
  * @author Peter Lin
  *
  */
-public class AssertTemporalFunction implements Function, Serializable {
+public class AssertTemporalFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public static final String ASSERT_TEMPORAL = "assert-temporal";
 

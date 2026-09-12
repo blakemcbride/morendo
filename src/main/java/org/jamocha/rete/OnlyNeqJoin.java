@@ -35,7 +35,6 @@ public class OnlyNeqJoin extends BaseJoin {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     public OnlyNeqJoin(int id) {
 		super(id);

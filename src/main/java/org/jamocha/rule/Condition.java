@@ -16,7 +16,6 @@
  */
 package org.jamocha.rule;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.jamocha.rete.BaseNode;
@@ -33,7 +32,7 @@ import org.jamocha.rete.compiler.ConditionCompiler;
  * Conditions are patterns. It may be a simple fact pattern, test function,
  * or an object pattern.
  */
-public interface Condition extends Serializable, Print {
+public interface Condition extends Print {
     /**
      * Method is used to compare the pattern to another pattern and
      * determine if they are equal.

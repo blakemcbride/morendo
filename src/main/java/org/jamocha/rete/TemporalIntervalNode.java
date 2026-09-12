@@ -27,7 +27,6 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	private int interval = 0;
     private long lastTime = 0;

@@ -38,7 +38,6 @@ public class DefaultRuleCompiler implements RuleCompiler {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private WorkingMemory memory = null;
     private Rete engine = null;
 	private Map<Template, ObjectTypeNode> inputnodes = null;

@@ -39,7 +39,6 @@ public class DeffunctionFunction implements Function {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected String name = null;
     protected String ppString = null;
     protected Parameter[] parameters = null;

@@ -1,7 +1,6 @@
 package org.jamocha.rete.functions;
 
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -19,9 +18,8 @@ import org.jamocha.rete.ValueParam;
  * Returns true if all of the parameters equate to CLIPS nil
  */
 
-public class IsNilFunction implements Function, Serializable  {
+public class IsNilFunction implements Function {
 	
-	private static final long serialVersionUID = 1L;
 	public static final String ISNIL = "is-nil";
 	
 	public IsNilFunction() {

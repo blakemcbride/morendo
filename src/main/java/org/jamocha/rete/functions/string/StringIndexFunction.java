@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.string;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
@@ -35,12 +34,11 @@ import org.jamocha.rete.ValueParam;
  *   args now [string to find] [string to search]
  *
  */
-public class StringIndexFunction implements Function, Serializable {
+public class StringIndexFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String STRING_INDEX = "str-index";
 

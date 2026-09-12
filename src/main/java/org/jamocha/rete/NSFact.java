@@ -41,7 +41,8 @@ public class NSFact implements Fact, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Deftemplate deftemplate = null;
-    private Defclass dclazz = null;
+    private transient Defclass dclazz = null;
+    @SuppressWarnings("serial") // payload; serializable only if the value is
     private Object objInstance;
     private Slot[] slots = null;
     /**

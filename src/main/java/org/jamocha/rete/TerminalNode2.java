@@ -34,7 +34,6 @@ public class TerminalNode2 extends TerminalNode {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param id

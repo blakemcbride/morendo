@@ -39,7 +39,6 @@ public class CubeQueryBNode extends BaseJoin {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
     private CubeFact cubeFact = null;
     private Binding[] numericBindings = null;
     private CubeBinding[] measureBindings = null;

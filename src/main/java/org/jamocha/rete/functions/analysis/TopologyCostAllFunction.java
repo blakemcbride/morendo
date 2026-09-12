@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.analysis;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -35,12 +34,11 @@ import org.jamocha.rule.util.TopologyCostCalculation;
  * @author Peter Lin
  * 
  */
-public class TopologyCostAllFunction implements Function, Serializable {
+public class TopologyCostAllFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String TOPOLOGY_COST_ALL = "topology-cost-all";
     private TopologyCostCalculation costFunction = new TopologyCostCalculation();
 

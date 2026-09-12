@@ -24,7 +24,6 @@ public class Defmapping implements Mapping {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private String className;
 	private List<KeyProperty> keyProperties = new ArrayList<>();
 	private String mappingName;

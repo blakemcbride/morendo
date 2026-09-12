@@ -33,7 +33,6 @@ public class LiteralConstraint implements Constraint {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	protected String name;
     protected Object value;

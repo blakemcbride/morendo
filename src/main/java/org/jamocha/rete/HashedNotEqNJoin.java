@@ -35,7 +35,6 @@ public class HashedNotEqNJoin extends BaseJoin {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public HashedNotEqNJoin(int id){
         super(id);

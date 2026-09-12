@@ -47,7 +47,6 @@ public class FunctionAction implements Action {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	protected Function faction = null;
     protected String functionName = null;
     protected Parameter[] parameters = null;

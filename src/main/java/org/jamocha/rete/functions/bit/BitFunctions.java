@@ -12,7 +12,6 @@ public class BitFunctions implements FunctionGroup {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private List<Function> funcs = new ArrayList<>();
 
 	public BitFunctions() {

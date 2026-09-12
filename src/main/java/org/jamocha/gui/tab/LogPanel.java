@@ -32,10 +32,10 @@ import org.jamocha.messagerouter.MessageEvent;
 import org.jamocha.messagerouter.StringChannel;
 import org.jamocha.rete.Function;
 
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class LogPanel extends AbstractJamochaPanel implements ActionListener,
 		ListSelectionListener {
 
-	private static final long serialVersionUID = 4811690181744862051L;
 
 	private JSplitPane pane;
 
@@ -64,7 +64,6 @@ public class LogPanel extends AbstractJamochaPanel implements ActionListener,
 		cellRenderer = new LogTableCellRenderer();
 		logTable = new JTable(dataModel) {
 
-			private static final long serialVersionUID = 1L;
 
 			public TableCellRenderer getCellRenderer(int row, int column) {
 				return cellRenderer;
@@ -120,7 +119,6 @@ public class LogPanel extends AbstractJamochaPanel implements ActionListener,
 
 	private final class LogMessageEvent extends MessageEvent {
 
-		private static final long serialVersionUID = -5690784906495393031L;
 
 		private Calendar datetime = Calendar.getInstance();
 
@@ -240,7 +238,6 @@ public class LogPanel extends AbstractJamochaPanel implements ActionListener,
 
 	private final class LogTableCellRenderer extends DefaultTableCellRenderer {
 
-		private static final long serialVersionUID = -6649805279420707106L;
 
 		private Color colorError = Color.RED;
 
@@ -273,7 +270,6 @@ public class LogPanel extends AbstractJamochaPanel implements ActionListener,
 
 	private final class LogTableModel extends AbstractTableModel {
 
-		private static final long serialVersionUID = 1L;
 
 		private List<LogMessageEvent> events = new LinkedList<>();
 

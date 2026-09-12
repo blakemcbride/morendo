@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions.math;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.lang.Math;
 
@@ -36,12 +35,11 @@ import org.jamocha.rete.ValueParam;
  * 
  * Exp returns Euler's number raised to the power of the arguments.
  */
-public class Exp implements Function, Serializable {
+public class Exp implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	public static final String EXP = "exp";
 

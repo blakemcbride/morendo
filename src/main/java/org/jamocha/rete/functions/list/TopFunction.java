@@ -1,6 +1,5 @@
 package org.jamocha.rete.functions.list;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +12,11 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 
-public class TopFunction implements Function, Serializable {
+public class TopFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String TOP = "top";
 	
 	public TopFunction() {

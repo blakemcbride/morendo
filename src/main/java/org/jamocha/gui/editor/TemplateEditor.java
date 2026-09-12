@@ -30,10 +30,10 @@ import org.jamocha.messagerouter.StringChannel;
 import org.jamocha.rete.Module;
 import org.jamocha.rete.Rete;
 
+@SuppressWarnings("serial") // Swing components are never serialized here
 public class TemplateEditor extends AbstractJamochaEditor implements
 		ActionListener {
 
-	private static final long serialVersionUID = 6037731034903564707L;
 
 	private JPanel contentPanel;
 
@@ -300,7 +300,6 @@ public class TemplateEditor extends AbstractJamochaEditor implements
 
 	private class DeleteButton extends JButton {
 
-		private static final long serialVersionUID = 1L;
 
 		private int row;
 

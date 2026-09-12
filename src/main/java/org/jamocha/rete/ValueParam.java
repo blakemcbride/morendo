@@ -30,7 +30,6 @@ public class ValueParam extends AbstractParam {
 	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
 
     protected int valueType;
 

@@ -32,7 +32,6 @@ public class LoadMeasureGroupFunction implements Function {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String LOAD_MEASURE_GROUP = "load-measure-group";
 	
 	public LoadMeasureGroupFunction() {

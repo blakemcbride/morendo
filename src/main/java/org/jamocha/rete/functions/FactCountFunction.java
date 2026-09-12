@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete.functions;
 
-import java.io.Serializable;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnValue;
@@ -32,12 +31,11 @@ import org.jamocha.rete.ReturnVector;
  * Facts function will printout all the facts, not including any
  * initial facts which are internal to the rule engine.
  */
-public class FactCountFunction implements Function, Serializable {
+public class FactCountFunction implements Function {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	public static final String FACT_COUNT = "fact-count";
 
 	/**

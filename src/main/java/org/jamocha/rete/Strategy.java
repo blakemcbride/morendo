@@ -16,7 +16,6 @@
  */
 package org.jamocha.rete;
 
-import java.io.Serializable;
 
 /**
  * @author Peter Lin
@@ -26,7 +25,7 @@ import java.io.Serializable;
  * of conflict resolution strategy using an agenda is the pre-
  * dominant approach used by RETE, TREAT, LEAPS rule engines.
  */
-public interface Strategy extends Serializable {
+public interface Strategy {
     String getName();
 	/**
 	 * Strategies that sort activations as they are added to the activation
