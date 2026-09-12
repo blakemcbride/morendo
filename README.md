@@ -23,11 +23,18 @@ Requires JDK 21. The build is driven by `bld` (see `builder/Tasks.java`); the fi
 downloads the dependencies into `libs/`.
 
 ```
-./bld build      # generate the CLIPS parser, compile (bld.cmd on Windows)
+./bld build      # generate the CLIPS parser, compile every module (bld.cmd on Windows)
 ./bld test       # run the test suite
-./bld dist       # target/morendo-<version>.zip with the jar, libraries, launcher and samples
+./bld dist       # target/morendo-<version>.zip with the module jars, libraries, launcher and samples
 ./morendo -shell # interactive shell from a checkout; ./morendo -gui for the Swing GUI
 ```
+
+The build produces one jar per module: `morendo-core` (the engine, needs only Log4j),
+`morendo-shell` (the launcher and interactive shell, JLine), `morendo-gui` (Swing GUI and
+network viewer), `morendo-service` (embedding service and servlet, Jackson and Jakarta Servlet),
+`morendo-messaging` (JMS client and agent functions, Jakarta Messaging) and `morendo-examples`
+(the sample beans). Embedders need only `morendo-core` plus Log4j; the optional jars add their
+functions to the engine automatically when they are on the classpath.
 
 Inside the shell: `(batch samples/only/only_1.clp)`, `(facts)`, `(fire)`, `(exit)`. The shell has
 line editing and history (JLine); constructs can be typed over several lines. Logging goes to

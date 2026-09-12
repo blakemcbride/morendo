@@ -289,7 +289,24 @@ Original plan:
 - Split `Rete.java` (1.8k lines): extract the template/defclass registry, the function/measure
   registry, and the output-stream management into their own classes; keep `Rete` as the facade.
 
-## Phase 4: Modules (optional dependencies stop being mandatory)
+## Phase 4: Modules (optional dependencies stop being mandatory) - DONE 2026-09-12
+
+Delivered: six modules, each a source root (`src/<module>/java` + resources), compiled by bld
+against only the class directories and jars it declares (`MODULES` in `Tasks.java`), so the
+compiler enforces the boundaries; one jar per module and all of them in the distribution.
+`core` (engine; Log4j only), `examples` (sample beans), `messaging` (JMS client, messaging and
+agent functions), `gui` (Swing GUI, network viewer, `view`), `service` (Jackson, Jakarta
+Servlet), `shell` (launcher and JLine shell; depends on `gui` for `-gui`). Moved into
+module-owned packages: `rete.Shell` -> `shell.Shell`, `rete.visualisation` -> `gui.visualisation`,
+`rete.functions.ViewFunction` -> `gui.functions` (with a `GuiFunctions` group),
+`rete.functions.messaging` -> `messaging.functions`, `rete.functions.agent` -> `messaging.agent`.
+The gui and messaging function groups register through `META-INF/services/
+org.jamocha.rete.FunctionGroup` instead of the built-in list. Verified: a probe compiled against
+the core jar and Log4j alone loads and fires a sample; with the gui and messaging jars added,
+`view`, `send-msg` and `register-agent` appear.
+
+Original plan:
+
 
 Split into separate jars (bld tasks or sub-projects) so the core has zero third-party runtime deps beyond Log4j 2:
 
@@ -334,7 +351,7 @@ The Swing GUI stays (decided); the JMS messaging package stays until decided oth
 | 2 Libraries | done | low | 1 |
 | 3a Mechanical | done | low | 0 |
 | 3b Structural | done | medium | 3a |
-| 4 Modules | 1-2 days | low | 2, 3a |
+| 4 Modules | done | low | 2, 3a |
 | 5 Tooling/docs | 1 day | none | any |
 
 Phases 1, 2 and 3a can proceed in parallel branches once Phase 0 is in. Phase 3b should be one

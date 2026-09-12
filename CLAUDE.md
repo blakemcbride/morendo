@@ -29,10 +29,23 @@ in `Tasks.java` from Maven Central into `libs/` (git-ignored). Everything built 
 ./morendo -shell            # interactive shell from a checkout (or -gui); needs a prior build
 ```
 
-Layout: `src/main/java` (engine), `src/main/resources` (gui icons, `messages.properties`),
-`src/main/javacc/clips.jj` (grammar), `src/test/java` (tests, sample beans, example code),
-`src/test/resources` (goldens, scenario scripts). The version is `Constants.VERSION`;
-`Tasks.java` reads it for jar and zip names.
+Layout: one source root per module, `src/<module>/java` with resources in
+`src/<module>/resources`, compiled to `target/<module>/classes` and packaged as
+`target/morendo-<module>-<version>.jar`. The modules and what they may depend on (enforced by
+compiling each against only its own dependencies, see `MODULES` in `Tasks.java`):
+
+| module | packages | third-party |
+|---|---|---|
+| `core` | `rete`, `rule`, `parser`, `model`, `mapping`, `messagerouter`, `nn`, `fuzzy` | Log4j only |
+| `examples` | `woolfel.examples.*` beans and the `org.jamocha.sample.im` example | - |
+| `messaging` | `messaging`, `messaging.functions`, `messaging.agent` | Jakarta JMS |
+| `gui` | `gui`, `gui.visualisation`, `gui.functions` (Swing) | - |
+| `service` | `service`, `service.servlet` | Jackson, Jakarta Servlet |
+| `shell` | `org.jamocha.Morendo`, `shell.Shell` (depends on `gui`) | JLine |
+
+`src/core/javacc/clips.jj` is the grammar; tests are in `src/test/java` (goldens and scenario
+scripts in `src/test/resources`) and compile against every module. The version is
+`Constants.VERSION`; `Tasks.java` reads it for jar and zip names.
 
 bld compiles only sources newer than their class files, so after changing a method or field
 signature run `./bld clean test` to avoid stale-class errors. `./bld lint` compiles everything
@@ -73,19 +86,19 @@ Morendo> (fire)          # NOT (run); the function is named "fire"
 Morendo> (exit)
 ```
 
-Logging is Log4j 2, configured by `src/main/resources/log4j2.xml`: WARN and above to stderr,
+Logging is Log4j 2, configured by `src/core/resources/log4j2.xml`: WARN and above to stderr,
 `-Dmorendo.log.level=DEBUG` for more, `-Dlog4j2.configurationFile=classpath:log4j2-file.xml` to
 also write `logs/morendo.log`. Loggers are obtained with `LogManager.getLogger(X.class)`;
 there is no logging wrapper any more. `logs/`, `cache/`, `libs/` and `target/` are git-ignored.
 
 ### Parser generation
 
-The CLIPS grammar is `src/main/javacc/clips.jj`. `./bld build` (via the `parser` task) runs
+The CLIPS grammar is `src/core/javacc/clips.jj`. `./bld build` (via the `parser` task) runs
 JavaCC 7.0.13 from `libs/tools/` and writes `CLIPSParser*.java`, `Token*.java`,
-`ParseException.java`, `SimpleCharStream.java` into `src/main/java/org/jamocha/parser/clips/`,
+`ParseException.java`, `SimpleCharStream.java` into `src/core/java/org/jamocha/parser/clips/`,
 where that directory's `.gitignore` hides them. Never hand-edit generated files; edit `clips.jj`
 and rebuild (JavaCC regenerates only when the grammar is newer; `./bld clean` removes them).
-`ParserUtils.java` in the same package is hand-written. `src/main/javacc/clips-experimental.jj`
+`ParserUtils.java` in the same package is hand-written. `src/core/javacc/clips-experimental.jj`
 is an unused variant of the grammar.
 
 ## Architecture
@@ -94,7 +107,9 @@ is an unused variant of the grammar.
 
 `org.jamocha.rete.Rete` is the engine facade; it delegates to `TemplateRegistry` (declared classes
 and templates), `FunctionRegistry` (functions, function groups, measures; also loads any
-`FunctionGroup` listed in `META-INF/services/org.jamocha.rete.FunctionGroup`) and `EngineOutput`
+`FunctionGroup` listed in `META-INF/services/org.jamocha.rete.FunctionGroup`, which is how the
+`gui` module contributes `view` and the `messaging` module its messaging and agent functions) and
+`EngineOutput`
 (print writers and the message router). A `Rete` instance is not thread-safe: drive it from one
 thread, or through the `MessageRouter` command thread as the shell and GUI do. `Rete.close()`
 marks the engine closed, stops the router and runs registered close hooks; `(exit)` only
@@ -122,7 +137,7 @@ Even `Rete.loadRuleset()` and `Rete.build()` just invoke `BatchFunction` / `Buil
 ### Input path
 
 Text -> `CLIPSParser` (JavaCC) -> builds `Defrule`/`Defquery`/`GraphQuery`/`Deftemplate`/`Defcube` objects
-or `Function` + `Parameter[]` calls -> executed against `Rete`. The shell (`rete/Shell`, JLine
+or `Function` + `Parameter[]` calls -> executed against `Rete`. The shell (`shell/Shell`, JLine
 line editing, collects input until the parentheses balance) does not call the parser directly: it
 sends each expression through a `StringChannel` on `messagerouter/MessageRouter`, whose daemon
 command thread takes it from a blocking queue, hands it to `CLIPSInterpreter`, and posts
@@ -203,7 +218,7 @@ parsed into `Rule` setters in `clips.jj` (`ruleBody()`).
 ### Other packages
 
 `rete/fuzzy` is the FuzzyJ-inspired
-`FuzzyBinding`; `rete/visualisation` and `gui/` are the Swing network viewer and GUI tabs;
+`FuzzyBinding`; `gui/visualisation` and `gui/` are the Swing network viewer and GUI tabs;
 `messaging/` is a Jakarta Messaging (JMS) client; `service/servlet` targets Jakarta Servlet;
 `rete/util/IOUtilities.open` is the one place that turns a location string (URL, `classpath:`
 resource or file path) into a stream; `rule/util/TopologyCostCalculation`
