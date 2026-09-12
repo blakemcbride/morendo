@@ -5,16 +5,15 @@ import java.util.ArrayList;
 import org.jamocha.rete.Rete;
 
 import woolfel.examples.model.Account4;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
-public class JavaObjectTest extends TestCase {
+public class JavaObjectTest {
 
-	public JavaObjectTest() {
-		super();
-	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testDeclareObject() {
 		Rete engine = new Rete();
 		engine.declareObject(Account4.class);
@@ -29,6 +28,7 @@ public class JavaObjectTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testAssertObject() {
 		Rete engine = new Rete();
 		engine.declareObject(Account4.class);

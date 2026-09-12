@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import woolfel.examples.model.Hobby;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
-public class ServiceConfigTest extends TestCase {
-	public ServiceConfigTest() {
-		super();
-	}
+public class ServiceConfigTest {
 
 	/**
 	 * Files written by these tests go to a temporary directory so that running the
@@ -26,6 +24,7 @@ public class ServiceConfigTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testSaveServiceConfig() {
 		ServiceConfiguration config = new ServiceConfiguration();
 		config.setServiceName("sample");
@@ -73,6 +72,7 @@ public class ServiceConfigTest extends TestCase {
 		RuleServiceImpl.saveConfiguration(tempFile("test_config.json"), config);
 	}
 	
+	@Test
 	public void testSaveServiceConfig2() {
 		ServiceConfiguration config = new ServiceConfiguration();
 		config.setServiceName("sample");
@@ -117,6 +117,7 @@ public class ServiceConfigTest extends TestCase {
 		RuleServiceImpl.saveConfiguration(tempFile("test_config2.json"), config);
 	}
 	
+	@Test
 	public void testSaveObjectData() {
 		ArrayList<Hobby> list = new ArrayList<Hobby>();
 		Hobby hobby1 = new Hobby();
@@ -142,6 +143,7 @@ public class ServiceConfigTest extends TestCase {
 		ObjectData.saveObjectData(tempFile("data1.json"), list);
 	}
 	
+	@Test
 	public void testCreateServiceInstance() {
 		RuleService service = RuleServiceImpl.createInstance("./samples/configuration/sample_config.json");
 		assertNotNull(service);

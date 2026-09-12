@@ -28,8 +28,9 @@ import woolfel.examples.model.Account;
 import woolfel.examples.model.IAccount;
 import woolfel.examples.model.TestBean;
 import woolfel.examples.model.TestBean2;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
 /**
  * @author Peter Lin
@@ -37,26 +38,15 @@ import junit.framework.TestCase;
  * DefclassTest performs basic unit test of the core functionality
  * of Defclass.
  */
-public class DefclassTest extends TestCase {
+public class DefclassTest {
 
-	/**
-	 * 
-	 */
-	public DefclassTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public DefclassTest(String arg0) {
-		super(arg0);
-	}
     
     /**
      * Test TestBean2, which does implement add/remove
      * listener.
      */
+    @Test
     public void testJavaBean(){
         Defclass dc = new Defclass(TestBean2.class);
         assertEquals(true,dc.isJavaBean());
@@ -66,6 +56,7 @@ public class DefclassTest extends TestCase {
      * Test TestBean, which does not implement add/remove
      * listener.
      */
+    @Test
     public void testNonJavaBeans(){
         Defclass dc = new Defclass(TestBean.class);
         assertEquals(false,dc.isJavaBean());
@@ -74,6 +65,7 @@ public class DefclassTest extends TestCase {
     /**
      * Test TestBean and get the BeanInfo
      */
+    @Test
     public void testBeanInfo() {
         Defclass dc = new Defclass(TestBean2.class);
         assertNotNull(dc.getBeanInfo());
@@ -83,6 +75,7 @@ public class DefclassTest extends TestCase {
      * Test TestBean2 and make sure the PropertyDescriptor
      * isn't null.
      */
+    @Test
     public void testPropertyDescriptor() {
         Defclass dc = new Defclass(TestBean2.class);
         assertNotNull(dc.getPropertyDescriptors());
@@ -92,6 +85,7 @@ public class DefclassTest extends TestCase {
      * Test TestBean2 and make sure it has the right number
      * PropertyDescriptors
      */
+    @Test
     public void testPropertyCount() {
         Defclass dc = new Defclass(TestBean2.class);
         if (dc.getPropertyDescriptors() != null){
@@ -112,6 +106,7 @@ public class DefclassTest extends TestCase {
      * Test createDeftemplate(String) method to make sure the
      * Defclass can create a deftemplate for the given Defclass.
      */
+    @Test
     public void testGetDeftemplate() {
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -125,6 +120,7 @@ public class DefclassTest extends TestCase {
     /**
      * Test defclass using an interface, which defines a domain object
      */
+    @Test
     public void testInterface() {
         Defclass dc = new Defclass(IAccount.class);
         assertNotNull(dc);
@@ -136,6 +132,7 @@ public class DefclassTest extends TestCase {
     /**
      * Test defclass using an object that implements an interface
      */
+    @Test
     public void testInterfaceSlot() {
         Defclass dc = new Defclass(IAccount.class);
         assertNotNull(dc);
@@ -144,6 +141,7 @@ public class DefclassTest extends TestCase {
         assertEquals(14,dtemp.getAllSlots().length);
     }
 
+    @Test
     public void testObject() {
         Defclass dc = new Defclass(Account.class);
         assertNotNull(dc);
@@ -152,6 +150,7 @@ public class DefclassTest extends TestCase {
     }
     
     @SuppressWarnings("rawtypes")
+	@Test
 	public void testDeclareObject() {
         Rete engine = new Rete();
         assertNotNull(engine);

@@ -2,15 +2,13 @@ package org.jamocha.service;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
 import woolfel.examples.model.Account;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JsonDataTest extends TestCase {
+public class JsonDataTest {
 
-	public JsonDataTest() {
-	}
 
 	@Test
 	public void testLoadJson() {

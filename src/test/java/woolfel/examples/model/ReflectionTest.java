@@ -1,16 +1,15 @@
 package woolfel.examples.model;
 
 import java.lang.reflect.Method;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
-public class ReflectionTest extends TestCase {
+public class ReflectionTest {
 
-	public ReflectionTest() {
-		super();
-	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testLookup1() {
 		String methd = "setCashCountry";
 		Class[] params = new Class[2];
@@ -35,6 +34,7 @@ public class ReflectionTest extends TestCase {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testLookup2() {
 		String methd = "setCashCountry";
 		Class[] params = new Class[2];

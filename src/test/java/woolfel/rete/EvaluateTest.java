@@ -17,7 +17,8 @@
 package woolfel.rete;
 
 import org.jamocha.rete.Evaluate;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Lin
@@ -25,16 +26,11 @@ import junit.framework.TestCase;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class EvaluateTest extends TestCase {
+public class EvaluateTest {
     
-    public EvaluateTest() {
-        super();
-    }
 
-    public EvaluateTest(String value) {
-        super(value);
-    }
     
+    @Test
     public void testLessEqual1() {
         Integer int1 = Integer.valueOf(1);
         Integer int2 = Integer.valueOf(2);
@@ -119,6 +115,7 @@ public class EvaluateTest extends TestCase {
      * the method will test comparing different numeric types to make sure
      * it all works correctly
      */
+    @Test
     public void testLessEqual2() {
         System.out.println("testLessEqual2 -------");
         Integer int1 = Integer.valueOf(1);
@@ -167,6 +164,7 @@ public class EvaluateTest extends TestCase {
         
     }
     
+    @Test
     public void testLess1() {
         Integer int1 = Integer.valueOf(1);
         Integer int2 = Integer.valueOf(2);
@@ -247,6 +245,7 @@ public class EvaluateTest extends TestCase {
         
     }
     
+    @Test
     public void testBoolean1() {
     	Boolean t = Boolean.TRUE;
     	String f = "false";

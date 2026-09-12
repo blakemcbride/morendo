@@ -23,7 +23,7 @@ import org.jamocha.rete.Rete;
 
 import woolfel.examples.model.Account4;
 import woolfel.examples.model.Transaction;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Peter Lin
@@ -31,23 +31,12 @@ import junit.framework.TestCase;
  * SimpleJoin test is used to measure basic join performance for very
  * simple cases.
  */
-public class SimpleJoinTest extends TestCase {
+public class SimpleJoinTest {
 
-	/**
-	 * 
-	 */
-	public SimpleJoinTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public SimpleJoinTest(String arg0) {
-		super(arg0);
-	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testFiveRules() {
 		int objCount = 25000;
         Random ran = new Random();

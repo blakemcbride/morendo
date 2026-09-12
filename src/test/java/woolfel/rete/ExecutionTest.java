@@ -5,18 +5,15 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.functions.io.BatchFunction;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
-public class ExecutionTest extends TestCase {
+public class ExecutionTest {
 
-	public ExecutionTest() {
-	}
 
-	public ExecutionTest(String name) {
-		super(name);
-	}
 
+	@Test
 	public void testExecution() {
 		org.jamocha.rete.Rete engine = new org.jamocha.rete.Rete();
 		// exists_sample15 defines one rule and asserts its facts; the batch function

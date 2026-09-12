@@ -18,8 +18,9 @@ package woolfel.rete;
 
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Rete;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
 /**
  * @author Peter Lin
@@ -27,27 +28,17 @@ import junit.framework.TestCase;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class ReteInitTest extends TestCase {
+public class ReteInitTest {
 
-	/**
-	 * 
-	 */
-	public ReteInitTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public ReteInitTest(String arg0) {
-		super(arg0);
-	}
 
+    @Test
     public void testInit() {
         Rete engine = new Rete();
         assertNotNull(engine);
     }
     
+    @Test
     public void testInitModule() {
         Rete engine = new Rete();
         assertNotNull(engine);
@@ -61,6 +52,7 @@ public class ReteInitTest extends TestCase {
      * Simple test to make sure the nodeId method work correctly
      *
      */
+    @Test
     public void testNodeId() {
         Rete engine = new Rete();
         assertNotNull(engine);

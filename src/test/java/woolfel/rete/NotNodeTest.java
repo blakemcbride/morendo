@@ -31,37 +31,28 @@ import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rete.*;
 
-import junit.framework.TestCase;
 
 import woolfel.examples.model.TestBean2;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Lin
  *
  * We test the BetaNode to make sure it works correctly.
  */
-public class NotNodeTest extends TestCase {
+public class NotNodeTest {
 
-	/**
-	 * 
-	 */
-	public NotNodeTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public NotNodeTest(String arg0) {
-		super(arg0);
-	}
 
+    @Test
     public void testCreateNode() {
         Rete engine = new Rete();
         NotJoin bn = new NotJoin(engine.nextNodeId());
         assertNotNull(bn);
     }
     
+    @Test
     public void testCreateNode2() {
         // first create a rule engine instance
         Rete engine = new Rete();
@@ -87,6 +78,7 @@ public class NotNodeTest extends TestCase {
     }
     
     @SuppressWarnings("rawtypes")
+	@Test
 	public void testAssertLeftOne() {
         // first create a rule engine instance
         Rete engine = new Rete();
@@ -130,6 +122,7 @@ public class NotNodeTest extends TestCase {
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testAssertLeftMultiple() {
         // first create a rule engine instance
         Rete engine = new Rete();
@@ -185,6 +178,7 @@ public class NotNodeTest extends TestCase {
      * Assert several object down the right input
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testAssertRightMultiple() {
         // first create a rule engine instance
         Rete engine = new Rete();
@@ -240,6 +234,7 @@ public class NotNodeTest extends TestCase {
      * Try asserting 10 objects and make sure the results are correct
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testMatch() {
         // first create a rule engine instance
         Rete engine = new Rete();
@@ -310,6 +305,7 @@ public class NotNodeTest extends TestCase {
      * Try asserting 10 objects and make sure the results are correct
      */
     @SuppressWarnings({ "rawtypes", "unchecked", "unused" })
+	@Test
 	public void testAssertAndRetract() {
         // first create a rule engine instance
         Rete engine = new Rete();
@@ -396,6 +392,7 @@ public class NotNodeTest extends TestCase {
      * should have a match count of zero.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testNoMatch() {
         // first create a rule engine instance
         Rete engine = new Rete();
@@ -468,6 +465,7 @@ public class NotNodeTest extends TestCase {
      * to the BetaNode.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testPropogateNoMatch() {
         System.out.println("testPropogateNoMatch");
         // first create a rule engine instance
@@ -566,6 +564,7 @@ public class NotNodeTest extends TestCase {
      * propogated and retracted.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testPropogateChange() {
         System.out.println("testPropogateChange");
         // first create a rule engine instance
@@ -666,6 +665,7 @@ public class NotNodeTest extends TestCase {
      * goes from zero to one or one to zero.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testPropogateChange2() {
         System.out.println("testPropogateChange2");
         // first create a rule engine instance

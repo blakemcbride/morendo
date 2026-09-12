@@ -16,25 +16,19 @@
  */
 package woolfel.rete;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * @author Peter Lin
  *
  */
-public class ObjectTypeNodeTest extends TestCase {
+public class ObjectTypeNodeTest {
 
-	/**
-	 * 
-	 */
-	public ObjectTypeNodeTest() {
-		super();
-	}
 
-	public ObjectTypeNodeTest(String arg0) {
-		super(arg0);
-	}
 
+	@Test
 	public void testCreate() {
 		assertTrue(true);
 	}

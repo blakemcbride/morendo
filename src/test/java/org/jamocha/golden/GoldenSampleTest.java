@@ -11,11 +11,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.util.stream.Stream;
 
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.jamocha.rete.Rete;
 
@@ -33,14 +35,11 @@ import woolfel.examples.model.Hobby;
  *
  * The tests must run from the repository root (all paths are relative to it).
  *
- * To regenerate the golden files after an intentional behaviour change:
- *
- *   java -Dgolden.update=true -cp "bin:lib/*" org.junit.runner.JUnitCore org.jamocha.golden.GoldenSampleTest
- *
- * then review the diff before committing it. Add -Dgolden.only=name1,name2 to restrict either
- * mode to particular scenarios.
+ * To regenerate the golden files after an intentional behaviour change run
+ * "./bld golden-update" (or "./bld golden-update name1,name2" for some scenarios), then review
+ * the diff before committing it. Under the hood that sets -Dgolden.update=true and
+ * -Dgolden.only=... on the JUnit console launcher.
  */
-@RunWith(org.junit.runners.AllTests.class)
 public class GoldenSampleTest {
 
 	static final Path GOLDEN_DIR = Paths.get("src", "test", "resources", "golden");
@@ -68,15 +67,12 @@ public class GoldenSampleTest {
 		}
 	}
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Golden samples");
+	@TestFactory
+	Stream<DynamicTest> samples() {
 		List<String> only = ONLY.isEmpty() ? Collections.<String>emptyList() : Arrays.asList(ONLY.split(","));
-		for (Scenario scenario : scenarios()) {
-			if (only.isEmpty() || only.contains(scenario.name)) {
-				suite.addTest(new Case(scenario));
-			}
-		}
-		return suite;
+		return scenarios().stream()
+				.filter(scenario -> only.isEmpty() || only.contains(scenario.name))
+				.map(scenario -> DynamicTest.dynamicTest(scenario.name, () -> check(scenario)));
 	}
 
 	static List<Scenario> scenarios() {
@@ -148,30 +144,19 @@ public class GoldenSampleTest {
 		return h;
 	}
 
-	/** One scenario, run and compared as a single JUnit test named after the scenario. */
-	public static class Case extends TestCase {
-		private final Scenario scenario;
-
-		Case(Scenario scenario) {
-			super(scenario.name);
-			this.scenario = scenario;
+	/** Runs one scenario and compares it with its golden file (or rewrites the file in update mode). */
+	static void check(Scenario scenario) throws Exception {
+		String actual = execute(scenario);
+		Path golden = GOLDEN_DIR.resolve(scenario.name + ".txt");
+		if (UPDATE) {
+			Files.createDirectories(golden.getParent());
+			Files.write(golden, actual.getBytes(StandardCharsets.UTF_8));
+			return;
 		}
-
-		@Override
-		protected void runTest() throws Throwable {
-			String actual = execute(scenario);
-			Path golden = GOLDEN_DIR.resolve(scenario.name + ".txt");
-			if (UPDATE) {
-				Files.createDirectories(golden.getParent());
-				Files.write(golden, actual.getBytes(StandardCharsets.UTF_8));
-				return;
-			}
-			assertTrue("missing golden file " + golden + "; generate it with -Dgolden.update=true",
-					Files.exists(golden));
-			String expected = new String(Files.readAllBytes(golden), StandardCharsets.UTF_8);
-			assertEquals("golden mismatch for " + scenario.name + " (" + golden
-					+ "); if the change is intended regenerate with -Dgolden.update=true", expected, actual);
-		}
+		assertTrue(Files.exists(golden), "missing golden file " + golden + "; generate it with ./bld golden-update");
+		String expected = new String(Files.readAllBytes(golden), StandardCharsets.UTF_8);
+		assertEquals(expected, actual, "golden mismatch for " + scenario.name + " (" + golden
+				+ "); if the change is intended regenerate with ./bld golden-update " + scenario.name);
 	}
 
 	static String execute(Scenario scenario) throws Exception {
@@ -223,9 +208,5 @@ public class GoldenSampleTest {
 		s = s.replaceAll("AggrTime--?\\d+", "AggrTime-*");
 		s = s.replaceAll("[A-Z][a-z]{2} [A-Z][a-z]{2} \\d{2} \\d{2}:\\d{2}:\\d{2} [A-Z]{2,5} \\d{4}", "<DATE>");
 		return s;
-	}
-
-	public static void main(String[] args) {
-		org.junit.runner.JUnitCore.main(new String[] { GoldenSampleTest.class.getName() });
 	}
 }

@@ -24,7 +24,8 @@ import woolfel.examples.model.BackupAccount;
 import woolfel.examples.model.DeletedAccount;
 import woolfel.examples.model.IAccount;
 import woolfel.examples.model.TestBean3;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Lin
@@ -32,22 +33,11 @@ import junit.framework.TestCase;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class AssertObjectTest extends TestCase {
+public class AssertObjectTest {
 
-	/**
-	 * 
-	 */
-	public AssertObjectTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public AssertObjectTest(String arg0) {
-		super(arg0);
-	}
 
+    @Test
     public void testSimpleAssert() {
         System.out.println("start testSimpleAssert");
         Rete engine = new Rete();
@@ -74,6 +64,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertTwoObjects() {
         System.out.println("start testAssertTwoObjects");
         Rete engine = new Rete();
@@ -118,6 +109,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testRepeatedAssert() {
         System.out.println("start testRepatedAssert");
         Rete engine = new Rete();
@@ -166,6 +158,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertWithInterface() {
         System.out.println("-----------------------------");
         System.out.println("start testAssertWithInterface");
@@ -193,6 +186,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertWithSubclass() {
         System.out.println("start testAssertWithSubclass");
         Rete engine = new Rete();
@@ -219,6 +213,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertWithSubclass2() {
         System.out.println("\nstart testAssertWithSubclass2");
         Rete engine = new Rete();
@@ -246,6 +241,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertWithSubclass3() {
         System.out.println("\nstart testAssertWithSubclass3");
         Rete engine = new Rete();
@@ -273,6 +269,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertWithSubclassWithParent() {
         System.out.println("\nstart testAssertWithSubclassWithParent");
         Rete engine = new Rete();
@@ -300,6 +297,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertWithSubclassWithParent2() {
         System.out.println("\nstart testAssertWithSubclassWithParent2");
         Rete engine = new Rete();
@@ -327,6 +325,7 @@ public class AssertObjectTest extends TestCase {
         }
     }
     
+    @Test
     public void testAssertWithSubclassWithParent3() {
         System.out.println("\nstart testAssertWithSubclassWithParent3");
         Rete engine = new Rete();

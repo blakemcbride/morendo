@@ -47,12 +47,10 @@ public class Tasks {
 	final static String GENERATED_PARSER_FILES = "CLIPSParser.*\\.java|ParseException\\.java|SimpleCharStream\\.java|Token\\.java|TokenMgrError\\.java";
 	final static String CONSTANTS = MAIN_SRC + "/org/jamocha/rete/Constants.java";
 	final static String MAIN_CLASS = "org.jamocha.Morendo";
-	final static String TEST_SUITE = "org.jamocha.AllTests";
 	final static String GOLDEN_TESTS = "org.jamocha.golden.GoldenSampleTest";
-	final static String JUNIT_RUNNER = "org.junit.runner.JUnitCore";
 	final static String MAVEN = "https://repo1.maven.org/maven2/";
 	final static String JAVACC = "javacc-7.0.13.jar";
-	final static String JUNIT = "junit-4.1.jar";
+	final static String JUNIT = "junit-platform-console-standalone-6.1.3.jar";
 
 	final static ForeignDependencies foreignLibs = buildForeignDependencies();
 	final static ForeignDependencies toolLibs = buildToolDependencies();
@@ -68,7 +66,7 @@ public class Tasks {
 	public static void listTasks() {
 		println("");
 		println("build                    download dependencies, generate the parser, compile");
-		println("test [class]             build and run the test suite (org.jamocha.AllTests), or one test class");
+		println("test [class]             build and run all tests under src/test/java, or one test class");
 		println("golden-update [names]    regenerate the golden files (all, or a comma-separated list of scenarios)");
 		println("run <class> [argument]... build and run a class, e.g. bld run org.jamocha.Morendo -gui");
 		println("                         (for the interactive shell use ./morendo -shell instead)");
@@ -109,8 +107,8 @@ public class Tasks {
 		guard(() -> {
 			doBuildTests();
 			String[] targs = taskArgs();
-			String suite = targs.length > 0 ? targs[0] : TEST_SUITE;
-			runWait(true, "java -cp " + testClasspath() + " " + JUNIT_RUNNER + " " + suite);
+			String selection = targs.length > 0 ? "--select-class " + targs[0] : "--scan-class-path " + TEST_CLASSES;
+			runWait(true, junitCommand("") + selection);
 		});
 	}
 
@@ -119,7 +117,7 @@ public class Tasks {
 			doBuildTests();
 			String[] targs = taskArgs();
 			String only = targs.length > 0 ? " -Dgolden.only=" + targs[0] : "";
-			runWait(true, "java -Dgolden.update=true" + only + " -cp " + testClasspath() + " " + JUNIT_RUNNER + " " + GOLDEN_TESTS);
+			runWait(true, junitCommand("-Dgolden.update=true" + only) + "--select-class " + GOLDEN_TESTS);
 			println("golden files written to src/test/resources/golden; review the diff before committing");
 		});
 	}
@@ -272,9 +270,16 @@ public class Tasks {
 		return i + 1 < args.length ? Arrays.copyOfRange(args, i + 1, args.length) : new String[0];
 	}
 
-	private static String testClasspath() {
-		String sep = File.pathSeparator;
-		return CLASSES + sep + TEST_CLASSES + sep + LIBS + "/*";
+	/**
+	 * The JUnit console launcher command up to the test selection. The launcher does not
+	 * expand classpath wildcards, so every jar is listed.
+	 */
+	private static String junitCommand(String systemProperties) {
+		StringBuilder cp = new StringBuilder(CLASSES).append(File.pathSeparator).append(TEST_CLASSES);
+		for (int i = 0; i < foreignLibs.size(); i++)
+			cp.append(File.pathSeparator).append(foreignLibs.get(i));
+		return "java " + systemProperties + " -jar " + LIBS + "/" + JUNIT
+				+ " execute --disable-banner --details=summary --fail-if-no-tests --class-path " + cp + " ";
 	}
 
 	/** The version string, read from Constants.VERSION so that it is defined in one place. */
@@ -337,8 +342,8 @@ public class Tasks {
 		dep.add(LIBS, MAVEN + "com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar");
 		dep.add(LIBS, MAVEN + "jakarta/jms/jakarta.jms-api/3.1.0/jakarta.jms-api-3.1.0.jar");
 		dep.add(LIBS, MAVEN + "jakarta/servlet/jakarta.servlet-api/6.1.0/jakarta.servlet-api-6.1.0.jar");
-		// tests only; dist() leaves it out of the distribution
-		dep.add(LIBS, MAVEN + "junit/junit/4.1/" + JUNIT);
+		// tests only (JUnit 6 platform, Jupiter and console launcher in one jar); dist() leaves it out
+		dep.add(LIBS, MAVEN + "org/junit/platform/junit-platform-console-standalone/6.1.3/" + JUNIT);
 		return dep;
 	}
 

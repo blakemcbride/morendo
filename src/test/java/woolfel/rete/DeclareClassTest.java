@@ -29,30 +29,20 @@ import woolfel.examples.model.Account2;
 import woolfel.examples.model.Account3;
 import woolfel.examples.model.BackupAccount;
 import woolfel.examples.model.TestBean3;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Lin
  *
  * Test the declareObject functionality
  */
-public class DeclareClassTest extends TestCase {
+public class DeclareClassTest {
 
-	/**
-	 * 
-	 */
-	public DeclareClassTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public DeclareClassTest(String arg0) {
-		super(arg0);
-	}
 
     @SuppressWarnings("rawtypes")
+	@Test
 	public void testDeclareClass() {
         Rete engine = new Rete();
         assertNotNull(engine);
@@ -73,6 +63,7 @@ public class DeclareClassTest extends TestCase {
     }
     
     @SuppressWarnings("rawtypes")
+	@Test
 	public void testDeclareClass2() {
         Rete engine = new Rete();
         assertNotNull(engine);
@@ -93,6 +84,7 @@ public class DeclareClassTest extends TestCase {
         System.out.println("--------------------------------");
     }
     
+    @Test
     public void testDeftemplate() {
         Rete engine = new Rete();
         assertNotNull(engine);
@@ -105,6 +97,7 @@ public class DeclareClassTest extends TestCase {
         System.out.println("number of Deftemplates is " + count);
     }
     
+    @Test
     public void testDeclareClassInheritance() {
         System.out.println("\ntestDeclareClassInheritance");
         Rete engine = new Rete();
@@ -126,6 +119,7 @@ public class DeclareClassTest extends TestCase {
         }
     }
     
+    @Test
     public void testDeclareClassInheritance2() {
         System.out.println("\ntestDeclareClassInheritance2");
         Rete engine = new Rete();
@@ -147,6 +141,7 @@ public class DeclareClassTest extends TestCase {
         }
     }
     
+    @Test
     public void testDeclareClassInheritance3() {
         System.out.println("\ntestDeclareClassInheritance3");
         Rete engine = new Rete();
@@ -168,6 +163,7 @@ public class DeclareClassTest extends TestCase {
         }
     }
     
+    @Test
     public void testDeclareClassInheritance4() {
         System.out.println("\ntestDeclareClassInheritance3");
         Rete engine = new Rete();

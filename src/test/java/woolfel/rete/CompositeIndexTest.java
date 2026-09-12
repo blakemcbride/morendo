@@ -25,30 +25,20 @@ import org.jamocha.rete.Deftemplate;
 import org.jamocha.rete.Fact;
 
 import woolfel.examples.model.TestBean2;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
 /**
  * @author Peter Lin
  *
  * Simple testcase for the CompositeIndex used by ObjectTypeNode
  */
-public class CompositeIndexTest extends TestCase {
+public class CompositeIndexTest {
 
-	/**
-	 * 
-	 */
-	public CompositeIndexTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public CompositeIndexTest(String arg0) {
-		super(arg0);
-	}
 
+    @Test
     public void testEqual(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -72,6 +62,7 @@ public class CompositeIndexTest extends TestCase {
         System.out.println(ci.toPPString());
     }
     
+    @Test
     public void testNotEqual() {
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -96,6 +87,7 @@ public class CompositeIndexTest extends TestCase {
         System.out.println(ci.toPPString());
     }
     
+    @Test
     public void testNil() {
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -119,6 +111,7 @@ public class CompositeIndexTest extends TestCase {
         System.out.println(ci.toPPString());
     }
     
+    @Test
     public void testNotNil() {
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -144,6 +137,7 @@ public class CompositeIndexTest extends TestCase {
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testIndex(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -187,6 +181,7 @@ public class CompositeIndexTest extends TestCase {
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testIndex2(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");

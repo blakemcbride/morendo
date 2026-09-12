@@ -16,22 +16,19 @@
  */
 package org.jamocha.rete.util;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * @author Peter Lin
  * 
  * A simple test of the HashMap
  */
-public class StringDataTest extends TestCase {
+public class StringDataTest {
 
-	/**
-	 * 
-	 */
-	public StringDataTest() {
-		super();
-	}
 
+	@Test
 	public void testIntegerData1() {
 		int count = 10000;
 		HashMap map = new HashMap();
@@ -44,6 +41,7 @@ public class StringDataTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStringData1() {
 		int count = 10000;
 		HashMap map = new HashMap();
@@ -56,6 +54,7 @@ public class StringDataTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testIterate() {
 		int count = 10000;
 		HashMap map = new HashMap();
@@ -76,6 +75,7 @@ public class StringDataTest extends TestCase {
 		System.out.println("count = " + counter);
 	}
 	
+	@Test
 	public void testStringData2() {
 		int count = 100000;
 		HashMap map = new HashMap();
@@ -91,6 +91,7 @@ public class StringDataTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testJUHashMap1() {
 		int count = 100000;
 		java.util.HashMap map = new java.util.HashMap();
@@ -105,6 +106,7 @@ public class StringDataTest extends TestCase {
 		System.out.println("java.util.HashMap put ET - " + (end-start));
 	}
 	
+	@Test
 	public void testStringData3() {
 		int count = 100000;
 		HashMap map = new HashMap();
@@ -124,6 +126,7 @@ public class StringDataTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testJUHashMap2() {
 		int count = 100000;
 		java.util.HashMap map = new java.util.HashMap();
@@ -142,6 +145,7 @@ public class StringDataTest extends TestCase {
 		System.out.println("java.util.HashMap containsKey ET - " + (end-start));
 	}
 	
+	@Test
 	public void testStringData4() {
 		int count = 100000;
 		HashMap map = new HashMap();
@@ -161,6 +165,7 @@ public class StringDataTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testJUHashMap3() {
 		int count = 100000;
 		java.util.HashMap map = new java.util.HashMap();
@@ -179,6 +184,7 @@ public class StringDataTest extends TestCase {
 		System.out.println("java.util.HashMap get(key) ET - " + (end-start));
 	}
 
+	@Test
 	public void testStringData5() {
 		int count = 100000;
 		HashMap map = new HashMap();
@@ -199,6 +205,7 @@ public class StringDataTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testJUHashMap4() {
 		int count = 100000;
 		java.util.HashMap map = new java.util.HashMap();

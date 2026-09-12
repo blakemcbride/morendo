@@ -22,12 +22,14 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import org.jamocha.rete.Rete;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
-public class FunctionsViaMessageRouter extends TestCase{
+public class FunctionsViaMessageRouterTest{
 	
 
+	@Test
 	public void test_assert(){
 		System.out.println("");
 		System.out.println("Start Assert");
@@ -100,6 +102,7 @@ public class FunctionsViaMessageRouter extends TestCase{
 		System.out.println("");
 	}
 	
+	@Test
 	public void test_deftemplate() {
 		System.out.println("");
 		System.out.println("Start Deftemplate");
@@ -150,6 +153,7 @@ public class FunctionsViaMessageRouter extends TestCase{
 		System.out.println("");
 	}	
 	
+	@Test
 	public void test_defrule() {
 		System.out.println("");
 		System.out.println("Start Defrule");
@@ -203,6 +207,7 @@ public class FunctionsViaMessageRouter extends TestCase{
 	}	
 	
 	
+	@Test
 	public void test_fact_slots() {
 		System.out.println("");
 		System.out.println("Start DefFactSlots");
@@ -266,6 +271,7 @@ public class FunctionsViaMessageRouter extends TestCase{
 		System.out.println("");
 	}	
 	
+	@Test
 	public void test_rule_slots(){
 		System.out.println("");
 		System.out.println("Start TestRuleSlots");
@@ -355,7 +361,7 @@ public class FunctionsViaMessageRouter extends TestCase{
 
 	
 	public static void main(String[] args) {
-		FunctionsViaMessageRouter test = new FunctionsViaMessageRouter();
+		FunctionsViaMessageRouterTest test = new FunctionsViaMessageRouterTest();
 		int loop = 1;
 		for (int idx=0; idx < loop; idx++) {
 			System.out.println("Start  Tests");

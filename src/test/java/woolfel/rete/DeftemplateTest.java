@@ -23,8 +23,9 @@ import org.jamocha.rete.Slot;
 
 import woolfel.examples.model.Account;
 import woolfel.examples.model.TestBean2;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
 /**
  * @author Peter Lin
@@ -32,26 +33,15 @@ import junit.framework.TestCase;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class DeftemplateTest extends TestCase {
+public class DeftemplateTest {
 
-	/**
-	 * 
-	 */
-	public DeftemplateTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public DeftemplateTest(String arg0) {
-		super(arg0);
-	}
 
     /**
      * Basic test of Defclass.createDeftemplate(String). the method
      * uses TestBean2 to create a Defclass.
      */
+    @Test
     public void testCreateTemplateFromClass(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -64,6 +54,7 @@ public class DeftemplateTest extends TestCase {
      * the method only test the getNumberOfSlots method and 
      * toPPEString.
      */
+    @Test
     public void testCreateTemplateFromSlots(){
         Slot[] slots = new Slot[4];
         slots[0] = new Slot();
@@ -96,6 +87,7 @@ public class DeftemplateTest extends TestCase {
      * method uses Account class to create a Defclass. the method tests
      * toPPEString.
      */
+    @Test
     public void testCreateTemplate2(){
         Defclass dc = new Defclass(Account.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("account");
@@ -108,6 +100,7 @@ public class DeftemplateTest extends TestCase {
      * 
      *
      */
+    @Test
     public void testCreateFactFromInstance(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -129,6 +122,7 @@ public class DeftemplateTest extends TestCase {
      * 
      *
      */
+    @Test
     public void testSlotID() {
         Slot[] slots = new Slot[4];
         slots[0] = new Slot();
@@ -169,6 +163,7 @@ public class DeftemplateTest extends TestCase {
      * have the correct slot id, which is the column id. this makes
      * sure that we can efficiently update facts using the slot id.
      */
+    @Test
     public void testCreateTemplateSlot(){
         String acc = "account";
         Defclass dc = new Defclass(Account.class);

@@ -11,10 +11,11 @@ import java.util.Iterator;
 
 import org.jamocha.rete.Rete;
 import org.jamocha.rule.Defrule;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 // import org.jamocha.rete.*;
 // import org.jamocha.rule.*;
 
-import junit.framework.TestCase;
 
 
 /**
@@ -23,23 +24,12 @@ import junit.framework.TestCase;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class LoadRulesetTest extends TestCase {
+public class LoadRulesetTest {
 
-	/**
-	 * 
-	 */
-	public LoadRulesetTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public LoadRulesetTest(String arg0) {
-		super(arg0);
-	}
 
     @SuppressWarnings("rawtypes")
+	@Test
 	public void testLoadOnlySample() {
         Rete engine = new Rete();
         engine.loadRuleset("./samples/only/only_1.clp");
@@ -54,6 +44,7 @@ public class LoadRulesetTest extends TestCase {
     }
 
     @SuppressWarnings("rawtypes")
+	@Test
 	public void testLoadExistsSample() {
         Rete engine = new Rete();
         engine.loadRuleset("./samples/exists/exists_sample10.clp");

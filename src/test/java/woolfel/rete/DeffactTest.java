@@ -21,30 +21,20 @@ import org.jamocha.rete.Deftemplate;
 import org.jamocha.rete.Fact;
 
 import woolfel.examples.model.TestBean2;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
 /**
  * @author Peter Lin
  *
  * Simple testcase for deffacts
  */
-public class DeffactTest extends TestCase {
+public class DeffactTest {
 
-	/**
-	 * 
-	 */
-	public DeffactTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public DeffactTest(String arg0) {
-		super(arg0);
-	}
 
+    @Test
     public void testCreateDeffact(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -65,6 +55,7 @@ public class DeffactTest extends TestCase {
         System.out.println(fact.toFactString());
     }
     
+    @Test
     public void testCreateDeffactWithNull(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -85,6 +76,7 @@ public class DeffactTest extends TestCase {
         System.out.println(fact.toFactString());
     }
     
+    @Test
     public void testCreateDeffactWithPrimitive(){
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");

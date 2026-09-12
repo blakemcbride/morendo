@@ -18,7 +18,10 @@ package woolfel.rete;
 
 import org.jamocha.rete.HashedEqBNode;
 import org.jamocha.rete.Binding;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Lin
@@ -26,30 +29,21 @@ import junit.framework.TestCase;
  * Tests for binding class. The test will create some bindings
  * and create betaNodes.
  */
-public class BindingTest extends TestCase {
+public class BindingTest {
 
-	/**
-	 * 
-	 */
-	public BindingTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public BindingTest(String arg0) {
-		super(arg0);
-	}
 
+    @BeforeEach
     public void setUp(){
         System.out.println("this test does not do any setup");
     }
     
+    @AfterEach
     public void tearDown(){
         System.out.println("this test does not do any teardown");
     }
     
+    @Test
     public void testSingleBinding(){
 
         Binding bn = new Binding();
@@ -65,6 +59,7 @@ public class BindingTest extends TestCase {
         assertNotNull(btnode.toPPString());
     }
     
+    @Test
     public void testTwoBinding(){
 
         Binding bn = new Binding();
@@ -85,6 +80,7 @@ public class BindingTest extends TestCase {
         assertNotNull(btnode.toPPString());
     }
 
+    @Test
     public void testThreeBinding(){
 
         Binding bn = new Binding();
@@ -110,6 +106,7 @@ public class BindingTest extends TestCase {
         assertNotNull(btnode.toPPString());
     }
     
+    @Test
     public void testThreeBinding2(){
 
         Binding bn = new Binding();

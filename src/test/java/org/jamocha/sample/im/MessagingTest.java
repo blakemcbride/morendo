@@ -6,16 +6,18 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.jamocha.rete.Rete;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
 
-import junit.framework.TestCase;
 
-public class MessagingTest extends TestCase {
+@Disabled("needs samples/InstantMessaging/instant_messaging.clp, which is not in the repository")
+public class MessagingTest {
 	private Rete engine = null;
 
-	public MessagingTest() {
-	}
 
 	@SuppressWarnings("rawtypes")
+	@Test
 	public void testMessageFilter() {
 		this.engine = setupEngine();
 		if (this.engine == null) {

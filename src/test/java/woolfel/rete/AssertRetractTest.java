@@ -25,7 +25,8 @@ import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 
 import woolfel.examples.model.Account;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Lin
@@ -34,24 +35,13 @@ import junit.framework.TestCase;
  * important to measure the performance, so we set a minimum level of
  * performance that is acceptable.
  */
-public class AssertRetractTest extends TestCase {
+public class AssertRetractTest {
 
-	/**
-	 * 
-	 */
-	public AssertRetractTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public AssertRetractTest(String arg0) {
-		super(arg0);
-	}
 
  
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testRetractNoShadow() {
         System.out.println("testRetractNoShadow");
         Random ran = new Random();
@@ -136,6 +126,7 @@ public class AssertRetractTest extends TestCase {
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testRetractWithShadow() {
         System.out.println("testRetractWithShadow");
         Random ran = new Random();

@@ -26,30 +26,20 @@ import org.jamocha.rete.Deftemplate;
 import org.jamocha.rete.Slot;
 
 import woolfel.examples.model.TestBean2;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
 
 /**
  * @author Peter Lin
  *
  * Simple test for slot to make sure it works correctly
  */
-public class SlotTest extends TestCase {
+public class SlotTest {
 
-	/**
-	 * 
-	 */
-	public SlotTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public SlotTest(String arg0) {
-		super(arg0);
-	}
 
+    @Test
     public void testOneSlot(){
     	// Rete engine = new Rete(); Unused
         Defclass dc = new Defclass(TestBean2.class);
@@ -65,6 +55,7 @@ public class SlotTest extends TestCase {
         assertNotNull(an.toString());
     }
     
+    @Test
     public void testTwoSlots(){
     	// Rete engine = new Rete(); Unused
         Defclass dc = new Defclass(TestBean2.class);

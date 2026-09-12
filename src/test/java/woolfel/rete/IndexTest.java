@@ -24,32 +24,22 @@ import org.jamocha.rete.Fact;
 import org.jamocha.rete.Index;
 
 import woolfel.examples.model.TestBean2;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Lin
  *
  * A basic test to validate the Index works correctly
  */
-public class IndexTest extends TestCase {
+public class IndexTest {
 
-	/**
-	 * 
-	 */
-	public IndexTest() {
-		super();
-	}
 
-	/**
-	 * @param arg0
-	 */
-	public IndexTest(String arg0) {
-		super(arg0);
-	}
 
     /**
      * Startout with a simple test of 2 Long objects
      */
+    @Test
     public void testObjectEquals() {
         Long l1 = Long.valueOf(2);
         Long l2 = Long.valueOf(2);
@@ -59,6 +49,7 @@ public class IndexTest extends TestCase {
     /**
      * Test an Index with a Fact[] array with 1 fact
      */
+    @Test
     public void testOneFact() {
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -86,6 +77,7 @@ public class IndexTest extends TestCase {
     /**
      * Test an Index with a Fact[] array with 5 fact
      */
+    @Test
     public void testFiveFacts() {
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
@@ -168,6 +160,7 @@ public class IndexTest extends TestCase {
      * as expected.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testHashMapIndex() {
         Defclass dc = new Defclass(TestBean2.class);
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
