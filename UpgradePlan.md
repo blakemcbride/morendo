@@ -20,7 +20,7 @@ buildable and the samples behaving identically.
 | `xpp3`, `jackson-dataformat-xml` | Unreferenced |
 | JLine | Referenced by launch scripts; jar was deleted from `lib/` |
 | JavaCC | Grammar `clips.jj`; generated parser (JavaCC 7.0.10, ~6.5k lines) was committed; generated at build time since Phase 1 |
-| `-Xlint:all` on main | 256 rawtypes, 140 serial, 114 cast, 45 this-escape, 12 deprecation (all `new URL(String)`), 10 lossy-conversions, 5 unchecked, 4 static, 1 fallthrough |
+| `-Xlint:all` on main | 256 rawtypes, 140 serial, 114 cast, 45 this-escape, 12 deprecation (all `new URL(String)`), 10 lossy-conversions, 5 unchecked, 4 static, 1 fallthrough. Zero since Phase 3a (`./bld lint`) |
 | Legacy idioms | 1316 `instanceof`, 236 `StringBuffer`, 130 `List<?>`, 124 `@SuppressWarnings`, 34 `synchronized`, 8 `Hashtable`, 2 `Vector`, 7 boxed-primitive constructors, 4 `StringTokenizer`, `java.util.Date` in 24 files |
 | Dead code | `rete/util` custom `HashMap`/`AbstractMap`/`Map`/`Entry`/`Iterator`/`Value` and `CollectionsFactory` have no callers outside `rete/util` (only `StringDataTest` benchmarks them) |
 | Java serialization | Actually used by `batch-objects`/`batch-static-objects` functions and `service/ClipsInitialData`; `Serializable` is also on nodes, rules, functions where it is not needed |
@@ -173,6 +173,35 @@ Verification: goldens unchanged; every jar in the `Tasks.java` dependency list i
 
 ## Phase 3: Language modernization
 
+### 3a - DONE 2026-09-12
+
+`./bld lint` (new task, `javac -Xlint:all` over hand-written sources): 570 warnings -> 0.
+`@SuppressWarnings("unchecked")`: 108 -> 32, each re-added only where javac still reports one.
+Delivered in nine commits: dead code removed (custom `rete/util` collections, `rete/sc`, four
+never-constructed nodes); `StringBuilder`, `ArrayList`/`HashMap`, `String.split`, 261 diamond
+operators; `Serializable` only on the fact/template/slot data types; `this-escape`, fallthrough
+and lossy-conversion fixes; `Class<?>[]` in every `getParameter()`; 115 + 343 + 45 redundant
+casts removed after `Rete.new*Map()` and `WorkingMemory.get*Memory()` became generic; real
+element types on the core API (`Rule.getJoins()`, `Query.getJoins()`, `FunctionGroup.
+listFunctions()`, the working-memory maps, `Rete.getCubes()`/`getObjects()`/`getDefclasses()`);
+`java.time.Instant` for the temporal API, DATE slots and the time functions (ISO-8601 strings;
+`java.util.Date`/`Calendar` from beans still compared correctly).
+
+API changes for 2.0 from this phase: `DefaultReturnVector.getItems()` returns `List`;
+`assertTemporalObject`/`assertFact` take `Instant`; `Evaluate.evaluateDate*` take epoch millis;
+`Defclass`, `BasicClient` and the GUI classes are final; `BaseSlot.setName`, `Defquery.setName`,
+`BoundConstraint.setName`, `MultiValue.setValue` are final.
+
+Not done from the 3a list, deliberately: converting the remaining `Iterator` while-loops to
+for-each and introducing `List.of`/text blocks. Those are best done file by file in 3b, where the
+pattern-matching rewrite touches the same code. Bugs fixed on the way: `TokenizeFunction`'s
+inverted null check, `HashedNotEqBNode.clear()` casting `Index` values to `BetaMemory`.
+Observed but left alone (candidates for 3b, where the `Parameter` hierarchy is revisited): the
+`eq-*` and `add-*` time functions read their arguments without the engine, so a nested call such
+as `(eq-day ?t (now))` yields false and `(add-hours 1 (now))` throws; the `within-*`, `before`
+and `after` functions resolve nested calls correctly.
+
+
 Do the mechanical passes first (IntelliJ inspections + "Fix all" per inspection, one commit
 each), then the structural ones. Run the golden suite after every commit.
 
@@ -275,7 +304,7 @@ The Swing GUI stays (decided); the JMS messaging package stays until decided oth
 | 0 Safety net | done | none | - |
 | 1 Build system | done | low | 0 |
 | 2 Libraries | done | low | 1 |
-| 3a Mechanical | 2-3 days | low | 0 |
+| 3a Mechanical | done | low | 0 |
 | 3b Structural | 1-2 weeks | medium | 3a |
 | 4 Modules | 1-2 days | low | 2, 3a |
 | 5 Tooling/docs | 1 day | none | any |

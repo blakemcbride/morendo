@@ -23,6 +23,7 @@ in `Tasks.java` from Maven Central into `libs/` (git-ignored). Everything built 
 ./bld test woolfel.rete.SimpleJoinTest      # one test class
 ./bld golden-update [only_1,manners16]      # regenerate golden files (all, or some)
 ./bld jar | dist | javadoc  # target/morendo-<version>.jar / .zip / javadoc
+./bld lint                  # javac -Xlint:all on src/main/java; must stay at 0 warnings (details in target/lint.txt)
 ./bld clean | realclean     # remove target/ (+ generated parser); + libs/
 ./bld list-tasks
 ./morendo -shell            # interactive shell from a checkout (or -gui); needs a prior build
@@ -34,7 +35,10 @@ Layout: `src/main/java` (engine), `src/main/resources` (gui icons, `messages.pro
 `Tasks.java` reads it for jar and zip names.
 
 bld compiles only sources newer than their class files, so after changing a method or field
-signature run `./bld clean test` to avoid stale-class errors. A failed task exits non-zero
+signature run `./bld clean test` to avoid stale-class errors. `./bld lint` compiles everything
+(generated parser included) but reports only hand-written sources; the code base is at zero
+warnings, so a change that introduces one should fix it rather than suppress it. The remaining
+`@SuppressWarnings("unchecked")` mark genuine unchecked casts (mostly `Object`-typed memories). A failed task exits non-zero
 (the `guard` wrapper in `Tasks.java`; bld itself would exit 0). `run` and `test` spawn the JVM
 without a console, so the interactive shell must be started with `./morendo`, not `bld run`.
 
@@ -145,11 +149,13 @@ query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`,
   `*Neq*`/`NotEq` = not-equal binding variants (recent bug fixes were here, for CEs with several
   not-equal slots).
 - Terminal nodes: `TerminalNode2` (default, `LinkedActivation`), `TerminalNode3` (effective/expiration
-  dates), `NoAgendaTNode` (fires immediately, no agenda), `TemporalTNode` (retracts expired facts
-  instead of activating), `MLTerminalNode` (modification logic).
-- Node memories are NOT stored in nodes. `WorkingMemory` (`DefaultWM`) owns them via
-  `getAlphaMemory / getBetaLeftMemory / getBetaRightMemory` keyed by node, plus facts, deffacts,
-  defglobals, modules, cubes, and the `Agenda`.
+  dates), `NoAgendaTNode` (fires immediately, no agenda), `MLTerminalNode` (modification logic).
+- Only `Fact`, `Template`, the slot classes and the fact implementations are `Serializable`;
+  nodes, compilers, rules, functions and the GUI are not.
+- Node memories are NOT stored in nodes. `WorkingMemory` (`DefaultWM`) owns them via the generic
+  `getAlphaMemory / getBetaLeftMemory / getBetaRightMemory` (`<T> T`, keyed by node; the node that
+  created a memory knows its type), plus facts, deffacts, defglobals, modules, cubes, and the
+  `Agenda`. `Rete.newMap()` and friends are generic factories for those maps.
 - `rete/query` mirrors the node set (`QueryRootNode`, `QueryObjTypeNode`, `QueryHashedEqJoin`, ...) for
   `defquery` / graph queries; `DefaultQueryCompiler` and `GraphQueryCompiler` reuse the same condition
   compilers through their `Query` overloads.
@@ -162,7 +168,11 @@ query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`,
   template named after the class, so rules match `(woolfel.examples.model.Account (age ?a))`.
   Objects are asserted as shadow facts; `rete/macro` (`ReadMacro`/`WriteMacro`) is the optional
   non-reflective property access path.
-- `TemporalFact`/`TemporalDeffact` carry effective/expiration times; `model/Graph|Node|Edge` are
+- `TemporalFact`/`TemporalDeffact` carry effective/expiration times as epoch milliseconds; the
+  public API (`Rete.assertTemporalObject`, `assertFact(TemporalFact, Instant, Instant)`) and the
+  time functions (`now`, `eq-day`, `within-seconds`, `add-hours`, ...) use `java.time.Instant`.
+  DATE slot values are Instants; `Evaluate` also accepts `java.util.Date`/`Calendar` from beans,
+  and time strings are ISO-8601. `model/Graph|Node|Edge` are
   auto-declared for graph queries; `Cube`/`Defcube`/`Defdimension`/`Defmeasure` + `rete/measures`
   implement MOLAP.
 
@@ -176,7 +186,7 @@ parsed into `Rule` setters in `clips.jj` (`ruleBody()`).
 
 ### Other packages
 
-`rete/sc` holds statically-compiled node interfaces that nothing references; `rete/fuzzy` is the FuzzyJ-inspired
+`rete/fuzzy` is the FuzzyJ-inspired
 `FuzzyBinding`; `rete/visualisation` and `gui/` are the Swing network viewer and GUI tabs;
 `messaging/` is a Jakarta Messaging (JMS) client; `service/servlet` targets Jakarta Servlet;
 `rete/util/IOUtilities.open` is the one place that turns a location string (URL, `classpath:`
