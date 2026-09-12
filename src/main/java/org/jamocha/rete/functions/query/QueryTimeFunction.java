@@ -7,6 +7,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 public class QueryTimeFunction implements Function {
 
@@ -26,7 +27,7 @@ public class QueryTimeFunction implements Function {
 			String name = params[0].getStringValue();
 			time = engine.getQueryTime(name);
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.LONG_OBJECT, Long.valueOf(time));
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.LONG_OBJECT, Long.valueOf(time));
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -39,8 +40,8 @@ public class QueryTimeFunction implements Function {
 		return new Class<?>[]{String.class};
 	}
 
-	public int getReturnType() {
-		return Constants.LONG_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.LONG_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

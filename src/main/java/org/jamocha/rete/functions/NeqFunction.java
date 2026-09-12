@@ -28,6 +28,8 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
+import org.jamocha.rete.Operator;
 
 /**
  * @author Nikolaus Koemm
@@ -47,8 +49,8 @@ public class NeqFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -95,7 +97,7 @@ public class NeqFunction implements Function {
 				if (first == null && right != null) {
                     eval = Boolean.TRUE;
                     break;
-                } else if (first != null && !Evaluate.evaluate(Constants.EQUAL, first, right)) {
+                } else if (first != null && !Evaluate.evaluate(Operator.EQUAL, first, right)) {
 					eval = Boolean.TRUE;
 					break;
 				}
@@ -103,7 +105,7 @@ public class NeqFunction implements Function {
             eq = eval;
 		}
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, eq);
+				ValueType.BOOLEAN_OBJECT, eq);
 		ret.addReturnValue(rv);
 		return ret;
 	}

@@ -247,7 +247,7 @@ public class NotNodeTest {
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
         assertNotNull(dtemp);
         Binding[] binds = new Binding[1];
-        Binding2 b1 = new Binding2(Constants.EQUAL);
+        Binding2 b1 = new Binding2(Operator.EQUAL);
         b1.setLeftIndex(0);
         b1.setIsObjectVar(false);
         b1.setLeftRow(0);
@@ -318,7 +318,7 @@ public class NotNodeTest {
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
         assertNotNull(dtemp);
         Binding[] binds = new Binding[1];
-        Binding2 b1 = new Binding2(Constants.EQUAL);
+        Binding2 b1 = new Binding2(Operator.EQUAL);
         b1.setLeftIndex(0);
         b1.setIsObjectVar(false);
         b1.setLeftRow(0);
@@ -405,7 +405,7 @@ public class NotNodeTest {
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
         assertNotNull(dtemp);
         Binding[] binds = new Binding[1];
-        Binding2 b1 = new Binding2(Constants.EQUAL);
+        Binding2 b1 = new Binding2(Operator.EQUAL);
         b1.setLeftIndex(0);
         b1.setIsObjectVar(false);
         b1.setLeftRow(0);
@@ -480,7 +480,7 @@ public class NotNodeTest {
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
         assertNotNull(dtemp);
         Binding[] binds = new Binding[1];
-        Binding2 b1 = new Binding2(Constants.EQUAL);
+        Binding2 b1 = new Binding2(Operator.EQUAL);
         b1.setLeftIndex(0);
         b1.setIsObjectVar(false);
         b1.setLeftRow(0);
@@ -579,7 +579,7 @@ public class NotNodeTest {
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
         assertNotNull(dtemp);
         Binding[] binds = new Binding[1];
-        Binding2 b1 = new Binding2(Constants.EQUAL);
+        Binding2 b1 = new Binding2(Operator.EQUAL);
         b1.setLeftIndex(0);
         b1.setIsObjectVar(false);
         b1.setLeftRow(0);
@@ -588,7 +588,7 @@ public class NotNodeTest {
         binds[0] = b1;
         
         Binding[] binds2 = new Binding[1];
-        Binding2 b2 = new Binding2(Constants.EQUAL);
+        Binding2 b2 = new Binding2(Operator.EQUAL);
         b2.setLeftIndex(1);
         b2.setIsObjectVar(false);
         b2.setLeftRow(0);
@@ -681,7 +681,7 @@ public class NotNodeTest {
         Deftemplate dtemp = (Deftemplate)dc.createDeftemplate("testBean2");
         assertNotNull(dtemp);
         Binding[] binds = new Binding[1];
-        Binding2 b1 = new Binding2(Constants.EQUAL);
+        Binding2 b1 = new Binding2(Operator.EQUAL);
         b1.setLeftIndex(0);
         b1.setIsObjectVar(false);
         b1.setLeftRow(0);
@@ -690,7 +690,7 @@ public class NotNodeTest {
         binds[0] = b1;
         
         Binding[] binds2 = new Binding[1];
-        Binding2 b2 = new Binding2(Constants.EQUAL);
+        Binding2 b2 = new Binding2(Operator.EQUAL);
         b2.setLeftIndex(1);
         b2.setIsObjectVar(false);
         b2.setLeftRow(0);

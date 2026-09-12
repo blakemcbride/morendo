@@ -25,6 +25,7 @@ import org.jamocha.rete.Module;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -49,14 +50,14 @@ public class GetCurrentModuleFunction implements Function {
 		return GET_CURRENT_MODULE;
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector rvector = new DefaultReturnVector();
 		Module module = engine.getCurrentFocus();
-		DefaultReturnValue rval = new DefaultReturnValue(Constants.STRING_TYPE,module.getModuleName());
+		DefaultReturnValue rval = new DefaultReturnValue(ValueType.STRING,module.getModuleName());
 		rvector.addReturnValue(rval);
 		return rvector;
 	}

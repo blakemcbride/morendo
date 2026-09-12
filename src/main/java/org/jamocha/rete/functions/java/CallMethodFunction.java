@@ -30,6 +30,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -58,8 +59,8 @@ public class CallMethodFunction implements Function {
 	 * all primitives in their object equivalent, returning Object type
 	 * makes the most sense.
 	 */
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class CallMethodFunction implements Function {
 						BoundParam bp2 = (BoundParam)params[idx];
 						Object resolvedValue = null;
 						if (bp2.isObjectBinding()) {
-							resolvedValue = bp2.getValue(engine, Constants.OBJECT_TYPE);
+							resolvedValue = bp2.getValue(engine, ValueType.OBJECT);
 						} else {
 							resolvedValue = engine.getBinding(bp2.getVariableName());
 						}
@@ -94,7 +95,7 @@ public class CallMethodFunction implements Function {
 					}
 				}
 			}
-			Object instance = bp.getValue(engine, Constants.OBJECT_TYPE);
+			Object instance = bp.getValue(engine, ValueType.OBJECT);
 			Defclass dc = engine.findDefclass(instance);
 			// we check to make sure the Defclass exists
 			if (dc != null) {
@@ -102,19 +103,19 @@ public class CallMethodFunction implements Function {
 				if (callm != null) {
 					try {
 						rtn = callm.invoke(instance, callparam.toArray());
-						int rtype = getMethodReturnType(callm);
+						ValueType rtype = getMethodReturnType(callm);
 						rvalue = new DefaultReturnValue(rtype,
 								rtn);
 					} catch (IllegalAccessException e) {
-						rvalue = new DefaultReturnValue(Constants.STRING_TYPE,
+						rvalue = new DefaultReturnValue(ValueType.STRING,
 								"IllegalAccessException: could not invoke the method due to access privledge");
 					} catch (InvocationTargetException e) {
-						rvalue = new DefaultReturnValue(Constants.STRING_TYPE,
+						rvalue = new DefaultReturnValue(ValueType.STRING,
 								"InvocationTargetException: could not invoke the method");
 					}
-				} else rvalue = new DefaultReturnValue(Constants.STRING_TYPE,
+				} else rvalue = new DefaultReturnValue(ValueType.STRING,
 						"Unknown method " + slot.getStringValue());
-			} else rvalue = new DefaultReturnValue(Constants.STRING_TYPE,
+			} else rvalue = new DefaultReturnValue(ValueType.STRING,
 						"Variable " + bp.getVariableName() + " has no associated defclass");
 		}
 		drv.addReturnValue(rvalue);
@@ -144,26 +145,26 @@ public class CallMethodFunction implements Function {
 	 * @param m
 	 * @return
 	 */
-	public int getMethodReturnType(Method m) {
+	public ValueType getMethodReturnType(Method m) {
 		if (m.getReturnType() == String.class) {
-			return Constants.STRING_TYPE;
+			return ValueType.STRING;
 		} else if (m.getReturnType() == int.class
 				|| m.getReturnType() == Integer.class) {
-			return Constants.INT_PRIM_TYPE;
+			return ValueType.INT_PRIM;
 		} else if (m.getReturnType() == short.class
 				|| m.getReturnType() == Short.class) {
-			return Constants.SHORT_PRIM_TYPE;
+			return ValueType.SHORT_PRIM;
 		} else if (m.getReturnType() == long.class
 				|| m.getReturnType() == Long.class) {
-			return Constants.LONG_PRIM_TYPE;
+			return ValueType.LONG_PRIM;
 		} else if (m.getReturnType() == float.class
 				|| m.getReturnType() == Float.class) {
-			return Constants.FLOAT_PRIM_TYPE;
+			return ValueType.FLOAT_PRIM;
 		} else if (m.getReturnType() == double.class
 				|| m.getReturnType() == Double.class) {
-			return Constants.DOUBLE_PRIM_TYPE;
+			return ValueType.DOUBLE_PRIM;
 		} else {
-			return Constants.OBJECT_TYPE;
+			return ValueType.OBJECT;
 		}
 	}
 

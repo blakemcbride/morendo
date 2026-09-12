@@ -9,6 +9,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 public class ListCubesFunction implements Function {
 
@@ -38,8 +39,8 @@ public class ListCubesFunction implements Function {
 		return new Class<?>[0];
 	}
 
-	public int getReturnType() {
-		return 0;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

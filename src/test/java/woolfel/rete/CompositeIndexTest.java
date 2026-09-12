@@ -27,6 +27,7 @@ import org.jamocha.rete.Fact;
 import woolfel.examples.model.TestBean2;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.jamocha.rete.Operator;
 
 
 /**
@@ -57,7 +58,7 @@ public class CompositeIndexTest {
         Fact fact = dtemp.createFact(bean,dc,1);
         assertNotNull(fact);
         System.out.println(fact.toFactString());
-        CompositeIndex ci = new CompositeIndex("attr1",Constants.EQUAL,fact.getSlotValue(0));
+        CompositeIndex ci = new CompositeIndex("attr1",Operator.EQUAL,fact.getSlotValue(0));
         assertNotNull(ci);
         System.out.println(ci.toPPString());
     }
@@ -82,7 +83,7 @@ public class CompositeIndexTest {
         assertNotNull(fact);
         System.out.println(fact.toFactString());
         CompositeIndex ci = 
-            new CompositeIndex("attr1",Constants.NOTEQUAL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.NOTEQUAL,fact.getSlotValue(0));
         assertNotNull(ci);
         System.out.println(ci.toPPString());
     }
@@ -106,7 +107,7 @@ public class CompositeIndexTest {
         assertNotNull(fact);
         System.out.println(fact.toFactString());
         CompositeIndex ci = 
-            new CompositeIndex("attr1",Constants.NILL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.NILL,fact.getSlotValue(0));
         assertNotNull(ci);
         System.out.println(ci.toPPString());
     }
@@ -131,7 +132,7 @@ public class CompositeIndexTest {
         assertNotNull(fact);
         System.out.println(fact.toFactString());
         CompositeIndex ci = 
-            new CompositeIndex("attr1",Constants.NOTNILL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.NOTNILL,fact.getSlotValue(0));
         assertNotNull(ci);
         System.out.println(ci.toPPString());
     }
@@ -157,26 +158,26 @@ public class CompositeIndexTest {
         assertNotNull(fact);
         System.out.println(fact.toFactString());
         CompositeIndex ci = 
-            new CompositeIndex("attr1",Constants.EQUAL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.EQUAL,fact.getSlotValue(0));
         assertNotNull(ci);
         System.out.println(ci.toPPString());
         HashMap map = new HashMap();
         map.put(ci,bean);
         
         CompositeIndex ci2 = 
-            new CompositeIndex("attr1",Constants.EQUAL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.EQUAL,fact.getSlotValue(0));
         assertTrue(map.containsKey(ci2));
         
         CompositeIndex ci3 = 
-            new CompositeIndex("attr1",Constants.NOTEQUAL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.NOTEQUAL,fact.getSlotValue(0));
         assertFalse(map.containsKey(ci3));
         
         CompositeIndex ci4 = 
-            new CompositeIndex("attr1",Constants.NILL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.NILL,fact.getSlotValue(0));
         assertFalse(map.containsKey(ci4));
         
         CompositeIndex ci5 = 
-            new CompositeIndex("attr1",Constants.NOTNILL,fact.getSlotValue(0));
+            new CompositeIndex("attr1",Operator.NOTNILL,fact.getSlotValue(0));
         assertFalse(map.containsKey(ci5));
     }
     
@@ -201,26 +202,26 @@ public class CompositeIndexTest {
         assertNotNull(fact);
         System.out.println(fact.toFactString());
         CompositeIndex ci = 
-            new CompositeIndex("attr2",Constants.EQUAL,fact.getSlotValue(1));
+            new CompositeIndex("attr2",Operator.EQUAL,fact.getSlotValue(1));
         assertNotNull(ci);
         System.out.println(ci.toPPString());
         HashMap map = new HashMap();
         map.put(ci,bean);
         
         CompositeIndex ci2 = 
-            new CompositeIndex("attr2",Constants.EQUAL,fact.getSlotValue(1));
+            new CompositeIndex("attr2",Operator.EQUAL,fact.getSlotValue(1));
         assertTrue(map.containsKey(ci2));
         
         CompositeIndex ci3 = 
-            new CompositeIndex("attr2",Constants.NOTEQUAL,fact.getSlotValue(1));
+            new CompositeIndex("attr2",Operator.NOTEQUAL,fact.getSlotValue(1));
         assertFalse(map.containsKey(ci3));
         
         CompositeIndex ci4 = 
-            new CompositeIndex("attr2",Constants.NILL,fact.getSlotValue(1));
+            new CompositeIndex("attr2",Operator.NILL,fact.getSlotValue(1));
         assertFalse(map.containsKey(ci4));
         
         CompositeIndex ci5 = 
-            new CompositeIndex("attr2",Constants.NOTNILL,fact.getSlotValue(1));
+            new CompositeIndex("attr2",Operator.NOTNILL,fact.getSlotValue(1));
         assertFalse(map.containsKey(ci5));
     }
 }

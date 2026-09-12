@@ -23,6 +23,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * AgentStatusResponse prints the information from an agent
@@ -65,7 +66,7 @@ public class AgentStatusResponseFunction implements Function {
 			engine.writeMessage(response, "t");
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rval = new DefaultReturnValue(Constants.STRING_TYPE, response);
+		DefaultReturnValue rval = new DefaultReturnValue(ValueType.STRING, response);
 		ret.addReturnValue(rval);
 		return ret;
 	}
@@ -78,8 +79,8 @@ public class AgentStatusResponseFunction implements Function {
 		return new Class<?>[]{long.class, long.class};
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

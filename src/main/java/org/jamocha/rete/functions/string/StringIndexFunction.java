@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -46,8 +47,8 @@ public class StringIndexFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -68,11 +69,11 @@ public class StringIndexFunction implements Function {
 		DefaultReturnVector ret = new DefaultReturnVector();
 		if (index == -1) {
 			DefaultReturnValue rv = new DefaultReturnValue(
-					Constants.BOOLEAN_OBJECT, Boolean.FALSE);
+					ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
 			ret.addReturnValue(rv);
 		} else {
 			DefaultReturnValue rv = new DefaultReturnValue(
-					Constants.INTEGER_OBJECT, Integer.valueOf(++index));
+					ValueType.INTEGER_OBJECT, Integer.valueOf(++index));
 			ret.addReturnValue(rv);
 		}
 		return ret;

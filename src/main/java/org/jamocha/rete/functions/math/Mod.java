@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -48,8 +49,8 @@ public class Mod implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BIG_DECIMAL;
+	public ValueType getReturnType() {
+		return ValueType.BIG_DECIMAL;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -59,19 +60,19 @@ public class Mod implements Function {
 			if (params[0] instanceof ValueParam) {
 				bdval = params[0].getBigDecimalValue();
 			} else {
-				bdval = new BigDecimal( params[0].getValue(engine, Constants.BIG_DECIMAL).toString() );
+				bdval = new BigDecimal( params[0].getValue(engine, ValueType.BIG_DECIMAL).toString() );
 			}
 			if (params[1] instanceof ValueParam) {
 				right = params[1].getBigDecimalValue();
 			}else { 
-				right = new BigDecimal( params[1].getValue(engine, Constants.BIG_DECIMAL).toString() );
+				right = new BigDecimal( params[1].getValue(engine, ValueType.BIG_DECIMAL).toString() );
 			}
 			bdval = bdval.remainder(right);
 			bdval = bdval.abs();
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
-			new DefaultReturnValue(Constants.BIG_DECIMAL,bdval);
+			new DefaultReturnValue(ValueType.BIG_DECIMAL,bdval);
 		ret.addReturnValue(rv);
 		return ret;
 	}

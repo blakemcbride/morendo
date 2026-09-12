@@ -34,6 +34,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rule.*;
 import org.jamocha.rete.util.IOUtilities;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -55,8 +56,8 @@ public class BatchFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	/**
@@ -76,11 +77,11 @@ public class BatchFunction implements Function {
                 } catch (FileNotFoundException e) {
 					// we should report the error
 					rv.addReturnValue(new DefaultReturnValue(
-							Constants.BOOLEAN_OBJECT, Boolean.FALSE));
+							ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
                     engine.writeMessage(e.getMessage() + Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);
                 } catch (IOException e) {
                     rv.addReturnValue(new DefaultReturnValue(
-                            Constants.BOOLEAN_OBJECT, Boolean.FALSE));
+                            ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
                     engine.writeMessage(e.getMessage() + Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);
 				}
 			}
@@ -111,7 +112,7 @@ public class BatchFunction implements Function {
 			}
 			if (rv != null) {
 				rv.addReturnValue(new DefaultReturnValue(
-						Constants.BOOLEAN_OBJECT, Boolean.TRUE));
+						ValueType.BOOLEAN_OBJECT, Boolean.TRUE));
 			}
 		} catch (ParseException e) {
             engine.writeMessage(e.getMessage() + Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);

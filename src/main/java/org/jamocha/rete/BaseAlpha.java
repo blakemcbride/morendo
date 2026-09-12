@@ -34,7 +34,7 @@ public abstract class BaseAlpha extends BaseNode {
 	/**
      * The operator to compare two values
      */
-    protected int operator = Constants.EQUAL;
+    protected Operator operator = Operator.EQUAL;
 
 
     public BaseAlpha(int id){
@@ -180,7 +180,7 @@ public abstract class BaseAlpha extends BaseNode {
      * operator. To get the string representation, it should
      * be converted.
      */
-    public int getOperator() {
+    public Operator getOperator() {
         return this.operator;
     }
     

@@ -63,27 +63,27 @@ public class Slot extends BaseSlot {
      */
     public void setValue(Object val){
         this.value = val;
-        if (this.getValueType() < 0) {
+        if (this.getValueType() == null) {
             inspectType();
         }
     }
     
     /**
-     * method will look at the value and set the int type
+     * method will look at the value and set the ValueType type
      */
     protected void inspectType() {
         if (this.value instanceof Double) {
-            this.setValueType(Constants.DOUBLE_PRIM_TYPE);
+            this.setValueType(ValueType.DOUBLE_PRIM);
         } else if (this.value instanceof Long) {
-            this.setValueType(Constants.LONG_PRIM_TYPE);
+            this.setValueType(ValueType.LONG_PRIM);
         } else if (this.value instanceof Float) {
-            this.setValueType(Constants.FLOAT_PRIM_TYPE);
+            this.setValueType(ValueType.FLOAT_PRIM);
         } else if (this.value instanceof Short) {
-            this.setValueType(Constants.SHORT_PRIM_TYPE);
+            this.setValueType(ValueType.SHORT_PRIM);
         } else if (this.value instanceof Integer) {
-            this.setValueType(Constants.INT_PRIM_TYPE);
+            this.setValueType(ValueType.INT_PRIM);
         } else {
-            this.setValueType(Constants.OBJECT_TYPE);
+            this.setValueType(ValueType.OBJECT);
         }
     }
     
@@ -100,7 +100,7 @@ public class Slot extends BaseSlot {
     }
     
 	public String valueToString() {
-		if (this.getValueType() == Constants.STRING_TYPE) {
+		if (this.getValueType() == ValueType.STRING) {
 			return "\"" + this.value.toString() + "\"";
 		} else {
 			return this.value.toString();

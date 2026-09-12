@@ -13,6 +13,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Dave Woodman 9 May 2021
@@ -44,10 +45,10 @@ public class FirstFunction implements Function {
 			if (params[0] instanceof ValueParam) {
 				list = ((ValueParam)params[0]).getValue();
 			} else {
-				list = params[0].getValue(engine, Constants.OBJECT_TYPE);
+				list = params[0].getValue(engine, ValueType.OBJECT);
 				if (list == null )  // Oh, Let's try an array instead...
 					// Could also do this... list = (Object)params[0].getValue();
-					list = params[0].getValue(engine, Constants.ARRAY_TYPE);
+					list = params[0].getValue(engine, ValueType.ARRAY);
 			}
 			if (list.getClass().isArray()) {
 				Object[] lval = (Object[])list;
@@ -57,7 +58,7 @@ public class FirstFunction implements Function {
 					val = ""; // Should never get here!
 			} else val = list; // Last item
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT,
 				val);
 		ret.addReturnValue(rv);
 		return ret;
@@ -71,8 +72,8 @@ public class FirstFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

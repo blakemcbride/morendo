@@ -33,6 +33,7 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defquery;
+import org.jamocha.rete.Operator;
 
 /**
  * QueryFuncAlphaNode is similar to AlphaNode with the difference that
@@ -77,7 +78,7 @@ public class QueryFuncAlphaNode extends QueryBaseAlphaCondition {
 		this.slot = sl;
 	}
 	
-	public void setOperator(int opr) {
+	public void setOperator(Operator opr) {
 		this.operator = opr;
 	}
 	

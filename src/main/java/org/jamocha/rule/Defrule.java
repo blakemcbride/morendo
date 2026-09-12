@@ -33,6 +33,7 @@ import org.jamocha.rete.Module;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.Scope;
 import org.jamocha.rete.Template;
+import org.jamocha.rete.Operator;
 
 /**
  * @author Peter Lin
@@ -417,7 +418,7 @@ public class Defrule implements Rule, Scope {
 		}
 	}
 	
-	public Binding copyPredicateBinding(String varName, int operator) {
+	public Binding copyPredicateBinding(String varName, Operator operator) {
 		Object value = this.bindings.get(varName);
 		if (value != null) {
 			if (value instanceof Binding2 b) {

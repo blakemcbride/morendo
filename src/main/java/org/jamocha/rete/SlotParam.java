@@ -26,7 +26,7 @@ public final class SlotParam extends AbstractParam {
      * 
      */
 
-    protected int valueType = Constants.SLOT_TYPE;
+    protected ValueType valueType = ValueType.SLOT;
 
 	protected Slot slot = null;
 
@@ -43,7 +43,7 @@ public final class SlotParam extends AbstractParam {
 	/* (non-Javadoc)
 	 * @see woolfel.engine.rete.ReturnValue#getValueType()
 	 */
-	public int getValueType() {
+	public ValueType getValueType() {
 		return this.valueType;
 	}
 
@@ -62,7 +62,7 @@ public final class SlotParam extends AbstractParam {
      * Slot parameter is only used internally, so normal user functions
      * should not need to deal with slot parameters.
      */
-    public Object getValue(Rete engine, int valueType) {
+    public Object getValue(Rete engine, ValueType valueType) {
         return this.slot;
     }
 

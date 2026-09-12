@@ -28,6 +28,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -50,8 +51,8 @@ public class PrintFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	/**
@@ -78,9 +79,9 @@ public class PrintFunction implements Function {
             				engine.writeMessage(v.toString(),output);
             			}
             		} else {
-            			rv.addReturnValue(new DefaultReturnValue(Constants.STRING_TYPE,
+            			rv.addReturnValue(new DefaultReturnValue(ValueType.STRING,
             					"Error: Variable " + bp.getVariableName() + " is not bound"));
-            			rv.addReturnValue(new DefaultReturnValue(Constants.BOOLEAN_OBJECT,
+            			rv.addReturnValue(new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,
             					Boolean.FALSE));
             		}
             	} else if (params[idx].getValue() != null &&

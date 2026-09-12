@@ -26,6 +26,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import org.jamocha.rete.ValueType;
 
 public class AddMinutesFunction extends AbstractTimeFunction implements
 		Function {
@@ -50,7 +51,7 @@ public class AddMinutesFunction extends AbstractTimeFunction implements
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
-			new DefaultReturnValue(Constants.DATE_TYPE, date);
+			new DefaultReturnValue(ValueType.DATE, date);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -63,8 +64,8 @@ public class AddMinutesFunction extends AbstractTimeFunction implements
 		return new Class<?>[]{Instant.class};
 	}
 
-	public int getReturnType() {
-		return Constants.DATE_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.DATE;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

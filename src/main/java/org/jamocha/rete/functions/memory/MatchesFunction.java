@@ -44,8 +44,8 @@ public class MatchesFunction extends BaseMatchFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-        return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
 	}
 
 	/**

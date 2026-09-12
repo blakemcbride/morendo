@@ -10,6 +10,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Simple union function that adds the items to a list and gets
@@ -36,7 +37,7 @@ public class UnionFunction implements Function {
 		ArrayList<Object> list = new ArrayList<>();
 		if (params != null && params.length > 0) {
 			for (int idx=0; idx < params.length; idx++) {
-				Object v = params[idx].getValue(engine, Constants.OBJECT_TYPE);
+				Object v = params[idx].getValue(engine, ValueType.OBJECT);
 				if (v.getClass().isArray()) {
 					Object[] array = (Object[])v;
 					for (int idz=0; idz < array.length; idz++) {
@@ -49,7 +50,7 @@ public class UnionFunction implements Function {
 		}
 		value = new Object[list.size()];
 		value = list.toArray(value);
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY,
 				value);
 		ret.addReturnValue(rv);
 		return ret;
@@ -63,8 +64,8 @@ public class UnionFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.ARRAY_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.ARRAY;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

@@ -49,6 +49,7 @@ import org.jamocha.rule.ObjectCondition;
 import org.jamocha.rule.PredicateConstraint;
 import org.jamocha.rule.Query;
 import org.jamocha.rule.Rule;
+import org.jamocha.rete.Operator;
 
 /**
  * 
@@ -84,7 +85,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
             } else if (cnstr instanceof PredicateConstraint predicateConstraint) {
             	if (rule.getBinding((predicateConstraint).getVariableName()) == null) {
                 	PredicateConstraint pc = predicateConstraint;
-                	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
+                	Operator operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 	Binding2 bind = new Binding2(operator);
                 	bind.setRightIndex(templ.getColumnIndex(pc.getName()));
                 	bind.setVarName(pc.getVariableName());
@@ -113,7 +114,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
             } else if (cnstr instanceof PredicateConstraint predicateConstraintValue) {
             	if (query.getBinding((predicateConstraintValue).getVariableName()) == null) {
                 	PredicateConstraint pc = predicateConstraintValue;
-                	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
+                	Operator operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 	Binding2 bind = new Binding2(operator);
                 	bind.setRightIndex(templ.getColumnIndex(pc.getName()));
                 	bind.setVarName(pc.getVariableName());
@@ -294,7 +295,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		for (int idz=0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
 	   		if (cst instanceof PredicateConstraint pc) {
-	   	    	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
+	   	    	Operator operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 if (pc.reverseOperator()) {
                 	operator = ConversionUtils.getOppositeOperatorCode(operator);
                 }
@@ -322,7 +323,7 @@ public class CubeQueryConditionCompiler extends AbstractConditionCompiler{
 		for (int idz=0; idz < Constraints.size(); idz++) {
 			Object cst = Constraints.get(idz);
 	   		if (cst instanceof PredicateConstraint pc) {
-	   	    	int operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
+	   	    	Operator operator = ConversionUtils.getOperatorCode(pc.getFunctionName());
                 if (pc.reverseOperator()) {
                 	operator = ConversionUtils.getOppositeOperatorCode(operator);
                 }

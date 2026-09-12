@@ -32,6 +32,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defquery;
+import org.jamocha.rete.Operator;
 
 /**
  * 
@@ -151,8 +152,8 @@ public class QueryNotJoinFrst extends QueryBaseNot {
      * @param rightId
      * @return
      */
-    public boolean evaluate(Fact left, int leftId, Fact right, int rightId, int opr){
-        if (opr == Constants.NOTEQUAL) {
+    public boolean evaluate(Fact left, int leftId, Fact right, int rightId, Operator opr){
+        if (opr == Operator.NOTEQUAL) {
             return Evaluate.evaluateNotEqual(left.getSlotValue(leftId),
                     right.getSlotValue(rightId));
         } else {

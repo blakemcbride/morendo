@@ -35,6 +35,7 @@ import org.jamocha.rete.SlotParam;
 import org.jamocha.rete.Template;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -65,8 +66,8 @@ public class ModifyFunction implements RuleFunction {
 		this.triggerFacts = facts;
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -123,7 +124,7 @@ public class ModifyFunction implements RuleFunction {
 		}
 
 		DefaultReturnVector rv = new DefaultReturnVector();
-		DefaultReturnValue rval = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, exec);
+		DefaultReturnValue rval = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, exec);
 		rv.addReturnValue(rval);
 		return rv;
 	}

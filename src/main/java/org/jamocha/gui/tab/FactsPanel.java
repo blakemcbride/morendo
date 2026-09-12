@@ -48,6 +48,7 @@ import org.jamocha.rete.BaseSlot;
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.Fact;
 import org.jamocha.rete.exception.RetractException;
+import org.jamocha.rete.ValueType;
 
 /**
  * This Panel shows all facts currently in the Jamocha engine. You can assert
@@ -242,7 +243,7 @@ public final class FactsPanel extends AbstractJamochaPanel implements ActionList
 					BaseSlot[] slots = fact.getDeftemplate().getAllSlots();
 					for (BaseSlot slot : slots) {
 						buffer.append("\n    (" + slot.getName() + " ");
-						if (slot.getValueType() == Constants.ARRAY_TYPE) { 
+						if (slot.getValueType() == ValueType.ARRAY) { 
 							//Just turn the array into a string
 							buffer.append(Arrays.toString((Object[])fact.getSlotValue(slot.getId())));
 						} else {

@@ -44,7 +44,7 @@ public final class BoundParam extends AbstractParam {
     /**
      * the int value defining the valueType
      */
-    protected int valueType = -1;
+    protected ValueType valueType = null;
 
     /**
      * the row id of the fact as defined by the rule
@@ -73,21 +73,21 @@ public final class BoundParam extends AbstractParam {
 	/**
 	 * 
 	 */
-	public BoundParam(int col, int vType) {
+	public BoundParam(int col, ValueType vType) {
 		super();
         this.column = col;
         this.valueType = vType;
         this.objBinding = true;
 	}
 
-    public BoundParam(int col, int vType, boolean objBinding) {
+    public BoundParam(int col, ValueType vType, boolean objBinding) {
         super();
         this.column = col;
         this.valueType = vType;
         this.objBinding = objBinding;
     }
     
-    public BoundParam(int row, int col, int vType, boolean obj) {
+    public BoundParam(int row, int col, ValueType vType, boolean obj) {
     	super();
     	this.rowId = row;
     	this.column = col;
@@ -98,7 +98,7 @@ public final class BoundParam extends AbstractParam {
     public BoundParam(Fact fact) {
         this.fact = fact;
         this.objBinding = true;
-        this.valueType = Constants.FACT_TYPE;
+        this.valueType = ValueType.FACT;
     }
     
     public String getVariableName() {
@@ -116,7 +116,7 @@ public final class BoundParam extends AbstractParam {
 	/**
      * get the value type
 	 */
-	public int getValueType() {
+	public ValueType getValueType() {
 		return this.valueType;
 	}
 
@@ -140,8 +140,8 @@ public final class BoundParam extends AbstractParam {
     /**
      * method will try to resolve the variable and return the value.
      */
-    public Object getValue(Rete engine, int valueType) {
-    	if (valueType == Constants.OBJECT_TYPE && this.fact != null) {
+    public Object getValue(Rete engine, ValueType valueType) {
+    	if (valueType == ValueType.OBJECT && this.fact != null) {
     		return this.fact.getObjectInstance();
     	} else if (fact != null) {
             return this.fact.getSlotValue(this.column);

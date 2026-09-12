@@ -109,7 +109,7 @@ public class Shell {
 		if (message instanceof DefaultReturnVector rv) {
 			if (rv.getItems().size() > 0) {
 				ReturnValue rval = rv.getItems().get(0);
-				if (rval.getValueType() == Constants.ARRAY_TYPE || rval.getValueType() == Constants.LIST_TYPE) {
+				if (rval.getValueType() == ValueType.ARRAY || rval.getValueType() == ValueType.LIST) {
 					System.out.println(Arrays.toString((Object[]) rval.getValue()));
 				} else {
 					System.out.print(message.toString());

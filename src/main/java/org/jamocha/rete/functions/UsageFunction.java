@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Karl-Heinz Krempels
@@ -50,8 +51,8 @@ public class UsageFunction implements Function {
 	}
 
 	
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -89,7 +90,7 @@ public class UsageFunction implements Function {
 			} else sval = this.toPPString(null,0);
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.STRING_TYPE, sval);
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING, sval);
 		ret.addReturnValue(rv);
 		return ret;
 	}

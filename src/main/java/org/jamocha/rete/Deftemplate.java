@@ -307,7 +307,7 @@ public class Deftemplate implements Template, Serializable {
 					if (s.value == null) {
 						values[idx].value = Constants.NIL_SYMBOL;
 					} else
-					if (values[idx].getValueType() == Constants.STRING_TYPE
+					if (values[idx].getValueType() == ValueType.STRING
 							&& !(s.value instanceof BoundParam)) {
 						values[idx].value = s.value.toString();
 					} else {
@@ -346,7 +346,7 @@ public class Deftemplate implements Template, Serializable {
                     } else {
                         if (s.value == null) {
                             values[idx].value = Constants.NIL_SYMBOL;
-                        } else if (values[idx].getValueType() == Constants.STRING_TYPE
+                        } else if (values[idx].getValueType() == ValueType.STRING
                                 && !(s.value instanceof BoundParam)) {
                             values[idx].value = s.value.toString();
                         } else if (s.value instanceof BoundParam) {
@@ -400,7 +400,7 @@ public class Deftemplate implements Template, Serializable {
                         if (s.value == null) {
                             values[idx].value = Constants.NIL_SYMBOL;
                         } else
-                        if (values[idx].getValueType() == Constants.STRING_TYPE
+                        if (values[idx].getValueType() == ValueType.STRING
                                 && !(s.value instanceof BoundParam)) {
                             values[idx].value = s.value.toString();
                         } else if (s.value instanceof BoundParam) {
@@ -461,7 +461,7 @@ public class Deftemplate implements Template, Serializable {
 	}
 	
 	/**
-	 * Method will return a string format with the int type code for the slot
+	 * Method will return a string format with the ValueType type code for the slot
 	 * type
 	 */
 	public String toString() {

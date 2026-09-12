@@ -9,6 +9,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * ReturnMessage is a dummy function and isn't implemented. It's here so that
@@ -56,8 +57,8 @@ public class ReturnMessage implements Function, Serializable {
 		return new Class[]{Object.class};
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

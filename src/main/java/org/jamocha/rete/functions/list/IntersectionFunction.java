@@ -11,6 +11,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * 
@@ -33,8 +34,8 @@ public class IntersectionFunction implements Function {
 		DefaultReturnVector ret = new DefaultReturnVector();
 		Object[] result = null;
 		if (params != null && params.length == 2) {
-			Object array1 = params[0].getValue(engine, Constants.OBJECT_TYPE);
-			Object array2 = params[1].getValue(engine, Constants.OBJECT_TYPE);
+			Object array1 = params[0].getValue(engine, ValueType.OBJECT);
+			Object array2 = params[1].getValue(engine, ValueType.OBJECT);
 			if (array1 instanceof Object[] && array2 instanceof Object[]) {
 				Set<Object> set1 = convertToList((Object[])array1);
 				Set<Object> set2 = convertToList((Object[])array2);
@@ -43,7 +44,7 @@ public class IntersectionFunction implements Function {
 			}
 		}
 		
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY,
 				result);
 		ret.addReturnValue(rv);
 		return ret;
@@ -64,8 +65,8 @@ public class IntersectionFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.ARRAY_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.ARRAY;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

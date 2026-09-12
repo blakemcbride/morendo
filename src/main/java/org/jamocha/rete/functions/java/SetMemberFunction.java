@@ -29,6 +29,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.StringParam;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -56,8 +57,8 @@ public class SetMemberFunction implements Function {
 	/* (non-Javadoc)
 	 * @see woolfel.engine.rete.Function#getReturnType()
 	 */
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	/* (non-Javadoc)
@@ -68,7 +69,7 @@ public class SetMemberFunction implements Function {
             BoundParam bp = (BoundParam)params[0];
             ValueParam slot = (ValueParam)params[1];
             ValueParam val = (ValueParam)params[2];
-            Object instance = bp.getValue(engine, Constants.OBJECT_TYPE);
+            Object instance = bp.getValue(engine, ValueType.OBJECT);
             Defclass dc = engine.findDefclass(instance);
             // we check to make sure the Defclass exists
             if (dc != null) {

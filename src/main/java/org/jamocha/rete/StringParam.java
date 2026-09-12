@@ -29,14 +29,14 @@ public final class StringParam extends AbstractParam {
 	 * 
 	 */
 
-	protected int valueType;
+	protected ValueType valueType;
 
 	protected String value = null;
 
 	/**
 	 * 
 	 */
-	public StringParam(int vtype, String value) {
+	public StringParam(ValueType vtype, String value) {
 		super();
 		this.valueType = vtype;
 		this.value = value;
@@ -45,7 +45,7 @@ public final class StringParam extends AbstractParam {
 	/**
 	 * The value types are defined in woolfel.engine.rete.Constants
 	 */
-	public int getValueType() {
+	public ValueType getValueType() {
 		return this.valueType;
 	}
 
@@ -61,7 +61,7 @@ public final class StringParam extends AbstractParam {
      * String parameters do not need to do any lookup, so it just
      * returns the value.
      */
-    public Object getValue(Rete engine, int valueType) {
+    public Object getValue(Rete engine, ValueType valueType) {
         return this.value;
     }
     
@@ -70,6 +70,6 @@ public final class StringParam extends AbstractParam {
 	 */
 	public void reset() {
 		this.value = null;
-		this.valueType = Constants.OBJECT_TYPE;
+		this.valueType = ValueType.OBJECT;
 	}
 }

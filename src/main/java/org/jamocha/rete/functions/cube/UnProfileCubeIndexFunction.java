@@ -8,6 +8,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 public class UnProfileCubeIndexFunction implements Function {
 
@@ -33,7 +34,7 @@ public class UnProfileCubeIndexFunction implements Function {
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, profile);
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, profile);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -46,8 +47,8 @@ public class UnProfileCubeIndexFunction implements Function {
 		return new Class<?>[]{String.class};
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

@@ -38,6 +38,7 @@ import org.jamocha.rule.Condition;
 import org.jamocha.rule.Query;
 import org.jamocha.rule.Rule;
 import org.jamocha.rule.TestCondition;
+import org.jamocha.rete.ValueType;
 
 /**
  * 
@@ -94,7 +95,7 @@ public class TestConditionCompiler implements ConditionCompiler {
                 // now we need to resolve and setup the BoundParam
                 Binding b = rule.getBinding(bpm.getVariableName());
                 BoundParam newpm = new BoundParam(b.getLeftRow(),
-                        b.getLeftIndex(),9,bpm.isObjectBinding());
+                        b.getLeftIndex(), ValueType.OBJECT, bpm.isObjectBinding());
                 newpm.setVariableName(bpm.getVariableName());
                 pms[ipm] = newpm;
             } else if (oldpm[ipm] instanceof FunctionParam2) {
@@ -128,7 +129,7 @@ public class TestConditionCompiler implements ConditionCompiler {
                 // now we need to resolve and setup the BoundParam
                 Binding b = query.getBinding(bpm.getVariableName());
                 BoundParam newpm = new BoundParam(b.getLeftRow(),
-                        b.getLeftIndex(),9,bpm.isObjectBinding());
+                        b.getLeftIndex(), ValueType.OBJECT, bpm.isObjectBinding());
                 newpm.setVariableName(bpm.getVariableName());
                 pms[ipm] = newpm;
             } else if (oldpm[ipm] instanceof FunctionParam2) {

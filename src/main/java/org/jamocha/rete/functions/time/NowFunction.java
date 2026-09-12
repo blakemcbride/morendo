@@ -25,6 +25,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import java.time.Instant;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -46,8 +47,8 @@ public class NowFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.LONG_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.LONG_OBJECT;
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class NowFunction implements Function {
 		Instant now = Instant.now();
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
-			new DefaultReturnValue(Constants.OBJECT_TYPE,now);
+			new DefaultReturnValue(ValueType.OBJECT,now);
 		ret.addReturnValue(rv);
 		return ret;
 	}

@@ -28,6 +28,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Strategy;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.strategies.Strategies;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function is used to register a new strategy defined by the user. The user
@@ -46,8 +47,8 @@ public class DefstrategyFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -84,7 +85,7 @@ public class DefstrategyFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, def);
+				ValueType.BOOLEAN_OBJECT, def);
 		ret.addReturnValue(rv);
 		return ret;
 	}

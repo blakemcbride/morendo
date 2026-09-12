@@ -38,7 +38,7 @@ public final class FunctionParam extends AbstractParam {
      * The function to call
      */
     protected Function func = null;
-    protected int valueType = -1;
+    protected ValueType valueType = null;
     protected Object value = null;
     protected Fact[] facts;
     protected BoundParam[] params = null;
@@ -56,7 +56,7 @@ public final class FunctionParam extends AbstractParam {
 	/**
      * Return the return value type.
 	 */
-	public int getValueType() {
+	public ValueType getValueType() {
 		return this.valueType;
 	}
 
@@ -70,7 +70,7 @@ public final class FunctionParam extends AbstractParam {
 		return this.value;
 	}
 
-    public Object getValue(Rete engine, int valueType) {
+    public Object getValue(Rete engine, ValueType valueType) {
         initParams();
         ReturnVector rval = this.func.executeFunction(engine,this.params);
         return rval.firstReturnValue().getBigDecimalValue();

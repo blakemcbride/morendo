@@ -14,6 +14,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function will parse a string and return a Map<String,Integer> after it
@@ -33,8 +34,8 @@ public class StopwordFunction implements Function {
 	public StopwordFunction() {
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -43,7 +44,7 @@ public class StopwordFunction implements Function {
 			try {
 				String rawText = params[0].getStringValue();
 				BoundParam bp = (BoundParam) params[1];
-				Object resolvedValue = bp.getValue(engine, Constants.OBJECT_TYPE);
+				Object resolvedValue = bp.getValue(engine, ValueType.OBJECT);
 				if (resolvedValue instanceof String[]) {
 					Set<String> stop = this.read((String[]) resolvedValue);
 					for (String t : rawText.trim().split("\\s+")) {
@@ -63,7 +64,7 @@ public class StopwordFunction implements Function {
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT,
 				wordcount);
 		ret.addReturnValue(rv);
 		return ret;

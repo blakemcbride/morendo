@@ -33,16 +33,16 @@ public class ConversionUtils {
     
     static {
         OPR_MAP = new HashMap<>();
-        OPR_MAP.put(String.valueOf(Constants.ADD),Constants.ADD_STRING);
-        OPR_MAP.put(String.valueOf(Constants.SUBTRACT),Constants.SUBTRACT_STRING);
-        OPR_MAP.put(String.valueOf(Constants.MULTIPLY),Constants.MULTIPLY_STRING);
-        OPR_MAP.put(String.valueOf(Constants.DIVIDE),Constants.DIVIDE_STRING);
-        OPR_MAP.put(String.valueOf(Constants.LESS),Constants.LESS_STRING);
-        OPR_MAP.put(String.valueOf(Constants.LESSEQUAL),Constants.LESSEQUAL_STRING);
-        OPR_MAP.put(String.valueOf(Constants.GREATER),Constants.GREATER_STRING);
-        OPR_MAP.put(String.valueOf(Constants.GREATEREQUAL),Constants.GREATEREQUAL_STRING);
-        OPR_MAP.put(String.valueOf(Constants.EQUAL),Constants.EQUAL_STRING);
-        OPR_MAP.put(String.valueOf(Constants.NOTEQUAL),Constants.NOTEQUAL_STRING);
+        OPR_MAP.put(String.valueOf(Operator.ADD),Constants.ADD_STRING);
+        OPR_MAP.put(String.valueOf(Operator.SUBTRACT),Constants.SUBTRACT_STRING);
+        OPR_MAP.put(String.valueOf(Operator.MULTIPLY),Constants.MULTIPLY_STRING);
+        OPR_MAP.put(String.valueOf(Operator.DIVIDE),Constants.DIVIDE_STRING);
+        OPR_MAP.put(String.valueOf(Operator.LESS),Constants.LESS_STRING);
+        OPR_MAP.put(String.valueOf(Operator.LESSEQUAL),Constants.LESSEQUAL_STRING);
+        OPR_MAP.put(String.valueOf(Operator.GREATER),Constants.GREATER_STRING);
+        OPR_MAP.put(String.valueOf(Operator.GREATEREQUAL),Constants.GREATEREQUAL_STRING);
+        OPR_MAP.put(String.valueOf(Operator.EQUAL),Constants.EQUAL_STRING);
+        OPR_MAP.put(String.valueOf(Operator.NOTEQUAL),Constants.NOTEQUAL_STRING);
     }
     
     @SuppressWarnings("unused")
@@ -116,24 +116,24 @@ public class ConversionUtils {
         return Byte.valueOf(val);
     }
     
-    public static Object convert(int type, Object val) {
-    	if (type == Constants.INT_PRIM_TYPE || type == Constants.INTEGER_OBJECT) {
+    public static Object convert(ValueType type, Object val) {
+    	if (type == ValueType.INT_PRIM || type == ValueType.INTEGER_OBJECT) {
     		if (val instanceof BigDecimal bigDecimal) {
     			return Integer.valueOf((bigDecimal).intValue());
     		}
-    	} else if (type == Constants.SHORT_PRIM_TYPE || type == Constants.SHORT_OBJECT) {
+    	} else if (type == ValueType.SHORT_PRIM || type == ValueType.SHORT_OBJECT) {
     		if (val instanceof BigDecimal bigDecimalValue) {
     			return Short.valueOf((bigDecimalValue).shortValue());
     		}
-    	} else if (type == Constants.FLOAT_PRIM_TYPE || type == Constants.FLOAT_OBJECT) {
+    	} else if (type == ValueType.FLOAT_PRIM || type == ValueType.FLOAT_OBJECT) {
     		if (val instanceof BigDecimal) {
     			return Float.valueOf(((BigDecimal)val).floatValue());
     		}
-    	} else if (type == Constants.LONG_PRIM_TYPE || type == Constants.LONG_OBJECT) {
+    	} else if (type == ValueType.LONG_PRIM || type == ValueType.LONG_OBJECT) {
     		if (val instanceof BigDecimal) {
     			return Long.valueOf(((BigDecimal)val).longValue());
     		}
-    	} else if (type == Constants.DOUBLE_PRIM_TYPE || type == Constants.DOUBLE_OBJECT) {
+    	} else if (type == ValueType.DOUBLE_PRIM || type == ValueType.DOUBLE_OBJECT) {
     		if (val instanceof BigDecimal) {
     			return Double.valueOf(((BigDecimal)val).doubleValue());
     		}
@@ -145,7 +145,7 @@ public class ConversionUtils {
      * @param opr
      * @return
      */
-    public static String getPPOperator(int opr){
+    public static String getPPOperator(Operator opr){
         return OPR_MAP.get(String.valueOf(opr));
     }
     
@@ -229,118 +229,118 @@ public class ConversionUtils {
      * @param clzz
      * @return
      */
-    public static int getTypeCode(Class<?> clzz){
+    public static ValueType getTypeCode(Class<?> clzz){
         if (clzz.isArray()){
-            return Constants.ARRAY_TYPE;
+            return ValueType.ARRAY;
         } else if (clzz.isPrimitive()){
             if (clzz == int.class){
-                return Constants.INT_PRIM_TYPE;
+                return ValueType.INT_PRIM;
             } else if (clzz == short.class){
-                return Constants.SHORT_PRIM_TYPE;
+                return ValueType.SHORT_PRIM;
             } else if (clzz == long.class){
-                return Constants.LONG_PRIM_TYPE;
+                return ValueType.LONG_PRIM;
             } else if (clzz == float.class){
-                return Constants.FLOAT_PRIM_TYPE;
+                return ValueType.FLOAT_PRIM;
             } else if (clzz == byte.class){
-                return Constants.BYTE_PRIM_TYPE;
+                return ValueType.BYTE_PRIM;
             } else if (clzz == double.class){
-                return Constants.DOUBLE_PRIM_TYPE;
+                return ValueType.DOUBLE_PRIM;
             } else if (clzz == boolean.class){
-                return Constants.BOOLEAN_PRIM_TYPE;
+                return ValueType.BOOLEAN_PRIM;
             } else if (clzz == char.class){
-                return Constants.CHAR_PRIM_TYPE;
+                return ValueType.CHAR_PRIM;
             } else {
-                return Constants.OBJECT_TYPE;
+                return ValueType.OBJECT;
             }
         } else if (clzz == Date.class || clzz == Instant.class) {
-        	return Constants.DATE_TYPE;
+        	return ValueType.DATE;
         } else if (clzz == String.class){
-            return Constants.STRING_TYPE;
+            return ValueType.STRING;
         } else {
-            return Constants.OBJECT_TYPE;
+            return ValueType.OBJECT;
         }
     }
     
     /**
-     * Convienance method for converting the int type code
+     * Convienance method for converting the ValueType type code
      * to the string form
      * @param intType
      * @return
      */
-    public static String getTypeName(int intType){
-        if (intType == Constants.INT_PRIM_TYPE){
+    public static String getTypeName(ValueType intType){
+        if (intType == ValueType.INT_PRIM){
             return "INTEGER";
-        } else if (intType == Constants.SHORT_PRIM_TYPE){
+        } else if (intType == ValueType.SHORT_PRIM){
             return "SHORT";
-        } else if (intType == Constants.LONG_PRIM_TYPE){
+        } else if (intType == ValueType.LONG_PRIM){
             return "LONG";
-        } else if (intType == Constants.FLOAT_PRIM_TYPE){
+        } else if (intType == ValueType.FLOAT_PRIM){
             return "FLOAT";
-        } else if (intType == Constants.DOUBLE_PRIM_TYPE){
+        } else if (intType == ValueType.DOUBLE_PRIM){
             return "DOUBLE";
-        } else if (intType == Constants.BYTE_PRIM_TYPE){
+        } else if (intType == ValueType.BYTE_PRIM){
             return "BYTE";
-        } else if (intType == Constants.BOOLEAN_PRIM_TYPE){
+        } else if (intType == ValueType.BOOLEAN_PRIM){
             return "BOOLEAN";
-        } else if (intType == Constants.CHAR_PRIM_TYPE){
+        } else if (intType == ValueType.CHAR_PRIM){
             return "CHAR";
-        } else if (intType == Constants.STRING_TYPE){
+        } else if (intType == ValueType.STRING){
             return "STRING";
-        } else if (intType == Constants.DATE_TYPE){
+        } else if (intType == ValueType.DATE){
         	return "DATE";
-        } else if (intType == Constants.ARRAY_TYPE){
+        } else if (intType == ValueType.ARRAY){
             return Object[].class.getName();
         } else {
             return Object.class.getName();
         }
     }
 
-    public static int getOperatorCode(String strSymbol) {
+    public static Operator getOperatorCode(String strSymbol) {
         if (strSymbol.equals(Constants.EQUAL_SYMBOL)) {
-            return Constants.EQUAL;
+            return Operator.EQUAL;
         } else if (strSymbol.equals(Constants.NOTEQUAL_SYMBOL)) {
-            return Constants.NOTEQUAL;
+            return Operator.NOTEQUAL;
         } else if (strSymbol.equals(Constants.ADD_SYMBOL)) {
-            return Constants.ADD;
+            return Operator.ADD;
         } else if (strSymbol.equals(Constants.SUBTRACT_SYMBOL)) {
-            return Constants.SUBTRACT;
+            return Operator.SUBTRACT;
         } else if (strSymbol.equals(Constants.MULTIPLY_SYMBOL)) {
-            return Constants.MULTIPLY;
+            return Operator.MULTIPLY;
         } else if (strSymbol.equals(Constants.DIVIDE_SYMBOL)) {
-            return Constants.DIVIDE;
+            return Operator.DIVIDE;
         } else if (strSymbol.equals(Constants.GREATER_SYMBOL)) {
-            return Constants.GREATER;
+            return Operator.GREATER;
         } else if (strSymbol.equals(Constants.GREATEREQUAL_SYMBOL)) {
-            return Constants.GREATEREQUAL;
+            return Operator.GREATEREQUAL;
         } else if (strSymbol.equals(Constants.LESS_SYMBOL)) {
-            return Constants.LESS;
+            return Operator.LESS;
         } else if (strSymbol.equals(Constants.LESSEQUAL_SYMBOL)) {
-            return Constants.LESSEQUAL;
+            return Operator.LESSEQUAL;
         } else {
-            return Constants.USERDEFINED;
+            return Operator.USERDEFINED;
         }
     }
 
-    public static int getOppositeOperatorCode(int op) {
-    	int rvop = Constants.EQUAL;
+    public static Operator getOppositeOperatorCode(Operator op) {
+    	Operator rvop = Operator.EQUAL;
     	switch(op) {
-    		case Constants.EQUAL:
-    			rvop = Constants.NOTEQUAL;
+    		case EQUAL:
+    			rvop = Operator.NOTEQUAL;
     			break;
-    		case Constants.NOTEQUAL:
-    			rvop = Constants.EQUAL;
+    		case NOTEQUAL:
+    			rvop = Operator.EQUAL;
     			break;
-    		case Constants.GREATER:
-    			rvop = Constants.LESS;
+    		case GREATER:
+    			rvop = Operator.LESS;
     			break;
-    		case Constants.LESS:
-    			rvop = Constants.GREATER;
+    		case LESS:
+    			rvop = Operator.GREATER;
     			break;
-    		case Constants.GREATEREQUAL:
-    			rvop = Constants.LESSEQUAL;
+    		case GREATEREQUAL:
+    			rvop = Operator.LESSEQUAL;
     			break;
-    		case Constants.LESSEQUAL:
-    			rvop = Constants.GREATEREQUAL;
+    		case LESSEQUAL:
+    			rvop = Operator.GREATEREQUAL;
     			break;
     	}
     	return rvop;

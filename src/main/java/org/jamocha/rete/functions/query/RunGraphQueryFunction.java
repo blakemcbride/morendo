@@ -14,6 +14,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rule.GraphQuery;
 import org.jamocha.rule.Query;
+import org.jamocha.rete.ValueType;
 
 /**
  * Running a graphQuery is different than a regular query in a couple of ways.
@@ -49,7 +50,7 @@ public class RunGraphQueryFunction implements Function {
 				results = query.executeQuery(engine, engine.getWorkingMemory(), queryParams);
 			}
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE, results);
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT, results);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -62,8 +63,8 @@ public class RunGraphQueryFunction implements Function {
 		return new Class<?>[]{String[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

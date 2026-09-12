@@ -25,6 +25,7 @@ import woolfel.examples.model.Account;
 import woolfel.examples.model.TestBean2;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -60,22 +61,22 @@ public class DeftemplateTest {
         slots[0] = new Slot();
         slots[0].setId(0);
         slots[0].setName("col1");
-        slots[0].setValueType(Constants.INT_PRIM_TYPE);
+        slots[0].setValueType(ValueType.INT_PRIM);
 
         slots[1] = new Slot();
         slots[1].setId(1);
         slots[1].setName("col2");
-        slots[1].setValueType(Constants.DOUBLE_PRIM_TYPE);
+        slots[1].setValueType(ValueType.DOUBLE_PRIM);
         
         slots[2] = new Slot();
         slots[2].setId(2);
         slots[2].setName("col3");
-        slots[2].setValueType(Constants.OBJECT_TYPE);
+        slots[2].setValueType(ValueType.OBJECT);
         
         slots[3] = new Slot();
         slots[3].setId(3);
         slots[3].setName("col4");
-        slots[3].setValueType(Constants.LONG_PRIM_TYPE);
+        slots[3].setValueType(ValueType.LONG_PRIM);
         
         Deftemplate dtemp = new Deftemplate("template1",null,slots);
         assertNotNull(dtemp);
@@ -128,22 +129,22 @@ public class DeftemplateTest {
         slots[0] = new Slot();
         slots[0].setId(0);
         slots[0].setName("col1");
-        slots[0].setValueType(Constants.INT_PRIM_TYPE);
+        slots[0].setValueType(ValueType.INT_PRIM);
 
         slots[1] = new Slot();
         slots[1].setId(1);
         slots[1].setName("col2");
-        slots[1].setValueType(Constants.DOUBLE_PRIM_TYPE);
+        slots[1].setValueType(ValueType.DOUBLE_PRIM);
         
         slots[2] = new Slot();
         slots[2].setId(2);
         slots[2].setName("col3");
-        slots[2].setValueType(Constants.OBJECT_TYPE);
+        slots[2].setValueType(ValueType.OBJECT);
         
         slots[3] = new Slot();
         slots[3].setId(3);
         slots[3].setName("col4");
-        slots[3].setValueType(Constants.LONG_PRIM_TYPE);
+        slots[3].setValueType(ValueType.LONG_PRIM);
         
         Deftemplate dtemp = new Deftemplate("template1",null,slots);
         assertNotNull(dtemp);

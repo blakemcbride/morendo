@@ -17,6 +17,7 @@
 package org.jamocha.rete.query;
 
 import org.jamocha.rete.Slot;
+import org.jamocha.rete.Operator;
 
 /**
  * @author Peter Lin
@@ -35,5 +36,5 @@ public abstract class QueryBaseAlphaCondition extends QueryBaseAlpha {
 	
 	public abstract void setSlot(Slot sl);
 	
-	public abstract void setOperator(int operator);
+	public abstract void setOperator(Operator operator);
 }

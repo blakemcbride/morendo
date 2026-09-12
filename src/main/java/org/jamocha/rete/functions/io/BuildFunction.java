@@ -31,6 +31,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rule.*;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -51,8 +52,8 @@ public class BuildFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class BuildFunction implements Function {
 			}
 			if (rv != null) {
 				rv.addReturnValue(new DefaultReturnValue(
-						Constants.BOOLEAN_OBJECT, Boolean.TRUE));
+						ValueType.BOOLEAN_OBJECT, Boolean.TRUE));
 			}
 		} catch (ParseException e) {
             engine.writeMessage(e.getMessage() + Constants.LINEBREAK,Constants.DEFAULT_OUTPUT);

@@ -24,6 +24,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -55,7 +56,7 @@ public class ShellFunction implements Function {
         this.actualFunction = engine.findFunction(this.funcName);
     }
 
-	public int getReturnType() {
+	public ValueType getReturnType() {
 		return this.actualFunction.getReturnType();
 	}
 
@@ -66,7 +67,7 @@ public class ShellFunction implements Function {
         } else {
         	DefaultReturnVector rv = new DefaultReturnVector();
     		DefaultReturnValue rval = 
-    			new DefaultReturnValue(Constants.BOOLEAN_OBJECT, Boolean.FALSE);
+    			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
     		rv.addReturnValue(rval);
             return rv;
         }

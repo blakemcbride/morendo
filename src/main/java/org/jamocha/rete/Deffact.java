@@ -327,7 +327,7 @@ public class Deffact implements Fact {
 		for (int idx = 0; idx < slts.length; idx++) {
 			// probably need to revisit this and make sure
 			if (this.slots[idx].value instanceof BoundParam) {
-				if (slts[idx].getValueType() == Constants.STRING_TYPE) {
+				if (slts[idx].getValueType() == ValueType.STRING) {
 					slts[idx].value = ((BoundParam) this.slots[idx].value)
 							.getValue().toString();
 				} else {

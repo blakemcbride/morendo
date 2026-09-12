@@ -42,6 +42,7 @@ import org.jamocha.rete.MultiSlot;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.Slot;
 import org.jamocha.rete.Template;
+import org.jamocha.rete.ValueType;
 
 @SuppressWarnings("serial") // Swing components are never serialized here
 public final class FactEditor extends AbstractJamochaEditor implements
@@ -231,7 +232,7 @@ public final class FactEditor extends AbstractJamochaEditor implements
 					gridbag.setConstraints(scrollPane, c);
 					innerPanel.add(scrollPane);
 					factComponents.put(slots[i], multislotEditor.getList());
-				} else if (slots[i].getValueType() == Constants.FACT_TYPE) {
+				} else if (slots[i].getValueType() == ValueType.FACT) {
 					// TODO Fact-Selector
 
 					JComboBox<?> factBox = new JComboBox<>();
@@ -361,7 +362,7 @@ public final class FactEditor extends AbstractJamochaEditor implements
 						res.append(" ");
 					res.append("\"" + values[i].toString() + "\"");
 				}
-			} else if (slot.getValueType() == Constants.FACT_TYPE) {
+			} else if (slot.getValueType() == ValueType.FACT) {
 				// TODO Fact-Selector
 			} else {
 				res

@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ShellBoundParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -47,8 +48,8 @@ public class EchoFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class EchoFunction implements Function {
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.STRING_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING,
 				buf.toString());
 		ret.addReturnValue(rv);
 		return ret;

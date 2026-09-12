@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.util.FactUtils;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -49,8 +50,8 @@ public class FactsFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {

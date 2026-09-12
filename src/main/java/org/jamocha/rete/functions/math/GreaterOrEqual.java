@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -48,8 +49,8 @@ public class GreaterOrEqual implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -60,13 +61,13 @@ public class GreaterOrEqual implements Function {
 			if (params[0] instanceof ValueParam) {
 				left = params[0].getBigDecimalValue();
 			} else {
-				left = new BigDecimal( params[0].getValue(engine, Constants.BIG_DECIMAL).toString());
+				left = new BigDecimal( params[0].getValue(engine, ValueType.BIG_DECIMAL).toString());
 			}
 			for (int idx=1; idx < params.length; idx++) {
 				if (params[idx] instanceof ValueParam) {
 					right = params[idx].getBigDecimalValue();
 				} else {
-					right = new BigDecimal( params[idx].getValue(engine, Constants.BIG_DECIMAL).toString() );
+					right = new BigDecimal( params[idx].getValue(engine, ValueType.BIG_DECIMAL).toString() );
 				}
 	            eval = (left.doubleValue() >= right.doubleValue());
 	            if (!eval) {
@@ -78,7 +79,7 @@ public class GreaterOrEqual implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, eval);
+				ValueType.BOOLEAN_OBJECT, eval);
 		ret.addReturnValue(rv);
 		return ret;
 	}

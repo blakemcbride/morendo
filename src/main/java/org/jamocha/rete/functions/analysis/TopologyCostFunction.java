@@ -27,6 +27,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rule.Defrule;
 import org.jamocha.rule.util.TopologyCostCalculation;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -47,8 +48,8 @@ public class TopologyCostFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -61,7 +62,7 @@ public class TopologyCostFunction implements Function {
                     ruleName = n.getStringValue();
                 } else if (params[0] instanceof BoundParam) {
                     BoundParam bp = (BoundParam) params[0];
-                    ruleName = (String)bp.getValue(engine, Constants.STRING_TYPE);
+                    ruleName = (String)bp.getValue(engine, ValueType.STRING);
                 }
                 Defrule r = (Defrule)engine.getCurrentFocus().findRule(ruleName);
                 costFunction.calculateCost(engine, r, engine.getRootNode());

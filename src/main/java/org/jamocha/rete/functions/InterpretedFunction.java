@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Scope;
+import org.jamocha.rete.ValueType;
 
 /**
  * 
@@ -84,10 +85,10 @@ public class InterpretedFunction implements Function, Scope {
             return ret;
         } else {
             DefaultReturnValue rv = new DefaultReturnValue(
-                    Constants.BOOLEAN_OBJECT, Boolean.FALSE);
+                    ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
             ret.addReturnValue(rv);
             DefaultReturnValue rv2 = new DefaultReturnValue(
-                    Constants.STRING_TYPE, "incorrect number of parameters");
+                    ValueType.STRING, "incorrect number of parameters");
             ret.addReturnValue(rv2);
             return ret;
         }
@@ -103,8 +104,8 @@ public class InterpretedFunction implements Function, Scope {
         return new Class<?>[]{BoundParam.class};
     }
 
-    public int getReturnType() {
-        return Constants.OBJECT_TYPE;
+    public ValueType getReturnType() {
+        return ValueType.OBJECT;
     }
 
     public String toPPString(Parameter[] params, int indents) {

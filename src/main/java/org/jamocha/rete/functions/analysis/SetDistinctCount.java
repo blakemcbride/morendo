@@ -12,6 +12,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Template;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class SetDistinctCount implements Function {
 
@@ -35,7 +36,7 @@ public class SetDistinctCount implements Function {
 			success = Boolean.TRUE;
 		}
 		DefaultReturnVector returnVector = new DefaultReturnVector();
-		DefaultReturnValue returnVal = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, success);
+		DefaultReturnValue returnVal = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, success);
 		returnVector.addReturnValue(returnVal);
 		return returnVector;
 	}
@@ -48,8 +49,8 @@ public class SetDistinctCount implements Function {
 		return new Class<?>[]{ValueParam.class, ValueParam.class, ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

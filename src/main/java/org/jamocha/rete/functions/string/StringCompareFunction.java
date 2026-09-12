@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -46,8 +47,8 @@ public class StringCompareFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -67,7 +68,7 @@ public class StringCompareFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.INTEGER_OBJECT, Integer.valueOf(eq));
+				ValueType.INTEGER_OBJECT, Integer.valueOf(eq));
 		ret.addReturnValue(rv);
 		return ret;
 	}

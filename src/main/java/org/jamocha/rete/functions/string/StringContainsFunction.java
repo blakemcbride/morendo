@@ -10,6 +10,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class StringContainsFunction implements Function {
 
@@ -37,7 +38,7 @@ public class StringContainsFunction implements Function {
         }
         DefaultReturnVector ret = new DefaultReturnVector();
         DefaultReturnValue rv = new DefaultReturnValue(
-                Constants.BOOLEAN_OBJECT, contain);
+                ValueType.BOOLEAN_OBJECT, contain);
         ret.addReturnValue(rv);
         return ret;
     }
@@ -50,8 +51,8 @@ public class StringContainsFunction implements Function {
         return new Class<?>[]{ValueParam.class,ValueParam.class};
     }
 
-    public int getReturnType() {
-        return Constants.BOOLEAN_OBJECT;
+    public ValueType getReturnType() {
+        return ValueType.BOOLEAN_OBJECT;
     }
 
     public String toPPString(Parameter[] params, int indents) {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2008 Peter Lin
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://jamocha.sourceforge.net/
- *
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,33 +17,12 @@
 package org.jamocha.rete;
 
 /**
- * @author Peter Lin
- * 
- * BaseAlpha2 is an abstract class for AlphaNodes that compare literal or bound
- * constraints. It isn't used for LIANode, ObjectTypeNode.
+ * The type a slot, parameter or function result carries. Replaces the integer type codes
+ * that used to live in Constants; the names are the old constants without the _TYPE suffix.
  */
-public abstract class BaseAlpha2 extends BaseAlpha {
-
-	/**
-	 * 
-	 */
-
-	/**
-	 * @param id
-	 */
-	public BaseAlpha2(int id) {
-		super(id);
-	}
-
-	/**
-	 * set the operator type for the node
-	 * @param opr
-	 */
-	public abstract void setOperator(Operator opr);
-
-	/**
-	 * set the slot for the node
-	 * @param sl
-	 */
-	public abstract void setSlot(Slot sl);
+public enum ValueType {
+	INT_PRIM, SHORT_PRIM, LONG_PRIM, FLOAT_PRIM, DOUBLE_PRIM, BYTE_PRIM, BOOLEAN_PRIM, CHAR_PRIM,
+	OBJECT, ARRAY, STRING, RETURN_VOID, FACT,
+	INTEGER_OBJECT, SHORT_OBJECT, LONG_OBJECT, FLOAT_OBJECT, DOUBLE_OBJECT, BYTE_OBJECT, BOOLEAN_OBJECT,
+	BIG_INTEGER, BIG_DECIMAL, NUMERIC_INCLUSIVE, LIST, DATE, SLOT
 }

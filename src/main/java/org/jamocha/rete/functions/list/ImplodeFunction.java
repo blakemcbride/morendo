@@ -10,6 +10,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function for creating a string from a multifield. This extends the CLIPS
@@ -43,7 +44,7 @@ public class ImplodeFunction implements Function {
 			if (params[idx] instanceof ValueParam) {
 				list = params[idx].getValue();
 			} else {
-				list = params[idx].getValue(engine, Constants.ARRAY_TYPE);
+				list = params[idx].getValue(engine, ValueType.ARRAY);
 			}
 			if (list.getClass().isArray()) {
 				Object[] r = (Object[]) list;
@@ -54,7 +55,7 @@ public class ImplodeFunction implements Function {
 				retStr.concat(list.toString().trim().concat(" "));
 			}
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.STRING_TYPE, retStr.trim());
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING, retStr.trim());
 
 		ret.addReturnValue(rv);
 
@@ -69,8 +70,8 @@ public class ImplodeFunction implements Function {
 		return new Class<?>[] { ValueParam[].class };
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

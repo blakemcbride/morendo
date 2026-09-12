@@ -25,6 +25,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -42,8 +43,8 @@ public class LoadFunctionsFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	
@@ -63,7 +64,7 @@ public class LoadFunctionsFunction implements Function {
 			}
 		}
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, load);
+				ValueType.BOOLEAN_OBJECT, load);
 		ret.addReturnValue(rv);
 		return ret;
 	}

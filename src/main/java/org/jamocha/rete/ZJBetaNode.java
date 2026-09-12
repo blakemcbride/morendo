@@ -37,7 +37,7 @@ public class ZJBetaNode extends BaseJoin {
 	 * doesn't comparing values, the operator should be set to -1.
 	 */
 	
-	protected int operator = Constants.EQUAL;
+	protected Operator operator = Operator.EQUAL;
 
 	public ZJBetaNode(int id) {
 		super(id);

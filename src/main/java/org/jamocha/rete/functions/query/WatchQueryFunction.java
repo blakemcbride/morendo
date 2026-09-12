@@ -7,6 +7,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 public class WatchQueryFunction implements Function {
 
@@ -29,7 +30,7 @@ public class WatchQueryFunction implements Function {
 			}
 			watch = Boolean.TRUE;
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, watch);
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, watch);
 		ret.addReturnValue(rv);
 		return ret;	}
 
@@ -41,8 +42,8 @@ public class WatchQueryFunction implements Function {
 		return new Class<?>[]{String.class, String.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

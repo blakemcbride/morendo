@@ -155,7 +155,7 @@ public class NoMemOr extends BaseAlpha2 {
 	/**
 	 * method is not implemented, since it doesn't apply
 	 */
-	public void setOperator(int opr) {
+	public void setOperator(Operator opr) {
 	}
 
 	/**

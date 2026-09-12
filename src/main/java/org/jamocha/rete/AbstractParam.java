@@ -33,7 +33,7 @@ public abstract sealed class AbstractParam implements Parameter
 	/**
 	 * get the value type
 	 */
-	public abstract int getValueType();
+	public abstract ValueType getValueType();
 
 	/**
 	 * Get the value of the given slot

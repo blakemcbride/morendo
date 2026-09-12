@@ -14,6 +14,7 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.functions.io.LoadFactsFunction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jamocha.rete.ValueType;
 
 /**
  * The implementation uses load-facts to load the data
@@ -73,7 +74,7 @@ public class ClipsInitialData implements InitialData {
 		try {
 			LoadFactsFunction load = (LoadFactsFunction)engine.findFunction(LoadFactsFunction.LOAD);
 			Parameter[] parameters = new Parameter[1];
-			parameters[0] = new ValueParam(Constants.STRING_TYPE, cacheFile);
+			parameters[0] = new ValueParam(ValueType.STRING, cacheFile);
 			load.executeFunction(engine, parameters);
 		} catch (Exception e) {
 			loaded = false;

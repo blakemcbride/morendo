@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -48,14 +49,14 @@ public class Random implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.DOUBLE_PRIM_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.DOUBLE_PRIM;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		double dval = java.lang.Math.random();	
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.DOUBLE_PRIM_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.DOUBLE_PRIM,
 				dval); 
 		ret.addReturnValue(rv);
 		return ret;

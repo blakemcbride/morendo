@@ -112,7 +112,7 @@ public final class FunctionParam2 extends AbstractParam {
         this.func = engine.findFunction(this.funcName);
     }
 
-    public int getValueType() {
+    public ValueType getValueType() {
 		return this.func.getReturnType();
 	}
 
@@ -141,23 +141,23 @@ public final class FunctionParam2 extends AbstractParam {
      * TODO we may want to check the value type and throw and exception
      * for now just getting it to work.
      */
-    public Object getValue(Rete engine, int valueType) {
+    public Object getValue(Rete engine, ValueType valueType) {
         if (this.params != null) {
             this.engine = engine;
             lookUpFunction();
             checkParameters();
             ReturnVector rval = this.func.executeFunction(engine,this.params);
-            if (valueType == Constants.BIG_DECIMAL) {
+            if (valueType == ValueType.BIG_DECIMAL) {
                 return rval.firstReturnValue().getBigDecimalValue();
-            } else if (valueType == Constants.OBJECT_TYPE || valueType == Constants.ARRAY_TYPE) {
+            } else if (valueType == ValueType.OBJECT || valueType == ValueType.ARRAY) {
             	return rval.firstReturnValue().getValue();
-            } else if (valueType == Constants.INTEGER_OBJECT || valueType == Constants.INT_PRIM_TYPE) {
+            } else if (valueType == ValueType.INTEGER_OBJECT || valueType == ValueType.INT_PRIM) {
             	return rval.firstReturnValue().getIntValue();
-            } else if (valueType == Constants.LONG_OBJECT || valueType == Constants.LONG_PRIM_TYPE) {
+            } else if (valueType == ValueType.LONG_OBJECT || valueType == ValueType.LONG_PRIM) {
             	return rval.firstReturnValue().getLongValue();
-            } else if (valueType == Constants.FLOAT_OBJECT || valueType == Constants.FLOAT_PRIM_TYPE) {
+            } else if (valueType == ValueType.FLOAT_OBJECT || valueType == ValueType.FLOAT_PRIM) {
             	return rval.firstReturnValue().getFloatValue();
-            } else if (valueType == Constants.DOUBLE_OBJECT || valueType == Constants.DOUBLE_PRIM_TYPE) {
+            } else if (valueType == ValueType.DOUBLE_OBJECT || valueType == ValueType.DOUBLE_PRIM) {
             	return rval.firstReturnValue().getDoubleValue();
             } else {
             	return rval.firstReturnValue().getValue();

@@ -19,7 +19,7 @@ package org.jamocha.rete;
 /**
  * @author Peter Lin
  * 
- * MultiSlot always returns Constants.ARRAY_TYPE. It is the class for array
+ * MultiSlot always returns ValueType.ARRAY. It is the class for array
  * types.
  */
 public class MultiSlot extends Slot {
@@ -28,7 +28,7 @@ public class MultiSlot extends Slot {
      * 
      */
     private static final long serialVersionUID = 1L;
-    protected int type = Constants.ARRAY_TYPE;
+    protected ValueType type = ValueType.ARRAY;
 
 	/**
 	 * 
@@ -71,14 +71,14 @@ public class MultiSlot extends Slot {
 	 * We override the base implementation and do nothing, since a multislot is
 	 * an object array. That means it is an array type
 	 */
-	public void setValueType(int type) {
+	public void setValueType(ValueType type) {
 	}
 	
 	/**
 	 *  Always return ARRAY_TYPE if asked 
 	 */
-	public int getValueType() {
-		return Constants.ARRAY_TYPE;
+	public ValueType getValueType() {
+		return ValueType.ARRAY;
 	}
 
 	public String valueToString() {

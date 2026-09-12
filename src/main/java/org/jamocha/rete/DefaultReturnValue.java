@@ -40,7 +40,7 @@ public final class DefaultReturnValue extends ValueParam {
 	/**
 	 * 
 	 */
-	public DefaultReturnValue(int vtype, Object value) {
+	public DefaultReturnValue(ValueType vtype, Object value) {
 		super(vtype, value);
 	}
 }

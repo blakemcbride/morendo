@@ -26,6 +26,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.query.QueryBaseJoin;
 import org.jamocha.rete.query.QueryBaseNot;
+import org.jamocha.rete.Operator;
 
 /**
  * @author Peter Lin
@@ -115,7 +116,7 @@ public interface Query {
      * @param operator
      * @return
      */
-    Binding copyPredicateBinding(String varName, int operator);
+    Binding copyPredicateBinding(String varName, Operator operator);
     /**
      * Get a iterator to the Binding objects
      * @return

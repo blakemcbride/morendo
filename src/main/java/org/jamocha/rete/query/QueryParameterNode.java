@@ -27,6 +27,7 @@ import org.jamocha.rete.Slot;
 import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defquery;
+import org.jamocha.rete.Operator;
 
 /**
  * @author Peter Lin
@@ -63,7 +64,7 @@ public class QueryParameterNode extends QueryBaseAlphaCondition {
 	 * Set the operator using the int value
 	 * @param opr
 	 */
-	public void setOperator(int opr) {
+	public void setOperator(Operator opr) {
 		this.operator = opr;
 	}
 

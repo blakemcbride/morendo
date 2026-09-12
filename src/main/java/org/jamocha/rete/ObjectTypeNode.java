@@ -70,8 +70,8 @@ public class ObjectTypeNode extends BaseAlpha {
      * we have to first test the slot is not nill, and then do the hash
      * lookup. not sure that it's worth it, so removed it instead.
      */
-    public static final int[] operators = {Constants.EQUAL,
-            Constants.NILL};
+    public static final Operator[] operators = {Operator.EQUAL,
+            Operator.NILL};
     
 	/**
 	 * 
@@ -146,7 +146,7 @@ public class ObjectTypeNode extends BaseAlpha {
     				slotValue = Constants.NIL_SYMBOL;
     			}
     			CompositeIndex compIndex = new CompositeIndex(
-    					slots[idx].getName(), Constants.EQUAL, slotValue);
+    					slots[idx].getName(), Operator.EQUAL, slotValue);
     			
     			BaseNode node = this.nodeHashMap.get(compIndex);
     			if (node != null) {
@@ -272,7 +272,7 @@ public class ObjectTypeNode extends BaseAlpha {
     throws AssertException 
     {
     	if (node instanceof AlphaNode alphaNode) {
-    		if (alphaNode.getOperator() == Constants.EQUAL) {
+    		if (alphaNode.getOperator() == Operator.EQUAL) {
         		nodeHashMap.put(alphaNode.getHashIndex(), alphaNode);
         		// increment the slot use count
         		this.deftemplate.getSlot(alphaNode.slot.getId()).incrementNodeCount();

@@ -31,48 +31,9 @@ public class Constants {
         "java.beans.PropertyChangeListener";
     public static final String MAIN_MODULE = "MAIN";
     
-    /// --------- primitive types ---------///
-    public static final int INT_PRIM_TYPE = 1;
-    public static final int SHORT_PRIM_TYPE = 2;
-    public static final int LONG_PRIM_TYPE = 3;
-    public static final int FLOAT_PRIM_TYPE = 4;
-    public static final int DOUBLE_PRIM_TYPE = 5;
-    public static final int BYTE_PRIM_TYPE = 6;
-    public static final int BOOLEAN_PRIM_TYPE = 7;
-    public static final int CHAR_PRIM_TYPE = 8;
-    /// --------- non-primitive types ---------///
-    public static final int OBJECT_TYPE = 9;
-    public static final int ARRAY_TYPE = 10;
-    public static final int STRING_TYPE = 11;
-    public static final int RETURN_VOID_TYPE = 12;
-    public static final int FACT_TYPE = 13;
-    public static final int INTEGER_OBJECT = 14;
-    public static final int SHORT_OBJECT = 15;
-    public static final int LONG_OBJECT = 16;
-    public static final int FLOAT_OBJECT = 17;
-    public static final int DOUBLE_OBJECT = 18;
-    public static final int BYTE_OBJECT = 19;
-    public static final int BOOLEAN_OBJECT = 20;
-    public static final int BIG_INTEGER = 21;
-    public static final int BIG_DECIMAL = 22;
-    public static final int NUMERIC_INCLUSIVE = 23;
-    public static final int LIST_TYPE = 24;
-    public static final int DATE_TYPE = 25;
+    // value type codes: see ValueType
     
-    /// --------- operators types ---------///
-    public static final int ADD = 1;
-    public static final int SUBTRACT = 2;
-    public static final int MULTIPLY = 3;
-    public static final int DIVIDE = 4;
-    public static final int GREATER = 5;
-    public static final int LESS = 6;
-    public static final int GREATEREQUAL = 7;
-    public static final int LESSEQUAL = 8;
-    public static final int EQUAL = 9;
-    public static final int NOTEQUAL = 10;
-    public static final int NILL = 11;
-    public static final int NOTNILL = 12;
-    public static final int USERDEFINED = 13;
+    // operator codes: see Operator
     
     /// --------- operators symbol ---------///
     public static final String ADD_SYMBOL = "+";
@@ -101,7 +62,6 @@ public class Constants {
     public static final String NILL_STRING = "is null";
     
     /// --------- native types for the rule engine ---------///
-    public static final int SLOT_TYPE = 100;
     
     public static final int ACTION_ASSERT = 1000;
     public static final int ACTION_RETRACT = 1001;

@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rule.Defrule;
+import org.jamocha.rete.ValueType;
 
 public class AverageCostFunction implements Function {
 
@@ -49,7 +50,7 @@ public class AverageCostFunction implements Function {
 			total += rule.getCostValue();
 		}
 		int average = total/rules.size();
-		DefaultReturnValue v = new DefaultReturnValue(Constants.INTEGER_OBJECT, Integer.valueOf(average));
+		DefaultReturnValue v = new DefaultReturnValue(ValueType.INTEGER_OBJECT, Integer.valueOf(average));
 		ret.addReturnValue(v);
 		return ret;
 	}
@@ -62,8 +63,8 @@ public class AverageCostFunction implements Function {
 		return new Class<?>[0];
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

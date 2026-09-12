@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class InstanceofFunction implements Function {
 	
@@ -58,7 +59,7 @@ public class InstanceofFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, eval);
+				ValueType.BOOLEAN_OBJECT, eval);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -71,8 +72,8 @@ public class InstanceofFunction implements Function {
 		return new Class<?>[] {BoundParam.class,BoundParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

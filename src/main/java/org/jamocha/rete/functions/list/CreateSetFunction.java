@@ -12,6 +12,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function for creating a Java Set from strings
@@ -41,7 +42,7 @@ public class CreateSetFunction implements Function {
 				if (params[idx] instanceof ValueParam) {
 					stringset.add(params[idx].getStringValue());
 				} else {
-					Object list = params[idx].getValue(engine, Constants.ARRAY_TYPE); 
+					Object list = params[idx].getValue(engine, ValueType.ARRAY); 
 					if (list.getClass().isArray()) {
 						Object[] vals = (Object[])list;
 						for (Object val : vals) {
@@ -50,7 +51,7 @@ public class CreateSetFunction implements Function {
 					} else stringset.add(list.toString());
 				}
 			}
-			DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE,
+			DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT,
 					stringset);
 			ret.addReturnValue(rv);
 			
@@ -66,8 +67,8 @@ public class CreateSetFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

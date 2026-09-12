@@ -26,6 +26,7 @@ import org.jamocha.rete.FunctionParam2;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * Before function is used to evaluate 2 time values. The time can be a date,
@@ -56,8 +57,8 @@ public class BeforeFunction extends AbstractTimeFunction implements Function {
 		Boolean eval = Boolean.FALSE;
 		
 		if (params != null && params.length == 2) {
-			long time1 = getMillisecondTime(params[0].getValue(engine, Constants.OBJECT_TYPE));
-			long time2 = getMillisecondTime(params[1].getValue(engine, Constants.OBJECT_TYPE));
+			long time1 = getMillisecondTime(params[0].getValue(engine, ValueType.OBJECT));
+			long time2 = getMillisecondTime(params[1].getValue(engine, ValueType.OBJECT));
 			if (time1 < time2) {
 				eval = Boolean.TRUE;
 			}
@@ -65,7 +66,7 @@ public class BeforeFunction extends AbstractTimeFunction implements Function {
 		
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
-			new DefaultReturnValue(Constants.BOOLEAN_OBJECT, eval);
+			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -78,8 +79,8 @@ public class BeforeFunction extends AbstractTimeFunction implements Function {
 		return new Class<?>[]{Object.class, Object.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

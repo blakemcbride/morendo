@@ -12,6 +12,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * <p>
@@ -35,8 +36,8 @@ public class TokenMatchFunction implements Function {
 	public TokenMatchFunction() {
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -48,7 +49,7 @@ public class TokenMatchFunction implements Function {
 				BoundParam bp = (BoundParam) params[0];
 				Object resolvedValue = null;
 				if (bp.isObjectBinding()) {
-					resolvedValue = bp.getValue(engine, Constants.OBJECT_TYPE);
+					resolvedValue = bp.getValue(engine, ValueType.OBJECT);
 				} else {
 					resolvedValue = bp.getValue();
 				}
@@ -81,7 +82,7 @@ public class TokenMatchFunction implements Function {
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.INTEGER_OBJECT,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.INTEGER_OBJECT,
 				total);
 		ret.addReturnValue(rv);
 		return ret;

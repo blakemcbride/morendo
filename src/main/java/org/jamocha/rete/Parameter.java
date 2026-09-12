@@ -43,5 +43,5 @@ public sealed interface Parameter extends ReturnValue permits AbstractParam {
      * @param valueType
      * @return
      */
-    Object getValue(Rete engine, int valueType);
+    Object getValue(Rete engine, ValueType valueType);
 }

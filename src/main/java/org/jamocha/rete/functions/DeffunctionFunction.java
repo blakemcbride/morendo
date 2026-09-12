@@ -25,6 +25,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * DeffunctionFunction is used for functions that are declared in the
@@ -44,7 +45,7 @@ public class DeffunctionFunction implements Function {
     protected Parameter[] parameters = null;
    	protected List<?> functions = null;
     protected Class<?>[] functionParams = null;
-    protected int returnType;
+    protected ValueType returnType;
     
     /**
      * 
@@ -72,7 +73,7 @@ public class DeffunctionFunction implements Function {
         }
         
         DefaultReturnValue rv = new DefaultReturnValue(
-                Constants.BOOLEAN_OBJECT, add);
+                ValueType.BOOLEAN_OBJECT, add);
         ret.addReturnValue(rv);
         return ret;
     }
@@ -89,7 +90,7 @@ public class DeffunctionFunction implements Function {
         return this.functionParams;
     }
 
-    public int getReturnType() {
+    public ValueType getReturnType() {
         return this.returnType;
     }
 

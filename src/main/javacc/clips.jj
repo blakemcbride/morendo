@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jamocha.rete.BoundParam;
 import org.jamocha.rete.Constants;
+import org.jamocha.rete.ValueType;
 import org.jamocha.rete.Deftemplate;
 import org.jamocha.rete.Defcube;
 import org.jamocha.rete.Defdimension;
@@ -414,8 +415,8 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[2];
-    pms[0] = new ValueParam(Constants.STRING_TYPE,exp2.image);
-    pms[1] = new ValueParam(Constants.OBJECT_TYPE,list.toArray());
+    pms[0] = new ValueParam(ValueType.STRING,exp2.image);
+    pms[1] = new ValueParam(ValueType.OBJECT,list.toArray());
     func.setParameters(pms);
     exp.next = null;
 	exp.specialToken = null;
@@ -429,8 +430,8 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[2];
-    pms[0] = new ValueParam(Constants.STRING_TYPE,exp2.image);
-    pms[1] = new ValueParam(Constants.OBJECT_TYPE,list.toArray());
+    pms[0] = new ValueParam(ValueType.STRING,exp2.image);
+    pms[1] = new ValueParam(ValueType.OBJECT,list.toArray());
     func.setParameters(pms);
     exp.next = null;
 	exp.specialToken = null;
@@ -448,7 +449,7 @@ Object expr() :
       bp.setVariableName(exp2.image);
       rpms[0] = bp;
     } else {
-      ValueParam vp = new ValueParam(Constants.BIG_DECIMAL, new BigDecimal(exp2.image));
+      ValueParam vp = new ValueParam(ValueType.BIG_DECIMAL, new BigDecimal(exp2.image));
       rpms[0] = vp;
     }
     func.setParameters(rpms);
@@ -481,7 +482,7 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[1];
-    pms[0] = new ValueParam(Constants.OBJECT_TYPE,templ);
+    pms[0] = new ValueParam(ValueType.OBJECT,templ);
     func.setParameters(pms);
     return func;
   }
@@ -492,7 +493,7 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[1];
-    pms[0] = new ValueParam(Constants.OBJECT_TYPE,cube);
+    pms[0] = new ValueParam(ValueType.OBJECT,cube);
     func.setParameters(pms);
     return func;
   }
@@ -503,7 +504,7 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[1];
-    pms[0] = new ValueParam(Constants.STRING_TYPE,body);
+    pms[0] = new ValueParam(ValueType.STRING,body);
     func.setParameters(pms);
     return func;
   }
@@ -514,7 +515,7 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[1];
-    pms[0] = new ValueParam(Constants.OBJECT_TYPE,rule);
+    pms[0] = new ValueParam(ValueType.OBJECT,rule);
     func.setParameters(pms);
     return func;
   }
@@ -525,7 +526,7 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[1];
-    pms[0] = new ValueParam(Constants.OBJECT_TYPE,query);
+    pms[0] = new ValueParam(ValueType.OBJECT,query);
     func.setParameters(pms);
     return func;
   }
@@ -536,7 +537,7 @@ Object expr() :
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[1];
-    pms[0] = new ValueParam(Constants.OBJECT_TYPE,graphquery);
+    pms[0] = new ValueParam(ValueType.OBJECT,graphquery);
     func.setParameters(pms);
     return func;
   }
@@ -568,7 +569,7 @@ Object expr() :
   {
     func = new ShellFunction();
     func.setName("bind");
-    list.add(0,new ValueParam(Constants.STRING_TYPE,exp.image.substring(1)));
+    list.add(0,new ValueParam(ValueType.STRING,exp.image.substring(1)));
     func.setParameters(ParameterUtils.convertParameters(list));
     list.clear();
     return func;
@@ -628,9 +629,9 @@ void valueParams(List<Object> list) :
     vp = new ValueParam();
       vp.setValue(exp);
     if (exp instanceof BigDecimal) {
-      vp.setValueType(Constants.BIG_DECIMAL);
+      vp.setValueType(ValueType.BIG_DECIMAL);
     } else if (exp instanceof String) {
-      vp.setValueType(Constants.STRING_TYPE);
+      vp.setValueType(ValueType.STRING);
     }
     list.add(vp);
   }
@@ -638,7 +639,7 @@ void valueParams(List<Object> list) :
   exp = <IDENTIFIER>
   {
     vp = new ValueParam();
-    vp.setValueType(Constants.STRING_TYPE);
+    vp.setValueType(ValueType.STRING);
     if (exp instanceof Token) {
       vp.setValue( ((Token)exp).image );
     } else {
@@ -757,8 +758,8 @@ ValueParam[] assertBody() :
   <LBRACE> exp = <IDENTIFIER> (assertContents(tokens))+ <RBRACE>
   {
     param = new ValueParam[2];
-    param[0] = new ValueParam(Constants.STRING_TYPE,exp.image);
-    param[1] = new ValueParam(Constants.OBJECT_TYPE,tokens.toArray());
+    param[0] = new ValueParam(ValueType.STRING,exp.image);
+    param[1] = new ValueParam(ValueType.OBJECT,tokens.toArray());
     tokens.clear();
     exp = null;
     return param;
@@ -931,7 +932,7 @@ Deftemplate templateExpr() :
 void templateBody(List<Object> slots) :
 {
   Token sname;
-  int stype;
+  ValueType stype;
   int sid;
   Slot sl;
   MultiSlot msl;
@@ -960,16 +961,16 @@ void templateBody(List<Object> slots) :
   }
 }
 
-int slotType() :
+ValueType slotType() :
 {
-  int stype = -1;
-  int defaultType = 9;
+  ValueType stype = null;
+  ValueType defaultType = ValueType.OBJECT;
 }
 {
   /* the type declaration is optional, so question mark is used to tell javacc */
   (LOOKAHEAD(<LBRACE> <TYPEDEF>) <LBRACE> <TYPEDEF> stype = getType() <RBRACE>)?
   {
-    if (stype > -1) {
+    if (stype != null) {
       defaultType = stype;
     }
     return defaultType;
@@ -988,7 +989,7 @@ Object defaultValue() :
   }
 }
 
-int getType() :
+ValueType getType() :
 {
   Token exp = null;
 }
@@ -996,57 +997,57 @@ int getType() :
   exp = <INTEGER>
   {
     exp = null;
-    return Constants.INT_PRIM_TYPE;
+    return ValueType.INT_PRIM;
   }
 |
   exp = <SHORT>
   {
     exp = null;
-    return Constants.SHORT_PRIM_TYPE;
+    return ValueType.SHORT_PRIM;
   }
 |
   exp = <LONG>
   {
     exp = null;
-    return Constants.LONG_PRIM_TYPE;
+    return ValueType.LONG_PRIM;
   }
 |
   exp = <FLOAT>
   {
     exp = null;
-    return Constants.FLOAT_PRIM_TYPE;
+    return ValueType.FLOAT_PRIM;
   }
 |
   exp = <DOUBLE>
   {
     exp = null;
-    return Constants.DOUBLE_PRIM_TYPE;
+    return ValueType.DOUBLE_PRIM;
   }
 |
   exp = <SYMBOL>
   {
     exp = null;
-    return Constants.OBJECT_TYPE;
+    return ValueType.OBJECT;
   }
 |
   exp = <STRING>
   {
     exp = null;
-    return Constants.STRING_TYPE;
+    return ValueType.STRING;
   }
 |
   exp = <BOOLEAN>
   {
     exp = null;
-    return Constants.BOOLEAN_PRIM_TYPE;
+    return ValueType.BOOLEAN_PRIM;
   }
 |
   exp = <IDENTIFIER>
   {
     if (exp.image.equals("DATE")) {
-      return Constants.DATE_TYPE;
+      return ValueType.DATE;
     } else {
-      return Constants.OBJECT_TYPE;
+      return ValueType.OBJECT;
     }
   }
 }

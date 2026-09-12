@@ -29,6 +29,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rule.Defrule;
 import org.jamocha.rule.util.TopologyCostCalculation;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -49,8 +50,8 @@ public class TopologyCostAllFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {

@@ -10,6 +10,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function will test if a string is in a Map
@@ -45,7 +46,7 @@ public class MapContainsFunction implements Function {
 			}
 		}
 		DefaultReturnValue val = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, contain);
+				ValueType.BOOLEAN_OBJECT, contain);
 		rv.addReturnValue(val);
 		return rv;
 	}
@@ -58,8 +59,8 @@ public class MapContainsFunction implements Function {
 		return new Class<?>[]{ValueParam.class,ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

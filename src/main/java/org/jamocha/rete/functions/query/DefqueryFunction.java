@@ -9,6 +9,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rule.Defquery;
+import org.jamocha.rete.ValueType;
 
 public class DefqueryFunction implements Function {
 
@@ -31,7 +32,7 @@ public class DefqueryFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, add);
+				ValueType.BOOLEAN_OBJECT, add);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -44,8 +45,8 @@ public class DefqueryFunction implements Function {
 		return new Class<?>[] { ValueParam.class };
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

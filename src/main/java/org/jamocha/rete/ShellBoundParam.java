@@ -32,7 +32,7 @@ public final class ShellBoundParam extends AbstractParam {
     /**
      * the int value defining the valueType
      */
-    protected int valueType = -1;
+    protected ValueType valueType = null;
     protected String globalVarName = "";
     protected Object value = null;
 
@@ -51,7 +51,7 @@ public final class ShellBoundParam extends AbstractParam {
 		return this.globalVarName;
 	}
 
-	public int getValueType() {
+	public ValueType getValueType() {
 		return this.valueType;
 	}
 
@@ -74,7 +74,7 @@ public final class ShellBoundParam extends AbstractParam {
     /**
      * the class will resolve the variable with the engine
      */
-    public Object getValue(Rete engine, int valueType) {
+    public Object getValue(Rete engine, ValueType valueType) {
         return this.value = engine.getDefglobalValue(this.globalVarName);
     }
 
@@ -95,7 +95,7 @@ public final class ShellBoundParam extends AbstractParam {
     }
 
     public void reset() {
-		this.valueType = -1;
+		this.valueType = null;
 		this.globalVarName = "";
 	}
 

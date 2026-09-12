@@ -28,6 +28,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Template;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -49,8 +50,8 @@ public class PPrintTemplateFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-        return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
 	}
 
 	/**

@@ -39,6 +39,7 @@ import org.jamocha.rete.query.QueryResultNode;
 import org.jamocha.rete.query.QueryRootNode;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.Template;
+import org.jamocha.rete.Operator;
 
 /**
  * @author Peter Lin
@@ -218,7 +219,7 @@ public class Defquery implements Query {
 		}
 	}
 	
-	public Binding copyPredicateBinding(String varName, int operator) {
+	public Binding copyPredicateBinding(String varName, Operator operator) {
 		Binding2 b = (Binding2)getBinding(varName);
 		if (b != null) {
 			Binding2 b2 = new Binding2(operator);

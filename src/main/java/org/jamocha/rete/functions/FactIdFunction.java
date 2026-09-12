@@ -26,6 +26,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -47,20 +48,20 @@ public class FactIdFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector returnVector = new DefaultReturnVector();
         if (params != null && params.length > 0) {
         	for (int idx=0; idx < params.length; idx++) {
-        		BigDecimal id = (BigDecimal)params[idx].getValue(engine, Constants.LONG_OBJECT);
+        		BigDecimal id = (BigDecimal)params[idx].getValue(engine, ValueType.LONG_OBJECT);
         		Fact f = engine.getFactById(id.longValue());
         		if (f != null) {
         			engine.writeMessage(f.toFactString() + Constants.LINEBREAK);
             		DefaultReturnValue rv = new DefaultReturnValue(
-            				Constants.FACT_TYPE, f);
+            				ValueType.FACT, f);
             		returnVector.addReturnValue(rv);
         		}
         	}

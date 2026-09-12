@@ -29,6 +29,7 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.functions.BaseMatchFunction;
 import org.jamocha.rule.Condition;
 import org.jamocha.rule.Defrule;
+import org.jamocha.rete.ValueType;
 
 public class RuleMatchesFunction extends BaseMatchFunction implements Function {
 
@@ -136,8 +137,8 @@ public class RuleMatchesFunction extends BaseMatchFunction implements Function {
         return new Class<?>[] {String[].class};
     }
 
-    public int getReturnType() {
-        return Constants.RETURN_VOID_TYPE;
+    public ValueType getReturnType() {
+        return ValueType.RETURN_VOID;
     }
 
     public String toPPString(Parameter[] params, int indents) {

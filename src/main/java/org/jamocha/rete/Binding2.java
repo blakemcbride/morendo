@@ -27,7 +27,7 @@ public class Binding2 extends Binding {
 	/**
 	 * 
 	 */
-	protected int operator = Constants.EQUAL;
+	protected Operator operator = Operator.EQUAL;
     protected Function function = null;
     protected Parameter[] params = null;
     protected String rightVariable = null;
@@ -36,12 +36,12 @@ public class Binding2 extends Binding {
 	/**
 	 * 
 	 */
-	public Binding2(int operator) {
+	public Binding2(Operator operator) {
 		super();
 		this.operator = operator;
 	}
 
-	public int getOperator() {
+	public Operator getOperator() {
 		return this.operator;
 	}
 

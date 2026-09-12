@@ -27,6 +27,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.RootNode;
 import org.jamocha.rete.visualisation.ViewGraphNode;
 import org.jamocha.rete.visualisation.Visualiser;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Josef Alexander Hahn
@@ -47,8 +48,8 @@ public class ViewFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	void traverse(int indent, BaseNode b){

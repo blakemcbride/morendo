@@ -14,6 +14,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.functions.java.ClassnameResolver;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Christian Ebert
@@ -112,7 +113,7 @@ public class MemberFunction implements Function {
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT,
 				ro);
 		ret.addReturnValue(rv);
 		return ret;
@@ -126,8 +127,8 @@ public class MemberFunction implements Function {
 		return new Class<?>[] { ValueParam[].class };
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

@@ -37,6 +37,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.util.IOUtilities;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -62,8 +63,8 @@ public class LoadGraphFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -118,7 +119,7 @@ public class LoadGraphFunction implements Function {
 		Deffact[] farray = new Deffact[facts.size()];
 		farray = facts.toArray(farray);
 		DefaultReturnValue drv = new DefaultReturnValue(
-				Constants.OBJECT_TYPE, farray);
+				ValueType.OBJECT, farray);
 		rv.addReturnValue(drv);
 		return rv;
 	}

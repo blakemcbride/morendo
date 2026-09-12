@@ -9,6 +9,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class BitAndFunction implements Function {
 
@@ -27,7 +28,7 @@ public class BitAndFunction implements Function {
 			if (params[0] instanceof ValueParam) {
 				value = ((ValueParam)params[0]).getIntValue();
 			} else if (params[0] instanceof BoundParam) {
-				Object v = ((BoundParam)params[0]).getValue(engine, Constants.OBJECT_TYPE);
+				Object v = ((BoundParam)params[0]).getValue(engine, ValueType.OBJECT);
 				if (v instanceof Number number) {
 					value = (number).intValue();
 				}
@@ -38,14 +39,14 @@ public class BitAndFunction implements Function {
 				if (params[i] instanceof ValueParam) {
 					intval = ((ValueParam)params[i]).getIntValue();
 				} else if (params[i] instanceof BoundParam) {
-					Object v = ((BoundParam)params[0]).getValue(engine, Constants.OBJECT_TYPE);
+					Object v = ((BoundParam)params[0]).getValue(engine, ValueType.OBJECT);
 					if (v instanceof Number numberValue) {
 						intval = (numberValue).intValue();
 					}
 				}
 				value = value & intval;
 			}
-			DefaultReturnValue returnVal = new DefaultReturnValue(Constants.INTEGER_OBJECT, Integer.valueOf(value));
+			DefaultReturnValue returnVal = new DefaultReturnValue(ValueType.INTEGER_OBJECT, Integer.valueOf(value));
 			returnVector.addReturnValue(returnVal);
 		}
 		return returnVector;
@@ -59,8 +60,8 @@ public class BitAndFunction implements Function {
 		return new Class<?>[]{ValueParam.class, ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

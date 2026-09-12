@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import java.time.Instant;
+import org.jamocha.rete.ValueType;
 
 public class PrintAgentsFunction implements Function {
 
@@ -64,8 +65,8 @@ public class PrintAgentsFunction implements Function {
 		return new Class<?>[0];
 	}
 
-	public int getReturnType() {
-		return 0;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

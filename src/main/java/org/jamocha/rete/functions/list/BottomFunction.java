@@ -11,6 +11,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class BottomFunction implements Function {
 
@@ -28,7 +29,7 @@ public class BottomFunction implements Function {
 		Object rl = null;
 		if (params != null && params.length == 2) {
 			int count = params[0].getBigIntegerValue().intValue();
-			rl = params[1].getValue(engine, Constants.OBJECT_TYPE);
+			rl = params[1].getValue(engine, ValueType.OBJECT);
 			if (rl instanceof List) {
 				@SuppressWarnings("unchecked") List<Object> list = (List<Object>)rl;
 				if (list.size() > count) {
@@ -56,7 +57,7 @@ public class BottomFunction implements Function {
 			}
 		}
 		DefaultReturnValue val = new DefaultReturnValue(
-				Constants.LIST_TYPE, rl);
+				ValueType.LIST, rl);
 		rv.addReturnValue(val);
 		return rv;
 	}
@@ -69,8 +70,8 @@ public class BottomFunction implements Function {
 		return new Class<?>[]{ValueParam.class,ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.LIST_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.LIST;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

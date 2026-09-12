@@ -23,6 +23,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 public class PPrintDefcubeFunction implements Function {
 
@@ -57,8 +58,8 @@ public class PPrintDefcubeFunction implements Function {
 		return new Class<?>[]{String.class};
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

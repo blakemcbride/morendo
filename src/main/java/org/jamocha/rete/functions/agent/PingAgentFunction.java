@@ -23,6 +23,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * PingAgent is similar to DOS/Unix ping command. The function
@@ -77,8 +78,8 @@ public class PingAgentFunction implements Function {
 		return new Class<?>[]{String.class};
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

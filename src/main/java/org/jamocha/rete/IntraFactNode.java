@@ -46,7 +46,7 @@ public class IntraFactNode extends BaseAlpha2 {
      * Set the operator using the int value
      * @param opr
      */
-    public void setOperator(int opr) {
+    public void setOperator(Operator opr) {
         this.operator = opr;
     }
 

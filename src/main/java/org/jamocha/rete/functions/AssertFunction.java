@@ -29,6 +29,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.RuleFunction;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.AssertException;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -45,8 +46,8 @@ public class AssertFunction implements RuleFunction {
 
 	protected Fact[] triggerFacts = null;
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public void setTriggerFacts(Fact[] facts) {
@@ -94,7 +95,7 @@ public class AssertFunction implements RuleFunction {
 			asrt = "false";
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.STRING_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING,
 				asrt);
 		ret.addReturnValue(rv);
 		return ret;

@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Nikolaus Koemm, Christian Ebert
@@ -48,8 +49,8 @@ public class IfFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -106,7 +107,7 @@ public class IfFunction implements Function {
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT,
 				result);
 		ret.addReturnValue(rv);
 		return ret;

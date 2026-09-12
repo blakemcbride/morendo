@@ -15,6 +15,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Dave Woodman - 9th May 2021
@@ -45,10 +46,10 @@ public class RestFunction implements Function {
 			if (params[0] instanceof ValueParam) {
 				list = ((ValueParam) params[1]).getValue();
 			} else {
-				list = params[0].getValue(engine, Constants.OBJECT_TYPE);
+				list = params[0].getValue(engine, ValueType.OBJECT);
 				if (list == null) // Oh, Let's try an array instead...
 					// Could also do this... list = (Object)params[0].getValue();
-					list = params[0].getValue(engine, Constants.ARRAY_TYPE);
+					list = params[0].getValue(engine, ValueType.ARRAY);
 			}
 			if (list.getClass().isArray()) {
 				Object[] lval = (Object[]) list;
@@ -61,15 +62,15 @@ public class RestFunction implements Function {
 			} 
 		} 		
 		val = rlist.toArray();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE, val);
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY, val);
 		
 		ret.addReturnValue(rv);
 		
 		return ret;
 	}
 
-	public int getReturnType() {
-		return Constants.ARRAY_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.ARRAY;
 	}
 
 	public String getName() {

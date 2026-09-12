@@ -8,6 +8,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class HelloFunction implements Function {
 
@@ -25,7 +26,7 @@ public class HelloFunction implements Function {
 		DefaultReturnVector returnVec = new DefaultReturnVector();
 		if (params != null && params.length > 0) {
 			for (int idx=0; idx < params.length; idx++) {
-				DefaultReturnValue value = new DefaultReturnValue(Constants.STRING_TYPE, params[idx].getStringValue());
+				DefaultReturnValue value = new DefaultReturnValue(ValueType.STRING, params[idx].getStringValue());
 				returnVec.addReturnValue(value);
 			}
 		}
@@ -40,8 +41,8 @@ public class HelloFunction implements Function {
 		return new Class[]{ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

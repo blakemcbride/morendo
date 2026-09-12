@@ -25,6 +25,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -45,8 +46,8 @@ public class DefglobalFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -61,7 +62,7 @@ public class DefglobalFunction implements Function {
         } else {
             value = "false";
         }
-        DefaultReturnValue rval = new DefaultReturnValue(Constants.OBJECT_TYPE,value);
+        DefaultReturnValue rval = new DefaultReturnValue(ValueType.OBJECT,value);
         ret.addReturnValue(rval);
 		return ret;
 	}

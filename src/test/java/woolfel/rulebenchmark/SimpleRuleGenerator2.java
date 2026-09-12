@@ -8,6 +8,7 @@ package woolfel.rulebenchmark;
 
 import java.io.FileWriter;
 import java.util.Random;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin

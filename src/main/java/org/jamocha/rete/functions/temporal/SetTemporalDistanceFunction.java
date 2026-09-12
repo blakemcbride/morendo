@@ -11,6 +11,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.Template;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class SetTemporalDistanceFunction implements Function {
 
@@ -31,7 +32,7 @@ public class SetTemporalDistanceFunction implements Function {
 			Template templ = engine.findTemplate(template);
 			if (templ != null) {
 				templ.setTemporalDistance(sec.intValue() * 1000);
-				DefaultReturnValue ret = new DefaultReturnValue(Constants.BIG_DECIMAL,sec);
+				DefaultReturnValue ret = new DefaultReturnValue(ValueType.BIG_DECIMAL,sec);
 				rv.addReturnValue(ret);
 			}
 		}
@@ -46,8 +47,8 @@ public class SetTemporalDistanceFunction implements Function {
 		return new Class<?>[]{ValueParam.class, ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BIG_DECIMAL;
+	public ValueType getReturnType() {
+		return ValueType.BIG_DECIMAL;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

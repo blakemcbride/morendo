@@ -44,6 +44,7 @@ import org.jamocha.rule.ObjectCondition;
 import org.jamocha.rule.PredicateConstraint;
 import org.jamocha.rule.Query;
 import org.jamocha.rule.Rule;
+import org.jamocha.rete.Operator;
 /**
  * 
  * @author HouZhanbin
@@ -174,10 +175,10 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 					oc.setHasPredicateJoin(true);
 					BoundParam bpm = (BoundParam) pc.getValue();
 					String var = bpm.getVariableName();
-					int op = ConversionUtils.getOperatorCode(pc
+					Operator op = ConversionUtils.getOperatorCode(pc
 							.getFunctionName());
 					// check and make sure the function isn't user defined
-					if (op != Constants.USERDEFINED) {
+					if (op != Operator.USERDEFINED) {
 						// if the first binding in the function is from the
 						// object type
 						// we reverse the operator
@@ -214,7 +215,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 					binds[idz].setRightIndex(rinx);
 				} else if (pc.getFunctionName() != null) {
 					// this means there is a nested function
-					Binding2 bind2 = new Binding2(Constants.EQUAL);
+					Binding2 bind2 = new Binding2(Operator.EQUAL);
 					binds[idz] = bind2;
 					Function f = ruleCompiler.getEngine().findFunction(
 							pc.getFunctionName());
@@ -266,10 +267,10 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 					oc.setHasPredicateJoin(true);
 					BoundParam bpm = (BoundParam) pc.getValue();
 					String var = bpm.getVariableName();
-					int op = ConversionUtils.getOperatorCode(pc
+					Operator op = ConversionUtils.getOperatorCode(pc
 							.getFunctionName());
 					// check and make sure the function isn't user defined
-					if (op != Constants.USERDEFINED) {
+					if (op != Operator.USERDEFINED) {
 						// if the first binding in the function is from the
 						// object type
 						// we reverse the operator
@@ -290,7 +291,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler{
 					binds[idz].setRightIndex(rinx);
 				} else if (pc.getFunctionName() != null) {
 					// this means there is a nested function
-					Binding2 bind2 = new Binding2(Constants.EQUAL);
+					Binding2 bind2 = new Binding2(Operator.EQUAL);
 					binds[idz] = bind2;
 					Function f = queryCompiler.getEngine().findFunction(
 							pc.getFunctionName());

@@ -27,7 +27,7 @@ import java.math.BigInteger;
  * to define functions, we provide this functionality.
  */
 public sealed interface ReturnValue permits Parameter {
-    int getValueType();
+    ValueType getValueType();
     
     Object getValue();
     

@@ -26,6 +26,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rule.Defrule;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -43,8 +44,8 @@ public class UnDefruleFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -62,7 +63,7 @@ public class UnDefruleFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, removed);
+				ValueType.BOOLEAN_OBJECT, removed);
 		ret.addReturnValue(rv);
 		return ret;
 	}

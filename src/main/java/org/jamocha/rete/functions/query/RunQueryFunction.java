@@ -11,6 +11,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rule.Query;
+import org.jamocha.rete.ValueType;
 
 public class RunQueryFunction implements Function {
 	
@@ -32,7 +33,7 @@ public class RunQueryFunction implements Function {
 			Query query = engine.getDefquery(name);
 			results = query.executeQuery(engine, engine.getWorkingMemory(), queryParams);
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE, results);
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT, results);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -45,8 +46,8 @@ public class RunQueryFunction implements Function {
 		return new Class<?>[]{String[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

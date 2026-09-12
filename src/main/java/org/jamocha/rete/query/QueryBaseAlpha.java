@@ -26,6 +26,7 @@ import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
 import org.jamocha.rule.Defquery;
+import org.jamocha.rete.Operator;
 
 /**
  * @author Peter Lin
@@ -40,7 +41,7 @@ public abstract class QueryBaseAlpha extends BaseNode {
 	/**
      * The operator to compare two values
      */
-    protected int operator = Constants.EQUAL;
+    protected Operator operator = Operator.EQUAL;
 	/**
 	 * The use of Slot(s) is similar to CLIPS design
 	 */
@@ -124,7 +125,7 @@ public abstract class QueryBaseAlpha extends BaseNode {
      * operator. To get the string representation, it should
      * be converted.
      */
-    public int getOperator() {
+    public Operator getOperator() {
         return this.operator;
     }
     

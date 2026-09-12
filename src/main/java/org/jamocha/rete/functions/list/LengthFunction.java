@@ -11,6 +11,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function for creating a multislot with 1 or more literals
@@ -40,7 +41,7 @@ public class LengthFunction implements Function {
 			if (params[0] instanceof ValueParam) {
 				val = params[0].getValue();
 			} else {
-				val = params[0].getValue(engine, Constants.ARRAY_TYPE);
+				val = params[0].getValue(engine, ValueType.ARRAY);
 			}
 			if (val.getClass().isArray()) {
 				Object[] ary = (Object[])val;
@@ -50,7 +51,7 @@ public class LengthFunction implements Function {
 				size = ((List<?>)val).size();
 			}
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.INTEGER_OBJECT,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.INTEGER_OBJECT,
 				Integer.valueOf(size));
 		ret.addReturnValue(rv);
 		return ret;
@@ -64,8 +65,8 @@ public class LengthFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

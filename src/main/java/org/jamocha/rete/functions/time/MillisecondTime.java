@@ -25,6 +25,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -45,8 +46,8 @@ public class MillisecondTime implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.LONG_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.LONG_OBJECT;
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class MillisecondTime implements Function {
 		BigDecimal time = new BigDecimal(System.currentTimeMillis());
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
-			new DefaultReturnValue(Constants.BIG_DECIMAL,time);
+			new DefaultReturnValue(ValueType.BIG_DECIMAL,time);
 		ret.addReturnValue(rv);
 		return ret;
 	}

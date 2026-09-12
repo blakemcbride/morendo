@@ -22,7 +22,7 @@ import java.util.Objects;
  * The key under which alpha nodes are shared: a slot name, the comparison operator
  * and the literal value of a constraint.
  */
-public record CompositeIndex(String name, int operator, Object value) {
+public record CompositeIndex(String name, Operator operator, Object value) {
 
 	@Override
 	public boolean equals(Object other) {
@@ -32,7 +32,7 @@ public record CompositeIndex(String name, int operator, Object value) {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode() + operator + (value == null ? 0 : value.hashCode());
+		return name.hashCode() + operator.ordinal() + (value == null ? 0 : value.hashCode());
 	}
 
 	public String toPPString() {

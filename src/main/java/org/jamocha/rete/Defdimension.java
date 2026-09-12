@@ -144,18 +144,18 @@ public class Defdimension implements CubeDimension {
 	 * method will only return data if the value is an instance
 	 * of Number of a subclass.
 	 */
-	public Map<Object, Object> getData(Object value, int operator) {
+	public Map<Object, Object> getData(Object value, Operator operator) {
 		if (value instanceof Number n) {
 			switch (operator) {
-				case Constants.GREATER:
+				case GREATER:
 					return queryGreater(n);
-				case Constants.LESS:
+				case LESS:
 					return queryLesser(n);
-				case Constants.GREATEREQUAL:
+				case GREATEREQUAL:
 					return queryGreaterEqual(n);
-				case Constants.LESSEQUAL:
+				case LESSEQUAL:
 					return queryLesserEqual(n);
-				case Constants.NOTEQUAL:
+				case NOTEQUAL:
 					return getData(value,true);
 				default:
 					return getData(value, false);

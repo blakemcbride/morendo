@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Nikolaus Koemm
@@ -47,8 +48,8 @@ public class Min implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BIG_DECIMAL;
+	public ValueType getReturnType() {
+		return ValueType.BIG_DECIMAL;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -60,14 +61,14 @@ public class Min implements Function {
 					ValueParam n = (ValueParam) params[idx];
 					bd = n.getBigDecimalValue();
 				} else {
-					bd = new BigDecimal( params[idx].getValue(engine, Constants.BIG_DECIMAL).toString() );
+					bd = new BigDecimal( params[idx].getValue(engine, ValueType.BIG_DECIMAL).toString() );
 				}
 				if (idx == 0) bdval = bdval.add(bd);
 				else bdval = bdval.min(bd);
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.BIG_DECIMAL,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL,
 				bdval);
 		ret.addReturnValue(rv);
 		return ret;

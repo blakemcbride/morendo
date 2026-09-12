@@ -37,6 +37,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.util.IOUtilities;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -58,8 +59,8 @@ public class LoadFactsFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -114,7 +115,7 @@ public class LoadFactsFunction implements Function {
 			loaded = Boolean.FALSE;
 		}
 		DefaultReturnValue drv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, loaded);
+				ValueType.BOOLEAN_OBJECT, loaded);
 		rv.addReturnValue(drv);
 		return rv;
 	}

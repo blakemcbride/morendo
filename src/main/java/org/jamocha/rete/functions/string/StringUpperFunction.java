@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -45,8 +46,8 @@ public class StringUpperFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -61,7 +62,7 @@ public class StringUpperFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.STRING_TYPE, txt);
+				ValueType.STRING, txt);
 		ret.addReturnValue(rv);
 		return ret;
 	}

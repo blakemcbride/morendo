@@ -34,6 +34,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.RetractException;
+import org.jamocha.rete.ValueType;
 
 public class RetractFunction implements Function {
 
@@ -46,8 +47,8 @@ public class RetractFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.RETURN_VOID_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.RETURN_VOID;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -64,20 +65,20 @@ public class RetractFunction implements Function {
 						if (fact.getObjectInstance() != null) 
 							engine.retractObject(fact.getObjectInstance());
 						else engine.retractFact(fact);
-						DefaultReturnValue rval = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, Boolean.TRUE);
+						DefaultReturnValue rval = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.TRUE);
 						rv.addReturnValue(rval);
 					} catch (RetractException | NumberFormatException e) {
-						DefaultReturnValue rval = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, Boolean.FALSE);
+						DefaultReturnValue rval = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
 						rv.addReturnValue(rval);
 					}
 				} else if (params[idx] instanceof ValueParam) {
 					BigDecimal bi = params[idx].getBigDecimalValue();
 					try {
 						engine.retractById(bi.longValue());
-						DefaultReturnValue rval = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, Boolean.TRUE);
+						DefaultReturnValue rval = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.TRUE);
 						rv.addReturnValue(rval);
 					} catch (RetractException e) {
-						DefaultReturnValue rval = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, Boolean.FALSE);
+						DefaultReturnValue rval = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
 						rv.addReturnValue(rval);
 					}
 				}

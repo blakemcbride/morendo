@@ -24,6 +24,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -44,8 +45,8 @@ public class BetweenFunction extends AbstractTimeFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	/**
@@ -56,9 +57,9 @@ public class BetweenFunction extends AbstractTimeFunction implements Function {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		Boolean eval = Boolean.FALSE;
 		if (params != null && params.length == 3) {
-			Object one = params[0].getValue(engine, Constants.OBJECT_TYPE);
-			Object two = params[1].getValue(engine, Constants.OBJECT_TYPE);
-			Object three = params[2].getValue(engine, Constants.OBJECT_TYPE);
+			Object one = params[0].getValue(engine, ValueType.OBJECT);
+			Object two = params[1].getValue(engine, ValueType.OBJECT);
+			Object three = params[2].getValue(engine, ValueType.OBJECT);
 			long begin = getMillisecondTime(one);
 			long end = getMillisecondTime(two);
 			long time = getMillisecondTime(three);
@@ -69,7 +70,7 @@ public class BetweenFunction extends AbstractTimeFunction implements Function {
 		
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
-			new DefaultReturnValue(Constants.BOOLEAN_OBJECT, eval);
+			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
 		ret.addReturnValue(rv);
 		return ret;
 	}

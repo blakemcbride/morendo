@@ -14,6 +14,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function will parse a string, strip punctuation and return a HashMap<String,Integer>
@@ -32,8 +33,8 @@ public class TokenizeFunction implements Function {
 	public TokenizeFunction() {
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -57,7 +58,7 @@ public class TokenizeFunction implements Function {
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT,
 				wordcount);
 		ret.addReturnValue(rv);
 		return ret;

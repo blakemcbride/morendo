@@ -14,6 +14,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * 
@@ -43,7 +44,7 @@ public class InsertValueFunction implements Function {
 			if (params[0] instanceof ValueParam) {
 				list = params[0].getValue();
 			} else {
-				list = params[0].getValue(engine, Constants.ARRAY_TYPE);
+				list = params[0].getValue(engine, ValueType.ARRAY);
 			}
 			if (list.getClass().isArray()) {
 				Object[] r = (Object[])list;
@@ -59,7 +60,7 @@ public class InsertValueFunction implements Function {
 			if (params[1] instanceof ValueParam) {
 				startIndex = params[1].getBigDecimalValue().intValue();
 			} else {
-				BigDecimal bval = new BigDecimal(params[1].getValue(engine, Constants.INT_PRIM_TYPE).toString());
+				BigDecimal bval = new BigDecimal(params[1].getValue(engine, ValueType.INT_PRIM).toString());
 				startIndex = bval.intValue();
 			}
 			if (startIndex > idx) startIndex = idx; // Check to see if we need to place at end (behaviour as per CLIPS)
@@ -71,9 +72,9 @@ public class InsertValueFunction implements Function {
 				if (params[p] instanceof ValueParam) {
 					add = params[p].getValue();
 				} else if (params[p] instanceof BoundParam) {
-					add = ((BoundParam)params[p]).getValue(engine, Constants.ARRAY_TYPE);
+					add = ((BoundParam)params[p]).getValue(engine, ValueType.ARRAY);
 				} else if (params[p] instanceof FunctionParam2) {
-					add = ((FunctionParam2)params[p]).getValue(engine, Constants.ARRAY_TYPE);
+					add = ((FunctionParam2)params[p]).getValue(engine, ValueType.ARRAY);
 				}
 				if (add.getClass().isArray()) {
 					Object[] ar = (Object[])add;
@@ -88,7 +89,7 @@ public class InsertValueFunction implements Function {
 			}
 			value = returnlist.toArray();
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY,
 				value);
 		ret.addReturnValue(rv);
 		return ret;
@@ -102,8 +103,8 @@ public class InsertValueFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.ARRAY_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.ARRAY;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

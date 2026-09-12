@@ -26,6 +26,7 @@ import org.jamocha.rete.Fact;
 import org.jamocha.rete.Module;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.Scope;
+import org.jamocha.rete.Operator;
 
 
 /**
@@ -279,7 +280,7 @@ public interface Rule extends Scope {
      * @param operator
      * @return
      */
-    Binding copyPredicateBinding(String varName, int operator);
+    Binding copyPredicateBinding(String varName, Operator operator);
     /**
      * Get a iterator to the Binding objects
      * @return

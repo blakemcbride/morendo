@@ -30,6 +30,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.util.FactUtils;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -51,8 +52,8 @@ public class SaveFactsFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -84,7 +85,7 @@ public class SaveFactsFunction implements Function {
 			}
 		}
 		DefaultReturnValue drv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, saved);
+				ValueType.BOOLEAN_OBJECT, saved);
 		rv.addReturnValue(drv);
 		return rv;
 	}

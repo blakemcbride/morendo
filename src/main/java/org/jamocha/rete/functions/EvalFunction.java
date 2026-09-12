@@ -28,6 +28,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Sebastian Reinartz
@@ -49,14 +50,14 @@ public class EvalFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		ReturnVector result = null;
 		if (params != null && params.length > 0) {
-			String command = (String)params[0].getValue(engine, Constants.STRING_TYPE);
+			String command = (String)params[0].getValue(engine, ValueType.STRING);
 			if (command != null) {
 				result = eval(engine, command);
 			}

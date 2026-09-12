@@ -28,6 +28,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Nikolaus Koemm
@@ -49,8 +50,8 @@ public class Degrees implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BIG_DECIMAL;
+	public ValueType getReturnType() {
+		return ValueType.BIG_DECIMAL;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -74,7 +75,7 @@ public class Degrees implements Function {
 			bdval = BigDecimal.valueOf(java.lang.Math.toDegrees(bdh));
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.BIG_DECIMAL,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BIG_DECIMAL,
 				bdval);
 		ret.addReturnValue(rv);
 		return ret;

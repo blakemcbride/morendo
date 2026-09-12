@@ -30,7 +30,7 @@ public interface Function {
 	 * every function needs to declare what the return type is.
 	 * @return
 	 */
-	int getReturnType();
+	ValueType getReturnType();
 
 	/**
 	 * Functions must implement concrete logic for the function.

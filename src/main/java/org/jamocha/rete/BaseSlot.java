@@ -47,7 +47,7 @@ public class BaseSlot implements Serializable, Cloneable {
 	/**
 	 * The type of the value
 	 */
-	private int type = -1;
+	private ValueType type = null;
 
 	/**
 	 * in some cases, users may want a template to have a default value
@@ -86,11 +86,11 @@ public class BaseSlot implements Serializable, Cloneable {
 		this.name = text;
 	}
 
-	public int getValueType() {
+	public ValueType getValueType() {
 		return this.type;
 	}
 
-	public void setValueType(int type) {
+	public void setValueType(ValueType type) {
 		this.type = type;
 	}
 

@@ -13,6 +13,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -38,20 +39,20 @@ public class DeleteRangeFunction implements Function {
 			if (params[0] instanceof ValueParam) {
 				list = params[0].getValue();
 			} else {
-				list = params[0].getValue(engine, Constants.ARRAY_TYPE);
+				list = params[0].getValue(engine, ValueType.ARRAY);
 			}
 			int startIndex = 0;
 			if (params[1] instanceof ValueParam) {
 				startIndex = params[1].getBigDecimalValue().intValue() ;
 			} else if (params[1] instanceof BoundParam) {
-				Object bval = ((BoundParam)params[1]).getValue(engine, Constants.INT_PRIM_TYPE);
+				Object bval = ((BoundParam)params[1]).getValue(engine, ValueType.INT_PRIM);
 				startIndex = ((BigDecimal)bval).intValue();
 			}
 			int endIndex = 0;
 			if (params[2] instanceof ValueParam) {
 				endIndex = params[2].getBigDecimalValue().intValue();
 			} else if (params[2] instanceof BoundParam) {
-				Object bval = ((BoundParam)params[2]).getValue(engine, Constants.INT_PRIM_TYPE);
+				Object bval = ((BoundParam)params[2]).getValue(engine, ValueType.INT_PRIM);
 				endIndex = ((BigDecimal)bval).intValue();
 			}
 			//Make 1 bases
@@ -76,7 +77,7 @@ public class DeleteRangeFunction implements Function {
 			}
 			value = rlist.toArray();
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY,
 				value);
 		ret.addReturnValue(rv);
 		return ret;
@@ -90,8 +91,8 @@ public class DeleteRangeFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.ARRAY_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.ARRAY;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

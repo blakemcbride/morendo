@@ -31,6 +31,7 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defrule;
 import org.jamocha.rule.util.GenerateFacts;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -50,8 +51,8 @@ public class TestRuleFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -79,7 +80,7 @@ public class TestRuleFunction implements Function {
 			}
 		}
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, Boolean.TRUE);
+				ValueType.BOOLEAN_OBJECT, Boolean.TRUE);
 		ret.addReturnValue(rv);
 		return ret;
 	}

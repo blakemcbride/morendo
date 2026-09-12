@@ -57,7 +57,7 @@ public interface CubeDimension {
 	 */
 	public void indexData(Index index, Rete engine);
 	public Map<?, ?> getData(Object value, boolean negated);
-	public Map<?, ?> getData(Object value, int operator);
+	public Map<?, ?> getData(Object value, Operator operator);
 	
 	boolean profile();
 	void setProfile(boolean profile);

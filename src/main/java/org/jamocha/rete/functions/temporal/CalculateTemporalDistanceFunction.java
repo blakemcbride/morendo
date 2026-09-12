@@ -10,6 +10,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class CalculateTemporalDistanceFunction implements Function {
 
@@ -32,7 +33,7 @@ public class CalculateTemporalDistanceFunction implements Function {
 		Collection<?> rules = engine.getCurrentFocus().getAllRules();
 		successful = calculation.calcuateDistance(engine, rules);
 		DefaultReturnVector rv = new DefaultReturnVector();
-		DefaultReturnValue value = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, successful);
+		DefaultReturnValue value = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, successful);
 		rv.addReturnValue(value);
 		return rv;
 	}
@@ -45,8 +46,8 @@ public class CalculateTemporalDistanceFunction implements Function {
 		return new Class<?>[]{ValueParam.class, ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

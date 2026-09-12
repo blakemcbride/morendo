@@ -26,6 +26,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -48,23 +49,23 @@ public class AnyEqFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		DefaultReturnVector ret = new DefaultReturnVector();
 		Boolean eq = Boolean.FALSE;
 		if (params != null && params.length > 1) {
-			Object constant = params[0].getValue(engine, Constants.OBJECT_TYPE);
+			Object constant = params[0].getValue(engine, ValueType.OBJECT);
 			for (int idx=1; idx < params.length; idx++) {
-				if (constant.equals(params[idx].getValue(engine, Constants.OBJECT_TYPE))) {
+				if (constant.equals(params[idx].getValue(engine, ValueType.OBJECT))) {
 					eq = Boolean.TRUE;
 					break;
 				}
 			}
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.BOOLEAN_OBJECT, eq);
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eq);
 		ret.addReturnValue(rv);
 		return ret;
 	}

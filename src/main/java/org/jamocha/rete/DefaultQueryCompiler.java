@@ -272,7 +272,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
             current = new QueryAlphaNode(engine.nextNodeId());
             
             current.setSlot(sl);
-            current.setOperator(Constants.EQUAL);
+            current.setOperator(Operator.EQUAL);
             current.incrementUseCount();
             // we increment the node use count when when create a new
             // AlphaNode for the LiteralConstraint
@@ -378,9 +378,9 @@ public class DefaultQueryCompiler implements QueryCompiler {
             ifnode.setRightSlot(right);
             ifnode.incrementUseCount();
             if (first.getNegated()) {
-                ifnode.setOperator(Constants.NOTEQUAL);
+                ifnode.setOperator(Operator.NOTEQUAL);
             } else {
-                ifnode.setOperator(Constants.EQUAL);
+                ifnode.setOperator(Operator.EQUAL);
             }
             current = ifnode;
         } else {
@@ -408,7 +408,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
     	// set when the query is executed.
 
     	if (ConversionUtils.isPredicateOperatorCode(cnstr.getFunctionName())) {
-            int oprCode = ConversionUtils.getOperatorCode(cnstr.getFunctionName());
+            Operator oprCode = ConversionUtils.getOperatorCode(cnstr.getFunctionName());
             if (cnstr.reverseOperator()) {
             	oprCode = ConversionUtils.getOppositeOperatorCode(oprCode);
             }
@@ -435,8 +435,8 @@ public class DefaultQueryCompiler implements QueryCompiler {
             if (f != null) {
                 // we create the alphaNode if a function is found and
                 // the return type is either boolean primitive or object
-                if (f.getReturnType() == Constants.BOOLEAN_PRIM_TYPE || 
-                    f.getReturnType() == Constants.BOOLEAN_OBJECT) {
+                if (f.getReturnType() == ValueType.BOOLEAN_PRIM || 
+                    f.getReturnType() == ValueType.BOOLEAN_OBJECT) {
 
                 	Parameter[] parameters = new Parameter[cnstr.getParameters().size()];
                 	parameters = cnstr.getParameters().toArray(parameters);

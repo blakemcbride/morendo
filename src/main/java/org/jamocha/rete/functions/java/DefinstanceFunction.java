@@ -34,6 +34,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.AssertException;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -53,8 +54,8 @@ public class DefinstanceFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -85,7 +86,7 @@ public class DefinstanceFunction implements Function {
 					log.debug(e.toString(), e);
 				}
 			} else if (params[0] instanceof BoundParam) {
-				instance = ((BoundParam)params[0]).getValue(engine, Constants.OBJECT_TYPE);
+				instance = ((BoundParam)params[0]).getValue(engine, ValueType.OBJECT);
 			} else if (params[0] instanceof ValueParam) {
 				String classname = params[0].getStringValue();
 				Defclass defclass = engine.findDefclassByName(classname);
@@ -112,7 +113,7 @@ public class DefinstanceFunction implements Function {
 			asrt = "false";
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.STRING_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING,
 				asrt);
 		ret.addReturnValue(rv);
 		return ret;

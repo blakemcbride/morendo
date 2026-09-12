@@ -29,6 +29,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.AssertException;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -44,8 +45,8 @@ public class AssertTemporalFunction implements Function {
 
 	protected Fact[] triggerFacts = null;
 
-	public int getReturnType() {
-		return Constants.STRING_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.STRING;
 	}
 
 	public void setTriggerFacts(Fact[] facts) {
@@ -91,7 +92,7 @@ public class AssertTemporalFunction implements Function {
 			asrt = "false";
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.STRING_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING,
 				asrt);
 		ret.addReturnValue(rv);
 		return ret;

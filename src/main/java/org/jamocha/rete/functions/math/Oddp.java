@@ -27,6 +27,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Nikolaus Koemm
@@ -47,15 +48,15 @@ public class Oddp implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BIG_DECIMAL;
+	public ValueType getReturnType() {
+		return ValueType.BIG_DECIMAL;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		BigDecimal bdval = new BigDecimal(0);
 		Boolean eval = Boolean.FALSE;
 		if (params.length == 1) {
-            bdval = (BigDecimal)params[0].getValue(engine, Constants.BIG_DECIMAL);
+            bdval = (BigDecimal)params[0].getValue(engine, ValueType.BIG_DECIMAL);
 			double bdh = bdval.doubleValue();
 			if (bdh % 2 == 1){
 				eval = Boolean.TRUE;
@@ -64,7 +65,7 @@ public class Oddp implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, eval);
+				ValueType.BOOLEAN_OBJECT, eval);
 		ret.addReturnValue(rv);
 		return ret;
 	}

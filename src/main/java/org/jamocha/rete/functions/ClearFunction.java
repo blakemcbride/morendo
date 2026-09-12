@@ -24,6 +24,7 @@ import org.jamocha.rete.Function;
 import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -45,8 +46,8 @@ public class ClearFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -61,7 +62,7 @@ public class ClearFunction implements Function {
 			engine.clearAll();
 		}
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, Boolean.TRUE);
+				ValueType.BOOLEAN_OBJECT, Boolean.TRUE);
 		ret.addReturnValue(rv);
 		return ret;
 	}

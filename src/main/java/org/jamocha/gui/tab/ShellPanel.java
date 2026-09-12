@@ -65,6 +65,7 @@ import org.jamocha.messagerouter.StreamChannel;
 import org.jamocha.rete.Constants;
 import org.jamocha.rete.DefaultReturnVector;
 import org.jamocha.rete.ReturnValue;
+import org.jamocha.rete.ValueType;
 
 /**
  * This class provides a panel with a command line interface to Jamocha.
@@ -432,8 +433,8 @@ public final class ShellPanel extends AbstractJamochaPanel implements ActionList
 									DefaultReturnVector rv = (DefaultReturnVector) event.getMessage();			
 									if (rv.getItems().size() > 0) {
 										ReturnValue rval = rv.getItems().get(0);
-										if ((rval.getValueType() == Constants.ARRAY_TYPE) ||
-												(rval.getValueType() == Constants.LIST_TYPE))
+										if ((rval.getValueType() == ValueType.ARRAY) ||
+												(rval.getValueType() == ValueType.LIST))
 										{
 											buffer.append(Arrays.toString((Object[])rval.getValue())
 													+ System.getProperty("line.separator"));

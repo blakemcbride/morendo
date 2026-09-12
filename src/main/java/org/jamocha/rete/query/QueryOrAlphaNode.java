@@ -24,6 +24,7 @@ import org.jamocha.rete.Slot2;
 import org.jamocha.rete.WorkingMemory;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defquery;
+import org.jamocha.rete.Operator;
 
 /**
  * 
@@ -134,7 +135,7 @@ public class QueryOrAlphaNode extends QueryBaseAlphaCondition {
 	/**
 	 * method is not implemented, since it doesn't apply
 	 */
-	public void setOperator(int opr) {
+	public void setOperator(Operator opr) {
 	}
 
 	/**

@@ -7,6 +7,7 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.functions.io.BatchFunction;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.jamocha.rete.ValueType;
 
 
 public class ExecutionTest {
@@ -19,7 +20,7 @@ public class ExecutionTest {
 		// exists_sample15 defines one rule and asserts its facts; the batch function
 		// is exercised explicitly the way the original test did.
 		Function batch = engine.findFunction(BatchFunction.BATCH);
-		Parameter[] parameters = new Parameter[]{new ValueParam(Constants.STRING_TYPE,"./samples/exists/exists_sample15.clp")};
+		Parameter[] parameters = new Parameter[]{new ValueParam(ValueType.STRING,"./samples/exists/exists_sample15.clp")};
 		batch.executeFunction(engine, parameters);
 		assertEquals(1, engine.getCurrentFocus().getRuleCount());
 		int fired = engine.fire();

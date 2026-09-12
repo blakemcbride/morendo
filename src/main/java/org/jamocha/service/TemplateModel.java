@@ -10,6 +10,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.functions.io.BatchFunction;
 import org.jamocha.rete.util.IOUtilities;
+import org.jamocha.rete.ValueType;
 
 /**
  * Template model defines the deftemplates for a rule application
@@ -64,6 +65,6 @@ public class TemplateModel implements Model {
 	 */
 	public void loadModel(Rete engine) {
 		Function batch = engine.findFunction(BatchFunction.BATCH);
-		batch.executeFunction(engine, new Parameter[]{new ValueParam(Constants.STRING_TYPE,this.URL)});
+		batch.executeFunction(engine, new Parameter[]{new ValueParam(ValueType.STRING,this.URL)});
 	}
 }

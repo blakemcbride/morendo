@@ -27,6 +27,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.RuleFunction;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rete.exception.RetractException;
+import org.jamocha.rete.ValueType;
 
 /**
  * CubeAddData function is used to update a cube and add more data
@@ -61,7 +62,7 @@ public class CubeAddDataFunction implements RuleFunction {
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
 		boolean update = false;
 		if (params != null && params.length == 1) {
-			String name = (String)params[0].getValue(engine, Constants.STRING_TYPE);
+			String name = (String)params[0].getValue(engine, ValueType.STRING);
 			Cube c = engine.getCube(name);
 			if (c != null && triggerFacts != null) {
 				c.addData(this.triggerFacts, engine);
@@ -77,7 +78,7 @@ public class CubeAddDataFunction implements RuleFunction {
 		}
 		
 		DefaultReturnVector ret = new DefaultReturnVector();
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.BOOLEAN_OBJECT,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,
 				update);
 		ret.addReturnValue(rv);
 		return ret;
@@ -91,8 +92,8 @@ public class CubeAddDataFunction implements RuleFunction {
 		return new Class<?>[]{String.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

@@ -11,6 +11,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function for creating a multislot with 1 or more literals
@@ -36,25 +37,25 @@ public class CreateMSlotFunction implements Function {
 				if (params[idx] instanceof ValueParam) {
 					list.add(params[idx].getValue());
 				} else {
-					Object val = params[idx].getValue(engine, Constants.OBJECT_TYPE);
+					Object val = params[idx].getValue(engine, ValueType.OBJECT);
 					list.add(val);
 				}
 			}
 			if (params[0].getValue() instanceof String) {
 				String[] mval = new String[params.length];
 				mval = list.toArray(mval);
-				DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE,
+				DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY,
 						mval);
 				ret.addReturnValue(rv);
 			} else {
 				Object[] value = list.toArray();
-				DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE,
+				DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY,
 						value);
 				ret.addReturnValue(rv);
 			}
 		} else {
 			Object[] value = list.toArray();
-			DefaultReturnValue rv = new DefaultReturnValue(Constants.ARRAY_TYPE,
+			DefaultReturnValue rv = new DefaultReturnValue(ValueType.ARRAY,
 					value);
 			ret.addReturnValue(rv);
 		}
@@ -69,8 +70,8 @@ public class CreateMSlotFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.ARRAY_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.ARRAY;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

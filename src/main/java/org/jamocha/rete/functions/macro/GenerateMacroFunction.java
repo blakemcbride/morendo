@@ -9,6 +9,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 public class GenerateMacroFunction implements Function {
 
@@ -34,7 +35,7 @@ public class GenerateMacroFunction implements Function {
 			generate = Boolean.TRUE;
 		}
 		DefaultReturnVector rv = new DefaultReturnVector();
-		DefaultReturnValue rval = new DefaultReturnValue(Constants.BOOLEAN_OBJECT,generate);
+		DefaultReturnValue rval = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT,generate);
 		rv.addReturnValue(rval);
 		return rv;
 	}
@@ -47,8 +48,8 @@ public class GenerateMacroFunction implements Function {
 		return new Class<?>[]{ValueParam.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

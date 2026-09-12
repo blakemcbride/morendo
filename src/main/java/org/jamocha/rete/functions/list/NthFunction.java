@@ -11,6 +11,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 /**
  * Nth function will return the value at the given index
@@ -45,16 +46,16 @@ public class NthFunction implements Function {
 			if (params[0] instanceof ValueParam) {
 				index = ((ValueParam)params[0]).getIntValue();
 			} else {
-				BigDecimal bval = new BigDecimal(params[0].getValue(engine, Constants.BIG_DECIMAL).toString());
+				BigDecimal bval = new BigDecimal(params[0].getValue(engine, ValueType.BIG_DECIMAL).toString());
 				index = bval.intValue();
 			}
 			if (params[1] instanceof ValueParam) {
 				list = ((ValueParam)params[1]).getValue();
 			} else {
-				list = params[1].getValue(engine, Constants.OBJECT_TYPE);
+				list = params[1].getValue(engine, ValueType.OBJECT);
 				if (list == null )  // Oh, Let's try an array instead...
 					// Could also do this... list = (Object)params[1].getValue();
-					list = params[1].getValue(engine, Constants.ARRAY_TYPE);
+					list = params[1].getValue(engine, ValueType.ARRAY);
 			}
 			index--; // Compensate for zero-based in Java vs 1 based in CLIPS
 			if (list.getClass().isArray()) {
@@ -66,7 +67,7 @@ public class NthFunction implements Function {
 				}
 			}
 		}
-		DefaultReturnValue rv = new DefaultReturnValue(Constants.OBJECT_TYPE,
+		DefaultReturnValue rv = new DefaultReturnValue(ValueType.OBJECT,
 				val);
 		ret.addReturnValue(rv);
 		return ret;
@@ -80,8 +81,8 @@ public class NthFunction implements Function {
 		return new Class<?>[]{ValueParam[].class};
 	}
 
-	public int getReturnType() {
-		return Constants.INTEGER_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.INTEGER_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

@@ -28,6 +28,7 @@ import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.exception.AssertException;
 import org.jamocha.rule.Defrule;
+import org.jamocha.rete.ValueType;
 
 /**
  * 
@@ -48,7 +49,7 @@ public class DefcubeFunction implements Function {
 		Boolean add = Boolean.FALSE;
 		
 		if (params != null && params.length == 1) {
-			Defcube cube = (Defcube)params[0].getValue(engine, Constants.OBJECT_TYPE);
+			Defcube cube = (Defcube)params[0].getValue(engine, ValueType.OBJECT);
 			add = cube.compileCube(engine);
 			if (add) {
 				Defrule rule = cube.getUpdateRule();
@@ -65,7 +66,7 @@ public class DefcubeFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.BOOLEAN_OBJECT, add);
+				ValueType.BOOLEAN_OBJECT, add);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -78,8 +79,8 @@ public class DefcubeFunction implements Function {
 		return new Class<?>[]{Cube.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

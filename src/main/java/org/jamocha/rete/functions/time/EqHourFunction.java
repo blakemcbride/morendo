@@ -28,6 +28,7 @@ import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import org.jamocha.rete.ValueType;
 
 /**
  * Function will compare two dates down to the minute. That means it will lop off the seconds
@@ -75,7 +76,7 @@ public class EqHourFunction extends AbstractTimeFunction implements Function {
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = 
-			new DefaultReturnValue(Constants.BOOLEAN_OBJECT, eval);
+			new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, eval);
 		ret.addReturnValue(rv);
 		return ret;
 	}
@@ -88,8 +89,8 @@ public class EqHourFunction extends AbstractTimeFunction implements Function {
 		return new Class<?>[]{Instant.class, Instant.class};
 	}
 
-	public int getReturnType() {
-		return Constants.BOOLEAN_OBJECT;
+	public ValueType getReturnType() {
+		return ValueType.BOOLEAN_OBJECT;
 	}
 
 	public String toPPString(Parameter[] params, int indents) {

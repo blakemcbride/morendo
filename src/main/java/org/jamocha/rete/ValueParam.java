@@ -31,7 +31,7 @@ public sealed class ValueParam extends AbstractParam permits DefaultReturnValue 
      * 
      */
 
-    protected int valueType;
+    protected ValueType valueType;
 
 	protected Object value = null;
 
@@ -42,20 +42,20 @@ public sealed class ValueParam extends AbstractParam permits DefaultReturnValue 
 	/**
 	 * 
 	 */
-	public ValueParam(int vtype, Object value) {
+	public ValueParam(ValueType vtype, Object value) {
 		super();
 		this.valueType = vtype;
 		this.value = value;
 	}
 
-	public void setValueType(int type) {
+	public void setValueType(ValueType type) {
 		this.valueType = type;
 	}
 
 	/**
 	 * The value types are defined in woolfel.engine.rete.Constants
 	 */
-	public int getValueType() {
+	public ValueType getValueType() {
 		return this.valueType;
 	}
 
@@ -75,8 +75,8 @@ public sealed class ValueParam extends AbstractParam permits DefaultReturnValue 
      * Value parameter don't need to resolve the value, so it just
      * returns it.
      */
-    public Object getValue(Rete engine, int valueType) {
-        if (this.valueType == Constants.STRING_TYPE) {
+    public Object getValue(Rete engine, ValueType valueType) {
+        if (this.valueType == ValueType.STRING) {
         	try {
         		return new BigDecimal((String)this.value);
         	}
@@ -93,7 +93,7 @@ public sealed class ValueParam extends AbstractParam permits DefaultReturnValue 
 	 */
 	public void reset() {
 		this.value = null;
-		this.valueType = Constants.OBJECT_TYPE;
+		this.valueType = ValueType.OBJECT;
 	}
 
 	public ValueParam cloneParameter() {

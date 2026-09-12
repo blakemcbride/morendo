@@ -28,6 +28,7 @@ import org.jamocha.rete.Slot;
 import woolfel.examples.model.TestBean2;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.jamocha.rete.Operator;
 
 
 /**
@@ -49,7 +50,7 @@ public class SlotTest {
         // ObjectTypeNode otn = new ObjectTypeNode(1,dtemp,engine); Unused
         AlphaNode an = new AlphaNode(1);
         slts[0].setValue(ConversionUtils.convert(110));
-        an.setOperator(Constants.EQUAL);
+        an.setOperator(Operator.EQUAL);
         an.setSlot(slts[0]);
         System.out.println("node::" + an.toString());
         assertNotNull(an.toString());
@@ -70,12 +71,12 @@ public class SlotTest {
         slts[1].setValue(ConversionUtils.convert(999));
         
         an1.setSlot(slts[0]);
-        an1.setOperator(Constants.EQUAL);
+        an1.setOperator(Operator.EQUAL);
         System.out.println("node::" + an1.toPPString());
         assertNotNull(an1.toPPString());
         
         an2.setSlot(slts[1]);
-        an2.setOperator(Constants.GREATER);
+        an2.setOperator(Operator.GREATER);
         System.out.println("node::" + an2.toPPString());
         assertNotNull(an2.toPPString());
     }

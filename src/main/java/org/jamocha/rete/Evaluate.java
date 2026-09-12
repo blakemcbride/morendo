@@ -33,15 +33,15 @@ import java.util.Date;
  */
 public class Evaluate {
 
-    public static boolean evaluate(int operator, Object left, Object right) {
+    public static boolean evaluate(Operator operator, Object left, Object right) {
         return switch (operator) {
-            case Constants.EQUAL -> evaluateEqual(left, right);
-            case Constants.NOTEQUAL -> evaluateNotEqual(left, right);
-            case Constants.LESS -> evaluateLess(left, right);
-            case Constants.LESSEQUAL -> evaluateLessEqual(left, right);
-            case Constants.GREATER -> evaluateGreater(left, right);
-            case Constants.GREATEREQUAL -> evaluateGreaterEqual(left, right);
-            case Constants.NILL -> evaluateNull(left, right);
+            case EQUAL -> evaluateEqual(left, right);
+            case NOTEQUAL -> evaluateNotEqual(left, right);
+            case LESS -> evaluateLess(left, right);
+            case LESSEQUAL -> evaluateLessEqual(left, right);
+            case GREATER -> evaluateGreater(left, right);
+            case GREATEREQUAL -> evaluateGreaterEqual(left, right);
+            case NILL -> evaluateNull(left, right);
             default -> false;
         };
     }
@@ -54,7 +54,7 @@ public class Evaluate {
             case null -> false;
             case String s -> evaluateStringEqual(s, right);
             case Boolean b -> evaluateBooleanEqual(b, right);
-            case Number n -> right instanceof String s ? n.toString().equals(s) : compare(Constants.EQUAL, n, right);
+            case Number n -> right instanceof String s ? n.toString().equals(s) : compare(Operator.EQUAL, n, right);
             case Object o when isTemporal(o) -> evaluateDateEqual(temporalMillis(o), right);
             default -> right != null && left.equals(right);
         };
@@ -68,26 +68,26 @@ public class Evaluate {
             case null -> false;
             case String s -> !s.equals(right);
             case Boolean b -> evaluateBooleanNotEqual(b, right);
-            case Number n -> right instanceof String s ? !n.toString().equals(s) : compare(Constants.NOTEQUAL, n, right);
+            case Number n -> right instanceof String s ? !n.toString().equals(s) : compare(Operator.NOTEQUAL, n, right);
             case Object o when isTemporal(o) -> evaluateDateNotEqual(temporalMillis(o), right);
             default -> right != null && !left.equals(right);
         };
     }
 
     public static boolean evaluateLess(Object left, Object right) {
-        return order(Constants.LESS, left, right);
+        return order(Operator.LESS, left, right);
     }
 
     public static boolean evaluateLessEqual(Object left, Object right) {
-        return order(Constants.LESSEQUAL, left, right);
+        return order(Operator.LESSEQUAL, left, right);
     }
 
     public static boolean evaluateGreater(Object left, Object right) {
-        return order(Constants.GREATER, left, right);
+        return order(Operator.GREATER, left, right);
     }
 
     public static boolean evaluateGreaterEqual(Object left, Object right) {
-        return order(Constants.GREATEREQUAL, left, right);
+        return order(Operator.GREATEREQUAL, left, right);
     }
 
     public static boolean evaluateNull(Object left, Object right) {
@@ -115,7 +115,7 @@ public class Evaluate {
     }
 
     /** Ordering comparisons: numbers against numbers, temporal values against temporal values or numbers. */
-    private static boolean order(int operator, Object left, Object right) {
+    private static boolean order(Operator operator, Object left, Object right) {
         return switch (left) {
             case Number n -> compare(operator, n, right);
             case Object o when isTemporal(o) -> compareMillis(operator, temporalMillis(o), right);
@@ -127,7 +127,7 @@ public class Evaluate {
      * Compares a number with a right-hand value that must also be a number: exactly as longs
      * when both are integral, as doubles when a floating-point or decimal value is involved.
      */
-    private static boolean compare(int operator, Number left, Object right) {
+    private static boolean compare(Operator operator, Number left, Object right) {
         if (!(right instanceof Number r)) {
             return false;
         }
@@ -137,12 +137,12 @@ public class Evaluate {
         double l = left.doubleValue();
         double d = r.doubleValue();
         return switch (operator) {
-            case Constants.EQUAL -> l == d;
-            case Constants.NOTEQUAL -> l != d;
-            case Constants.LESS -> l < d;
-            case Constants.LESSEQUAL -> l <= d;
-            case Constants.GREATER -> l > d;
-            case Constants.GREATEREQUAL -> l >= d;
+            case EQUAL -> l == d;
+            case NOTEQUAL -> l != d;
+            case LESS -> l < d;
+            case LESSEQUAL -> l <= d;
+            case GREATER -> l > d;
+            case GREATEREQUAL -> l >= d;
             default -> false;
         };
     }
@@ -152,14 +152,14 @@ public class Evaluate {
     }
 
     /** Applies an operator to the sign of a comparison result. */
-    private static boolean test(int operator, int comparison) {
+    private static boolean test(Operator operator, int comparison) {
         return switch (operator) {
-            case Constants.EQUAL -> comparison == 0;
-            case Constants.NOTEQUAL -> comparison != 0;
-            case Constants.LESS -> comparison < 0;
-            case Constants.LESSEQUAL -> comparison <= 0;
-            case Constants.GREATER -> comparison > 0;
-            case Constants.GREATEREQUAL -> comparison >= 0;
+            case EQUAL -> comparison == 0;
+            case NOTEQUAL -> comparison != 0;
+            case LESS -> comparison < 0;
+            case LESSEQUAL -> comparison <= 0;
+            case GREATER -> comparison > 0;
+            case GREATEREQUAL -> comparison >= 0;
             default -> false;
         };
     }
@@ -182,32 +182,32 @@ public class Evaluate {
         };
     }
 
-    private static boolean compareMillis(int operator, long left, Object right) {
+    private static boolean compareMillis(Operator operator, long left, Object right) {
         return (isTemporal(right) || right instanceof Number) && test(operator, Long.compare(left, temporalMillis(right)));
     }
 
     public static boolean evaluateDateEqual(long left, Object right) {
-        return compareMillis(Constants.EQUAL, left, right);
+        return compareMillis(Operator.EQUAL, left, right);
     }
 
     public static boolean evaluateDateNotEqual(long left, Object right) {
-        return compareMillis(Constants.NOTEQUAL, left, right);
+        return compareMillis(Operator.NOTEQUAL, left, right);
     }
 
     public static boolean evaluateDateLess(long left, Object right) {
-        return compareMillis(Constants.LESS, left, right);
+        return compareMillis(Operator.LESS, left, right);
     }
 
     public static boolean evaluateDateLessEqual(long left, Object right) {
-        return compareMillis(Constants.LESSEQUAL, left, right);
+        return compareMillis(Operator.LESSEQUAL, left, right);
     }
 
     public static boolean evaluateDateGreater(long left, Object right) {
-        return compareMillis(Constants.GREATER, left, right);
+        return compareMillis(Operator.GREATER, left, right);
     }
 
     public static boolean evaluateDateGreaterEqual(long left, Object right) {
-        return compareMillis(Constants.GREATEREQUAL, left, right);
+        return compareMillis(Operator.GREATEREQUAL, left, right);
     }
 
     // ---------------------------------------------------------------- facts

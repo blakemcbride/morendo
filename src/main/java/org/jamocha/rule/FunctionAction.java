@@ -33,6 +33,7 @@ import org.jamocha.rete.SlotParam;
 import org.jamocha.rete.ValueParam;
 import org.jamocha.rete.exception.ExecuteException;
 import org.jamocha.rete.functions.*;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -137,7 +138,7 @@ public class FunctionAction implements Action {
 					(Object[])this.parameters[1].getValue(),-1);
 			fact.compileBinding(util);
 			this.parameters = new ValueParam[1];
-			this.parameters[0] = new ValueParam(Constants.OBJECT_TYPE,fact);
+			this.parameters[0] = new ValueParam(ValueType.OBJECT,fact);
         }
     }
     
@@ -160,7 +161,7 @@ public class FunctionAction implements Action {
             		sbp.setFact(facts);
             		// the binding could be from a query or function check the value isn't null
             		if (sbp.getValue() == null) {
-            			BoundParam newbp = new BoundParam(-1, Constants.ARRAY_TYPE, false);
+            			BoundParam newbp = new BoundParam(-1, ValueType.ARRAY, false);
             			newbp.setVariableName(sbp.getVariableName());
             			slot.setValue(newbp);
             		}

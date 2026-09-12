@@ -32,6 +32,7 @@ import org.jamocha.rete.ValueParam;
 import org.jamocha.rule.Defrule;
 import org.jamocha.rule.util.GenerateFacts;
 import org.jamocha.rete.util.IOUtilities;
+import org.jamocha.rete.ValueType;
 
 /**
  * @author Peter Lin
@@ -54,8 +55,8 @@ public class GenerateFactsFunction implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.OBJECT_TYPE;
+	public ValueType getReturnType() {
+		return ValueType.OBJECT;
 	}
 
 	public ReturnVector executeFunction(Rete engine, Parameter[] params) {
@@ -92,11 +93,11 @@ public class GenerateFactsFunction implements Function {
 					IOUtilities.saveFacts(facts, output);
 				}
 				DefaultReturnValue rv = new DefaultReturnValue(
-						Constants.OBJECT_TYPE, facts.toArray());
+						ValueType.OBJECT, facts.toArray());
 				ret.addReturnValue(rv);
 			} else {
 				DefaultReturnValue rv = new DefaultReturnValue(
-						Constants.BOOLEAN_OBJECT, Boolean.FALSE);
+						ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
 				ret.addReturnValue(rv);
 			}
 		}

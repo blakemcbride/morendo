@@ -28,6 +28,7 @@ import org.jamocha.rete.Parameter;
 import org.jamocha.rete.Rete;
 import org.jamocha.rete.ReturnVector;
 import org.jamocha.rete.ValueParam;
+import org.jamocha.rete.ValueType;
 
 
 /**
@@ -50,8 +51,8 @@ public class Divide implements Function {
 		super();
 	}
 
-	public int getReturnType() {
-		return Constants.BIG_DECIMAL;
+	public ValueType getReturnType() {
+		return ValueType.BIG_DECIMAL;
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class Divide implements Function {
 			if (params[0] instanceof ValueParam) {
 				bdval = params[0].getBigDecimalValue();
 			} else { 
-				bdval = new BigDecimal(params[0].getValue(engine, Constants.BIG_DECIMAL).toString());
+				bdval = new BigDecimal(params[0].getValue(engine, ValueType.BIG_DECIMAL).toString());
 			}
 			for (int idx=1; idx < params.length; idx++) {
 				if (params[idx] instanceof ValueParam) {
@@ -72,14 +73,14 @@ public class Divide implements Function {
 					BigDecimal bd = n.getBigDecimalValue();
                     bdval = bdval.divide(bd, 20, RoundingMode.DOWN);
 				} else {
-					BigDecimal bd = new BigDecimal(params[idx].getValue(engine, Constants.BIG_DECIMAL).toString());
+					BigDecimal bd = new BigDecimal(params[idx].getValue(engine, ValueType.BIG_DECIMAL).toString());
                     bdval = bdval.divide(bd, 20, RoundingMode.DOWN);
 				}
 			}
 		}
 		DefaultReturnVector ret = new DefaultReturnVector();
 		DefaultReturnValue rv = new DefaultReturnValue(
-				Constants.DOUBLE_PRIM_TYPE, bdval);
+				ValueType.DOUBLE_PRIM, bdval);
 		ret.addReturnValue(rv);
 		return ret;
 	}

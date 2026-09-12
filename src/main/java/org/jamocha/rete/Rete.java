@@ -1054,7 +1054,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 		BatchFunction bf = (BatchFunction) this.functions
 				.get(BatchFunction.BATCH);
 		Parameter[] params = new Parameter[] { new ValueParam(
-				Constants.STRING_TYPE, filename) };
+				ValueType.STRING, filename) };
 		bf.executeFunction(this, params);
 	}
 
@@ -1098,7 +1098,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      */
     public void build(String text) {
         Function f = this.findFunction(BuildFunction.BUILD);
-        ValueParam p = new ValueParam(Constants.STRING_TYPE,text);
+        ValueParam p = new ValueParam(ValueType.STRING,text);
         Parameter[] params = new Parameter[]{p};
         f.executeFunction(this, params);
     }
