@@ -207,6 +207,15 @@ public final class BoundConstraint implements Constraint {
         return this.ifjoins.get(0);
     }
 
+    public List<BoundConstraint> getIntraFactJoins() {
+        return this.ifjoins;
+    }
+
+    public void setIntraFactJoins(List<BoundConstraint> joins) {
+        this.ifjoins = joins;
+        this.intraFactJoin = !joins.isEmpty();
+    }
+
     /** returns the constriant in a pretty printer format */
     public String toPPString() {
         if (this.isMultislot) {

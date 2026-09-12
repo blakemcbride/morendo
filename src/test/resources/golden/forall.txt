@@ -1,0 +1,32 @@
+== stats ==
+templates: 7
+rules: 2
+facts: 5
+next-node-id: 25
+== output ==
+no students yet:
+100 each: f-2
+100 all-passed: f-1
+for a total of 2
+bob has not passed:
+for a total of 0
+both passed:
+100 each: f-2
+100 all-passed: f-1
+for a total of 2
+==> fire: Activation: each, id-2 AggrTime-*
+everyone passed math
+==> fire: Activation: all-passed, id-1 AggrTime-*
+everyone passed math
+cy has not passed:
+for a total of 0
+cy left:
+100 each: f-2
+100 all-passed: f-1
+for a total of 2
+==> fire: Activation: each, id-2 AggrTime-*
+everyone passed math
+==> fire: Activation: all-passed, id-1 AggrTime-*
+everyone passed math
+ann's pass retracted:
+for a total of 0

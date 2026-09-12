@@ -117,7 +117,10 @@ public final class OrLiteralConstraint implements Constraint {
     }
 
     public void addValues(List<Object> andor) {
-        // TODO Auto-generated method stub
-
+        for (Object o : andor) {
+            if (o instanceof MultiValue mv) {
+                this.value.add(mv);
+            }
+        }
     }
 }

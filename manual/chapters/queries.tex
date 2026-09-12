@@ -1,0 +1,146 @@
+\chapter{Queries}
+\label{ch:queries}
+
+A rule reacts; a query asks. \fn{defquery} defines a parameterized
+pattern set that is run on demand against working memory and returns the
+facts that match, and \fn{defgraphquery} does the same against a graph of
+nodes and edges loaded from a file. Both use the left-hand-side syntax of
+rules, compiled into their own part of the network, so a query costs
+nothing until it is run.
+
+\section{defquery}
+
+\begin{lstlisting}
+(defquery <name> ["comment"]
+  (declare (variables ?v1 ?v2 ...))
+  <conditional element>*)
+\end{lstlisting}
+
+The \fn{declare} block is mandatory and names the query's parameters.
+The patterns use them like any variable, and a parameter may appear in
+several patterns; the query returns every combination of facts that
+matches when the parameters take the values passed to \fn{run-query}.
+From \file{samples/defquery/queries.clp}:
+
+\begin{lstlisting}
+(defquery queryByTransactionStart (declare (variables ?trxId ?startTime))
+    (ApplicationRequestLog
+        (TransactionID ?trxId)
+        (Timestamp ?startTime)))
+
+(defquery queryByTransactionAfterStart (declare (variables ?trxId ?startTime))
+    (ApplicationRequestLog
+        (TransactionID ?trxId)
+        (Timestamp ?ts&:(> ?ts ?startTime))))
+\end{lstlisting}
+
+The first query finds the log entry of a transaction at an exact time;
+the second every entry of the transaction after a time, using the
+parameter inside a predicate. \file{samples/defquery/run.clp} loads the
+templates and queries, loads a data file and runs them:
+
+\begin{lstlisting}
+(batch ./samples/defquery/templates.clp)
+(batch ./samples/defquery/queries.clp)
+(load-facts ./samples/defquery/log_data.dat)
+(bind ?result (run-query queryByTransactionStart "1234baaa" 1269285900120))
+(printout t ?result crlf)
+\end{lstlisting}
+
+\begin{lstlisting}[style=shell]
+f-3 (ApplicationRequestLog (IPAddress "129.0.0.1") (Hostname "localhost")
+    (ServerType "Tomcat") (PortNumber 8080) (Timestamp 1269285900120) ...
+    (TransactionID "1234baaa") (ThreadID "2") )
+\end{lstlisting}
+
+\fn{run-query} takes the query name and one value per declared variable,
+in order, and returns a list with one entry per match. Each entry is the
+tuple of facts that matched, one fact per pattern; the shell prints a
+tuple per line, and \fn{printout} prints the facts one after another.
+Bind the list and pass it to the list functions (\fn{length\$},
+\fn{nth\$}), or print it. \fn{(query-time name)} reports how long the
+last run took in milliseconds, and \fn{(watch-query name)} traces a
+query's evaluation.
+
+Patterns join through shared variables exactly as in a rule, and a
+predicate may relate a pattern to an earlier one:
+
+\begin{lstlisting}[style=shell]
+Morendo> (clear)
+true
+Morendo> (deftemplate guest (slot name) (slot hobby))
+true
+Morendo> (assert (guest (name "a") (hobby "x")))
+2
+Morendo> (assert (guest (name "b") (hobby "x")))
+3
+Morendo> (defquery same-hobby (declare (variables ?h))
+  (guest (name ?n1) (hobby ?h))
+  (guest (name ?n2&:(neq ?n2 ?n1)) (hobby ?h)))
+true
+Morendo> (run-query same-hobby "x")
+f-3 (guest (name "b") (hobby "x") ) f-2 (guest (name "a") (hobby "x") )
+f-2 (guest (name "a") (hobby "x") ) f-3 (guest (name "b") (hobby "x") )
+\end{lstlisting}
+
+A query's facts are those in working memory at the time it runs; unlike
+a rule it keeps no activation, and its network is emptied before every
+run, so running it again after facts change gives the new answer.
+Queries and rules do not share alpha nodes, so a query never slows down
+rule matching.
+
+\section{Graph queries}
+
+\Morendo\ declares three templates at start-up, \fn{Node}, \fn{Edge} and
+\fn{Graph}, with the slots of the classes in \fn{org.morendo.model}: a
+node has \fn{id}, \fn{label}, \fn{nodeType}, \fn{reference} and
+\fn{weight}; an edge has \fn{id}, \fn{label}, \fn{source}, \fn{target}
+and \fn{weight}. A graph file is a list of node and edge facts,
+\file{samples/graphquery/graphdata.clp}:
+
+\begin{lstlisting}
+(Node (id "1")(label "electric vehicle")(nodeType "concept"))
+(Node (id "2")(label "autonomous vehicle")(nodeType "concept"))
+(Node (id "3")(label "tesla model s")(nodeType "noun"))
+(Node (id "4")(label "leaf")(nodeType "noun"))
+(Edge (id "100")(source "3")(target "1"))
+(Edge (id "102")(source "4")(target "1"))
+(Edge (id "105")(source "3")(target "2"))
+\end{lstlisting}
+
+\fn{(load-graph file)} reads such a file and returns the facts as a list
+\emph{without} asserting them into working memory. A graph query is a
+\fn{defquery} over \fn{Node} and \fn{Edge} patterns, joined through the
+id slots; \file{samples/graphquery/query.clp}:
+
+\begin{lstlisting}
+(defgraphquery conceptDistanceOne (declare (variables ?label))
+  (Node (nodeType "noun") (label ?label) (id ?sourceid))
+  (Edge (source ?sourceid) (target ?targetid))
+  (Node (nodeType "concept") (id ?targetid)))
+\end{lstlisting}
+
+It reads: starting from the noun with the given label, follow one edge
+and return the concept nodes reached. \fn{run-graph-query} takes the
+graph, the query name and the parameter values:
+
+\begin{lstlisting}
+(batch ./samples/graphquery/query.clp)
+(bind ?data1 (load-graph ./samples/graphquery/graphdata.clp))
+(bind ?query1 (run-graph-query ?data1 conceptDistanceOne "tesla model s"))
+(printout t "first query results: " ?query1 crlf)
+\end{lstlisting}
+
+\begin{lstlisting}[style=shell]
+first query results: f-2 (Node (id "1") (label "electric vehicle") (nodeType "concept")
+  (reference "nil") (weight "nil") ) f-3 (Node (id "2") (label "autonomous vehicle")
+  (nodeType "concept") (reference "nil") (weight "nil") )
+\end{lstlisting}
+
+Longer paths are longer chains of \fn{Edge} and \fn{Node} patterns;
+\fn{conceptDistanceTwo} in the same file follows two edges to reach
+project nodes. Because the graph is held outside working memory, several
+graphs can be loaded and queried independently in one engine, and rules
+are unaffected by them. To reason over a graph with rules instead, load
+it with \fn{load-facts}: the same file asserts ordinary \fn{Node} and
+\fn{Edge} facts.

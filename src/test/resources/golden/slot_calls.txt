@@ -1,0 +1,20 @@
+== stats ==
+templates: 5
+rules: 2
+facts: 5
+next-node-id: 12
+== output ==
+==> fire: Activation: price-it, id-3 AggrTime-*
+==> fire: Activation: copy-it, id-3 AggrTime-*
+==> fire: Activation: price-it, id-4 AggrTime-*
+f-1 (_initialFact)
+f-2 (item (name "a1") (price 5) (total 10) (tags "x" "y") )
+f-3 (item (name "b") (price 7) (total 21) (tags "nil") )
+f-4 (item (name "b-copy") (price 7) (total 21) (tags "copy") )
+for a total of 4
+f-1 (_initialFact)
+f-2 (item (name "a1") (price 5) (total 10) (tags "p" "q" "r") )
+f-3 (item (name "b") (price 7) (total 21) (tags "nil") )
+f-4 (item (name "b-copy") (price 7) (total 21) (tags "copy") )
+f-5 (item (name "dup") (price 5) (total 10) (tags "p" "q" "r") )
+for a total of 5

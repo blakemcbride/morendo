@@ -51,15 +51,17 @@ public class TopologyCostFunction implements Function {
         if (params != null && params.length > 0) {
             String ruleName = null;
             for (int idx = 0; idx < params.length; idx++) {
-                if (params[0] instanceof ValueParam) {
-                    ValueParam n = (ValueParam) params[0];
+                if (params[idx] instanceof ValueParam) {
+                    ValueParam n = (ValueParam) params[idx];
                     ruleName = n.getStringValue();
-                } else if (params[0] instanceof BoundParam) {
-                    BoundParam bp = (BoundParam) params[0];
+                } else if (params[idx] instanceof BoundParam) {
+                    BoundParam bp = (BoundParam) params[idx];
                     ruleName = (String) bp.getValue(engine, ValueType.STRING);
                 }
                 Defrule r = (Defrule) engine.getCurrentFocus().findRule(ruleName);
-                costFunction.calculateCost(engine, r, engine.getRootNode());
+                if (r != null) {
+                    costFunction.calculateCost(engine, r, engine.getRootNode());
+                }
             }
         }
         return ret;

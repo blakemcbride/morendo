@@ -59,11 +59,20 @@ public class DuplicateFunction implements RuleFunction {
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         Boolean exec = Boolean.FALSE;
-        if (params != null && params.length >= 2 && params[0].isObjectBinding()) {
-            BoundParam bp = (BoundParam) params[0];
+        if (params != null && params.length >= 2 && params[0] instanceof BoundParam bp) {
             Deffact fact = (Deffact) bp.getFact();
             try {
-                if (fact.getObjectInstance() == null) {
+                if (fact == null) {
+                    // at the shell the variable holds the id the assert returned
+                    fact =
+                            (Deffact)
+                                    engine.getFactById(
+                                            Long.parseLong(
+                                                    String.valueOf(
+                                                            engine.getBinding(
+                                                                    bp.getVariableName()))));
+                }
+                if (fact != null && fact.getObjectInstance() == null) {
                     // first retract the fact
                     Deffact clone = fact.cloneFact();
                     // now modify the fact
@@ -82,7 +91,7 @@ public class DuplicateFunction implements RuleFunction {
                     engine.assertFact(clone);
                     exec = Boolean.TRUE;
                 }
-            } catch (AssertException e) {
+            } catch (AssertException | NumberFormatException e) {
                 engine.writeMessage(e.getMessage());
             }
         }

@@ -1,0 +1,200 @@
+\chapter{Rule Properties and Modification Logic}
+\label{ch:rule-properties}
+
+The \fn{declare} block of a rule sets properties that control when and
+how the rule fires. \Morendo\ accepts these, in any order:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{llL}
+\toprule
+Property & Value & Effect \\
+\midrule
+\fn{salience} & integer & priority on the agenda; default 100, higher fires first \\
+\fn{auto-focus} & boolean & bring the rule's module into focus when it activates \\
+\fn{rule-version} & symbol or number & a label shown by \fn{(rules)} and \fn{ppdefrule} \\
+\fn{remember-alpha} & boolean & keep alpha memories for the rule (default true) \\
+\fn{hashed-memory} & boolean & hash the rule's join memories (default true) \\
+\fn{effective-date} & string & the rule activates only after this time \\
+\fn{expiration-date} & string & and only before this time \\
+\fn{chaining-direction} & \fn{forward} or \fn{backward} & recorded on the rule; the engine chains forward \\
+\fn{no-agenda} & boolean & fire immediately, bypassing the agenda \\
+\fn{temporal-activation} & boolean & see Chapter~\ref{ch:temporal} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\fn{ppdefrule} prints the declaration with every property that differs
+from a bare rule, in the form the parser accepts, so it is the quickest
+way to see the defaults.
+
+\section{Salience}
+
+Salience is an integer literal, possibly negative. Activations of higher
+salience fire first regardless of strategy. Section~\ref{sec:tutorial-salience}
+shows the effect; a common pattern is a low-salience ``cleanup'' rule
+that retracts a control fact after every other rule for it has fired.
+
+\section{Event-driven rules: no-agenda}
+\label{sec:no-agenda}
+
+\begin{lstlisting}
+(defrule make_path (declare (no-agenda TRUE))
+   ?context <- (context (name "make_path"))
+   (seating (id ?id) (pid ?sPID) (path_done FALSE))
+   (path (id ?sPID) (name ?n1) (seat ?s))
+   (not (path (id ?id) (name ?n1)))
+=>
+   (assert (path (id ?id) (name ?n1) (seat ?s))))
+\end{lstlisting}
+
+A \fn{no-agenda} rule fires the moment a complete match reaches its
+terminal node, inside the \fn{assert}, \fn{modify} or \fn{retract} that
+completed the match, without waiting for \fn{fire}. Salience and
+strategy do not apply to it. This turns the engine into an event
+processor: as facts stream in, the reactions run at once, while ordinary
+rules still accumulate on the agenda for the next \fn{fire}. The Manners
+benchmark uses it for the rule above, which must propagate before any
+other rule looks at the seating, and the engine uses it for the rule that
+feeds each MOLAP cube (Chapter~\ref{ch:molap}).
+
+Because such a rule runs inside another operation, its actions should be
+short and must not assume any particular order relative to the agenda.
+
+\section{Effective and expiration dates}
+\label{sec:rule-dates}
+
+\begin{lstlisting}
+(defrule live
+  (declare (effective-date "09/01/2026 00:00") (expiration-date "12/31/2026 23:59"))
+  (order (total ?t))
+=>
+  (printout t "live fired" crlf))
+(defrule dead
+  (declare (effective-date "01/01/2010 00:00") (expiration-date "03/31/2010 23:59"))
+  (order (total ?t))
+=>
+  (printout t "dead fired" crlf))
+\end{lstlisting}
+
+Asserting an \fn{order} and firing prints only \fn{live fired}. A rule
+with an expiration date is given a terminal node that checks the clock: a
+match is put on the agenda only if the current time is after the
+effective date and before the expiration date. Matches outside the window
+are dropped, and they are not reconsidered when the window opens later;
+the fact has to be asserted or modified again. Retractions are always
+honoured. A rule with only an effective date and no expiration date is
+not time-checked at all.
+
+Dates are written \fn{MM/dd/yyyy HH:mm} (month, day, year, hour and
+minute, 24-hour clock) and interpreted in the JVM's default time zone.
+
+\section{Remembering alpha memories}
+
+By default every alpha node keeps the facts that passed it, so that a
+join can be recomputed when the other side changes. \fn{(remember-alpha
+FALSE)} tells the compiler to drop that memory for the rule's nodes,
+trading memory for repeated evaluation. It is an optimization for rules
+whose patterns are cheap to re-test and match many facts, and it only
+affects nodes not shared with other rules.
+
+\section{Auto-focus and modules}
+\label{sec:auto-focus}
+
+A rule declared \fn{(auto-focus TRUE)} brings its module into focus the
+moment one of its activations reaches the agenda, remembering the
+previous focus. \fn{fire} drains the module in focus; when that module's
+agenda is empty it returns to the module that was in focus before and
+continues there, so a rule set can hand control to a specialised module
+and get it back without an explicit \fn{set-focus}:
+
+\begin{lstlisting}[style=shell]
+Morendo> (defmodule ACCT)
+true
+Morendo> (deftemplate ACCT::u (slot a))
+true
+Morendo> (defrule ACCT::r (u (a ?x)) => (printout t "module rule " ?x crlf))
+true
+Morendo> (defrule ACCT::auto (declare (auto-focus TRUE)) (u (a ?x)) => (printout t "auto-focus rule " ?x crlf))
+true
+Morendo> (set-focus MAIN)
+ACCT
+Morendo> (assert (ACCT::u (a 2)))
+2
+Morendo> (focus)
+ACCT
+Morendo> (fire)
+module rule 2
+auto-focus rule 2
+2
+Morendo> (focus)
+MAIN
+\end{lstlisting}
+
+\section{Other properties}
+
+\fn{rule-version} and \fn{chaining-direction} are recorded on the rule
+and shown by \fn{(rules)} and \fn{ppdefrule}; the engine itself always
+chains forward, so \fn{chaining-direction} is documentation for tools
+built on the Java API. \fn{hashed-memory} controls whether the rule's
+join memories are hashed by their bound values (the default) or scanned.
+
+\section{Modification logic}
+\label{sec:modification-logic}
+
+A rule's actions run when a match appears. Nothing runs when a match
+\emph{disappears}: if a fact the rule used is retracted or modified, the
+activation is simply withdrawn (or, if it already fired, nothing happens
+at all). For rules that maintain aggregates that is a problem: a rule
+that adds a transaction to a running total has no way to subtract it when
+the transaction is cancelled, short of a second rule and a status slot to
+keep the two from fighting.
+
+\Morendo\ extends \fn{defrule} with a second action block, introduced by
+\fn{<<=}, that runs when a fact of a match that has already fired is
+modified or retracted:
+
+\begin{lstlisting}
+(deftemplate item (slot name))
+(deftemplate seen (slot name))
+(defrule track
+  ?i <- (item (name ?n))
+=>
+  (printout t "add " ?n crlf)
+  (assert (seen (name ?n)))
+<<=
+  (printout t "remove " ?n crlf))
+\end{lstlisting}
+
+\begin{lstlisting}[style=shell]
+Morendo> (assert (item (name "a")))
+2
+Morendo> (fire)
+add a
+1
+Morendo> (retract 2)
+true
+Morendo> (fire)
+remove a
+1
+Morendo> (assert (item (name "b")))
+4
+Morendo> (retract 4)
+true
+Morendo> (fire)
+0
+\end{lstlisting}
+
+The \fn{=>} actions run when the match appears; the \fn{<<=} actions are
+the compensating step, run with the same variable bindings when a fact of
+the match is retracted after the rule has fired. A rule with modification
+actions is compiled with a special terminal node: on retraction, if the
+activation is still waiting on the agenda it is withdrawn as usual
+(item \fn{b} above), and if the rule has already fired a
+\emph{modification activation} is placed on the agenda instead, which runs
+the \fn{<<=} block at the next \fn{fire}. The design, with the
+aggregate-maintenance rule that motivated it, is written up in
+\file{doc/modification\_logic.pdf}.
+
+Modification actions fire once per retracted match, with the bindings the
+original activation had, including the retracted fact's values. They are
+the mechanism behind the cube-maintenance rules the engine generates.

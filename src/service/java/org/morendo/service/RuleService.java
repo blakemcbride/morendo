@@ -38,7 +38,14 @@ public interface RuleService {
      * @param applicationName
      * @return
      */
+    /**
+     * An engine of the application for one request, or null when none is free within the
+     * application's check-out timeout; close the context to return it.
+     */
     EngineContext getEngine(String applicationName, String version);
+
+    /** The pool of an application, or null when there is none by that name and version. */
+    EnginePool getEnginePool(String applicationName, String version);
 
     void setServiceName(String name);
 

@@ -1,0 +1,29 @@
+== stats ==
+templates: 7
+rules: 2
+facts: 5
+next-node-id: 31
+== output ==
+either (or) "a or b" salience:100 version: no-agenda:false temporal-activation:false cost-value:0
+two (or) "" salience:100 version: no-agenda:false temporal-activation:false cost-value:0
+for a total of 2
+(defrule either "a or b" (or (a (x ?x)) (b (x ?x))) (c (y ?y)) => (printout t "either " ?x " " ?y crlf))
+100 two&3: f-3,f-4
+100 either&2: f-3,f-4
+100 two&1: f-2,f-4
+100 either&1: f-2,f-4
+for a total of 4
+==> fire: Activation: two&3, id-3, id-4 AggrTime-*
+two 2
+==> fire: Activation: either&2, id-3, id-4 AggrTime-*
+either 2 9
+==> fire: Activation: two&1, id-2, id-4 AggrTime-*
+two 1
+==> fire: Activation: either&1, id-2, id-4 AggrTime-*
+either 1 9
+either (or) "a or b" salience:100 version: no-agenda:false temporal-activation:false cost-value:0
+for a total of 1
+==> fire: Activation: either&2, id-3, id-5 AggrTime-*
+either 2 8
+==> fire: Activation: either&1, id-2, id-5 AggrTime-*
+either 1 8

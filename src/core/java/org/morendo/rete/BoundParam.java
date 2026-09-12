@@ -118,13 +118,15 @@ public final class BoundParam extends AbstractParam {
 
     /** method will try to resolve the variable and return the value. */
     public Object getValue(Rete engine, ValueType valueType) {
-        if (valueType == ValueType.OBJECT && this.fact != null) {
-            return this.fact.getObjectInstance();
-        } else if (fact != null) {
+        if (this.fact != null) {
+            if (this.column < 0) {
+                // a fact binding (?f <- ...): the Java object behind a shadow fact, else the fact
+                Object instance = this.fact.getObjectInstance();
+                return instance != null ? instance : this.fact;
+            }
             return this.fact.getSlotValue(this.column);
-        } else {
-            return engine.getBinding(this.variableName);
         }
+        return engine.getBinding(this.variableName);
     }
 
     public void setResolvedValue(Object val) {

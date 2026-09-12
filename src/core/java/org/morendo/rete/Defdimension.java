@@ -16,8 +16,6 @@
  */
 package org.morendo.rete;
 
-import org.morendo.rete.util.ProfileStats;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -94,7 +92,7 @@ public class Defdimension implements CubeDimension {
      */
     public void indexData(Index index, Rete engine) {
         if (profile) {
-            ProfileStats.startCubeIndex();
+            engine.getProfileStats().startCubeIndex();
             Object key =
                     index.getFacts()[this.binding.leftrow].getSlotValue(this.binding.leftIndex);
             @SuppressWarnings("unchecked")
@@ -104,7 +102,7 @@ public class Defdimension implements CubeDimension {
                 this.tokenIndex.put(key, value);
             }
             value.put(index, index);
-            ProfileStats.endCubeIndex();
+            engine.getProfileStats().endCubeIndex();
         } else {
             Object key =
                     index.getFacts()[this.binding.leftrow].getSlotValue(this.binding.leftIndex);

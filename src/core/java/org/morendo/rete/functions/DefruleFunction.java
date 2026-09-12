@@ -44,7 +44,14 @@ public class DefruleFunction implements Function {
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         Boolean add = Boolean.TRUE;
-        if (params.length == 1 && params[0].getValue() instanceof Defrule) {
+        if (params.length == 1 && params[0].getValue() instanceof Defrule[] group) {
+            // a rule with an or group: one rule per combination of alternatives
+            for (Defrule rl : group) {
+                if (!engine.getCurrentFocus().containsRule(rl)) {
+                    add = engine.getRuleCompiler().addRule(rl) && add;
+                }
+            }
+        } else if (params.length == 1 && params[0].getValue() instanceof Defrule) {
             Defrule rl = (Defrule) params[0].getValue();
             if (!engine.getCurrentFocus().containsRule(rl)) {
                 add = engine.getRuleCompiler().addRule(rl);

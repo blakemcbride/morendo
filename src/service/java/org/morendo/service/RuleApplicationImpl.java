@@ -45,6 +45,7 @@ public class RuleApplicationImpl implements RuleApplication {
 
     private int minPool;
     private int maxPool;
+    private long checkoutTimeout = 5000;
     private int initialPool;
     @JsonIgnore private int currentPoolCount;
     @JsonIgnore private URLClassLoader classloader = null;
@@ -58,7 +59,9 @@ public class RuleApplicationImpl implements RuleApplication {
     public void readBean(RuleApplicationBean bean) {
         this.maxPool = bean.getMaxPool();
         this.minPool = bean.getMinPool();
+        this.checkoutTimeout = bean.getCheckoutTimeout();
         this.applicationName = bean.getName();
+        this.version = bean.getVersion();
         this.functionGroups = bean.getFunctionGroups();
         this.initialPool = bean.getInitialPool();
         this.clipsData = bean.getClipsData();
@@ -371,6 +374,14 @@ public class RuleApplicationImpl implements RuleApplication {
 
     public int getInitialPool() {
         return initialPool;
+    }
+
+    public long getCheckoutTimeout() {
+        return checkoutTimeout;
+    }
+
+    public void setCheckoutTimeout(long milliseconds) {
+        this.checkoutTimeout = milliseconds;
     }
 
     public int getMaxPool() {

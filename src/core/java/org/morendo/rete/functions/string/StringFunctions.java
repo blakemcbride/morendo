@@ -66,6 +66,22 @@ public class StringFunctions implements FunctionGroup {
         funcs.add(trim);
         StringNotEmptyFunction snef = new StringNotEmptyFunction();
         engine.declareFunction(snef);
+        try {
+            engine.declareFunction("upcase", upper);
+            engine.declareFunction("lowcase", lower);
+        } catch (org.morendo.rete.exception.FunctionException e) {
+            throw new IllegalStateException(e);
+        }
+        for (Function f :
+                new Function[] {
+                    new FormatFunction(), new SymCatFunction(), new StringToFieldFunction()
+                }) {
+            engine.declareFunction(f);
+            funcs.add(f);
+        }
+        StrCatFunction strcat = new StrCatFunction();
+        funcs.add(strcat);
+        engine.declareFunction(strcat);
         funcs.add(snef);
     }
 

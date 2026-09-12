@@ -22,7 +22,6 @@ import org.morendo.rete.BetaMemoryImpl;
 import org.morendo.rete.Binding;
 import org.morendo.rete.Binding2;
 import org.morendo.rete.Fact;
-import org.morendo.rete.HashedAlphaMemoryImpl;
 import org.morendo.rete.Index;
 import org.morendo.rete.Rete;
 import org.morendo.rete.WorkingMemory;
@@ -55,7 +54,7 @@ public class QueryFuncJoin extends QueryBaseJoin {
     /** clear will clear the lists */
     public void clear(WorkingMemory mem) {
         Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
-        HashedAlphaMemoryImpl rightmem = mem.getQueryRightMemory(this);
+        Map<?, ?> rightmem = mem.getQueryRightMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -101,7 +100,7 @@ public class QueryFuncJoin extends QueryBaseJoin {
      * @param engine
      */
     public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
-        Map<Fact, Fact> rightmem = mem.getQueryBetaMemory(this);
+        Map<Fact, Fact> rightmem = mem.getQueryRightMemory(this);
         rightmem.put(rfact, rfact);
         Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         Iterator<?> itr = leftmem.values().iterator();

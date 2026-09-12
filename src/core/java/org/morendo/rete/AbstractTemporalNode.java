@@ -116,7 +116,8 @@ public abstract class AbstractTemporalNode extends BaseJoin {
         if (this.rightElapsedTime > 0) {
             time = ts - this.rightElapsedTime;
         } else {
-            time = 9223372036854775807L;
+            // no window on this side: every fact is fresh enough
+            time = Long.MIN_VALUE;
         }
         return time;
     }
@@ -126,7 +127,8 @@ public abstract class AbstractTemporalNode extends BaseJoin {
         if (this.leftElapsedTime > 0) {
             time = System.currentTimeMillis() - this.leftElapsedTime;
         } else {
-            time = 9223372036854775807L;
+            // no window on this side: every fact is fresh enough
+            time = Long.MIN_VALUE;
         }
         return time;
     }

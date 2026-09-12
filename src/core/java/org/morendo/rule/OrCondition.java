@@ -1,11 +1,11 @@
 /*
- * Copyright 2002-2006 Peter Lin
+ * Copyright 2026 Blake McBride
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://ruleml-dev.sourceforge.net/
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
  */
 package org.morendo.rule;
 
-import org.morendo.rete.BaseJoin;
+import org.morendo.parser.clips.Token;
 import org.morendo.rete.BaseNode;
 import org.morendo.rete.GraphQueryCompiler;
 import org.morendo.rete.QueryCompiler;
@@ -27,81 +27,92 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Peter Lin
- *     <p>AndCondition is specifically created to handle and conjunctions. AndConditions are
- *     compiled to a BetaNode.
+ * {@code (or CE+)} in a rule's left-hand side. It is never compiled: the parser expands a rule that
+ * contains one into a rule per combination of alternatives, re-reading the rule's text with one
+ * alternative in place of the group, which is why the group keeps the tokens of each alternative.
  */
 public final class OrCondition implements Condition {
 
-    /** */
-    protected List<Object> nestedCE = new ArrayList<>();
+    private final List<Condition> alternatives = new ArrayList<>();
+    private final List<Token> starts = new ArrayList<>();
+    private final List<Token> ends = new ArrayList<>();
+    private Token orToken = null;
 
-    protected BaseJoin reteNode = null;
-
-    /** */
     public OrCondition() {
         super();
     }
 
+    /** Records an alternative with the tokens of its opening and closing parentheses. */
+    public void addAlternative(Condition ce, Token start, Token end) {
+        this.alternatives.add(ce);
+        this.starts.add(start);
+        this.ends.add(end);
+    }
+
+    public List<Condition> getAlternatives() {
+        return this.alternatives;
+    }
+
+    public int size() {
+        return this.alternatives.size();
+    }
+
+    public Token getStart(int alternative) {
+        return this.starts.get(alternative);
+    }
+
+    public Token getEnd(int alternative) {
+        return this.ends.get(alternative);
+    }
+
+    /** The {@code or} keyword token; the group's opening parenthesis is the token before it. */
+    public Token getOrToken() {
+        return this.orToken;
+    }
+
+    public void setOrToken(Token token) {
+        this.orToken = token;
+    }
+
     public boolean compare(Condition cond) {
-        if (!(cond instanceof OrCondition)) {
-            return false;
-        }
-        OrCondition orc = (OrCondition) cond;
-        if (orc.getNestedConditionalElement().size() == this.nestedCE.size()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void addNestedConditionElement(Object ce) {
-        this.nestedCE.add(ce);
-    }
-
-    public List<Object> getNestedConditionalElement() {
-        return this.nestedCE;
+        return cond instanceof OrCondition other && other.size() == size();
     }
 
     public List<?> getNodes() {
         return new ArrayList<>();
     }
 
-    /** not implemented yet */
     public void addNode(BaseNode node) {}
 
-    /** not implemented yet */
     public void addNewAlphaNodes(BaseNode node) {}
 
     public BaseNode getLastNode() {
-        return reteNode;
+        return null;
     }
 
-    public void clear() {
-        reteNode = null;
-    }
+    public void clear() {}
 
     public String toPPString() {
-        return "";
+        StringBuilder buf = new StringBuilder("(or");
+        for (Condition ce : this.alternatives) {
+            buf.append(' ').append(ce.toPPString().trim());
+        }
+        return buf.append(')').toString();
     }
 
     public ConditionCompiler getCompiler(RuleCompiler ruleCompiler) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new IllegalStateException("an or group is expanded by the parser, not compiled");
     }
 
     public ConditionCompiler getCompiler(QueryCompiler ruleCompiler) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new IllegalStateException("an or group is expanded by the parser, not compiled");
     }
 
     public ConditionCompiler getCompiler(GraphQueryCompiler ruleCompiler) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new IllegalStateException("an or group is expanded by the parser, not compiled");
     }
 
     public List<Object> getBindConstraints() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<>();
     }
 }

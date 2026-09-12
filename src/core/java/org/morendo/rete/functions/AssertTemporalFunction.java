@@ -54,9 +54,7 @@ public class AssertTemporalFunction implements Function {
             if (params[0].getValue() instanceof Deffact) {
                 fact = (Deffact) params[0].getValue();
             } else {
-                Deftemplate tmpl =
-                        (Deftemplate)
-                                engine.getCurrentFocus().getTemplate(params[0].getStringValue());
+                Deftemplate tmpl = (Deftemplate) engine.findTemplate(params[0].getStringValue());
                 // before we create the fact, we need to remove the four
                 // slots for temporal facts
                 fact = (Deffact) tmpl.createTemporalFact((Object[]) params[1].getValue(), -1);

@@ -26,6 +26,7 @@ import jakarta.servlet.ServletContextListener;
 
 import org.morendo.rete.Rete;
 import org.morendo.service.EngineContext;
+import org.morendo.service.EnginePool;
 import org.morendo.service.RuleApplication;
 import org.morendo.service.RuleApplicationBean;
 import org.morendo.service.RuleApplicationImpl;
@@ -51,7 +52,7 @@ public class RuleStartupService implements ServletContextListener, RuleService {
     private String serviceName = null;
     private List<RuleApplicationImpl> applications = new ArrayList<>();
     private Map<String, RuleApplication> applicationMap = new HashMap<>();
-    private Map<String, List<Rete>> engineMap = new HashMap<>();
+    private final Map<String, EnginePool> pools = new java.util.concurrent.ConcurrentHashMap<>();
     protected ServiceConfiguration serviceConfiguration = null;
     private ServletServiceAdmin administration = null;
     protected ServletContext servletContext = null;
@@ -89,19 +90,11 @@ public class RuleStartupService implements ServletContextListener, RuleService {
 
     public void close() {
         servletContext.log("--- Start closing RuleService ---");
-        Iterator<String> itr = this.engineMap.keySet().iterator();
-        while (itr.hasNext()) {
-            String key = itr.next();
-            List<?> queue = this.engineMap.remove(key);
-            // first close all the engine instances.
-            Iterator<?> queueItr = queue.iterator();
-            while (queueItr.hasNext()) {
-                org.morendo.rete.Rete engine = (org.morendo.rete.Rete) queueItr.next();
-                engine.close();
-            }
-            queue.clear();
+        for (EnginePool pool : this.pools.values()) {
+            pool.closeAll();
         }
-        itr = this.applicationMap.keySet().iterator();
+        this.pools.clear();
+        Iterator<String> itr = this.applicationMap.keySet().iterator();
         while (itr.hasNext()) {
             String key = itr.next();
             RuleApplication app = this.applicationMap.remove(key);
@@ -120,41 +113,35 @@ public class RuleStartupService implements ServletContextListener, RuleService {
     }
 
     public EngineContext getEngine(String applicationName, String version) {
-        String key = applicationName + "::" + version;
-        List<?> queue = this.engineMap.get(key);
-        if (queue != null) {
-            org.morendo.rete.Rete engine = null;
-            if (queue.size() > 0 && (engine = (org.morendo.rete.Rete) queue.remove(0)) != null) {
-                EngineContext context =
-                        new ServletEngineContext(
-                                this, engine, applicationName, version, this.servletContext);
-                return context;
-            } else {
-                // there isn't any engine in the pool. Check to see if we've reached the
-                // max pool number. If we are below the max, create a new engine instance
-                // and return a new EngineContext.
-                RuleApplication application = this.applicationMap.get(key);
-                if (application.getCurrentPoolCount() < application.getMaxPool()) {
-                    engine = new org.morendo.rete.Rete();
-                    application.initializeEngine(engine);
-                    application.setCurrentPoolCount(application.getCurrentPoolCount() + 1);
-                    EngineContext context =
-                            new ServletEngineContext(
-                                    this, engine, applicationName, version, this.servletContext);
-                    this.servletContext.log(
-                            "New engine instance created. Current engine pool count is "
-                                    + application.getCurrentPoolCount());
-                    return context;
-                } else {
-                    this.servletContext.log(
-                            "The Rule service has reached the maximum pool number. Try increasing"
-                                    + " the configuration.");
-                }
-                return null;
-            }
-        } else {
+        EnginePool pool = getEnginePool(applicationName, version);
+        if (pool == null) {
             return null;
         }
+        try {
+            Rete engine = pool.checkOut(pool.getApplication().getCheckoutTimeout());
+            if (engine == null) {
+                this.servletContext.log(
+                        "No engine free for "
+                                + applicationName
+                                + " within "
+                                + pool.getApplication().getCheckoutTimeout()
+                                + " ms; the pool holds "
+                                + pool.createdCount()
+                                + " of at most "
+                                + pool.getApplication().getMaxPool()
+                                + ". Try increasing the configuration.");
+                return null;
+            }
+            return new ServletEngineContext(
+                    this, engine, applicationName, version, this.servletContext);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        }
+    }
+
+    public EnginePool getEnginePool(String applicationName, String version) {
+        return this.pools.get(applicationName + "::" + version);
     }
 
     public long getRequests() {
@@ -183,18 +170,10 @@ public class RuleStartupService implements ServletContextListener, RuleService {
             RuleApplication application = this.applications.get(idx);
             ((RuleApplicationImpl) application).setServletContext(this.servletContext);
             String key = application.getName() + "::" + application.getVersion();
-            List<Rete> queue = new ArrayList<>();
+            EnginePool pool = new EnginePool(application);
             this.applicationMap.put(key, application);
-            this.engineMap.put(key, queue);
-            int initialCount = application.getInitialPool();
-            for (int c = 0; c < initialCount; c++) {
-                org.morendo.rete.Rete engine = new org.morendo.rete.Rete();
-                engine.setWatch(Rete.Watch.ALL);
-                application.initializeEngine(engine);
-                application.setCurrentPoolCount(c + 1);
-                engine.setUnWatch(Rete.Watch.ALL);
-                queue.add(engine);
-            }
+            this.pools.put(key, pool);
+            pool.fill();
         }
         this.servletContext.log("--- End initializing RuleService ---");
     }
@@ -208,7 +187,7 @@ public class RuleStartupService implements ServletContextListener, RuleService {
         this.serviceName = name;
     }
 
-    public void updateStatistics(long time, int rulesFired) {
+    public synchronized void updateStatistics(long time, int rulesFired) {
         this.requests++;
         this.totalResponseTime += time;
         this.averageResponseTime = this.totalResponseTime / this.requests;
@@ -217,17 +196,21 @@ public class RuleStartupService implements ServletContextListener, RuleService {
     }
 
     public void queueEngine(String application, String version, org.morendo.rete.Rete engine) {
-        String key = application + "::" + version;
-        List<Rete> queue = this.engineMap.get(key);
-        queue.add(engine);
+        EnginePool pool = getEnginePool(application, version);
+        if (pool != null) {
+            pool.checkIn(engine);
+        } else {
+            engine.close();
+        }
     }
 
     public Map<String, RuleApplication> getRuleApplicationMap() {
         return this.applicationMap;
     }
 
-    public Map<String, List<Rete>> getEngineMap() {
-        return this.engineMap;
+    /** The pools by application key, name::version. */
+    public Map<String, EnginePool> getEnginePools() {
+        return this.pools;
     }
 
     public ServiceConfiguration getServiceConfiguration() {

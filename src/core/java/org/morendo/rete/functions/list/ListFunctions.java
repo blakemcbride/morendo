@@ -82,8 +82,21 @@ public class ListFunctions implements FunctionGroup {
         ImplodeFunction implode = new ImplodeFunction();
         funcs.add(implode);
         engine.declareFunction(implode);
+        UnionFunction union = new UnionFunction();
+        engine.declareFunction(union);
+        funcs.add(union);
+        IntersectionFunction intersection = new IntersectionFunction();
+        engine.declareFunction(intersection);
+        funcs.add(intersection);
         SubsetpFunction subsetp = new SubsetpFunction();
         funcs.add(subsetp);
         engine.declareFunction(subsetp);
+        for (Function f :
+                new Function[] {
+                    new SubseqFunction(), new ReplaceFunction(), new DeleteMemberFunction()
+                }) {
+            engine.declareFunction(f);
+            funcs.add(f);
+        }
     }
 }

@@ -47,6 +47,9 @@ public class FunctionPackage {
     }
 
     public URL getURLObject() {
+        if (this.URL == null || this.URL.isEmpty()) {
+            return null;
+        }
         try {
             return IOUtilities.toURL(this.URL);
         } catch (MalformedURLException e) {

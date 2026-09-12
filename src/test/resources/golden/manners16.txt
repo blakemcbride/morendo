@@ -1,7 +1,202 @@
 == stats ==
 templates: 11
 rules: 8
-facts: 46
+facts: 234
 next-node-id: 55
 == output ==
 ==> fire: Activation: assign_first_seat, id-2, id-43, id-3 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-45, id-42, id-40, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-47, id-46 AggrTime-*
+==> fire: Activation: path_done, id-2, id-47 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-45, id-43, id-38, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-51, id-46 AggrTime-*
+==> fire: Activation: path_done, id-2, id-51 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-45, id-42, id-37, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-55, id-46 AggrTime-*
+==> fire: Activation: path_done, id-2, id-55 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-45, id-42, id-36, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-59, id-46 AggrTime-*
+==> fire: Activation: path_done, id-2, id-59 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-45, id-43, id-34, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-63, id-46 AggrTime-*
+==> fire: Activation: path_done, id-2, id-63 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-45, id-42, id-32, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-67, id-46 AggrTime-*
+==> fire: Activation: path_done, id-2, id-67 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-45, id-43, id-31, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-71, id-46 AggrTime-*
+==> fire: Activation: path_done, id-2, id-71 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-71, id-30, id-20, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-75, id-72 AggrTime-*
+==> fire: Activation: make_path, id-2, id-75, id-74 AggrTime-*
+==> fire: Activation: path_done, id-2, id-75 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-75, id-19, id-41, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-80, id-76 AggrTime-*
+==> fire: Activation: make_path, id-2, id-80, id-78 AggrTime-*
+==> fire: Activation: make_path, id-2, id-80, id-79 AggrTime-*
+==> fire: Activation: path_done, id-2, id-80 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-80, id-40, id-17, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-86, id-81 AggrTime-*
+==> fire: Activation: make_path, id-2, id-86, id-83 AggrTime-*
+==> fire: Activation: make_path, id-2, id-86, id-84 AggrTime-*
+==> fire: Activation: make_path, id-2, id-86, id-85 AggrTime-*
+==> fire: Activation: path_done, id-2, id-86 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-86, id-16, id-39, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-93, id-87 AggrTime-*
+==> fire: Activation: make_path, id-2, id-93, id-89 AggrTime-*
+==> fire: Activation: make_path, id-2, id-93, id-90 AggrTime-*
+==> fire: Activation: make_path, id-2, id-93, id-91 AggrTime-*
+==> fire: Activation: make_path, id-2, id-93, id-92 AggrTime-*
+==> fire: Activation: path_done, id-2, id-93 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-93, id-39, id-15, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-101, id-94 AggrTime-*
+==> fire: Activation: make_path, id-2, id-101, id-96 AggrTime-*
+==> fire: Activation: make_path, id-2, id-101, id-97 AggrTime-*
+==> fire: Activation: make_path, id-2, id-101, id-98 AggrTime-*
+==> fire: Activation: make_path, id-2, id-101, id-99 AggrTime-*
+==> fire: Activation: make_path, id-2, id-101, id-100 AggrTime-*
+==> fire: Activation: path_done, id-2, id-101 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-101, id-14, id-36, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-110, id-102 AggrTime-*
+==> fire: Activation: make_path, id-2, id-110, id-104 AggrTime-*
+==> fire: Activation: make_path, id-2, id-110, id-105 AggrTime-*
+==> fire: Activation: make_path, id-2, id-110, id-106 AggrTime-*
+==> fire: Activation: make_path, id-2, id-110, id-107 AggrTime-*
+==> fire: Activation: make_path, id-2, id-110, id-108 AggrTime-*
+==> fire: Activation: make_path, id-2, id-110, id-109 AggrTime-*
+==> fire: Activation: path_done, id-2, id-110 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-110, id-35, id-13, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-111 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-113 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-114 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-115 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-116 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-117 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-118 AggrTime-*
+==> fire: Activation: make_path, id-2, id-120, id-119 AggrTime-*
+==> fire: Activation: path_done, id-2, id-120 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-120, id-13, id-33, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-121 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-123 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-124 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-125 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-126 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-127 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-128 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-129 AggrTime-*
+==> fire: Activation: make_path, id-2, id-131, id-130 AggrTime-*
+==> fire: Activation: path_done, id-2, id-131 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-131, id-33, id-11, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-132 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-134 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-135 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-136 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-137 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-138 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-139 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-140 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-141 AggrTime-*
+==> fire: Activation: make_path, id-2, id-143, id-142 AggrTime-*
+==> fire: Activation: path_done, id-2, id-143 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-143, id-11, id-28, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-144 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-146 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-147 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-148 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-149 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-150 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-151 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-152 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-153 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-154 AggrTime-*
+==> fire: Activation: make_path, id-2, id-156, id-155 AggrTime-*
+==> fire: Activation: path_done, id-2, id-156 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-156, id-28, id-9, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-157 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-159 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-160 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-161 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-162 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-163 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-164 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-165 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-166 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-167 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-168 AggrTime-*
+==> fire: Activation: make_path, id-2, id-170, id-169 AggrTime-*
+==> fire: Activation: path_done, id-2, id-170 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-170, id-9, id-26, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-171 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-173 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-174 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-175 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-176 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-177 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-178 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-179 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-180 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-181 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-182 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-183 AggrTime-*
+==> fire: Activation: make_path, id-2, id-185, id-184 AggrTime-*
+==> fire: Activation: path_done, id-2, id-185 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-185, id-26, id-6, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-186 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-188 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-189 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-190 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-191 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-192 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-193 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-194 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-195 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-196 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-197 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-198 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-199 AggrTime-*
+==> fire: Activation: make_path, id-2, id-201, id-200 AggrTime-*
+==> fire: Activation: path_done, id-2, id-201 AggrTime-*
+==> fire: Activation: continue, id-2 AggrTime-*
+==> fire: Activation: find_seating, id-2, id-201, id-6, id-22, id-3 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-202 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-204 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-205 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-206 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-207 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-208 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-209 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-210 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-211 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-212 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-213 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-214 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-215 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-216 AggrTime-*
+==> fire: Activation: make_path, id-2, id-218, id-217 AggrTime-*
+==> fire: Activation: path_done, id-2, id-218 AggrTime-*
+==> fire: Activation: are_we_done, id-2, id-44, id-218 AggrTime-*
+Yes, we are done:  Print Results!!
+==> fire: Activation: all_done, id-2 AggrTime-*
+
+rule all done: Condition context print_results
+==> fire: Activation: print_results, id-2, id-218, id-44, id-235 AggrTime-*
+name=16 seat=1

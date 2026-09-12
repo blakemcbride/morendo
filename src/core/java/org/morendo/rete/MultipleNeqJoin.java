@@ -83,23 +83,19 @@ public class MultipleNeqJoin extends BaseJoin {
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
 
-        rightmem.addPartialMatch(inx, rfact, engine);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
-        int after = rightmem.count(inx);
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
-            if (this.evaluate(linx.getFacts(), rfact)) {
-                if (after > 1) {
-                    this.propagateAssert(linx, engine, mem);
-                } else if (after == 1) {
-                    try {
-                        this.propagateRetract(linx, engine, mem);
-                    } catch (RetractException e) {
-                    }
-                }
+            // propagate the left tuple when rfact is its second match, i.e. the
+            // tuple's own bind values had exactly one match before rfact was
+            // added (rfact's bind values say nothing about that)
+            if (this.evaluate(linx.getFacts(), rfact)
+                    && rightmem.matchCount(leftIndex(linx)) == 1) {
+                this.propagateAssert(linx, engine, mem);
             }
         }
+        rightmem.addPartialMatch(inx, rfact, engine);
     }
 
     /**
@@ -130,20 +126,23 @@ public class MultipleNeqJoin extends BaseJoin {
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         // first we remove the fact from the right
-        int after = rightmem.removePartialMatch(inx, rfact);
-
-        if (after == 1) {
-            // now we see the left memory matched and remove it also
-            Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-            Iterator<?> itr = leftmem.values().iterator();
-            while (itr.hasNext()) {
-                Index linx = (Index) itr.next();
-                if (this.evaluate(linx.getFacts(), rfact)) {
-                    propagateRetract(linx, engine, mem);
-                }
+        rightmem.removePartialMatch(inx, rfact);
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+        Iterator<?> itr = leftmem.values().iterator();
+        while (itr.hasNext()) {
+            Index linx = (Index) itr.next();
+            // retract the left tuple when rfact was one of its two matches,
+            // i.e. exactly one is left
+            if (this.evaluate(linx.getFacts(), rfact)
+                    && rightmem.matchCount(leftIndex(linx)) == 1) {
+                propagateRetract(linx, engine, mem);
             }
-            inx = null;
         }
+    }
+
+    /** The index of a left tuple's bind values, for looking up its matches in the right memory. */
+    private NotEqHashIndex leftIndex(Index linx) {
+        return new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds, linx.getFacts()));
     }
 
     /**

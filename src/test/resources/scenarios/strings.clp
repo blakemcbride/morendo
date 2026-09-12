@@ -1,0 +1,10 @@
+;; Golden scenario: format, sym-cat, string-to-field and the case aliases.
+(format t "%d items at %.2f each = %8.3f%n" 3 1.5 4.5)
+(format t "[%5d] [%-5d] [%05d]%n" 42 42 42)
+(format t "%s and %s, %c, %e, %g%n" "text" sym 65 12345.678 0.5)
+(format t "%d%% done%n" 50)
+(bind ?s (format nil "%s-%d" "id" 7))
+(printout t ?s " " (str-length ?s) crlf)
+(printout t (sym-cat "a" 1 "b") " " (upcase "abc") " " (lowcase "ABC") crlf)
+(printout t (+ (string-to-field "42") 1) " " (string-to-field "\"quoted\"") " " (string-to-field "sym rest") crlf)
+(printout t (numberp (string-to-field "1.5")) " " (string-to-field "TRUE") crlf)

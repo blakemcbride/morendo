@@ -87,11 +87,12 @@ public class RecencyStrategy implements Strategy {
         if (rfacts.length < len) {
             len = rfacts.length;
         }
-        // first we compare the time stamp
+        // fact ids grow with assertion order, so they order the facts by recency exactly
+        // as their timestamps would, and they do not change from one run to the next
         for (int idx = 0; idx < len; idx++) {
-            if (lfacts[idx].timeStamp() > rfacts[idx].timeStamp()) {
+            if (lfacts[idx].getFactId() > rfacts[idx].getFactId()) {
                 return 1;
-            } else if (lfacts[idx].timeStamp() < rfacts[idx].timeStamp()) {
+            } else if (lfacts[idx].getFactId() < rfacts[idx].getFactId()) {
                 return -1;
             }
         }
@@ -100,14 +101,6 @@ public class RecencyStrategy implements Strategy {
             return 1;
         } else if (lfacts.length < rfacts.length) {
             return -1;
-        }
-        // next we compare the fact id
-        for (int idx = 0; idx < len; idx++) {
-            if (lfacts[idx].getFactId() > rfacts[idx].getFactId()) {
-                return 1;
-            } else if (lfacts[idx].getFactId() < rfacts[idx].getFactId()) {
-                return -1;
-            }
         }
         return 0;
     }

@@ -24,7 +24,6 @@ import org.morendo.rete.Rete;
 import org.morendo.rete.ReturnVector;
 import org.morendo.rete.ValueParam;
 import org.morendo.rete.ValueType;
-import org.morendo.rule.Defrule;
 
 /**
  * @author Peter Lin
@@ -46,10 +45,11 @@ public class UnDefruleFunction implements Function {
         Boolean removed = Boolean.TRUE;
         if (params.length == 1) {
             String rl = params[0].getStringValue();
-            Defrule defrl = (Defrule) engine.getCurrentFocus().findRule(rl);
-            if (defrl != null) {
+            java.util.List<org.morendo.rule.Rule> found = engine.getCurrentFocus().findRules(rl);
+            for (org.morendo.rule.Rule defrl : found) {
                 engine.getCurrentFocus().removeRule(defrl, engine, engine.getWorkingMemory());
-            } else {
+            }
+            if (found.isEmpty()) {
                 removed = Boolean.FALSE;
             }
         } else {

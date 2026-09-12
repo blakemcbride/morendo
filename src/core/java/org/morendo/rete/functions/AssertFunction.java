@@ -54,9 +54,7 @@ public class AssertFunction implements RuleFunction {
             if (params[0].getValue() instanceof Deffact) {
                 fact = (Deffact) params[0].getValue();
             } else {
-                Deftemplate tmpl =
-                        (Deftemplate)
-                                engine.getCurrentFocus().getTemplate(params[0].getStringValue());
+                Deftemplate tmpl = (Deftemplate) engine.findTemplate(params[0].getStringValue());
                 if (tmpl != null)
                     fact = (Deffact) tmpl.createFact((Object[]) params[1].getValue(), -1);
                 else {

@@ -32,7 +32,14 @@ import java.util.List;
  */
 public interface EngineContext {
     /** Close the context and return the engine back to the pool. */
+    /**
+     * Returns the engine to the pool. Unless keepFacts() was called, the facts and objects of the
+     * request are cleared first so the next request starts empty.
+     */
     void close();
+
+    /** Leaves the engine's facts in place when the context is closed. */
+    void keepFacts();
 
     /**
      * Resets the the EngineContext by removing all the objects and asserting them again. It is

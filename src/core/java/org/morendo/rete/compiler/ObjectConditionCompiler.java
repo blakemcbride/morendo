@@ -72,6 +72,7 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler {
         ObjectCondition cond = (ObjectCondition) condition;
         ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(cond.getTemplateName());
         if (otn != null) {
+            expandCrossPatternBindings(cond, util, position);
             BaseAlpha first = null;
             BaseAlpha previous = null;
             BaseAlpha current = null;
@@ -244,6 +245,32 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler {
                     cond.addNewAlphaNodes(first);
                 } catch (AssertException e) {
                 }
+            }
+        }
+    }
+
+    /**
+     * A chained binding such as (slot ?x&~?y) is an intra-fact comparison only when ?y is a slot of
+     * the same pattern. When ?y was bound by an earlier pattern it is a join with that pattern, so
+     * it becomes an ordinary (negated) bound constraint on the slot.
+     */
+    private void expandCrossPatternBindings(ObjectCondition cond, Rule rule, int position) {
+        for (Constraint c : cond.getConstraints()) {
+            if (c instanceof BoundConstraint bc && bc.hasIntraFactJoin()) {
+                java.util.List<BoundConstraint> sameFact = new java.util.ArrayList<>();
+                for (BoundConstraint other : bc.getIntraFactJoins()) {
+                    org.morendo.rete.Binding bound = rule.getBinding(other.getVariableName());
+                    if (bound != null && bound.getLeftRow() != position) {
+                        BoundConstraint join = new BoundConstraint();
+                        join.setName(bc.getName());
+                        join.setValue(other.getVariableName());
+                        join.setNegated(other.getNegated());
+                        cond.addConstraint(join);
+                    } else {
+                        sameFact.add(other);
+                    }
+                }
+                bc.setIntraFactJoins(sameFact);
             }
         }
     }
@@ -559,11 +586,10 @@ public class ObjectConditionCompiler extends AbstractConditionCompiler {
             LIANode lianode = ruleCompiler.findLIANode(otn);
             NotJoinFrst njoin = new NotJoinFrst(ruleCompiler.getEngine().nextNodeId());
             njoin.setBindings(new Binding[0]);
-            lianode.addSuccessorNode(njoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            ruleCompiler.attachJoinNode(lianode, njoin);
             // add the join to the rule object
             rule.addJoinNode(njoin);
-            oc.getLastNode()
-                    .addSuccessorNode(njoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            ruleCompiler.attachJoinNode(oc.getLastNode(), njoin);
         } else if (oc.getNodes().size() == 0) {
             // this means the rule has a binding, but no conditions
             ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(oc.getTemplateName());

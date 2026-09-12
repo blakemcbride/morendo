@@ -31,7 +31,7 @@ import java.util.List;
  *     pattern.
  */
 public sealed interface Condition extends Print
-        permits AbstractCondition, TestCondition, AndCondition, OrCondition {
+        permits AbstractCondition, TestCondition, AndCondition, OrCondition, ForallCondition {
     /**
      * Method is used to compare the pattern to another pattern and determine if they are equal.
      *

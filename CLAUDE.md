@@ -8,7 +8,12 @@ Morendo is a RETE inference engine in Java that speaks the CLIPS rule language (
 Jamocha/Sumatra engine; the package root was `org.jamocha` until 2.0.0 and is now `org.morendo`). Deliberately unsupported:
 ordered facts. Comments in `.clp` files are `;;` (a single `;` is a token in this grammar). Added on top of plain RETE: MOLAP cubes, graph queries, temporal facts/rules,
 `only`/`multiple` conditional elements, no-agenda (event-driven) rules, fuzzy bindings, and a
-rule cost function. Design notes for these live in `doc/*.pdf|odt` and `classdiagrams/`.
+rule cost function. Design notes for these live in `doc/*.pdf|odt` and `classdiagrams/`. The
+version is 2.1.0 (`Constants.VERSION`). Documents at the root: `README.md` (the GitHub page:
+origins, what changed from Peter Lin's original, where things are), `README2.md` (the original
+README, kept as is), `BUILDING.md`, `USAGE.md`, this file, and `UpgradePlan.md` (the 2.0.0
+modernization plan). `FeaturePlan.md`, the 2.1.0 feature plan, is Blake's local working file and
+is not committed; neither are changes to `UpgradePlan.md`.
 
 ## Build and run
 
@@ -49,8 +54,9 @@ compiling each against only its own dependencies, see `MODULES` in `Tasks.java`)
 scripts in `src/test/resources`) and compile against every module. The version is
 `Constants.VERSION`; `Tasks.java` reads it for jar and zip names.
 
-bld compiles only sources newer than their class files, so after changing a method or field
-signature run `./bld clean test` to avoid stale-class errors. `./bld lint` compiles everything
+bld runs one task per invocation (`./bld clean test` only cleans). It compiles only sources newer
+than their class files, so after changing a method or field signature run `./bld clean` and then
+`./bld test` to avoid stale-class errors. `./bld lint` compiles everything
 (generated parser included) but reports only hand-written sources; the code base is at zero
 warnings, so a change that introduces one should fix it rather than suppress it. The remaining
 `@SuppressWarnings("unchecked")` mark genuine unchecked casts (mostly `Object`-typed memories). A failed task exits non-zero
@@ -74,14 +80,15 @@ new test classes that way. The rest of `src/test` (`*Benchmark*`, `rulebenchmark
 `cube`, `sample`) are benchmarks, generators and examples with no `@Test` methods. Engine tests
 live in `src/test/java/woolfel/rete`; `src/test/java/woolfel/examples/model` has the bean classes
 (`Account`, `Hobby`, ...) that samples and tests assert as facts. File paths in tests and `.clp`
-files are relative to the repo root. `InitServiceTest` and the two JMS sample tests are
-`@Disabled` with the reason (the service package never builds applications from its JSON config;
-the messaging sample's rule file is not in the repository).
+files are relative to the repo root. The two JMS sample tests are `@Disabled` with the reason
+(the messaging sample's rule file is not in the repository).
 
 ### Golden (characterization) tests
 
 `org.morendo.golden.GoldenSampleTest` runs every self-contained sample under `samples/` plus the
-scenario scripts in `src/test/resources/scenarios/` (Manners 16 guests, MOLAP, graph query) with
+scenario scripts in `src/test/resources/scenarios/` (Manners 16 guests, MOLAP, graph query, and
+the language scenarios `slot_calls`, `loops`, `deffunction`, `halt`, `deffacts`, `fact_access`,
+`agenda`, `strings`, `routers`, `types`, `lists`, `or_ce`, `forall`, `return_value`) with
 `(watch rules)` on, and compares the printed output, the firing trace and template/rule/fact/node
 counts with `src/test/resources/golden/<name>.txt`. This is the safety net for the modernization
 work in `UpgradePlan.md`: any engine change must keep it green, or the golden diff must be reviewed
@@ -110,8 +117,19 @@ JavaCC 7.0.13 from `libs/tools/` and writes `CLIPSParser*.java`, `Token*.java`,
 `ParseException.java`, `SimpleCharStream.java` into `src/core/java/org/morendo/parser/clips/`,
 where that directory's `.gitignore` hides them. Never hand-edit generated files; edit `clips.jj`
 and rebuild (JavaCC regenerates only when the grammar is newer; `./bld clean` removes them).
-`ParserUtils.java` in the same package is hand-written. `src/core/javacc/clips-experimental.jj`
+`ParserUtils.java` and `OrExpansion.java` in the same package are hand-written (the directory's
+`.gitignore` lists the generated files by name). `src/core/javacc/clips-experimental.jj`
 is an unused variant of the grammar.
+
+### User manual
+
+`manual/` is the LaTeX user manual and tutorial (`manual/morendo.tex`, one file per chapter under
+`manual/chapters/`, U.S. Letter). `make` in that directory builds `manual/morendo.pdf` with
+`pdflatex` (three passes); `make clean` removes the auxiliary files. Every shell transcript in it is
+real output: `python3 manual/replay.py` replays them all against the build and prints the
+differences (only timestamps and profiling times should differ), and `--rewrite <chapter.tex>`
+re-records a chapter's outputs. The tutorial is one continuous session, so its fact ids carry over
+between sections; Appendix C lists the remaining limitations.
 
 ## Architecture
 
@@ -123,7 +141,13 @@ and templates), `FunctionRegistry` (functions, function groups, measures; also l
 `gui` module contributes `view` and the `messaging` module its messaging and agent functions) and
 `EngineOutput`
 (print writers and the message router). A `Rete` instance is not thread-safe: drive it from one
-thread, or through the `MessageRouter` command thread as the shell and GUI do. `Rete.close()`
+thread, or through the `MessageRouter` command thread as the shell and GUI do. Serving many
+threads means one engine per thread or a pool (the service module's `EnginePool`); the only
+JVM-wide state shared between engines is the `Strategies` registry and, in the messaging module,
+the content-handler and agent registries. Profiling counters are per engine
+(`Rete.getProfileStats()`, a `ProfileStats` instance; nothing static is left). A module's
+working directory (generated macro classes) is created lazily under `-Dmorendo.workdir`, default
+the JVM temp directory, so an engine writes nothing to the current directory. `Rete.close()`
 marks the engine closed, stops the router and runs registered close hooks; `(exit)` only
 closes the engine (nothing calls `System.exit` except the GUI window). All shell/CLIPS-level
 operations (`batch`, `build`, `eval`, `deftemplate`, `defrule`, `fire`, `assert`, ...) are
@@ -134,15 +158,30 @@ operations (`batch`, `build`, `eval`, `deftemplate`, `defrule`, `fire`, `assert`
   (a `ValueType`), `getParameter()`, `toPPString()`. Comparison operators are the `Operator`
   enum; both replaced int codes in `Constants`.
 - Functions are bundled in `FunctionGroup`s (`functions/list/ListFunctions`, `functions/math/MathFunctions`,
-  ...). Each group's `loadFunctions(engine)` calls `engine.declareFunction(f)`. All built-in groups are
-  registered in `Rete.loadBuiltInFunctions()`. To add a built-in: write the class, add it to the right
-  group's `loadFunctions`.
+  ...). Each group's `loadFunctions(engine)` calls `engine.declareFunction(f)` and records the
+  function in the group's list, which is what `(list-deffunctions)` prints. All built-in groups
+  are registered in `FunctionRegistry.loadBuiltIns()` (called from `Rete.loadBuiltInFunctions()`);
+  the groups added in 2.1.0 are `functions/control` and `functions/type`. To add a built-in: write
+  the class, add it to the right group's `loadFunctions`.
 - Parameters arrive as `ValueParam` (literal), `BoundParam` (call `resolveBinding(engine)` first),
   `FunctionParam2` (nested call), `SlotParam`, etc. Read arguments with
   `params[i].getValue(engine, ValueType.OBJECT)`, never the engine-less `getValue()`: only the
   former resolves bindings and nested calls. `Parameter`/`ReturnValue`, `Condition` and
   `Constraint` are sealed hierarchies with final leaves, so a new parameter kind or conditional
   element is an explicit change to the closed set.
+- Control flow lives in `functions/control`: `progn`, `while`, `loop-for-count`, `foreach`,
+  `progn$`, `break`, `return`, `halt`. Loop bodies are `FunctionParam2` arguments evaluated on
+  every turn; `break`/`return` throw the stackless `ControlFlow` exception, caught by the loops,
+  by `InterpretedFunction` (deffunction bodies) and by the two activation classes (a `return`
+  ends the rule's remaining actions). The loop specification `(?i 1 10)` / `(?x <list>)` is
+  parsed by `valueParams` as a `FunctionParam2` named `bind` whose first parameter is the
+  variable name. `-Dmorendo.loop.limit=<n>` caps the turns of any loop.
+- A slot value in `assert`/`modify`/`duplicate` may be a `FunctionParam2`, evaluated by
+  `Deftemplate.createFact` and `Deffact.updateSlots`/`cloneFact` (`Deffact.callValue` adapts a
+  list result to a multislot). A deffunction body is a list of expressions run by
+  `InterpretedFunction`; a bare value in the body is wrapped in `progn` by the grammar. Variable
+  tokens allow `-` and `_` after the first character (`?e-index`). A nested call to an unknown
+  function throws (`FunctionParam2.require`); a top-level one still answers `false`.
 
 Even `Rete.loadRuleset()` and `Rete.build()` just invoke `BatchFunction` / `BuildFunction`.
 
@@ -156,7 +195,11 @@ command thread takes it from a blocking queue, hands it to `CLIPSInterpreter`, a
 `MessageEvent`s (COMMAND, ENGINE output, RESULT or ERROR) that the channel reads back. The
 shell returns when the input ends or the engine is closed. `service/` wraps the same engine
 for embedding (`RuleService` -> `RuleApplication` -> `EngineContext`, JSON config in
-`samples/configuration`, plus a `servlet/` variant).
+`samples/configuration`, plus a `servlet/` variant). Each application has an `EnginePool`
+(`LinkedBlockingDeque`): `getEngine` checks out an idle engine, grows the pool up to `maxPool`,
+else waits `checkoutTimeout` ms; `EngineContext.close()` retracts the facts the request added
+(those above the fact-id mark taken at check-out) unless `keepFacts()` was called, then checks
+the engine in.
 
 ### Rule compilation (rule -> RETE nodes)
 
@@ -165,7 +208,9 @@ for embedding (`RuleService` -> `RuleApplication` -> `EngineContext`, JSON confi
 1. `rule.resolveTemplates(engine)`, compute `Complexity`, optionally validate (`rule/TemplateValidation`).
 2. For each `Condition`, `condition.getCompiler(ruleCompiler).compile(...)` builds the alpha side.
    `rete/compiler/CompilerProvider` is a singleton holding one `ConditionCompiler` per CE type:
-   Object, Exist, Temporal, Test, And, CubeQuery, Only, Multiple. Constraints (`LiteralConstraint`,
+   Object, Exist, Temporal, Test, And, CubeQuery, Only, Multiple, Forall. The And compiler is a
+   stub: a top-level `and` group is flattened by `getRuleConditions`; an `or` group never reaches
+   the compiler because the parser expands it into several rules. Constraints (`LiteralConstraint`,
    `AndLiteralConstraint`, `OrLiteralConstraint`, `BoundConstraint`, `PredicateConstraint`) map to the
    `compileConstraint` overloads producing `AlphaNode`, `AlphaNodeAnd/Or`, `AlphaNodePredConstr`,
    `NumericAlphaNode`, `NoMem*` nodes. Equal alpha nodes are shared between rules (not between queries).
@@ -195,6 +240,70 @@ query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`,
 - `Evaluate` compares slot values with pattern-matching switches: strings and booleans by text,
   numbers exactly as longs when both are integral and as doubles otherwise, temporal values by
   epoch millisecond, anything else by `equals`.
+- Agenda order is deterministic: an activation's aggregate time is the sum of its fact ids
+  (not the wall clock), node memories are `LinkedHashMap`s so replay order is stable, and the
+  golden tests depend on both. A `LIANode` replays its parent's alpha memory into a new successor,
+  which is how a rule defined after its facts still matches them.
+- `DefaultRuleCompiler.attachJoinNode` postpones every alpha-side input of a join (recorded in
+  `pendingInputs`) until the terminal node is attached (`attachPendingInputs`), so the facts a
+  new rule replays flow through the complete rule; only join-to-join links are made at once.
+- A `defquery` runs on the network it was compiled with (`Rete.getDefquery` no longer clones);
+  `Defquery.executeQuery` empties that network's join memories and result node first. A parameter
+  used in several patterns has one `QueryParameterNode` per pattern (`Defquery.parameterNodes`);
+  a predicate relating two patterns compiles to a `QueryFuncJoin`, not an alpha node. Bound
+  constraints that are not parameters produce no node at all.
+- `(slot ?x&~?y)` parses as an intra-fact chain; `ObjectConditionCompiler.expandCrossPatternBindings`
+  turns the entries whose variable another pattern bound into ordinary (negated) bound
+  constraints, i.e. join bindings.
+- `temporal-activation` rules queue expired temporal facts on `Rete.retractLater`; the engine
+  retracts them after the current assertion has propagated (`flushPendingRetracts`).
+- `deffacts` are `Deffacts` objects stored on the module (`Module.addDeffacts` and friends), in
+  definition order; defining one asserts nothing. `Rete.resetAll()` (the `reset` function)
+  retracts every fact including the initial fact, restarts fact numbering when no Java objects
+  are asserted, asserts a fresh initial fact, then every deffacts of every module, then re-asserts
+  the objects. `resetFacts`/`resetObjects` keep their old retract-and-re-assert meaning.
+- A terminal node keeps a fired match in its memory (`LinkedActivation.fired`), so `refresh` can
+  re-activate it; the entry goes when the facts are retracted. `TerminalNode2.retractFacts` only
+  touches the agenda for unfired activations, and `MLTerminalNode` overrides `removeActivation`
+  to drop the entry because its retract path reads "missing" as "already fired".
+  `ObjectTypeNode.retractFact` propagates to terminal successors (rules with no LHS).
+- `(agenda)` lists activations through `ActivationList.activations()`, which repeats the choice
+  `nextActivation` makes on a copy so the order matches firing; `Rete.fire(n)` checks the count
+  before taking the next activation (it used to drop one).
+- Routers: `EngineOutput` holds the console writers (`addPrintWriter`, which receive everything
+  sent to `t`), the file routers of `(open)` (`Rete.openRouter`/`closeRouter`; a message to an
+  open name goes there alone) and the input side (`readLine`; `setInputSupplier` is how the
+  shell feeds `(readline t)` from JLine). The old `read` function is now `read-command`.
+- Predicate constraints: `PredicateConstraint.isPredicateJoin` is true only when the predicate
+  uses a variable of another pattern (globals and nested calls are searched, `?*x*` never counts);
+  the operator alpha nodes (`NumericAlphaNode`, ...) are used only for `isSimpleOperator()`, the
+  variable against one literal, everything else is an `AlphaNodePredConstr` whose identity for
+  node sharing is the text of the call (`hashString`). `bindOwnVariable` points every nested
+  occurrence of the slot's variable at row 0 of the fact. A running `Defquery` pushes itself as
+  the binding `Scope`, which is how a predicate reads a query parameter.
+- Grammar: `nil` is an argument, symbols may contain `*` after the first character (`gensym*`),
+  `defglobal` has its own production accepting `?*x* = 1` pairs, and `!=`/`<>` are function
+  names in predicates.
+- `(or ...)`: the parser expands a rule with an or group into one rule per combination
+  (`OrExpansion`, rebuilding the text from the tokens kept by `OrCondition`, then re-parsing).
+  Members are `name&n` with `Defrule.getOrGroup()` set and the written text in
+  `getSourceText()`; `Module.findRules(name)` resolves a written name to its members, and the
+  rules functions use it. The grammar must keep the token chain intact for this (no
+  `exp.next = null`).
+- `(forall A B+)`: `ForallCondition` compiles (`ForallConditionCompiler`) to a sub-network, the
+  outer tuples joined with A and the Bs, and two `TupleNotJoin`s, a not-join whose right input is
+  tuples (through `RightInputAdapter`) matched by prefix; the outer one emits the entering tuples
+  unchanged. Inner patterns take the rows after the outer tuple, so their variables are local.
+- A rule that opens with `(not ...)` and has more conditions starts from the initial fact
+  (`DefaultRuleCompiler.startsWithInitialFact`): row 0 is the initial fact and the negated
+  pattern is a `NotJoin` with no bindings. It used to be compiled as a positive pattern.
+- `(slot =(expr))` is a `PredicateConstraint` on a generated variable `_rvN` calling `eq`; in a
+  join it is a `Binding2` with a function, whose parameters are re-bound per evaluation
+  (`Binding2.getParameters` now copies a nested call's parameters).
+- Modules: `DefaultWM.addModule` does not change the focus (`defmodule` does, via
+  `Rete.addModule(name, true)`); `auto-focus` rules push their module with `pushFocus`, and
+  `fire()` pops back when that module's agenda is empty. `TemplateRegistry.findTemplate` accepts
+  `MODULE::name` and searches the focus module, `MAIN`, then every module.
 - Node memories are NOT stored in nodes. `WorkingMemory` (`DefaultWM`) owns them via the generic
   `getAlphaMemory / getBetaLeftMemory / getBetaRightMemory` (`<T> T`, keyed by node; the node that
   created a memory knows its type), plus facts, deffacts, defglobals, modules, cubes, and the
@@ -222,7 +331,8 @@ query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`,
 ### Agenda and firing
 
 `Agenda` holds activations per `Module`; ordering is a `Strategy` (`rete/strategies`: depth, breadth,
-recency). `Rete.fire()` / `fire(n)` drains the focused module. Rule properties (`salience`,
+recency). `Rete.fire()` / `fire(n)` drains the focused module; `(halt)` sets `Rete.halted`, which
+`fire()` clears on entry and checks after every activation, leaving the agenda intact. Rule properties (`salience`,
 `auto-focus`, `no-agenda`, `remember-alpha`, `hashed-memory`, `temporal-activation`, `effective-date`,
 `expiration-date`, `rule-version`, `chaining-direction`) are
 parsed into `Rule` setters in `clips.jj` (`ruleBody()`).

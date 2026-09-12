@@ -1,0 +1,147 @@
+\chapter{MOLAP Cubes}
+\label{ch:molap}
+
+Business rules often need aggregates: the total exposure of an account,
+the average response time of an application, the number of orders per
+region. Computing them in rules is awkward, because a rule sees one
+combination of facts at a time. \Morendo\ instead lets you declare a
+multidimensional cube that the engine keeps up to date as facts come and
+go, and lets rules query the cube as if it were a fact. The design is
+described in \file{doc/molap\_for\_production\_system.pdf}; this chapter
+covers how to use it.
+
+\section{Declaring a cube}
+
+A cube has three parts, in this order: the \emph{sources}, one or more
+patterns joined like the left-hand side of a rule; the \emph{dimensions},
+the slots the cube can be sliced by; and the \emph{measures}, aggregates
+computed over each slice. \file{samples/molap/cubes.clp} declares a cube
+over web-server and database logs:
+
+\begin{lstlisting}
+(defcube TransactionCube
+  <- (HTTPLog
+    (IPAddress ?ipaddr)
+    (URL ?url)
+    (bytesSent ?bytesSent)
+    (elapsedTime ?elapsedTime)
+    (endTime ?endTime)
+    (serverType ?applicationType)
+    (statusCode ?statusCode)
+    (timestamp ?timestamp)
+    (transactionID ?transactionId)
+  )
+  <- (DatabaseQueryLog
+    (IPAddress ?dbipaddr)
+    (bytesSent ?dbBytesSent)
+    (elapsedTime ?dbElapsedTime)
+    (endTime ?dbEndTime&:(within-minutes 4 ?dbEndTime ?endTime) )
+    (statusCode ?dbStatusCode)
+    (timestamp ?dbTimestamp&:(within-minutes 2 ?timestamp ?dbTimestamp) )
+    (transactionID ?transactionId )
+  )
+  (dimension IPAddress ?ipaddr)
+  (dimension Application ?url)
+  (dimension TransactionID ?transactionId)
+  (dimension ServerType ?applicationType)
+  (dimension ApplicationStatus ?statusCode)
+  (dimension DatabaseStatus ?dbStatusCode)
+  (AvergeResponseTime (average ?elapsedTime) )
+  (AverageDbQueryTime (average ?dbElapsedTime) )
+  (NinetyPercentResponseTime (90-percentile ?elapsedTime) )
+  (MaxResponseTime (max ?elapsedTime) )
+  (TotalBytesSent (sum ?bytesSent) )
+)
+\end{lstlisting}
+
+Each source begins with \fn{<-} followed by an ordinary pattern. Variables
+shared between sources join them, exactly as in a rule: here the two logs
+are joined on \fn{?transactionId}, and predicate constraints keep only
+database queries that ran within the request's time window. A source may
+use any constraint a rule pattern may.
+
+A dimension is \fn{(dimension name ?variable)}: the name is what rules
+will query by, the variable says where the value comes from. A measure is
+\fn{(name (function ?variable))}, where the function is one of the
+registered measures and the variable must be bound to a numeric slot. The
+built-in measures are \fn{sum}, \fn{average}, \fn{median}, \fn{min},
+\fn{max}, \fn{stdev} and the \fn{70-}, \fn{80-} and \fn{90-percentile};
+\fn{(measures)} lists them, and \fn{load-measure} or
+\fn{load-measure-group} add Java classes implementing
+\fn{org.morendo.rete.measures.Measure}.
+
+\section{What the engine does with it}
+
+Compiling a cube does four things: it validates the definition against the
+templates, it creates a \emph{cube template} whose slots are the
+dimensions and measures, it asserts one \emph{cube fact} of that template,
+and it generates and compiles a rule that feeds the cube. \fn{ppdefcube}
+shows the compiled cube, and \fn{(rules)} shows the generated rule, named
+\fn{generated\_cube\_rule\_}\emph{cube}. Its conditions are the sources;
+its action is \fn{(cube-add-data "TransactionCube")}, and its
+modification action (Section~\ref{sec:modification-logic}) is
+\fn{(cube-delete-data "TransactionCube")}. The rule is declared
+\fn{no-agenda}, so the cube is updated the moment a matching combination
+of facts appears or disappears, before any ordinary rule fires. Nothing in
+the user's rule set needs to sequence it.
+
+A cube is therefore \emph{reactive}: every assertion, modification or
+retraction of a source fact changes the cube's contents immediately, and
+the cube fact is re-asserted so that rules depending on it are
+re-evaluated.
+
+\section{Querying a cube from a rule}
+
+The \fn{cubequery} conditional element slices the cube. Its pattern names
+the cube and gives dimensions to filter by and measures to read;
+\file{samples/molap/cube\_rules.clp}:
+
+\begin{lstlisting}
+(defrule ContentStats
+  ?report <- (Report (Application ?app))
+  ?cresult <- (cubequery
+    (TransactionCube
+      (Application ?app)
+      (AvergeResponseTime ?aveRespTime)
+      (MaxResponseTime ?maxRespTime)
+      (AverageDbQueryTime ?aveDbTime)
+      (NinetyPercentResponseTime ?ninetyPercent)
+    )
+  )
+=>
+  (printout t "results: " ?app " - ave resp: " ?aveRespTime
+    " - max resp: " ?maxRespTime " - 90% resp: " ?ninetyPercent crlf)
+  (printout t "- db ave: " ?aveDbTime " - db max: " ?maxDbTime crlf)
+)
+\end{lstlisting}
+
+A dimension bound to a variable that is already bound earlier in the rule
+(\fn{?app}) selects the slice; a measure bound to a fresh variable
+receives the aggregate over that slice. The rule fires once per
+\fn{Report} with the measures for that application, and fires again when
+the cube changes. The result of a query is cached, so several rules
+asking for the same slice share one computation.
+
+The compiler switches indexing on for every dimension a \fn{cubequery}
+uses; other dimensions are not indexed. \fn{(index-dimension cube dim
+...)} turns indexing on by hand, for dimensions queried only from Java.
+
+\section{Inspecting and profiling}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.9in}L}
+\toprule
+\fn{(list-defcubes)}, \fn{(cubes)} & names of the cubes \\
+\fn{(ppdefcube name)} & dimensions with their index state and size, and the measures \\
+\fn{(profile-cube name)}, \fn{(unprofile-cube name)} & time the cube's queries; \fn{print-profile} reports the average \\
+\fn{(profile-cube-index name)}, \fn{(print-profile-cube-index)} & statistics on the dimension indexes \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The scenario \file{src/test/resources/scenarios/molap.clp} loads the
+sample's templates, cube and rule; the repository ships no log data for
+it, so to see the rule fire, assert matching \fn{HTTPLog},
+\fn{DatabaseQueryLog} and \fn{Report} facts of your own. The templates in
+\file{samples/molap/templates.clp} type their time slots as \fn{DATE},
+which the time functions in the cube's predicates require.

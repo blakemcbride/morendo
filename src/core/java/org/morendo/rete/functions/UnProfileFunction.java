@@ -47,17 +47,17 @@ public class UnProfileFunction implements Function {
         if (params != null && params.length > 0) {
             for (int idx = 0; idx < params.length; idx++) {
                 if (params[idx].getStringValue().equals("all")) {
-                    engine.setProfile(Rete.Profile.ALL);
+                    engine.setProfileOff(Rete.Profile.ALL);
                 } else if (params[idx].getStringValue().equals("assert-fact")) {
-                    engine.setProfile(Rete.Profile.ASSERT);
+                    engine.setProfileOff(Rete.Profile.ASSERT);
                 } else if (params[idx].getStringValue().equals("add-activation")) {
-                    engine.setProfile(Rete.Profile.ADD_ACTIVATION);
+                    engine.setProfileOff(Rete.Profile.ADD_ACTIVATION);
                 } else if (params[idx].getStringValue().equals("fire")) {
-                    engine.setProfile(Rete.Profile.FIRE);
+                    engine.setProfileOff(Rete.Profile.FIRE);
                 } else if (params[idx].getStringValue().equals("retract-fact")) {
-                    engine.setProfile(Rete.Profile.RETRACT);
+                    engine.setProfileOff(Rete.Profile.RETRACT);
                 } else if (params[idx].getStringValue().equals("remove-activation")) {
-                    engine.setProfile(Rete.Profile.RM_ACTIVATION);
+                    engine.setProfileOff(Rete.Profile.RM_ACTIVATION);
                 }
             }
         }
@@ -74,6 +74,6 @@ public class UnProfileFunction implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(unprofile assert|all|retract|fire|add-activation|remove-activation)";
+        return "(unprofile all|assert-fact|retract-fact|fire|add-activation|remove-activation)";
     }
 }

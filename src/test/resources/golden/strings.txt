@@ -1,0 +1,14 @@
+== stats ==
+templates: 4
+rules: 0
+facts: 1
+next-node-id: 6
+== output ==
+3 items at 1.50 each =    4.500
+[   42] [42   ] [00042]
+text and sym, A, 1.234568e+04, 0.500000
+50% done
+id-7 4
+a1b ABC abc
+43 quoted sym
+true true

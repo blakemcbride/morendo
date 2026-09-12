@@ -79,19 +79,15 @@ public class OnlyConditionCompiler extends AbstractConditionCompiler {
         BaseNode base = cond.getLastNode();
         if (base != null) {
             if (base instanceof BaseAlpha baseAlpha) {
-                (baseAlpha)
-                        .addSuccessorNode(
-                                bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+                ruleCompiler.attachJoinNode(baseAlpha, bjoin);
             } else if (base instanceof BaseJoin baseJoin) {
-                (baseJoin)
-                        .addSuccessorNode(
-                                bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+                ruleCompiler.attachJoinNode(baseJoin, bjoin);
             }
         } else {
             // the rule doesn't have a literal constraint so we need to add
             // ExistJoinFrst as a child
             ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(cond.getTemplateName());
-            otn.addSuccessorNode(bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            ruleCompiler.attachJoinNode(otn, bjoin);
         }
         // important, do not call this before ExistJoinFrst is added
         // if it's called first, the arraylist will return index
@@ -170,19 +166,15 @@ public class OnlyConditionCompiler extends AbstractConditionCompiler {
         BaseJoin bjoin = new OnlyJoinFrst(ruleCompiler.getEngine().nextNodeId());
         if (base != null) {
             if (base instanceof BaseAlpha) {
-                ((BaseAlpha) base)
-                        .addSuccessorNode(
-                                bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+                ruleCompiler.attachJoinNode(base, bjoin);
             } else if (base instanceof BaseJoin) {
-                ((BaseJoin) base)
-                        .addSuccessorNode(
-                                bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+                ruleCompiler.attachJoinNode(base, bjoin);
             }
         } else {
             // the rule doesn't have a literal constraint so we need to add
             // ExistJoinFrst as a child
             ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(cond.getTemplateName());
-            otn.addSuccessorNode(bjoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            ruleCompiler.attachJoinNode(otn, bjoin);
         }
         // important, do not call this before ExistJoinFrst is added
         // if it's called first, the arraylist will return index

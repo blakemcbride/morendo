@@ -64,6 +64,12 @@ public class AgentFunctions implements FunctionGroup {
         funcs.add(printagn);
         UnregisterAgentFunction unreg = new UnregisterAgentFunction();
         engine.declareFunction(unreg);
+        DiscoverAgentsFunction discover = new DiscoverAgentsFunction();
+        funcs.add(discover);
+        engine.declareFunction(discover);
+        PrintAgentPerfSummaryFunction perfSummary = new PrintAgentPerfSummaryFunction();
+        funcs.add(perfSummary);
+        engine.declareFunction(perfSummary);
         funcs.add(unreg);
     }
 }

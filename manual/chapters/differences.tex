@@ -1,0 +1,97 @@
+\chapter{Differences from CLIPS and Known Limitations}
+\label{app:differences}
+
+This appendix is the list to check when a CLIPS rule file does not load
+or behaves differently. It is written against \Morendo\ \version.
+
+\section{Constructs and conditional elements}
+
+\begin{itemize}
+\item There are no ordered facts: every fact has a template, a
+  \fn{deftemplate} or a declared Java class. \fn{(assert (color red))}
+  is an error.
+\item COOL is absent: \fn{definstances}, \fn{defclass} with slots,
+  \fn{defmessage-handler}, \fn{send}, \fn{defgeneric} and \fn{defmethod}.
+  \fn{defclass} in \Morendo\ declares a Java class as a template.
+\item A template takes \fn{type} and \fn{default} on a slot and nothing
+  else: no \fn{extends}, \fn{allowed-values}, \fn{range},
+  \fn{cardinality} or \fn{default-dynamic}, and a default is a number or
+  a string.
+\item \fn{defmodule} takes no \fn{export} or \fn{import} lists; every
+  template is visible from every module, and \fn{defmodule} makes the
+  new module current.
+\item The \fn{logical} conditional element is not supported.
+  \fn{forall} is supported in rules, over plain patterns, and not in
+  queries.
+\item Wildcards \fn{?} and \fn{\$?} without a name are not accepted, nor
+  is a standalone predicate constraint \fn{:(expr)}. A slot takes one
+  predicate; combine tests with \fn{and} inside it.
+\item A rule with an \fn{or} element is expanded into \fn{name\&1},
+  \fn{name\&2}, \dots; \fn{(rules)}, \fn{ppdefrule}, \fn{undefrule} and
+  \fn{refresh} use the written name, the agenda and the watch traces show
+  the members.
+\item Default salience is 100, not 0.
+\item Comments are \fn{;;}; a single semicolon is a syntax error. Strings
+  know only the escapes \fn{\textbackslash\textbackslash} and an escaped
+  quote, and may be single-quoted. Symbols may contain \fn{.} and
+  \fn{/}, so a fully qualified Java class name is a symbol.
+\end{itemize}
+
+\section{Functions}
+
+\begin{itemize}
+\item \fn{run} is \fn{fire}, which returns the number of rules fired;
+  \fn{load} is \fn{batch}; \fn{list-defmodules} is \fn{modules}.
+  \fn{(exit)} closes the engine, not the JVM.
+\item \fn{switch} does not exist. \fn{while}, \fn{loop-for-count} and
+  \fn{foreach} return \fn{false}; \fn{foreach} binds \fn{?var-index}
+  like \fn{progn\$}.
+\item Symbols and strings are one type: \fn{symbolp} and \fn{stringp}
+  are both true for any text, and \fn{sym-cat} returns the same kind of
+  value as \fn{str-cat}. Numbers compare numerically, so \fn{(eq 1
+  1.0)} and \fn{(= 1 1.0)} are both true.
+\item An unknown function at the top level evaluates to \fn{false} with
+  no error; nested inside another call it is an error.
+\item \fn{(random)} with no bounds returns a double in $[0,1)$; \fn{time}
+  returns milliseconds, like \fn{ms-time}.
+\item \fn{read} consumes a whole line and returns its first field;
+  \fn{readline t} in the GUI console reads standard input.
+\item \fn{(reset)} also re-asserts the Java objects that were asserted,
+  and restarts fact numbering only when no objects are asserted.
+  \fn{(clear)} removes facts, rules, templates and deffacts.
+\item \fn{(refresh rule)} returns the number of activations it added;
+  \fn{(agenda)} prints \fn{salience rule: f-1,f-2} per activation and
+  a total line; \fn{(set-focus name)} returns the previous focus.
+\item Agenda order among activations of equal salience is decided by
+  the fact ids of the match, not by the wall clock, so a run is
+  repeatable.
+\end{itemize}
+
+\section{Extensions}
+
+Java objects as templates (Chapter~\ref{ch:java-objects}); the rule
+properties and the \fn{<<=} modification block
+(Chapter~\ref{ch:rule-properties}); \fn{only} and \fn{multiple}
+(Chapter~\ref{ch:language}); \fn{defquery} and \fn{defgraphquery}
+(Chapter~\ref{ch:queries}); \fn{defcube} and \fn{cubequery}
+(Chapter~\ref{ch:molap}); temporal facts, the \fn{temporal} element and
+the time functions (Chapter~\ref{ch:temporal}); the cost and profiling
+functions (Chapter~\ref{ch:analysis}); the service module's engine pools
+(Chapter~\ref{ch:embedding}); the Java, list, text and messaging
+functions (Appendix~\ref{app:functions}).
+
+\section{Known limitations in this version}
+\label{sec:known-problems}
+
+\begin{itemize}
+\item Predicate constraints inside a \fn{temporal} pattern are used as
+  join keys rather than evaluated; relate the facts in a \fn{test}
+  element after the temporal one (Chapter~\ref{ch:temporal}).
+\item \fn{chaining-direction} is recorded but the engine always chains
+  forward.
+\item A variable first bound inside a \fn{forall} is local to it; the
+  rest of the rule cannot use it.
+\item The administration reloads of the service module reach the engines
+  that are idle at the time; an engine checked out by a request keeps
+  its old rules until it is reinitialized.
+\end{itemize}

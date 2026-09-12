@@ -1,0 +1,14 @@
+== stats ==
+templates: 6
+rules: 3
+facts: 6
+next-node-id: 16
+== output ==
+==> fire: Activation: twice, id-3, id-6 AggrTime-*
+twice 5
+==> fire: Activation: next, id-2, id-4 AggrTime-*
+next after 1
+==> fire: Activation: twice, id-2, id-4 AggrTime-*
+twice 1
+==> fire: Activation: five, id-3 AggrTime-*
+five

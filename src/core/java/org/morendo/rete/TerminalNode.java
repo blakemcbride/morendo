@@ -61,6 +61,28 @@ public abstract class TerminalNode extends BaseNode {
         return this.theRule;
     }
 
+    /**
+     * For a rule declared temporal-activation: true when one of the matched facts has expired.
+     * Expired facts are queued for retraction, which the engine performs once the current assertion
+     * has finished propagating.
+     */
+    protected boolean expired(Index inx, Rete engine) {
+        if (!this.theRule.isTemporalActivation()) {
+            return false;
+        }
+        long now = System.currentTimeMillis();
+        boolean expired = false;
+        for (Fact f : inx.getFacts()) {
+            if (f instanceof TemporalFact tf
+                    && tf.getExpirationTime() > 0
+                    && tf.getExpirationTime() < now) {
+                engine.retractLater(f);
+                expired = true;
+            }
+        }
+        return expired;
+    }
+
     /** return the name of the rule */
     public String toString() {
         return this.theRule.getName();

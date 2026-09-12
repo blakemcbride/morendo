@@ -16,7 +16,6 @@
  */
 package org.morendo.rete.functions;
 
-import org.morendo.rete.Constants;
 import org.morendo.rete.DefaultReturnValue;
 import org.morendo.rete.DefaultReturnVector;
 import org.morendo.rete.Function;
@@ -44,18 +43,14 @@ public class DefmoduleFunction implements Function {
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         Boolean add = Boolean.TRUE;
-        if (params.length == 1) {
-            engine.addModule(params[0].getStringValue());
-            engine.writeMessage("true", Constants.DEFAULT_OUTPUT);
+        if (params != null && params.length == 1) {
+            engine.addModule(params[0].getStringValue(), true);
         } else {
             add = Boolean.FALSE;
         }
         DefaultReturnVector ret = new DefaultReturnVector();
         DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, add);
         ret.addReturnValue(rv);
-        DefaultReturnValue rv2 =
-                new DefaultReturnValue(ValueType.STRING, params[0].getStringValue());
-        ret.addReturnValue(rv2);
         return ret;
     }
 

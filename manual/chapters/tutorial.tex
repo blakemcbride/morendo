@@ -1,0 +1,352 @@
+\chapter{A First Session}
+\label{ch:tutorial}
+
+This chapter builds a tiny rule base at the shell prompt, one step at a
+time. Start \fn{./morendo -shell} and type along; every transcript below is
+real output. Chapter~\ref{ch:language} then describes each construct in
+full.
+
+\section{Templates and facts}
+
+Every fact in \Morendo\ has a template that names its slots. Define one
+with \fn{deftemplate}, then create facts with \fn{assert}:
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate person (slot name) (slot age))
+true
+Morendo> (assert (person (name "ann") (age 34)))
+2
+Morendo> (assert (person (name "bob") (age 12)))
+3
+Morendo> (facts)
+f-1 (_initialFact)
+f-2 (person (name "ann") (age 34) )
+f-3 (person (name "bob") (age 12) )
+for a total of 3
+\end{lstlisting}
+
+\fn{assert} returns the id of the new fact. Fact~1 is the
+\emph{initial fact}, which the engine creates itself; rules whose first
+pattern is negated or that have no patterns at all are matched against it.
+Slots you leave out get their default value, which is \fn{nil} unless the
+template says otherwise. \fn{(clear)} empties the engine, templates
+included, so the template can be defined again with a default:
+
+\begin{lstlisting}[style=shell]
+Morendo> (clear)
+true
+Morendo> (deftemplate person (slot name) (slot age (type INTEGER) (default 0)))
+true
+Morendo> (assert (person (name "ann") (age 34)))
+2
+Morendo> (assert (person (name "bob") (age 12)))
+3
+Morendo> (assert (person (name "cy")))
+4
+Morendo> (facts)
+f-1 (_initialFact)
+f-2 (person (name "ann") (age 34) )
+f-3 (person (name "bob") (age 12) )
+f-4 (person (name "cy") (age 0) )
+for a total of 4
+\end{lstlisting}
+
+Slot values are strings in double quotes, integers, floating-point numbers,
+the booleans \fn{TRUE} and \fn{FALSE}, or \fn{nil}. Symbols without quotes
+are accepted where CLIPS accepts them, but strings are the usual choice for
+text.
+
+\section{A rule}
+
+A rule has a name, an optional comment string, a left-hand side of
+patterns, the arrow \fn{=>}, and a right-hand side of actions. This one
+prints every person who is at least 18:
+
+\begin{lstlisting}
+(defrule adult "people who may vote"
+  (person (name ?n) (age ?a&:(>= ?a 18)))
+=>
+  (printout t ?n " is an adult" crlf))
+\end{lstlisting}
+
+The pattern \fn{(person ...)} matches facts of the \fn{person} template.
+\fn{?n} and \fn{?a} are variables; a variable in a slot binds to the slot's
+value. \fn{\&:} attaches a \emph{predicate constraint}: the pattern only
+matches when the expression after the colon is true. \fn{printout t} writes
+to the standard output; \fn{crlf} ends the line.
+
+Type the rule into the shell (the prompt shows \fn{...} while it waits for
+the closing parentheses) and list the rules:
+
+\begin{lstlisting}[style=shell]
+Morendo> (rules)
+adult "people who may vote" salience:100 version: no-agenda:false temporal-activation:false cost-value:0
+for a total of 1
+\end{lstlisting}
+
+Nothing has been printed yet. Matching happened when the rule was
+compiled, but actions run only when you fire the agenda:
+
+\begin{lstlisting}[style=shell]
+Morendo> (watch rules)
+Morendo> (fire)
+==> fire: Activation: adult, id-2 AggrTime--1
+ann is an adult
+1
+Morendo> (fire)
+0
+Morendo> (unwatch rules)
+\end{lstlisting}
+
+\fn{(watch rules)} makes the engine announce each rule as it fires, naming
+the facts that activated it (\fn{id-2} is Ann's fact), and \fn{unwatch}
+turns the trace off again. \fn{fire} returns the
+number of rules fired; the second call finds an empty agenda. A rule fires
+once per combination of facts that matches it; it does not fire again for
+the same facts unless they are retracted and asserted anew, or modified.
+
+\section{Retracting and modifying facts}
+
+\fn{retract} takes a fact id or a fact bound to a variable; \fn{modify}
+takes a bound fact and new slot values. In the shell, bind the value of
+\fn{assert} to keep a handle on the fact:
+
+\begin{lstlisting}[style=shell]
+Morendo> (watch facts)
+Morendo> (bind ?f (assert (person (name "dee") (age 40))))
+==> f-5 (person (name "dee") (age 40) )
+true
+Morendo> (modify ?f (age 41))
+<== f-5 (person (name "dee") (age 40) )
+==> f-5 (person (name "dee") (age 41) )
+true
+Morendo> (retract ?f)
+<== f-5 (person (name "dee") (age 41) )
+true
+Morendo> (unwatch facts)
+\end{lstlisting}
+
+With \fn{(watch facts)} on, \fn{==>} marks an assertion and \fn{<==} a
+retraction. A modification is a retraction followed by an assertion of the
+changed fact under the same id, and every rule that depends on the fact is
+re-evaluated. \fn{(retract 2)} with a literal id works as well, and a
+slot value may be computed in place: \fn{(modify ?f (age (+ 40 1)))}
+does what the transcript did without binding the value first.
+
+\section{Salience and the agenda}
+\label{sec:tutorial-salience}
+
+When several activations are waiting, \emph{salience} decides which fires
+first. Every rule has salience 100 unless it declares otherwise; higher
+fires first. Define two rules, start from an empty working memory with
+\fn{(reset)}, and assert two facts:
+
+\begin{lstlisting}
+(defrule greet (person (name ?n)) => (printout t "hello " ?n crlf))
+(defrule low (declare (salience 50))
+  (person (name ?n)) => (printout t "hi " ?n crlf))
+\end{lstlisting}
+
+\begin{lstlisting}[style=shell]
+Morendo> (reset)
+Morendo> (assert (person (name "ed") (age 1)))
+2
+Morendo> (watch activations)
+Morendo> (assert (person (name "flo") (age 2)))
+=> Activation: greet, id-3 AggrTime--1
+=> Activation: low, id-3 AggrTime--1
+3
+Morendo> (unwatch activations)
+Morendo> (agenda)
+100 greet: f-3
+100 greet: f-2
+50 low: f-3
+50 low: f-2
+for a total of 4
+Morendo> (fire 1)
+hello flo
+1
+Morendo> (agenda)
+100 greet: f-2
+50 low: f-3
+50 low: f-2
+for a total of 3
+Morendo> (fire)
+hello ed
+hi flo
+hi ed
+3
+\end{lstlisting}
+
+\fn{(watch activations)} shows activations being added to the agenda as
+the facts are asserted, and \fn{(agenda)} shows the queue in firing
+order. All of \fn{greet}'s activations (salience 100) come before
+\fn{low}'s (salience 50). Within one salience level the default strategy
+is depth-first: the most recently added activation fires first, which is
+why \fn{flo} precedes \fn{ed}. \fn{(fire 1)} fires only the first
+activation; \fn{(fire)} then runs the rest. \fn{set-strategy} selects
+breadth or recency ordering, and \fn{(refresh rule)} puts a rule back on
+the agenda for matches it has already fired on (Section~\ref{sec:agenda}).
+
+\section{Rules and facts in either order}
+\label{sec:rules-before-facts}
+
+Matching happens at assertion time, but a rule defined later is matched
+against the facts that already exist: when the rule's nodes are added to
+the network the engine replays the facts held by the nodes they hang off.
+Both rules below fire for the fact asserted before them:
+
+\begin{lstlisting}[style=shell]
+Morendo> (clear)
+true
+Morendo> (deftemplate person (slot name) (slot age))
+true
+Morendo> (assert (person (name "cy") (age 0)))
+2
+Morendo> (defrule lit (person (name "cy")) => (printout t "literal matched" crlf))
+true
+Morendo> (defrule var (person (name ?n)) => (printout t "variable matched " ?n crlf))
+true
+Morendo> (fire)
+literal matched
+variable matched cy
+2
+\end{lstlisting}
+
+Templates, however, must exist before the rules and facts that use them:
+a rule naming an unknown template is rejected, and so is an \fn{assert}.
+Rule files therefore put their \fn{deftemplate}s first, and by convention
+their \fn{defrule}s next and the facts last, as every file in
+\file{samples/} does.
+
+\section{Functions, variables and control}
+
+Outside rules the shell is a calculator. Function calls are prefix
+expressions; \fn{bind} sets a variable that stays defined for the rest of
+the session:
+
+\begin{lstlisting}[style=shell]
+Morendo> (* 2.5 4)
+10.0
+Morendo> (bind ?x (* 3 4))
+true
+Morendo> (printout t "x is " ?x crlf)
+x is 12
+Morendo> (if (> ?x 10) then (printout t "big" crlf) else (printout t "small" crlf))
+big
+Morendo> (now)
+2026-09-12T16:37:33.845210878Z
+\end{lstlisting}
+
+\fn{deffunction} defines a function in CLIPS itself, and \fn{defglobal} a
+global variable, written with asterisks around its name:
+
+\begin{lstlisting}[style=shell]
+Morendo> (deffunction twice (?n) (* 2 ?n))
+true
+Morendo> (twice 21)
+42
+Morendo> (defglobal ?*limit* 18)
+18
+Morendo> (printout t ?*limit* crlf)
+18
+\end{lstlisting}
+
+The CLIPS form \fn{(defglobal ?*limit* = 18)} is accepted as well.
+For output with a fixed layout, \fn{format} takes a C-style format
+string: \fn{(format t "\%-6s \%5.2f\%n" "x" ?x)}
+(Section~\ref{sec:routers}).
+
+Loops are functions too: \fn{while} repeats while a test holds,
+\fn{loop-for-count} counts, and \fn{foreach} walks a list. A
+\fn{deffunction} body may hold several expressions and \fn{return}
+early:
+
+\begin{lstlisting}[style=shell]
+Morendo> (loop-for-count (?k 1 3) (printout t "k=" ?k crlf))
+k=1
+k=2
+k=3
+false
+Morendo> (foreach ?e (create$ a b c) (printout t ?e-index ":" ?e crlf))
+1:a
+2:b
+3:c
+false
+Morendo> (deffunction size (?a ?b)
+  (bind ?c (+ ?a ?b))
+  (if (> ?c 10) then (return "big"))
+  "small")
+true
+Morendo> (size 8 9)
+big
+\end{lstlisting}
+
+Section~\ref{sec:loops} has the full set, \fn{progn}, \fn{progn\$} and
+\fn{break} included.
+
+\section{Rule files}
+
+Rather than typing at the prompt, put constructs in a file and load it
+with \fn{batch}. The file \file{only\_1.clp} in \file{samples/only/}
+is typical: two templates, one rule, then the facts. \fn{(batch file)} evaluates every
+expression in the file in order and returns \fn{true}; anything the file
+prints appears as it is loaded.
+
+\begin{lstlisting}[style=shell]
+Morendo> (batch samples/only/only_1.clp)
+true
+Morendo> (fire)
+spiderman save the day
+1
+\end{lstlisting}
+
+Two other functions load data: \fn{load-facts} reads a file of fact
+expressions (no templates or rules) and asserts them, which is how the
+Manners benchmark loads its guest lists; \fn{load-graph} reads nodes and
+edges for graph queries (Chapter~\ref{ch:queries}). A file can also
+declare its starting facts in a \fn{deffacts} and end with \fn{(reset)},
+which retracts whatever is in working memory and asserts them; this is
+the CLIPS habit, and it makes a rule file rerunnable
+(Section~\ref{sec:deffacts}).
+
+\section{Inspecting the engine}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lL}
+\toprule
+\fn{(facts)} & list working memory \\
+\fn{(agenda)} & list the activations waiting to fire, in order \\
+\fn{(rules)} & list the rules with their salience and properties \\
+\fn{(list-deffacts)} & list the deffacts \\
+\fn{(templates)} & list the templates, including the built-in \fn{Node}, \fn{Edge} and \fn{Graph} \\
+\fn{(ppdefrule name)} & pretty-print a rule as the engine compiled it, with every property and its topology cost \\
+\fn{(ppdeftemplate name)} & pretty-print a template \\
+\fn{(watch x)}, \fn{(unwatch x)} & trace \fn{facts}, \fn{rules}, \fn{activations} or \fn{all} \\
+\fn{(profile x)}, \fn{(unprofile x)} & time \fn{assert-fact}, \fn{retract-fact}, \fn{fire}, \fn{add-activation}, \fn{remove-activation} or \fn{all} \\
+\fn{(clear)} & remove every fact, rule and template \\
+\fn{(exit)} & close the engine and leave the shell \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\fn{ppdefrule} is worth a look after writing a rule: it shows the full
+\fn{declare} block with every property the rule has, explicitly or by
+default:
+
+\begin{lstlisting}[style=shell]
+Morendo> (ppdefrule var)
+(defrule var
+  (declare (salience 100) (remember-alpha true) (chaining-direction forward)
+           (no-agenda false) (temporal-activation false) )
+  (person
+    (name ?n)
+  )
+=>
+  (printout t "variable matched " ?n crlf)
+)
+;; topology-cost: 0
+\end{lstlisting}
+
+The declaration is printed in the form the parser accepts, so the output
+can be pasted back into a rule file.

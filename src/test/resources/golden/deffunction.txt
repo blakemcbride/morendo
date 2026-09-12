@@ -1,0 +1,17 @@
+== stats ==
+templates: 5
+rules: 1
+facts: 3
+next-node-id: 9
+== output ==
+sum-list 6
+size small big
+factorial 120
+count-to 10
+len 2
+hello world
+greeted world
+==> fire: Activation: use-functions, id-3 AggrTime-*
+f(6)=720 big
+==> fire: Activation: use-functions, id-2 AggrTime-*
+f(3)=6 small

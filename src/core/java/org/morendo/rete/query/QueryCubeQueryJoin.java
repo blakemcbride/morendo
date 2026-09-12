@@ -35,7 +35,6 @@ import org.morendo.rete.exception.AssertException;
 import org.morendo.rete.measures.AggregateMeasure;
 import org.morendo.rete.measures.Measure;
 import org.morendo.rete.util.NodeUtils;
-import org.morendo.rete.util.ProfileStats;
 import org.morendo.rule.Defquery;
 
 import java.math.BigDecimal;
@@ -186,7 +185,7 @@ public class QueryCubeQueryJoin extends QueryBaseJoin {
         Map<?, ?> firstResult = null;
         // execute query
         if (c.profileQuery()) {
-            ProfileStats.startCubeQuery();
+            engine.getProfileStats().startCubeQuery();
         }
 
         if (this.binds.length > 0) {
@@ -237,7 +236,7 @@ public class QueryCubeQueryJoin extends QueryBaseJoin {
             }
         }
         if (c.profileQuery()) {
-            ProfileStats.endCubeQuery();
+            engine.getProfileStats().endCubeQuery();
         }
         Object[] resultArray = new Object[result.size()];
         return result.toArray(resultArray);

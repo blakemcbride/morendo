@@ -112,6 +112,8 @@ public class FunctionAction implements Action {
                         nestparam.setRow(bd.getLeftRow());
                         nestparam.setColumn(bd.getLeftIndex());
                     }
+                } else if (sp.getSlotValue().getValue() instanceof FunctionParam2 nested) {
+                    nested.configure(engine, util);
                 }
             } else if (this.parameters[idx] instanceof ValueParam) {
                 ValueParam vp = (ValueParam) this.parameters[idx];
@@ -157,6 +159,9 @@ public class FunctionAction implements Action {
                         newbp.setVariableName(sbp.getVariableName());
                         slot.setValue(newbp);
                     }
+                } else if (slot.getValue() instanceof FunctionParam2 nested) {
+                    nested.setEngine(engine);
+                    nested.setFacts(facts);
                 }
             } else if (this.parameters[idx] instanceof FunctionParam) {
                 ((FunctionParam) this.parameters[idx]).setFacts(facts);

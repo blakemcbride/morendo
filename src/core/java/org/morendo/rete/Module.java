@@ -19,6 +19,7 @@ package org.morendo.rete;
 import org.morendo.rule.Rule;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Peter Lin
@@ -85,6 +86,21 @@ public interface Module {
      * @return
      */
     ActivationList getAllActivations();
+
+    /** The activations waiting in this module, in the order they would fire; nothing is removed. */
+    List<Activation> listActivations();
+
+    /** Records a deffacts; a later one with the same name replaces it. */
+    void addDeffacts(Deffacts deffacts);
+
+    /** The deffacts with the given name, or null. */
+    Deffacts getDeffacts(String name);
+
+    /** Every deffacts of the module in definition order. */
+    Collection<Deffacts> getAllDeffacts();
+
+    /** Removes and returns a deffacts, or null when there is none by that name. */
+    Deffacts removeDeffacts(String name);
 
     /**
      * Return the name of the module. The interface doesn't provide any guidelines for the format,
@@ -179,6 +195,9 @@ public interface Module {
      * @return
      */
     Rule findRule(String name);
+
+    /** The rule with the name, or the rules an or group of that name was expanded into. */
+    List<Rule> findRules(String name);
 
     /**
      * Method will remove the activation from the module and return it to the engine. The method

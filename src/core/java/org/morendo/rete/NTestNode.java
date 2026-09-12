@@ -68,12 +68,10 @@ public class NTestNode extends BaseJoin {
         if (!leftmem.containsKey(linx)) {
             this.setParameters(linx.getFacts());
             ReturnVector rv = this.func.executeFunction(engine, this.params);
+            // the negated test holds for this tuple when the function is false
             if (!rv.firstReturnValue().getBooleanValue()) {
                 BetaMemory bmem = new BetaMemoryImpl(linx, engine);
                 leftmem.put(bmem.getIndex(), bmem);
-            }
-            // only propogate if left memories count is zero
-            if (leftmem.size() == 0) {
                 propagateAssert(linx, engine, mem);
             }
         }
@@ -85,12 +83,8 @@ public class NTestNode extends BaseJoin {
     /** */
     public void retractLeft(Index linx, Rete engine, WorkingMemory mem) throws RetractException {
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-        int prev = leftmem.size();
-        if (leftmem.containsKey(linx)) {
-            // the memory contains the key, so we retract and propogate
-            leftmem.remove(linx);
-        }
-        if (prev != 0 && leftmem.size() == 0) {
+        if (leftmem.remove(linx) != null) {
+            // the tuple had passed the negated test, so its matches are withdrawn
             propagateRetract(linx, engine, mem);
         }
     }

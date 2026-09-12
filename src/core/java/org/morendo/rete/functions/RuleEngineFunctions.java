@@ -162,6 +162,27 @@ public class RuleEngineFunctions implements FunctionGroup {
             funcs.add(proff);
             ResetFunction resetf = new ResetFunction();
             engine.declareFunction(resetf);
+
+            for (Function f :
+                    new Function[] {
+                        new DeffactsFunction(),
+                        new ListDeffactsFunction(),
+                        new PPDeffactsFunction(),
+                        new UndeffactsFunction(),
+                        new FactSlotValueFunction(),
+                        new FactExistpFunction(),
+                        new FactRelationFunction(),
+                        new FactIndexFunction(),
+                        new AgendaFunction(),
+                        new RefreshFunction(),
+                        new GensymFunction(false),
+                        new GensymFunction(true),
+                        new SetgenFunction(),
+                        new SystemFunction()
+                    }) {
+                engine.declareFunction(f);
+                funcs.add(f);
+            }
             funcs.add(resetf);
             ResetFactsFunction resetff = new ResetFactsFunction();
             engine.declareFunction(resetff);

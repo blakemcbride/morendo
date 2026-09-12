@@ -148,7 +148,9 @@ public class LoadFactsFunction implements Function {
             buf.append(")");
             return buf.toString();
         } else {
-            return "(load <filename>)\n" + "Command description:\n" + "\tLoad the file <filename>.";
+            return "(load-facts <filename>)\n"
+                    + "Command description:\n"
+                    + "\tLoad the facts in the file <filename>.";
         }
     }
 }

@@ -10,5 +10,3 @@ save the day
 save the day2 
 ==> fire: Activation: save_the_day, id-2 AggrTime-*
 save the day 
-==> fire: Activation: save_the_day, id-2 AggrTime-*
-save the day 

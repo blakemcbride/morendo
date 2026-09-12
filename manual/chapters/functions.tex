@@ -1,0 +1,449 @@
+\chapter{Function Reference}
+\label{app:functions}
+
+This appendix lists every function the engine registers, grouped as
+\fn{(list-deffunctions)} groups them. \fn{(usage name)} prints a function's
+usage string at the shell.
+
+Arguments written \fn{<value>} may be literals, bound variables or nested
+function calls. A trailing \fn{+} means one or more, \fn{*} zero or more,
+and square brackets mark an optional argument. Unless a description says
+otherwise, a function that takes numbers accepts integers and floating
+point values and returns a \fn{BigDecimal}; comparison functions return a
+boolean.
+
+\begin{note}
+A top-level expression that names a function the engine does not have
+evaluates to \fn{false} without an error message; nested inside another
+call, an unknown function is an error. In particular there is no \fn{run}
+(use \fn{fire}), no \fn{load} (use \fn{batch} or \fn{load-facts}) and no
+\fn{deffacts}.
+\end{note}
+
+\section{Rule engine functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+agenda & (agenda [<module>]) & Prints the activations in firing order: salience, rule and fact ids. \\
+and & (and <expr>+) & Logical and of its arguments. \\
+any-eq & (any-eq <value> <binding>+) & True if any binding equals the value. \\
+assert & (assert (<template> (<slot> <value>)+)) & Asserts a fact; returns its id. Grammar construct: the fact is written inline. \\
+assert-\br{}temporal & (assert-temporal (<template> ...)) & Like \fn{assert}, but the fact is a temporal fact (Chapter~\ref{ch:temporal}). \\
+bind & (bind ?<var> <expr>) & Binds a variable; \fn{(bind ?*g* <expr>)} sets a global. \\
+clear & (clear [objects | deffacts]) & Removes every fact, rule, template and deffacts and resets the fact counter; \fn{objects} removes only asserted Java objects, \fn{deffacts} only the facts that are not objects. \\
+deffacts & (deffacts <name> ["comment"] <fact>+) & Names facts for \fn{reset} to assert. Grammar construct (Section~\ref{sec:deffacts}). \\
+defglobal & (defglobal ?*<name>* [<value>]) & Declares a global variable. Note: no \fn{=} between name and value. \\
+defmodule & (defmodule <name>) & Creates a module. \\
+defrule & (defrule <name> ["comment"] [(declare ...)] <CE>+ => <action>*) & Compiles a rule into the current module. Grammar construct; see Chapter~\ref{ch:language}. \\
+defstrategy & (defstrategy <classname>) & Instantiates a user class implementing \fn{Strategy} and registers it for \fn{set-strategy}. \\
+deftemplate & (deftemplate <name> (slot <name> [(type T)] [(default v)])+) & Declares a template. Grammar construct. \\
+duplicate & (duplicate ?<fact> (<slot> <value>)+) & Asserts a copy of a fact with some slots changed. \\
+echo & (echo <value>+) & Echoes its arguments. \\
+eq & (eq <value>+) & True if all arguments are equal. \\
+eval & (eval <string>) & Evaluates CLIPS text held in a string. \\
+exit & (exit) & Closes the engine; the shell then ends. Does not call \fn{System.exit}. \\
+fact-count & (fact-count) & Number of facts in working memory. \\
+fact-existp & (fact-existp <fact> | <id>) & True while the fact is in working memory. \\
+fact-id & (fact-id <id>) & Prints the fact with the given id. \\
+fact-index & (fact-index <fact>) & The id of a bound fact. \\
+fact-relation & (fact-relation <fact> | <id>) & The template name of a fact. \\
+fact-slot-value & (fact-slot-value <fact> | <id> <slot>) & The value of one slot; \fn{false} for an unknown fact or slot. \\
+facts & (facts) & Prints working memory. \\
+fire & (fire [<n>]) & Fires the agenda, or at most \fn{n} activations; returns the number fired. This is CLIPS's \fn{run}. \\
+focus & (focus) & Returns the name of the module in focus. \\
+get-\br{}current-\br{}module & (get-current-module) & Returns the current module's name. \\
+gensym, gensym* & (gensym) & A new symbol \fn{gen1}, \fn{gen2}, ...; \fn{gensym*} skips names in use as variables. \\
+get-strategy & (get-strategy) & Returns the name of the conflict-resolution strategy. \\
+halt & (halt) & From a rule's actions: stops the running \fn{fire} after those actions; the agenda is kept for the next \fn{fire}. \\
+is-nil & (is-nil <binding>+) & True if every binding is \fn{nil}. \\
+is-not-nil & (is-not-nil <binding>+) & True if no binding is \fn{nil}. \\
+lazy-agenda & (lazy-agenda true|false) & Sort activations when they are removed from the agenda instead of when added. \\
+list-deffacts & (list-deffacts) & Prints the name and comment of every deffacts. \\
+list-\br{}deffunctions & (list-deffunctions [<group>+]) & Prints the functions by group. Alias: \fn{functions}. \\
+list-defrules & (list-defrules) & Prints the rules with their properties. Alias: \fn{rules}. \\
+list-\br{}deftemplates & (list-deftemplates) & Prints the templates. Alias: \fn{templates}. \\
+list-dir & (list-dir [<dir>]) & Lists a directory. \\
+load-function & (load-function <classname>) & Instantiates a Java \fn{Function} class and declares it (group ``User Defined Functions''). \\
+load-\br{}function-\br{}group & (load-function-group <classname>) & Loads every function of a Java \fn{FunctionGroup} class. \\
+measures & (measures) & Prints the declared cube measures. \\
+modify & (modify ?<fact> (<slot> <value>)+) & Changes slots of a fact; a retract followed by an assert under the same id. Grammar construct. \\
+modules & (modules) & Prints the module names. \\
+or & (or <expr>+) & Logical or of its arguments. \\
+ppdeffacts & (ppdeffacts <name>) & Pretty-prints a deffacts. \\
+ppdefrule & (ppdefrule <name>) & Pretty-prints a rule with every property and its topology cost. \\
+ppdeftemplate & (ppdeftemplate <name>) & Pretty-prints a template. \\
+print-profile & (print-profile) & Prints the profiling counters. \\
+profile & (profile <what>+) & Turns profiling on: \fn{all}, \fn{assert-fact}, \fn{retract-fact}, \fn{fire}, \fn{add-activation}, \fn{remove-activation}. \\
+refresh & (refresh <rule>) & Re-activates the rule for every match that already fired; returns the number of activations added. \\
+reset & (reset) & Retracts every fact, asserts the initial fact, the deffacts of every module and the asserted objects again. \\
+reset-facts & (reset-facts) & Retracts every fact and asserts it again. \\
+reset-objects & (reset-objects) & Retracts every object and asserts it again. \\
+retract & (retract ?<fact> | <id>) & Removes a fact. Grammar construct. \\
+save-facts & (save-facts <file> [id|template]) & Writes every fact to a file, sorted by id (the default) or by template. \\
+set-focus & (set-focus <module>) & Sets the focus module; returns the previous one. \\
+setgen & (setgen <integer>) & Sets the number the next \fn{gensym} uses. \\
+set-strategy & (set-strategy depth|breadth|recency) & Selects the conflict-resolution strategy; returns the previous name. \\
+spool & (spool <name> <file>), (spool off <name>) & Copies engine output to a file until switched off. Alias: \fn{dribble}. \\
+system & (system <value>+) & Runs the arguments, joined with spaces, as a command of the operating system's shell; prints its output and returns the exit code. \\
+undeffacts & (undeffacts <name>) & Removes a deffacts; facts already asserted stay. \\
+undefrule & (undefrule <name>) & Removes a rule. \\
+undeftemplate & (undeftemplate <name>) & Removes a template. \\
+unprofile & (unprofile <what>+) & Turns profiling off (same words as \fn{profile}). \\
+usage & (usage <function>) & Prints a function's usage string. \\
+version & (version) & Prints the engine version. \\
+watch & (watch <what>+) & Traces \fn{facts}, \fn{rules}, \fn{activations} or \fn{all}. \\
+unwatch & (unwatch <what>+) & Turns tracing off. \\
+\bottomrule
+\end{longtable}
+
+\section{Control functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+if & (if <test> then <expr>+ [else <expr>+]) & Conditional evaluation; returns the value of the last expression run. \\
+progn & (progn <expr>*) & Evaluates the expressions in order; returns the last value. \\
+while & (while <test> [do] <action>*) & Repeats the actions while the test is true; returns \fn{false}. \\
+loop-for-\br{}count & (loop-for-count (?<var> [<start>] <end>) [do] <action>*), (loop-for-count <n> <action>*) & Counts from \fn{start} (default 1) to \fn{end} inclusive with the variable bound, or runs \fn{n} times; returns \fn{false}. \\
+foreach & (foreach ?<var> <list> <action>*) & Runs the actions once per element, with the variable bound to the element and \fn{?<var>-index} to its position from 1; returns \fn{false}. \\
+progn\$ & (progn\$ (?<var> <list>) <action>*) & Like \fn{foreach}; returns the value of the last action. \\
+break & (break) & Leaves the innermost loop. \\
+return & (return [<value>]) & Leaves the enclosing \fn{deffunction} with the value, or ends the current rule's actions. \\
+\bottomrule
+\end{longtable}
+
+The JVM option \fn{-Dmorendo.loop.limit=<n>} caps the number of turns any
+loop may take; a loop that exceeds it stops with an error. By default
+there is no limit.
+
+\section{Boolean and bit functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+not & (not <expr>) & Logical negation. \\
+true & (true) & The constant true. \\
+false & (false) & The constant false. \\
+bit-and & (bit-and <int>+) & Bitwise and. \\
+bit-or & (bit-or <int>+) & Bitwise or. \\
+bit-not & (bit-not <int>) & Bitwise complement. \\
+\bottomrule
+\end{longtable}
+
+\section{Math functions}
+
+The arithmetic and comparison operators are aliases of named functions:
+\fn{+} is \fn{add}, \fn{-} is \fn{subtract}, \fn{*} is \fn{multiply},
+\fn{/} is \fn{divide}, \fn{**} is \fn{pow}, \fn{>} is \fn{greater},
+\fn{>=} is \fn{greaterOrEqual}, \fn{<} is \fn{less}, \fn{<=} is
+\fn{lessOrEqual}, \fn{=} and \fn{==} are \fn{eq}, and \fn{<>} and
+\fn{!=} are \fn{neq}. Either spelling works. Comparisons take any number
+of arguments and test each adjacent pair.
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
++ - * / & (+ <number>+) & Sum, difference, product, quotient of the arguments (left to right). \\
+{**} & (** <number> <number>+) & Power. \\
+> >= < <= & (> <number> <number>+) & Ordering comparisons. \\
+eq neq & (eq <value>+) & Equality and inequality; \fn{=} and \fn{==} are \fn{eq}, \fn{<>} and \fn{!=} are \fn{neq}. \\
+div & (div <number> <number>+) & Integer division, truncating toward zero. \\
+abs & (abs <number>) & Absolute value. \\
+ceil, floor & (ceil <number>) & Rounding up and down. \\
+round, rint & (round <number>) & Round to the nearest integer; \fn{rint} returns the nearest integral double. \\
+mod & (mod <number> <number>) & Remainder. \\
+max, min & (max <number>+) & Largest and smallest argument. \\
+sqrt, exp, log, log10 & (sqrt <number>) & Square root, $e^x$, natural and base-10 logarithm. \\
+sin, cos, tan & (sin <number>) & Trigonometric functions of an angle in radians (return a double). \\
+asin, acos, atan & (asin <number>) & Inverse trigonometric functions. \\
+sinh, cosh, tanh & (sinh <number>) & Hyperbolic functions. \\
+degrees, radians & (degrees <number>) & Convert radians to degrees and back. \\
+const & (const e|pi) & Euler's number or $\pi$. \\
+evenp, oddp & (evenp <integer>) & Parity tests. \\
+random & (random [<start> <end>]) & Pseudo-random double in $[0,1)$, or an integer between \fn{start} and \fn{end} inclusive. \\
+seed & (seed <integer>) & Restarts the random number generator. \\
+\bottomrule
+\end{longtable}
+
+\section{Type functions}
+
+Symbols and strings are one type in \Morendo, so \fn{symbolp},
+\fn{stringp} and \fn{lexemep} agree. A number written with a decimal
+point is a float, one without is an integer, whatever its value.
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+numberp & (numberp <value>) & True for a number. \\
+integerp, floatp & (integerp <value>) & True for an integer, or for a floating point value. \\
+stringp, symbolp, lexemep & (stringp <value>) & True for text. \\
+multifieldp & (multifieldp <value>) & True for a list. \\
+integer & (integer <number>) & Truncates to an integer. \\
+float & (float <number>) & Converts to a floating point number. \\
+\bottomrule
+\end{longtable}
+
+\section{String functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+str-compare & (str-compare <s1> <s2>) & Lexicographic comparison: negative, zero or positive. \\
+str-contains & (str-contains <s> <pattern>) & True if \fn{s} contains \fn{pattern}. \\
+str-index & (str-index <find> <s>) & Index of \fn{find} within \fn{s}, in CLIPS argument order. \\
+str-length & (str-length <s>) & Length. \\
+str-\br{}lower, str-\br{}upper & (str-lower <s>) & Case conversion. Aliases: \fn{lowcase}, \fn{upcase}. \\
+str-replace & (str-replace <s> <pattern> <with>) & Replaces every occurrence. \\
+str-trim & (str-trim <s>) & Removes leading and trailing white space. \\
+str-not-empty & (str-not-empty <s>) & True if \fn{s} is neither \fn{nil} nor empty. \\
+str-cat & (str-cat <value>+) & Concatenates the string form of its arguments. \\
+sub-string & (sub-string <begin> <end> <s>) & Substring by index. \\
+sym-cat & (sym-cat <value>+) & Like \fn{str-cat}; the result is a symbol. \\
+string-to-field & (string-to-field <s>) & The first field of the text as the parser would read it: a number, a quoted string, \fn{TRUE}, \fn{FALSE}, \fn{nil} or a symbol. \\
+format & (format <router> <format> <value>*) & Formats the values with the directives below, writes the text to the router unless it is \fn{nil}, and returns it. \\
+\bottomrule
+\end{longtable}
+
+The directives of \fn{format} are those of C's \fn{printf}; a width and
+a precision may follow the \fn{\%}, as in \fn{\%8.3f} and \fn{\%-10s}:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\fn{\%d} & an integer (a float is truncated) \\
+\fn{\%f}, \fn{\%e}, \fn{\%g} & a number in fixed, exponent or shortest notation \\
+\fn{\%s} & any value as text; a list as its elements separated by spaces \\
+\fn{\%c} & a character: the first of a string, or the character with a numeric code \\
+\fn{\%n} & a line break \\
+\fn{\%\%} & a percent sign \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{List functions}
+
+Multifield values are Java arrays. \fn{create\$} builds one; a rule may
+also receive one from a multislot or from \fn{run-query}.
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+create\$ & (create\$ <value>+) & Builds a list. \\
+length\$ & (length\$ <list>) & Number of elements. \\
+first\$, rest\$ & (first\$ <list>) & First element; all but the first. \\
+nth\$ & (nth\$ <index> <list>) & Element at an index. \\
+top, bottom & (top <n> <list>) & First or last \fn{n} elements. \\
+member\$ & (member\$ <value> <list>) & Membership test. \\
+insert\$ & (insert\$ <list> <index> <value-or-list>) & Inserts at an index. \\
+delete\$ & (delete\$ <list> <begin> <end>) & Deletes an index range. \\
+subseq\$ & (subseq\$ <list> <begin> <end>) & The elements from \fn{begin} to \fn{end} inclusive. \\
+replace\$ & (replace\$ <list> <begin> <end> <value>+) & Replaces an index range with the values; a list value is spliced in. \\
+delete-\br{}member\$ & (delete-member\$ <list> <value>+) & Removes every occurrence of the values. \\
+explode\$ & (explode\$ <string>+) & Splits strings into a list. \\
+implode\$ & (implode\$ <list>+) & Joins list elements into a string separated by spaces. \\
+subsetp & (subsetp <list> <list>) & True if the first list is a subset of the second. \\
+union\$, intersection\$ & (union\$ <list> <list>) & Set union and intersection of two lists. \\
+create-set\$ & (create-set\$ <string>+) & Builds a Java \fn{Set} of strings. \\
+set-contains & (set-contains <set> <string>) & Membership in a set. \\
+eager-\br{}set-\br{}contains & (eager-set-contains <set> <string>) & True if any space-separated word of the string is in the set. \\
+map-contains & (map-contains <map> <key>) & True if a Java \fn{Map} has the key. \\
+\bottomrule
+\end{longtable}
+
+\section{Text functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+tokenize & (tokenize <string>) & Splits text into words, dropping punctuation; returns a \fn{Map} from word to count. \\
+stop-word & (stop-word <string> <list>) & Like \fn{tokenize}, with the words in the list removed. \\
+token-match & (token-match <set> <string>) & Counts how many words of the text are in the set. \\
+\bottomrule
+\end{longtable}
+
+\section{Input and output}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+printout & (printout <router> <value>+) & Writes to a router: \fn{t} is the terminal, any other name a file opened with \fn{open}. \fn{crlf} ends a line. \\
+open & (open <file> <router> ["r"|"w"|"a"]) & Opens a file under a router name for reading (the default), writing or appending. \\
+close & (close [<router>]) & Closes one file router, or all of them. \\
+readline & (readline [<router>]) & The next line from a file router, or from the terminal for \fn{t}; the symbol \fn{EOF} at the end. \\
+read & (read [<router>]) & Reads a line and returns its first field, converted as \fn{string-to-field} does; \fn{EOF} at the end. \\
+batch & (batch <file>) & Reads a whole CLIPS file, then executes it. Accepts a path, a URL or \fn{classpath:} resource. \\
+build & (build <string>) & Executes CLIPS source held in a string. \\
+load-facts & (load-facts <file>) & Reads a file of fact expressions and asserts them. \\
+load-stream & (load-stream <file>) & Like \fn{load-facts}, asserting each fact as it is read. \\
+load-graph & (load-graph <file>) & Reads \fn{Node} and \fn{Edge} facts for graph queries and returns them as a list (Chapter~\ref{ch:queries}). \\
+batch-objects & (batch-objects <file>) & Reads a serialized Java \fn{List} and asserts each object. \\
+batch-\br{}static-\br{}objects & (batch-static-objects <file>) & The same, asserting the objects as static facts. \\
+read-command & (read-command) & Returns the next command queued on the engine's message router. \\
+\bottomrule
+\end{longtable}
+
+\section{Time functions}
+
+Time functions accept a \fn{java.time.Instant}, a \fn{java.util.Date} or
+\fn{Calendar} from a Java bean, or epoch milliseconds. Chapter~\ref{ch:temporal}
+shows them in rules.
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+now & (now) & The current time as an \fn{Instant}. \\
+ms-time & (ms-time) & The current time in epoch milliseconds. Alias: \fn{time}. \\
+add-\br{}seconds, add-\br{}minutes, add-\br{}hours & (add-hours <n> <time>) & The time shifted by \fn{n} units. \\
+before, after & (before <t1> <t2>) & Ordering of two times. \\
+between & (between <begin> <end> <time>) & True if the time lies strictly between the bounds. \\
+eq-\br{}second \dots\ eq-\br{}year & (eq-day <t1> <t2>) & Equality after truncating both times to the second, minute, hour, day, month or year. \\
+within-\br{}seconds \dots\ within-\br{}days & (within-minutes <n> <t1> <t2>) & True if the two times are at most \fn{n} units apart. \\
+\bottomrule
+\end{longtable}
+
+\section{Temporal functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+set-\br{}temporal-\br{}distance & (set-temporal-distance <template> <seconds>) & Sets how long facts of a template stay relevant. \\
+calculate-\br{}temporal-\br{}distance & (calculate-temporal-distance <file> <out>) & Computes the temporal distance of every template the rules use. \\
+\bottomrule
+\end{longtable}
+
+\section{Query functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+defquery & (defquery <name> (declare (variables ?v+)) <CE>+) & Defines a query. Grammar construct. \\
+defgraphquery & (defgraphquery <name> (declare (variables ?v+)) <CE>+) & Defines a graph query. Grammar construct. \\
+run-query & (run-query <name> <value>*) & Runs a query with values for its variables; returns the matching facts as a list. \\
+run-\br{}graph-\br{}query & (run-graph-query <graph> <name> <value>*) & Runs a graph query against the list returned by \fn{load-graph}. \\
+query-time & (query-time <name>) & Milliseconds taken by the last run of the query. \\
+watch-\br{}query, unwatch-\br{}query & (watch-query <name>+) & Trace a query. \\
+\bottomrule
+\end{longtable}
+
+\section{Cube functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+defcube & (defcube <name> <- <CE>+ (dimension ...)+ (<measure> ...)+) & Defines a cube. Grammar construct; Chapter~\ref{ch:molap}. \\
+list-defcubes & (list-defcubes) & Lists the cubes. Alias: \fn{cubes}. \\
+ppdefcube & (ppdefcube <name>) & Pretty-prints a cube with its dimension indexes. \\
+cube-\br{}add-\br{}data, cube-\br{}delete-\br{}data & (cube-add-data <name>) & Add to or remove from a cube the facts of the current activation; used by the rule the engine generates for each cube. \\
+index-\br{}dimension & (index-dimension <cube> <dimension>+) & Turns indexing on for dimensions no rule queries. \\
+load-\br{}measure, load-\br{}measure-\br{}group & (load-measure <classname>+) & Registers Java \fn{Measure} classes or a \fn{MeasureGroup}. \\
+profile-\br{}cube, unprofile-\br{}cube & (profile-cube <name>) & Times the cube's queries. \\
+profile-\br{}cube-\br{}index, unprofile-\br{}cube-\br{}index & (profile-cube-index <name>) & Profile the cube's dimension indexes. \\
+print-\br{}profile-\br{}cube-\br{}index & (print-profile-cube-index) & Print the index statistics. \\
+\bottomrule
+\end{longtable}
+
+The measures available in a \fn{defcube} are \fn{sum}, \fn{average},
+\fn{median}, \fn{min}, \fn{max}, \fn{stdev}, \fn{70-percentile},
+\fn{80-percentile} and \fn{90-percentile}.
+
+\section{Analysis functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+topology-cost & (topology-cost <rule>+) & Computes the node cost of the named rules (Chapter~\ref{ch:analysis}). \\
+topology-\br{}cost-\br{}all & (topology-cost-all) & The same for every rule. \\
+average-cost & (average-cost) & Average cost over the rules of the current module. \\
+partial-\br{}match-\br{}cost & (partial-match-cost <rule>) & Cost of the partial matches a rule keeps. \\
+set-\br{}distinct-\br{}count & (set-distinct-count <template> <slot> <n>) & Records how many distinct values a slot has, for cost estimates. \\
+generate-facts & (generate-facts <rule> [true|false] [<file>]) & Generates facts that would activate the rule. \\
+test-rule & (test-rule <rule>) & Generates facts for a rule, asserts them and fires. \\
+validate-rule & (validate-rule true|false) & Turns validation of rules against their templates on or off. \\
+\bottomrule
+\end{longtable}
+
+\section{Memory and network inspection}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+matches & (matches) & Prints the facts held in every alpha and join node. \\
+right-matches & (right-matches) & Prints the right-hand memories of the join nodes. \\
+rule-matches & (rule-matches <rule>) & Prints the node memories of one rule. \\
+mem-\br{}free, mem-\br{}total, mem-\br{}used & (mem-used) & JVM memory figures. \\
+gc & (gc) & Asks the JVM to collect garbage. \\
+\bottomrule
+\end{longtable}
+
+\section{Java functions}
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.45in} >{\ttfamily\small\raggedright\arraybackslash}p{2.05in} >{\raggedright\arraybackslash}p{2.5in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+defclass & (defclass <classname> [<template>] [<parent>]) & Declares a Java class as a template (Chapter~\ref{ch:java-objects}). Grammar construct. \\
+definstance & (definstance <object> <template>) & Asserts a Java object as a fact. \\
+new & (new <classname> <arg>*) & Creates a Java object. \\
+call, member & (call <object> <method> <arg>*) & Invokes a method by reflection. \\
+get-\br{}member, set-\br{}member & (get-member <object> <property>) & Reads or writes a bean property. \\
+instanceof & (instanceof <object> <classname>) & Class test. \\
+load-package & (load-package <package>) & Registers a package prefix so short class names resolve. \\
+use-\br{}macro, generate-\br{}macro & (generate-macro <classname>) & Generate and load compiled property accessors that avoid reflection. \\
+\bottomrule
+\end{longtable}
+
+\section{Optional modules}
+
+With the \fn{gui} module on the class path, \fn{(view)} opens the network
+viewer (Chapter~\ref{ch:shell-gui}). With the \fn{messaging} module,
+these functions are added (Chapter~\ref{ch:embedding}):
+
+\begin{longtable}{>{\ttfamily\raggedright\arraybackslash}p{1.6in} >{\ttfamily\small\raggedright\arraybackslash}p{2.2in} >{\raggedright\arraybackslash}p{2.2in}}
+\toprule
+\normalfont Function & \normalfont Usage & Description \\
+\midrule
+\endhead
+create-\br{}message-\br{}client & (create-message-client <jndi> <url> <factory> <topic> <user> <password> <name>) & Connects a named JMS client to a topic. \\
+close-\br{}message-\br{}client & (close-message-client <name>) & Closes it. \\
+send-msg & (send-msg <name> <message>) & Publishes a message. \\
+register-\br{}content-\br{}handler & (register-content-handler <classname>) & Registers a handler for incoming messages. \\
+print-\br{}content-\br{}handlers, pprint-\br{}msg-\br{}clients & (pprint-msg-clients) & List handlers and clients. \\
+register-\br{}agent, unregister-\br{}agent & (register-agent <ip> <host> <application> <name> <version>) & Maintain the registry of remote engines. \\
+ping-\br{}agent, agent-\br{}status-\br{}response & (ping-agent <client> <ip> <host> <application>) & Round-trip check of an agent. \\
+discover-\br{}agents & (discover-agents <client>) & Asks every agent on the topic to register. \\
+pprint-\br{}agent-\br{}perf-\br{}summary & (pprint-agent-perf-summary) & Prints the performance summaries agents reported. \\
+add-\br{}rule-\br{}status, remove-\br{}rule-\br{}status, agent-\br{}perf-\br{}summary, pprint-\br{}agents & & Record and print what agents report. \\
+\bottomrule
+\end{longtable}

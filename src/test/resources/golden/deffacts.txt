@@ -1,0 +1,33 @@
+== stats ==
+templates: 5
+rules: 2
+facts: 3
+next-node-id: 10
+== output ==
+f-1 (_initialFact)
+for a total of 1
+f-1 (_initialFact)
+f-2 (person (name "ann") (age 30) (tags "a" "b") )
+f-3 (person (name "bob") (age 40) (tags "nil") )
+f-4 (person (name "cy") (age 50) (tags "nil") )
+for a total of 4
+==> fire: Activation: adult, id-4 AggrTime-*
+cy is an adult
+==> fire: Activation: adult, id-3 AggrTime-*
+bob is an adult
+==> fire: Activation: no-lhs, id-1 AggrTime-*
+no-lhs fired
+people "the starting facts"
+more
+for a total of 2
+(deffacts people "the starting facts"
+  (person (name "ann") (age 30) (tags "a" "b"))
+  (person (name "bob") (age 40)))
+f-1 (_initialFact)
+f-2 (person (name "ann") (age 30) (tags "a" "b") )
+f-3 (person (name "bob") (age 40) (tags "nil") )
+for a total of 3
+==> fire: Activation: adult, id-3 AggrTime-*
+bob is an adult
+==> fire: Activation: no-lhs, id-1 AggrTime-*
+no-lhs fired

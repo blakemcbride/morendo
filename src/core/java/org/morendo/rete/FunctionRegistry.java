@@ -85,6 +85,7 @@ public class FunctionRegistry {
             new AnalysisFunctions(),
             new BitFunctions(),
             new BooleanFunctions(),
+            new org.morendo.rete.functions.control.ControlFunctions(),
             new CubeFunctions(),
             new IOFunctions(),
             new ListFunctions(),
@@ -97,6 +98,7 @@ public class FunctionRegistry {
             new StringFunctions(),
             new TemporalFunctions(),
             new TimeFunctions(),
+            new org.morendo.rete.functions.type.TypeFunctions(),
             new MacroFunctions()
         };
         for (FunctionGroup group : builtIns) {

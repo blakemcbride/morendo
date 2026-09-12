@@ -201,6 +201,35 @@ public class LinkedActivationList extends AbstractActivationList {
         return true;
     }
 
+    /**
+     * Repeats the choice nextActivation makes, on a copy: the lazy list scans from the end for the
+     * activation the strategy ranks first, the sorted list is taken from the end.
+     */
+    public java.util.List<Activation> activations() {
+        java.util.List<Activation> order = new java.util.ArrayList<>(this.count);
+        if (this.lazy) {
+            java.util.List<LinkedActivation> pending = new java.util.ArrayList<>(this.count);
+            for (LinkedActivation act = this.first; act != null; act = act.getNext()) {
+                pending.add(act);
+            }
+            while (!pending.isEmpty()) {
+                int pick = pending.size() - 1;
+                for (int i = pick - 1; i >= 0; i--) {
+                    if (this.stratey == null
+                            || this.stratey.compare(pending.get(pick), pending.get(i)) < 1) {
+                        pick = i;
+                    }
+                }
+                order.add(pending.remove(pick));
+            }
+        } else {
+            for (LinkedActivation act = this.last; act != null; act = act.getPrevious()) {
+                order.add(act);
+            }
+        }
+        return order;
+    }
+
     public int size() {
         return this.count;
     }

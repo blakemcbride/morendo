@@ -1,0 +1,11 @@
+== stats ==
+templates: 4
+rules: 0
+facts: 1
+next-node-id: 6
+== output ==
+1: first line
+2: second 2
+3: 3.5 true 4.5
+4: EOF
+lines: 4

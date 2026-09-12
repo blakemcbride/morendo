@@ -166,6 +166,13 @@ public class MathFunctions implements FunctionGroup {
             engine.declareFunction("<", le);
             engine.declareFunction("<=", leoe);
             engine.declareFunction("<>", neq);
+            engine.declareFunction("==", engine.findFunction("eq"));
+            engine.declareFunction("=", engine.findFunction("eq"));
+            engine.declareFunction("!=", neq);
+            for (Function f : new Function[] {new Div(), new Seed()}) {
+                engine.declareFunction(f);
+                funcs.add(f);
+            }
         } catch (FunctionException e) {
             engine.writeMessage(e.getMessage());
         }

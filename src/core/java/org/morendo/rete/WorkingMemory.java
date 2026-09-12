@@ -125,6 +125,15 @@ public interface WorkingMemory {
 
     public Collection<Module> getModules();
 
+    /** Makes the module the focus, remembering the current one for {@link #popFocus()}. */
+    public void pushFocus(Module mod);
+
+    /** Restores the focus pushed last; false when nothing was pushed. */
+    public boolean popFocus();
+
+    /** Drops the alpha, left and right memories of the given query nodes. */
+    public void clearQueryMemories(java.util.Collection<?> nodes);
+
     /// ----- method for Strategy ----- ///
     public Strategy getStrategy();
 

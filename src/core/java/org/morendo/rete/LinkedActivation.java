@@ -42,6 +42,9 @@ public class LinkedActivation implements Activation {
 
     private TerminalNode2 tnode = null;
 
+    /** Set when the activation has fired; the terminal node keeps it as a record of the match. */
+    private boolean fired = false;
+
     /** */
     public LinkedActivation(Rule rule, Index inx) {
         super();
@@ -50,10 +53,25 @@ public class LinkedActivation implements Activation {
         // calculateTime(inx.getFacts());
     }
 
+    /**
+     * The sum of the fact ids. Ids grow with assertion order, so a larger sum is a more recent
+     * match; unlike the wall clock it is the same from one run to the next, which keeps the agenda
+     * order deterministic.
+     */
     protected void calculateTime(Fact[] facts) {
+        long sum = 0;
         for (int idx = 0; idx < facts.length; idx++) {
-            this.aggreTime += facts[idx].timeStamp() + facts[idx].getFactId();
+            sum += facts[idx].getFactId();
         }
+        this.aggreTime = sum;
+    }
+
+    public boolean isFired() {
+        return this.fired;
+    }
+
+    public void setFired(boolean fired) {
+        this.fired = fired;
     }
 
     public long getAggregateTime() {
@@ -177,6 +195,8 @@ public class LinkedActivation implements Activation {
                     throw new ExecuteException(ExecuteException.NULL_ACTION);
                 }
             }
+        } catch (org.morendo.rete.functions.control.ControlFlow flow) {
+            // (return) ends the actions of this firing; (break) outside a loop does the same
         } catch (ExecuteException e) {
             throw e;
         }

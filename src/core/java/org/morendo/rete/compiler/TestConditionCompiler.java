@@ -109,7 +109,11 @@ public class TestConditionCompiler implements ConditionCompiler {
         } else {
             joinNode = new TestNode(ruleCompiler.getEngine().nextNodeId(), fn.getFunction(), pms);
         }
-        ((TestNode) joinNode).lookUpFunction(ruleCompiler.getEngine());
+        if (joinNode instanceof TestNode testNode) {
+            testNode.lookUpFunction(ruleCompiler.getEngine());
+        } else if (joinNode instanceof NTestNode nTestNode) {
+            nTestNode.lookUpFunction(ruleCompiler.getEngine());
+        }
         return joinNode;
     }
 

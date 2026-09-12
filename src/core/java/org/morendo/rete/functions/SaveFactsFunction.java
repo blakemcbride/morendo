@@ -56,7 +56,9 @@ public class SaveFactsFunction implements Function {
         boolean sortid = true;
         DefaultReturnVector rv = new DefaultReturnVector();
         if (params != null && params.length >= 1) {
-            if (params[1] != null && params[1].getStringValue().equals("template")) {
+            if (params.length >= 2
+                    && params[1] != null
+                    && "template".equals(params[1].getStringValue())) {
                 sortid = false;
             }
             try {

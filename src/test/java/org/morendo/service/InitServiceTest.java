@@ -2,14 +2,10 @@ package org.morendo.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-@Disabled(
-        "RuleServiceImpl.createInstance never builds applications from the JSON config; see"
-                + " UpgradePlan.md")
 public class InitServiceTest {
 
     /** The single application defined in samples/configuration/sample_config.json. */

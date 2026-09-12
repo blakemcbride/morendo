@@ -66,9 +66,17 @@ public class IOFunctions implements FunctionGroup {
         LoadGraphFunction lgf = new LoadGraphFunction();
         engine.declareFunction(lgf);
         funcs.add(lgf);
-        ReadFunction read = new ReadFunction();
-        engine.declareFunction(read);
-        funcs.add(read);
+        for (Function f :
+                new Function[] {
+                    new ReadCommandFunction(),
+                    new ReadFunction(),
+                    new ReadlineFunction(),
+                    new OpenFunction(),
+                    new CloseFunction()
+                }) {
+            engine.declareFunction(f);
+            funcs.add(f);
+        }
     }
 
     public List<Function> listFunctions() {

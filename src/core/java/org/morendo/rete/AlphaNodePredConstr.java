@@ -106,12 +106,38 @@ public class AlphaNodePredConstr extends BaseAlpha {
     /* (non-Javadoc)
      * @see woolfel.engine.rete.BaseNode#hashString()
      */
+    /**
+     * Two predicate nodes are the same node only when they call the same function with the same
+     * arguments on the same slot; the text of the call is the identity the compiler shares on.
+     */
     public String hashString() {
         if (this.hashstring == null) {
             this.hashstring =
-                    this.slot.getId() + ":" + this.operator + ":" + String.valueOf(this.slot.value);
+                    this.slot.getId() + ":" + this.function.getName() + callText(this.params);
         }
         return this.hashstring;
+    }
+
+    private static String callText(Parameter[] parameters) {
+        StringBuilder buf = new StringBuilder("(");
+        if (parameters != null) {
+            for (Parameter p : parameters) {
+                if (buf.length() > 1) {
+                    buf.append(' ');
+                }
+                if (p instanceof BoundParam bp) {
+                    buf.append('?').append(bp.getVariableName());
+                } else if (p instanceof FunctionParam2 fp) {
+                    buf.append(fp.getFunctionName()).append(callText(fp.getParameters()));
+                } else if (p instanceof ValueParam vp) {
+                    Object v = vp.getValue();
+                    buf.append(v instanceof String ? '"' + (String) v + '"' : String.valueOf(v));
+                } else {
+                    buf.append(p);
+                }
+            }
+        }
+        return buf.append(')').toString();
     }
 
     public String toString() {

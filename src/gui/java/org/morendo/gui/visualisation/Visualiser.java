@@ -58,13 +58,18 @@ import javax.swing.text.StyleConstants;
  *     extend a swing-class since it has a method show for creating and opening a window. but you
  *     can get a JPanel by calling getVisualiserPanel. That JPanel-instance you can embed somewhere.
  */
-public final class Visualiser implements ActionListener, MouseListener, EngineEventListener {
+public final class Visualiser
+        implements ActionListener,
+                MouseListener,
+                EngineEventListener,
+                org.morendo.rete.CompilerListener {
     protected JZoomableShapeContainer container;
     protected JMiniRadarShapeContainer radar;
     protected ViewGraphNode root;
     protected JButton zoomInButton, zoomOutButton, reloadButton;
     protected JScrollPane scrollPane;
     protected JToggleButton autoReloadButton;
+    private javax.swing.Timer reloadTimer;
     protected JTextPane dump;
     protected JFrame myFrame;
     protected Rete engine;
@@ -326,9 +331,11 @@ public final class Visualiser implements ActionListener, MouseListener, EngineEv
             if (autoReloadButton.isSelected()) {
                 reloadButton.setEnabled(false);
                 engine.addEngineEventListener(this);
+                engine.getRuleCompiler().addListener(this);
             } else {
                 reloadButton.setEnabled(true);
                 engine.removeEngineEventListener(this);
+                engine.getRuleCompiler().removeListener(this);
             }
         }
     }
@@ -359,7 +366,28 @@ public final class Visualiser implements ActionListener, MouseListener, EngineEv
 
     public void mouseReleased(MouseEvent arg0) {}
 
-    public void eventOccurred(EngineEvent event) {}
+    public void eventOccurred(EngineEvent event) {
+        scheduleReload();
+    }
+
+    public void ruleAdded(org.morendo.rete.CompileEvent event) {
+        scheduleReload();
+    }
+
+    public void ruleRemoved(org.morendo.rete.CompileEvent event) {
+        scheduleReload();
+    }
+
+    public void compileError(org.morendo.rete.CompileEvent event) {}
+
+    /** Redraws at most a few times a second, on the event dispatch thread. */
+    private void scheduleReload() {
+        if (reloadTimer == null) {
+            reloadTimer = new javax.swing.Timer(300, e -> reloadView());
+            reloadTimer.setRepeats(false);
+        }
+        reloadTimer.restart();
+    }
 
     public void mousePressed(MouseEvent event) {
         Shape shape = container.getShapeAtPosition(event.getX(), event.getY());

@@ -24,6 +24,7 @@ import org.morendo.rete.Module;
 import org.morendo.rete.Operator;
 import org.morendo.rete.Rete;
 import org.morendo.rete.Scope;
+import org.morendo.rete.TerminalNode;
 
 import java.util.Iterator;
 import java.util.List;
@@ -284,6 +285,11 @@ public interface Rule extends Scope {
      * @return
      */
     BaseNode getLastNode();
+
+    /** The terminal node the compiler attached to the rule, or null before compilation. */
+    TerminalNode getTerminalNode();
+
+    void setTerminalNode(TerminalNode node);
 
     /**
      * When the rule is compiled, the rule compiler needs to set the module so that the terminalNode

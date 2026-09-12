@@ -417,7 +417,8 @@ public class GraphQueryCompiler implements QueryCompiler {
         // Queries are different than rules in that the value will be
         // set when the query is executed.
 
-        if (ConversionUtils.isPredicateOperatorCode(cnstr.getFunctionName())) {
+        if (ConversionUtils.isPredicateOperatorCode(cnstr.getFunctionName())
+                && cnstr.isSimpleOperator()) {
             Operator oprCode = ConversionUtils.getOperatorCode(cnstr.getFunctionName());
             if (cnstr.reverseOperator()) {
                 oprCode = ConversionUtils.getOppositeOperatorCode(oprCode);
@@ -494,15 +495,11 @@ public class GraphQueryCompiler implements QueryCompiler {
             Template template,
             Query query) {
         for (int px = 0; px < parameters.length; px++) {
-            if (parameters[px] instanceof BoundParam) {
-                BoundParam bp = (BoundParam) parameters[px];
-                bp.setColumn(template.getSlot(constraint.getName()).getId());
-                bp.setRow(0);
-            } else if (parameters[px] instanceof FunctionParam2) {
-                FunctionParam2 fp = (FunctionParam2) parameters[px];
+            if (parameters[px] instanceof FunctionParam2 fp) {
                 fp.configure(engine, query);
             }
         }
+        constraint.bindOwnVariable(parameters, template.getSlot(constraint.getName()).getId());
     }
 
     public void compileJoins(GraphQuery query, Condition[] conds) throws AssertException {

@@ -26,6 +26,9 @@ package org.morendo.rete;
  *     that works the better.
  */
 public interface ActivationList {
+    /** The activations in the order nextActivation would return them, without removing any. */
+    java.util.List<Activation> activations();
+
     /**
      * Depending on whether lazy is set or not, the activation list may assume the activations are
      * ordered by priority and should just return the first or last activation. in the case where

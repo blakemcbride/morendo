@@ -1,0 +1,396 @@
+\chapter{Embedding the Engine in Java}
+\label{ch:embedding}
+
+The engine is a Java library. A program creates a \fn{Rete}, declares its
+classes, loads rule files, asserts objects and fires; the shell and the
+GUI are thin layers over exactly this API. This chapter shows the calls
+that matter, then the optional modules.
+
+\section{Class path}
+
+An embedding needs \file{morendo-core-\version.jar} and the two Log4j
+jars, \file{log4j-api} and \file{log4j-core}, from \file{libs/} of the
+distribution; \file{jspecify} is optional (it carries the nullness
+annotations). Add \file{morendo-examples} for the sample beans,
+\file{morendo-gui} if rules should be able to call \fn{(view)}, and
+\file{morendo-messaging} or \file{morendo-service} for the modules
+described at the end of the chapter. Any \fn{FunctionGroup} listed in a
+jar's \file{META-INF/services/org.morendo.rete.FunctionGroup} is
+registered automatically when a \fn{Rete} is created.
+
+\section{A complete example}
+
+The following program was compiled and run against the \fn{examples}
+module; it loads the rule file from Section~\ref{ch:java-objects} and
+asserts two \fn{Account} beans.
+
+\begin{lstlisting}[style=java]
+import org.morendo.rete.Rete;
+import woolfel.examples.model.Account;
+import woolfel.examples.model.AccountHobby;
+import woolfel.examples.model.Hobby;
+
+import java.io.PrintWriter;
+import java.util.List;
+
+public class Example {
+    public static void main(String[] args) throws Exception {
+        Rete engine = new Rete();
+        try {
+            engine.addPrintWriter("stdout", new PrintWriter(System.out, true));
+            engine.declareObject(Account.class);
+            engine.declareObject(AccountHobby.class);
+            engine.declareObject(Hobby.class);
+            engine.loadRuleset("samples/ruleset/sample1.clp");
+
+            Account ann = new Account();
+            ann.setFirst("ann");
+            ann.setLast("lee");
+            ann.setAge(34);
+            Account bob = new Account();
+            bob.setFirst("bob");
+            bob.setLast("ray");
+            bob.setAge(12);
+            engine.assertObjects(List.of(ann, bob));
+
+            int fired = engine.fire();
+            System.out.println(fired + " rule(s) fired");
+
+            bob.setAge(31);   // the bean notifies the engine, which re-matches
+            System.out.println(engine.fire() + " rule(s) fired after the change");
+        } finally {
+            engine.close();
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=shell]
+woolfel.examples.model.Account
+woolfel.examples.model.AccountHobby
+woolfel.examples.model.Hobby
+ann lee is over 30
+1 rule(s) fired
+bob ray is over 30
+1 rule(s) fired after the change
+\end{lstlisting}
+
+The three class names are printed by \fn{declareObject}. The second
+\fn{fire} shows the property-change path: \fn{setAge} on the
+\fn{Account} bean fires a \fn{PropertyChangeEvent}, the engine (a
+registered listener) modifies the shadow fact, and the \fn{Over\_30} rule
+matches Bob.
+
+\section{The Rete API}
+
+\subsection{Life cycle and threading}
+
+\begin{lstlisting}[style=java]
+Rete engine = new Rete();
+...
+engine.addCloseHook(() -> pool.release(engine));
+engine.close();
+boolean done = engine.isClosed();
+\end{lstlisting}
+
+Creating an engine starts a daemon thread for its message router;
+\fn{close()} clears everything, stops that thread and runs the close
+hooks. An engine is \emph{not thread-safe}: drive it from one thread, or
+post commands through the message router (below). The \fn{(exit)}
+function is \fn{close()}; nothing in the engine calls \fn{System.exit}.
+
+\subsection{Serving many threads}
+\label{sec:threads}
+
+Nothing inside an engine is synchronized: its working memory, agenda,
+scopes and profiling counters belong to the thread that uses it, and
+two threads asserting into one engine corrupt it. A program that serves
+requests from many threads therefore gives each thread its own engine,
+or keeps a pool and hands an engine to one thread at a time. What is
+shared between engines in a JVM is small: the strategy registry of
+\fn{defstrategy}, and in the messaging module the content-handler and
+agent registries; templates, rules, facts, functions and the network
+are per engine. The cost of an engine is its compiled network and one
+daemon thread for its message router, plus whatever facts it holds, so
+a pool of a dozen engines is unremarkable.
+
+The pattern is the one the service module implements: load the rules
+once per engine, and for each request check an engine out, assert the
+request's facts, fire, read the results and check it back in after
+retracting what the request added, so the next request starts from the
+same state. \fn{Rete.clearFacts()} and \fn{clearObjects()} empty an
+engine completely when a request should leave nothing behind, rules
+and templates included in neither. The message router is the other way
+in: several threads may post commands to one engine through their own
+channels, and the router's command thread runs them one at a time
+(Section~\ref{sec:router}).
+
+\subsection{Loading rules}
+
+\begin{lstlisting}[style=java]
+engine.loadRuleset("rules/orders.clp");            // file path, URL or classpath:...
+engine.loadRuleset(inputStream);
+engine.build("(defrule r (order (total ?t)) => (printout t ?t crlf))");
+\end{lstlisting}
+
+\fn{loadRuleset} is the \fn{batch} function: the location may be a file
+path relative to the working directory, an \fn{http:}, \fn{file:} or
+\fn{jar:} URL, or \fn{classpath:dir/file}. Parse errors are written to
+the engine output rather than thrown, so register a print writer before
+loading if you want to see them. \fn{build} executes CLIPS text held in
+a string.
+
+\subsection{Templates and objects}
+
+\begin{lstlisting}[style=java]
+engine.declareObject(Order.class);                       // template "com.acme.Order"
+engine.declareObject(Order.class, "Order");              // template "Order"
+engine.declareObject(RushOrder.class, "RushOrder", "Order");   // with a parent template
+
+engine.assertObject(order, null, false, true);    // dynamic shadow fact, template from the class
+engine.assertObjects(List.of(a, b, c));            // the same for each element
+engine.modifyObject(order);                        // after changing a bean that fires no events
+engine.retractObject(order);
+Fact shadow = engine.getShadowFact(order);         // null if not asserted
+\end{lstlisting}
+
+\fn{assertObject} takes the object, an optional template name (null
+means the class's own template, and the fact is also propagated to
+parent templates), a \fn{static} flag and a \fn{shadow} flag. A static
+object is reference data: it gets no change listener,
+\fn{modifyObject} ignores it, and \fn{resetObjects} re-asserts it. With
+\fn{shadow} true the property values are copied into the fact; with it
+false the fact reads the live object on every access, with no copy and
+no listener, which is cheaper for large objects that change rarely.
+Asserting an instance that is already asserted does nothing.
+
+Plain facts are built from a template:
+
+\begin{lstlisting}[style=java]
+Deftemplate order = (Deftemplate) engine.findTemplate("order");
+Fact f = order.createFact(new Object[] {
+        new Slot("id", 42), new Slot("customer", "acme")}, -1);
+engine.assertFact(f);
+engine.retractFact(f);             // or engine.retractById(f.getFactId())
+\end{lstlisting}
+
+\subsection{Running and inspecting}
+
+\begin{lstlisting}[style=java]
+int fired = engine.fire();            // drain the agenda of the module in focus
+engine.fire(1);                       // one activation
+List<Rule> rules = engine.getRulesFired();   // the distinct rules fired so far
+List<Fact> facts = engine.getAllFacts();
+List<Object> objects = engine.getObjects();
+engine.setWatch(Rete.Watch.RULES);    // FACTS, ACTIVATIONS, ALL
+engine.setProfile(Rete.Profile.ALL);
+engine.setFocus("MAIN");
+Object limit = engine.getDefglobalValue("limit");
+engine.declareDefglobal("limit", 18);
+\end{lstlisting}
+
+\subsection{Output}
+
+\begin{lstlisting}[style=java]
+StringWriter out = new StringWriter();
+engine.addPrintWriter("capture", out);
+...
+PrintWriter w = engine.removePrintWriter("capture");   // the caller closes it
+\end{lstlisting}
+
+Every writer registered with \fn{addPrintWriter} is a console: it
+receives everything the engine prints to \fn{t}, which is \fn{printout
+t} output, watch traces and error messages. This is how the golden tests
+capture a run and how a server can attach a log. Output to another router
+name goes only to the router opened under that name, by \fn{(open)} in
+CLIPS or from Java:
+
+\begin{lstlisting}[style=java]
+engine.openRouter("audit", new FileWriter("audit.log", true)); // or (file, mode)
+engine.writeMessage("checked\n", "audit");   // what (printout audit ...) does
+engine.closeRouter("audit");                  // closeRouter(null) closes all
+engine.setInputSupplier(() -> nextLine());    // where (readline t) reads from
+\end{lstlisting}
+
+Without an input supplier, \fn{readline t} reads standard input.
+\fn{Rete.close()} closes every open router.
+
+\subsection{Listeners}
+
+\begin{lstlisting}[style=java]
+engine.getRuleCompiler().addListener(new CompilerListener() {
+    public void ruleAdded(CompileEvent e)    { log.info(e.getMessage()); }
+    public void ruleRemoved(CompileEvent e)  { }
+    public void compileError(CompileEvent e) { log.warn(e.getMessage()); }
+});
+\end{lstlisting}
+
+\fn{CompilerListener} is called when rules are added, removed, or fail
+to compile (a missing template, an unknown function, a parse error);
+\fn{CompileEvent.getRule()} and \fn{getMessage()} say which and why.
+\fn{addEngineEventListener} registers an \fn{EngineEventListener} that
+receives an \fn{EngineEvent} of kind \fn{ASSERT} or \fn{RETRACT}, with
+the fact, every time working memory changes; listeners run on the thread
+that asserted, so keep them short.
+
+\subsection{Temporal facts}
+
+\begin{lstlisting}[style=java]
+engine.assertTemporalObject(event, null, Instant.now(),
+        Instant.now().plus(Duration.ofMinutes(5)), false);
+engine.assertFact(temporalFact, effective, expiration);   // expiration may be null
+\end{lstlisting}
+
+The times are stored on the shadow fact as epoch milliseconds
+(Chapter~\ref{ch:temporal}).
+
+\subsection{Functions written in Java}
+
+A function implements the \fn{Function} interface of
+\fn{org.morendo.rete}: \fn{getName()}, \fn{getReturnType()},
+\fn{executeFunction(Rete, Parameter[])} returning a \fn{ReturnVector},
+\fn{getParameter()} and \fn{toPPString()} for the usage text. Read arguments with \fn{params[i].getValue(engine,
+ValueType.OBJECT)}, which resolves bound variables and nested calls.
+
+\begin{lstlisting}[style=java]
+public final class Shout implements Function {
+    public String getName() { return "shout"; }
+    public ValueType getReturnType() { return ValueType.STRING; }
+    public Class<?>[] getParameter() { return new Class<?>[] {ValueParam.class}; }
+    public String toPPString(Parameter[] params, int indents) { return "(shout <string>)"; }
+    public ReturnVector executeFunction(Rete engine, Parameter[] params) {
+        String s = String.valueOf(params[0].getValue(engine, ValueType.STRING));
+        DefaultReturnVector rv = new DefaultReturnVector();
+        rv.addReturnValue(new DefaultReturnValue(ValueType.STRING, s.toUpperCase()));
+        return rv;
+    }
+}
+\end{lstlisting}
+
+Register it from Java or from CLIPS:
+
+\begin{lstlisting}[style=java]
+engine.declareFunction(new Shout());
+\end{lstlisting}
+\begin{lstlisting}
+(load-function com.acme.Shout)
+\end{lstlisting}
+
+Or bundle several functions in a \fn{FunctionGroup} and list the group
+in the jar's service file (\file{META-INF/services/}, file
+\file{org.morendo.rete.FunctionGroup}) so that every engine picks it up
+from the class path. The example beans' module shows a
+\fn{HelloFunction} written this way.
+
+\subsection{Driving the engine through the message router}
+\label{sec:router}
+
+To accept CLIPS text from another thread, or to get the engine's output
+and results as events, use a channel on the message router, as the shell
+does:
+
+\begin{lstlisting}[style=java]
+MessageRouter router = engine.getMessageRouter();
+StringChannel channel = router.openChannel("MyApp");    // InterestType.MINE
+router.setCurrentChannelId(channel.getChannelId());     // (printout t ...) goes here
+
+channel.executeCommand("(batch samples/only/only_1.clp)", true);  // true: wait
+List<MessageEvent> events = new ArrayList<>();
+channel.fillEventList(events);
+for (MessageEvent e : events) {
+    switch (e.getType()) {
+        case ENGINE -> System.out.print(e.getMessage());      // printed output
+        case RESULT -> System.out.println(e.getMessage());    // the expression's value
+        case ERROR  -> ((Exception) e.getMessage()).printStackTrace();
+        default -> { }
+    }
+}
+engine.close();
+\end{lstlisting}
+
+The router's command thread parses and executes each expression, so
+several channels may post commands concurrently and the engine still
+runs them one at a time. \fn{InterestType.ALL} makes a channel receive
+the output of every channel, which is what the GUI's log tab uses.
+
+\subsection{Logging}
+
+Log4j~2 is the only logging dependency. The default configuration in
+the core jar writes WARN and above to standard error; set
+\fn{-Dmorendo.log.level=DEBUG} for detail, or supply your own
+configuration with \fn{-Dlog4j2.configurationFile}. The alternative
+\fn{log4j2-file.xml} in the same jar also writes
+\file{logs/morendo.log}, with \fn{-Dmorendo.log.file} to move it.
+
+\section{The service module}
+
+\fn{morendo-service} wraps engines for server use: a
+\fn{RuleService} holds one or more \emph{rule applications}, each with a
+pool of engines initialized from a JSON configuration, and hands out an
+\fn{EngineContext} per request:
+
+\begin{lstlisting}[style=java]
+EngineContext ctx = service.getEngine("test", null);   // waits for a free engine
+try {
+    ctx.assertObject(order, false, true);
+    ctx.executeRules();
+} finally {
+    ctx.close();      // retracts the request's facts, returns the engine
+}
+\end{lstlisting}
+
+Each application has an \fn{EnginePool}, safe to use from any number of
+threads. \fn{getEngine} hands out an idle engine, creates one while the
+pool is below \fn{maxPool}, and otherwise waits up to the application's
+\fn{checkoutTimeout} (milliseconds, 5000 by default) for one to come
+back, returning null when none does. \fn{close()} retracts the facts and
+objects the request added, so the initial data loaded from the
+configuration stays and the next request starts from it; call
+\fn{keepFacts()} on the context first to leave them in place.
+\fn{service.getEnginePool(name, version)} exposes the pool, and the
+administration object's \fn{reload} operations act on the engines that
+are idle at the time.
+
+The configuration (\file{samples/configuration/sample\_config.json})
+names, per application, the model classes to declare, the function
+groups to load, the rule files, and the initial data as fact files, JSON
+or serialized objects; the pool sizes \fn{initialPool} and
+\fn{maxPool} and the \fn{checkoutTimeout}; and a service name. In a servlet
+container, \fn{org.morendo.service.servlet.RuleStartupService} is
+registered as a listener in \file{web.xml}, reads
+\file{/WEB-INF/Ruleconfig.json}, builds the pools and publishes the
+service as a servlet-context attribute under the service name.
+
+Outside a container, \fn{RuleServiceImpl.createInstance(file)} reads
+the same configuration, builds the applications and returns the service;
+call \fn{initialize()} to create the engine pools. An application may
+carry a \fn{version} in the configuration, and \fn{getEngine} takes the
+name and version (null when none was given). Initial data of the
+\fn{jsonData} kind is deserialized into the class named by its
+\fn{name} field; \fn{clipsData} is loaded from its URL with
+\fn{load-facts}.
+
+\section{The messaging module}
+
+\fn{morendo-messaging} connects an engine to a Jakarta Messaging topic.
+The JMS provider's client jars and a running broker are the user's; the
+module carries only the API. From CLIPS:
+
+\begin{lstlisting}
+(create-message-client "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+    "tcp://localhost:61616" "ConnectionFactory" "dynamicTopics/rules"
+    "user" "password" "bus")
+(register-content-handler org.morendo.messaging.TextHandler)
+(send-msg "bus" "(assert (order (id 7)))")
+(close-message-client "bus")
+\end{lstlisting}
+
+The client is stored as a global under the name given last. Incoming
+messages are dispatched by their JMS type to registered
+\fn{ContentHandler}s; the built-in \fn{TextHandler} treats a text
+message as CLIPS and executes it in the engine, so two engines on the
+same topic can send each other facts and commands. Subscriptions are
+non-durable and messages published by the client itself are not
+delivered back to it. The \emph{agent} functions keep a registry of
+remote engines (\fn{register-agent}, \fn{ping-agent},
+\fn{pprint-agents}) built on the same client.

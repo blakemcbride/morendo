@@ -77,6 +77,11 @@ public class Deffact implements Fact {
                     bp.rowId = bd.getLeftRow();
                     bp.column = bd.getLeftIndex();
                 }
+            } else if (this.slots[idx].value instanceof FunctionParam2 fp2) {
+                // a nested call: its own bound parameters are resolved against the rule
+                this.hasBinding = true;
+                list.add(this.slots[idx]);
+                fp2.configure(null, util);
             }
         }
         if (list.size() > 0) {
@@ -114,8 +119,27 @@ public class Deffact implements Fact {
                 } else {
                     bp.setResolvedValue(engine.getBinding(bp.getVariableName()));
                 }
+            } else if (this.boundSlots[idx].value instanceof FunctionParam2 fp2) {
+                fp2.setEngine(engine);
+                fp2.setFacts(triggerFacts);
             }
         }
+    }
+
+    /** The value a nested call produced, shaped for the slot it goes into. */
+    static Object callValue(BaseSlot target, Object value) {
+        if (target instanceof MultiSlot) {
+            if (value instanceof Object[]) {
+                return value;
+            } else if (value instanceof java.util.Collection<?> c) {
+                return c.toArray();
+            }
+            return new Object[] {value};
+        }
+        if (target.getValueType() == ValueType.STRING && value != null) {
+            return value.toString();
+        }
+        return value;
     }
 
     /**
@@ -269,6 +293,10 @@ public class Deffact implements Fact {
             if (uslot.value instanceof BoundParam bp) {
                 Object val = engine.getBinding(bp.getVariableName());
                 this.slots[uslot.getId()].value = val;
+            } else if (uslot.value instanceof FunctionParam2 fp2) {
+                fp2.setEngine(engine);
+                this.slots[uslot.getId()].value =
+                        callValue(this.slots[uslot.getId()], fp2.evaluate());
             } else {
                 this.slots[uslot.getId()].value = uslot.value;
             }
@@ -321,7 +349,9 @@ public class Deffact implements Fact {
         BaseSlot[] slts = newfact.slots;
         for (int idx = 0; idx < slts.length; idx++) {
             // probably need to revisit this and make sure
-            if (this.slots[idx].value instanceof BoundParam) {
+            if (this.slots[idx].value instanceof FunctionParam2 fp2) {
+                slts[idx].value = callValue(slts[idx], fp2.evaluate());
+            } else if (this.slots[idx].value instanceof BoundParam) {
                 if (slts[idx].getValueType() == ValueType.STRING) {
                     slts[idx].value = ((BoundParam) this.slots[idx].value).getValue().toString();
                 } else {

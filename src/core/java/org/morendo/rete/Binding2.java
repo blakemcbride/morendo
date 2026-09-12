@@ -120,6 +120,7 @@ public class Binding2 extends Binding {
                     fp.func = ((FunctionParam2) params[i]).func;
                     fp.funcName = ((FunctionParam2) params[i]).funcName;
                     fp.objBinding = ((FunctionParam2) params[i]).objBinding;
+                    fp.setParameters(((FunctionParam2) params[i]).getParameters());
                 } else if (params[i] instanceof ValueParam) {
                     ValueParam vp = (ValueParam) params[i];
                     newparams[i] = vp.cloneParameter();
@@ -160,8 +161,10 @@ public class Binding2 extends Binding {
             } else {
                 buf.append(")");
             }
-        } else {
+        } else if (function != null) {
             buf.append(function.toPPString(params, 1));
+        } else {
+            buf.append(ConversionUtils.getPPOperator(operator));
         }
         return buf.toString();
     }

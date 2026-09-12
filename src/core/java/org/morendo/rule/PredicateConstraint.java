@@ -24,8 +24,9 @@ import org.morendo.rete.Parameter;
 import org.morendo.rete.ValueParam;
 
 import java.util.ArrayList;
-// import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Peter Lin
@@ -109,7 +110,6 @@ public final class PredicateConstraint implements Constraint {
 
     public void addParameters(List<Object> params) {
         this.parameters.addAll(params);
-        int bcount = 0;
         // we try to set the value
         for (int idx = 0; idx < parameters.size(); idx++) {
             Object p = parameters.get(idx);
@@ -120,18 +120,71 @@ public final class PredicateConstraint implements Constraint {
                     this.reverseOperator = true;
                 }
             } else if (p instanceof BoundParam bp) {
-                if (!bp.getVariableName().equals(this.varName)) {
+                if (!bp.getVariableName().equals(this.varName) && !isGlobal(bp)) {
                     this.setValue(p);
-                }
-                bcount++;
-            } else if (p instanceof FunctionParam2 fparam) {
-                if (fparam.hasBoundParameter()) {
-                    bcount++;
                 }
             }
         }
-        if (bcount > 1) {
-            this.isPredicateJoin = true;
+        // the predicate joins two patterns when it uses a variable other than the slot's own;
+        // globals are read from the engine and nested calls are searched as well
+        Set<String> others = new LinkedHashSet<>();
+        collectVariables(this.parameters, others);
+        this.isPredicateJoin = !others.isEmpty();
+    }
+
+    private static boolean isGlobal(BoundParam bp) {
+        return bp.getVariableName().startsWith("*");
+    }
+
+    private void collectVariables(List<?> params, Set<String> names) {
+        for (Object p : params) {
+            if (p instanceof BoundParam bp) {
+                if (!bp.getVariableName().equals(this.varName) && !isGlobal(bp)) {
+                    names.add(bp.getVariableName());
+                }
+            } else if (p instanceof FunctionParam2 fp && fp.getParameters() != null) {
+                collectVariables(List.of(fp.getParameters()), names);
+            }
+        }
+    }
+
+    /**
+     * True for the form the operator alpha nodes evaluate directly: the slot's variable compared
+     * with one literal, {@code (> ?x 5)} or {@code (> 5 ?x)}.
+     */
+    public boolean isSimpleOperator() {
+        if (this.parameters.size() != 2) {
+            return false;
+        }
+        Object a = this.parameters.get(0);
+        Object b = this.parameters.get(1);
+        return (isOwn(a) && b instanceof ValueParam) || (isOwn(b) && a instanceof ValueParam);
+    }
+
+    private boolean isOwn(Object p) {
+        return p instanceof BoundParam bp && bp.getVariableName().equals(this.varName);
+    }
+
+    /**
+     * Points every occurrence of the slot's own variable, nested calls included, at the fact being
+     * tested: row 0 of the fact array and the slot's column. Globals are left to be read from the
+     * engine.
+     */
+    public void bindOwnVariable(Parameter[] params, int column) {
+        bindOwnVariable(params, 0, column);
+    }
+
+    /** The same for a join, where the fact being tested sits at the given row. */
+    public void bindOwnVariable(Parameter[] params, int row, int column) {
+        for (Parameter p : params) {
+            if (p instanceof BoundParam bp) {
+                if (bp.getVariableName().equals(this.varName)) {
+                    bp.setColumn(column);
+                    bp.setRow(row);
+                }
+            } else if (p instanceof FunctionParam2 fp && fp.getParameters() != null) {
+                bindOwnVariable(fp.getParameters(), row, column);
+            }
         }
     }
 

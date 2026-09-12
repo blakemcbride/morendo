@@ -17,6 +17,11 @@ public interface Configuration {
 
     void setMaxPool(int max);
 
+    /** How long a request waits for an engine when the pool is exhausted, in milliseconds. */
+    void setCheckoutTimeout(long milliseconds);
+
+    long getCheckoutTimeout();
+
     int getMaxPool();
 
     void setMinPool(int min);

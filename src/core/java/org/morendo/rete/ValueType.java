@@ -33,6 +33,8 @@ public enum ValueType {
     ARRAY,
     STRING,
     RETURN_VOID,
+    /** the whole ReturnVector of a nested call, for control functions */
+    OBJECT_RETURN,
     FACT,
     INTEGER_OBJECT,
     SHORT_OBJECT,

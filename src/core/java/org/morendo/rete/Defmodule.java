@@ -26,8 +26,10 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +66,9 @@ public class Defmodule implements Module {
 
     private int templateCount = 0;
 
+    /** The deffacts of the module, in definition order. */
+    private final Map<String, Deffacts> deffacts = new LinkedHashMap<>();
+
     private ClassLoader moduleClassLoader = null;
 
     private String workingDirectory = null;
@@ -77,22 +82,31 @@ public class Defmodule implements Module {
         classToDeftemplates = engine.newLocalMap();
         // activations = new ArrayActivationList(strat);
         activations = new LinkedActivationList();
-
-        URL[] urls = new URL[1];
-        workingDirectory = Constants.WORKING_DIRECTORY + "/" + this.name;
-        File workingdir = new File(workingDirectory);
-        workingdir.mkdirs();
-        try {
-            urls[0] = workingdir.toURI().toURL();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        moduleClassLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
     }
 
     /** Return all the activations within the module */
     public ActivationList getAllActivations() {
         return this.activations.clone();
+    }
+
+    public List<Activation> listActivations() {
+        return this.activations.activations();
+    }
+
+    public void addDeffacts(Deffacts dfs) {
+        this.deffacts.put(dfs.getName(), dfs);
+    }
+
+    public Deffacts getDeffacts(String name) {
+        return this.deffacts.get(name);
+    }
+
+    public Collection<Deffacts> getAllDeffacts() {
+        return this.deffacts.values();
+    }
+
+    public Deffacts removeDeffacts(String name) {
+        return this.deffacts.remove(name);
     }
 
     /**
@@ -157,6 +171,7 @@ public class Defmodule implements Module {
         this.rules.clear();
         this.deftemplates.clear();
         this.classToDeftemplates.clear();
+        this.deffacts.clear();
     }
 
     /** Add a compiled rule to the module */
@@ -323,6 +338,21 @@ public class Defmodule implements Module {
     }
 
     /** implementation looks up the rule in the HashMap */
+    public List<Rule> findRules(String name) {
+        List<Rule> found = new ArrayList<>();
+        Rule exact = this.rules.get(name);
+        if (exact != null) {
+            found.add(exact);
+            return found;
+        }
+        for (Rule rule : this.rules.values()) {
+            if (rule instanceof Defrule member && name.equals(member.getOrGroup())) {
+                found.add(rule);
+            }
+        }
+        return found;
+    }
+
     public Rule findRule(String name) {
         return this.rules.get(name);
     }
@@ -340,11 +370,38 @@ public class Defmodule implements Module {
         return this.activations.getStrategy();
     }
 
+    /**
+     * A class loader over the module's working directory, made when first needed: this is where
+     * generated macro classes are loaded from.
+     */
     public ClassLoader getModuleClassLoader() {
+        if (this.moduleClassLoader == null) {
+            try {
+                URL[] urls = new URL[] {new File(getWorkingDirectory()).toURI().toURL()};
+                this.moduleClassLoader = new URLClassLoader(urls, getClass().getClassLoader());
+            } catch (MalformedURLException e) {
+                throw new IllegalStateException(e);
+            }
+        }
         return this.moduleClassLoader;
     }
 
+    /**
+     * The directory for files generated on the module's behalf, created on first use under the
+     * directory named by the morendo.workdir property, or under the JVM's temporary directory.
+     */
     public String getWorkingDirectory() {
+        if (this.workingDirectory == null) {
+            String base =
+                    System.getProperty(
+                            Constants.WORKING_DIRECTORY_PROPERTY,
+                            System.getProperty("java.io.tmpdir") + File.separator + "morendo");
+            File dir = new File(base, this.name);
+            if (!dir.isDirectory() && !dir.mkdirs()) {
+                throw new IllegalStateException("cannot create " + dir);
+            }
+            this.workingDirectory = dir.getPath();
+        }
         return this.workingDirectory;
     }
 }

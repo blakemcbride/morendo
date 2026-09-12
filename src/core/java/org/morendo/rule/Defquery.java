@@ -44,7 +44,7 @@ import java.util.Map;
  * @author Peter Lin
  *     <p>A basic implementation of the Rule interface
  */
-public class Defquery implements Query {
+public class Defquery implements Query, org.morendo.rete.Scope {
 
     /** */
     protected String name = null;
@@ -67,6 +67,12 @@ public class Defquery implements Query {
 
     /** We use LinkedHashMap to keep the parameters in the order they were declared. */
     protected Map<String, QueryBaseAlphaCondition> queryParameterNodeMap = new LinkedHashMap<>();
+
+    /**
+     * The values of the declared parameters while the query runs, read through the engine's
+     * bindings.
+     */
+    private final Map<String, Object> parameterValues = new HashMap<>();
 
     /** by default watch is off */
     protected boolean watch = false;
@@ -210,13 +216,16 @@ public class Defquery implements Query {
     }
 
     public Binding copyPredicateBinding(String varName, Operator operator) {
-        Binding2 b = (Binding2) getBinding(varName);
+        Binding b = getBinding(varName);
         if (b != null) {
             Binding2 b2 = new Binding2(operator);
             b2.setLeftRow(b.getLeftRow());
             b2.setLeftIndex(b.getLeftIndex());
             b2.setVarName(b.getVarName());
-            b2.setQueryValue(b.getQueryValue());
+            if (b instanceof Binding2 pb) {
+                // the variable was itself bound by a predicate
+                b2.setQueryValue(pb.getQueryValue());
+            }
             b2.setRightIndex(b.getRightIndex());
             return b2;
         } else {
@@ -243,16 +252,39 @@ public class Defquery implements Query {
         return this.bindings.size();
     }
 
+    /** Every node that filters on a parameter; a parameter used in several patterns has several. */
+    protected final List<QueryBaseAlphaCondition> parameterNodes = new ArrayList<>();
+
     public void addQueryParameterNode(QueryParameterNode parameterNode) {
         if (this.queryParameterNodeMap.containsKey(parameterNode.getParameterName())) {
             // only set the node if the parameter was declared
             this.queryParameterNodeMap.put(parameterNode.getParameterName(), parameterNode);
+            this.parameterNodes.add(parameterNode);
         }
     }
 
     public void addQueryFuncNode(QueryFuncAlphaNode funcNode) {
         if (this.queryParameterNodeMap.containsKey(funcNode.getParameterName())) {
             this.queryParameterNodeMap.put(funcNode.getParameterName(), funcNode);
+            this.parameterNodes.add(funcNode);
+        }
+    }
+
+    /** Gives the i-th declared parameter its value on every node that filters on it. */
+    protected void setParameterValues(Parameter[] parameters) {
+        List<String> names = new ArrayList<>(this.queryParameterNodeMap.keySet());
+        for (int i = 0; i < parameters.length && i < names.size(); i++) {
+            String name = names.get(i);
+            Object value = parameters[i].getValue();
+            for (QueryBaseAlphaCondition node : this.parameterNodes) {
+                if (node instanceof QueryParameterNode pnode
+                        && name.equals(pnode.getParameterName())) {
+                    pnode.setQueryParameterValue(value);
+                } else if (node instanceof QueryFuncAlphaNode fnode
+                        && name.equals(fnode.getParameterName())) {
+                    fnode.setQueryParameterValue(value);
+                }
+            }
         }
     }
 
@@ -312,6 +344,14 @@ public class Defquery implements Query {
 
     public boolean isQueryParameter(String name) {
         return this.variables.containsKey(name);
+    }
+
+    public Object getBindingValue(Object key) {
+        return this.parameterValues.get(String.valueOf(key));
+    }
+
+    public void setBindingValue(String name, Object value) {
+        this.parameterValues.put(name, value);
     }
 
     public static long getDateTime(String date) {
@@ -377,17 +417,21 @@ public class Defquery implements Query {
         if (watch) {
             startTime = System.currentTimeMillis();
         }
+        // a query runs on its own network every time: start from empty memories
+        this.queryRoot.clearMemories(memory);
+        if (this.resultNode != null) {
+            this.resultNode.clear();
+        }
+        // a predicate that reads a parameter, (> ?ts ?start), resolves it as a binding of the
+        // query, so the query is the scope while its network runs
+        this.parameterValues.clear();
+        List<String> names = new ArrayList<>(this.queryParameterNodeMap.keySet());
+        for (int i = 0; i < parameters.length && i < names.size(); i++) {
+            this.parameterValues.put(names.get(i), parameters[i].getValue());
+        }
+        engine.pushScope(this);
         try {
-            ArrayList<QueryBaseAlphaCondition> params =
-                    new ArrayList<>(this.queryParameterNodeMap.values());
-            for (int i = 0; i < parameters.length; i++) {
-                Object node = params.get(i);
-                if (node instanceof QueryParameterNode pnode) {
-                    pnode.setQueryParameterValue(parameters[i].getValue());
-                } else if (node instanceof QueryFuncAlphaNode pnode) {
-                    pnode.setQueryParameterValue(parameters[i].getValue());
-                }
-            }
+            setParameterValues(parameters);
             this.queryRoot.assertObject(null, engine, memory);
             // now iterate over the NOTCE nodes and execute the query
             // they should be in the order it was defined.
@@ -395,6 +439,8 @@ public class Defquery implements Query {
                 ((QueryBaseNot) this.notJoins.get(i)).executeJoin(engine, memory);
             }
         } catch (AssertException e) {
+        } finally {
+            engine.popScope();
         }
         if (watch) {
             elapsedTime = System.currentTimeMillis() - startTime;

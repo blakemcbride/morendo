@@ -1,0 +1,162 @@
+\chapter{Grammar Summary}
+\label{app:grammar}
+
+This is a condensed form of \file{src/core/javacc/clips.jj}, the JavaCC
+grammar the engine is built from. Square brackets mark optional parts,
+\fn{*} zero or more repetitions, \fn{+} one or more, and \fn{|}
+alternatives. Words in angle brackets are non-terminals; everything else
+is literal.
+
+\section{Top level}
+
+\begin{lstlisting}[style=shell]
+<input>       ::= <form>*
+<form>        ::= ( <expression> ) | ?*global* | <symbol> | <string>
+<expression>  ::= <construct> | <special> | <call>
+<call>        ::= <function-name> <argument>*
+<argument>    ::= <literal> | nil | ?var | ?*global* | $?var | ( <expression> )
+                | ( ?var <argument>* )
+<literal>     ::= <integer> | <float> | <string> | <symbol>
+                | TRUE | true | FALSE | false | nil
+\end{lstlisting}
+
+The last form of \fn{<argument>}, a variable and values in parentheses, is
+the loop specification of \fn{loop-for-count} and \fn{progn\$}.
+The shell, \fn{batch}, \fn{build} and \fn{eval} read \fn{<form>}s.
+Data files read by \fn{load-facts}, \fn{load-stream} and \fn{load-graph}
+contain \fn{<fact>}s only (below), without \fn{assert}.
+
+\section{Constructs}
+
+\begin{lstlisting}[style=shell]
+<construct>   ::= <deftemplate> | <deffacts> | <defrule> | <defquery>
+                | <defgraphquery> | <defcube> | <deffunction> | <defmodule>
+                | <defclass>
+
+<deftemplate> ::= deftemplate <name> <slot-def>+
+<slot-def>    ::= ( slot <name> [ ( type <type> ) ]
+                               [ ( default <number> | <string> ) ] )
+                | ( multislot <name> )
+<type>        ::= INTEGER | SHORT | LONG | FLOAT | DOUBLE | STRING | BOOLEAN
+                | symbol | DATE
+
+<deffacts>    ::= deffacts <name> [ <string> ] <fact>+
+
+<defrule>     ::= defrule <name> [ <string> ] [ <declare> ] <ce>* => <action>*
+                  [ <<= <action>* ]
+<declare>     ::= ( declare [ ( salience <integer> ) ]
+                            [ ( auto-focus <bool> ) ]
+                            [ ( rule-version <symbol> | <number> ) ]
+                            [ ( remember-alpha <bool> ) ]
+                            [ ( effective-date <string> ) ]
+                            [ ( expiration-date <string> ) ]
+                            [ ( chaining-direction <symbol> ) ]
+                            [ ( no-agenda <bool> ) ]
+                            [ ( hashed-memory <bool> ) ]
+                            [ ( temporal-activation <bool> ) ] )
+<action>      ::= ( <expression> )
+
+<defquery>    ::= defquery <name> [ <string> ]
+                  ( declare ( variables ?var+ ) ) <ce>*
+<defgraphquery> ::= defgraphquery <name> [ <string> ]
+                  ( declare ( variables ?var+ ) ) <ce>*
+
+<defcube>     ::= defcube <name> ( <- <pattern> )+ ( <dimension> | <measure> )+
+<dimension>   ::= ( dimension <name> ?var )
+<measure>     ::= ( <name> ( <measure-fn> ?var ) )
+
+<deffunction> ::= deffunction <name> ( <parameter>* ) <body>*
+<body>        ::= ( <expression> ) | <literal> | ?var | ?*global*
+<parameter>   ::= ?var | ?*global* | $?var
+<defmodule>   ::= defmodule <name>
+<defclass>    ::= defclass <classname> [ <template-name> [ <parent-template> ] ]
+\end{lstlisting}
+
+Rule and template names may be written \fn{MODULE::name}. The properties
+in \fn{<declare>} may appear in any order; each is optional.
+\fn{defglobal} is parsed as \fn{(defglobal (?*name* [=] [<argument>])*)}.
+
+\section{Conditional elements}
+
+\begin{lstlisting}[style=shell]
+<ce>          ::= [ ?var <- ] <pattern>
+                | ( not <pattern> )
+                | ( test ( <call> ) )
+                | ( and <ce>+ )
+                | ( or <ce>+ )
+                | ( forall <pattern> <pattern>+ )
+                | ( exists <ce>+ )
+                | ( only <ce>+ )
+                | ( multiple <ce>+ )
+                | [ ?var <- ] ( temporal <temporal-declare> <pattern> )
+                | [ ?var <- ] ( cubequery ( <cube-name> ( <name> ?var )+ ) )
+
+<temporal-declare> ::= ( declare ?var ( relative-time <number> )
+                         [ ( interval-time <number> [ ( <call> ) ] ) ] )
+
+<pattern>     ::= ( <template-name> <slot-constraint>* )
+<slot-constraint> ::= ( <slot-name> <constraint> )
+<constraint>  ::= <literal>
+                | ?var
+                | $?var
+                | ?var&:( <predicate> )
+                | =( <call> )
+                | ~?var | ~<string> | ~nil
+                | <literal> ( | <literal> )+
+                | <constraint-atom> ( & <constraint-atom> )+
+<constraint-atom> ::= <literal> | ~<literal> | ?var | ~?var
+<predicate>   ::= <function-name> <argument>+
+\end{lstlisting}
+
+The predicate function name may be a symbol or one of \fn{+ - * / < >
+<= >= = == <> != eq and or}. \fn{\textasciitilde} before a number or an
+unquoted symbol is part of the symbol, not a negation. An \fn{or}
+element is expanded by the parser into one rule per combination of
+alternatives (Section~\ref{sec:or-ce}); \fn{forall} is accepted in
+rules only.
+
+\section{Special forms}
+
+These are parsed by dedicated productions rather than as generic calls,
+because their arguments are not expressions:
+
+\begin{lstlisting}[style=shell]
+<special>     ::= assert <fact>
+                | assert-temporal <fact>
+                | retract ?var | <integer>
+                | modify ?var <slot-value>+
+                | duplicate ?var <slot-value>+
+                | bind ?var <argument>+ | bind ?*global* <argument>
+<fact>        ::= ( <template-name> <slot-value>+ )
+<slot-value>  ::= ( <slot-name> <value>* )
+<value>       ::= <literal> | ?var | ?*global* | $?var | ( <expression> )
+\end{lstlisting}
+
+A slot value is a literal, a variable or a call, evaluated when the fact
+is built; a multislot lists several values, or one variable or call that
+yields a list. Inside \fn{assert} an empty \fn{(slot)} is accepted and
+ignored.
+
+\section{Tokens}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lL}
+\toprule
+comment & \fn{;;} to end of line \\
+integer & optional minus, digits \\
+float & optional minus, digits, \fn{.}, digits, optional exponent \\
+string & \fn{"..."} or \fn{'...'}; escapes \fn{\textbackslash\textbackslash} and an escaped quote only \\
+symbol & letters, digits and \fn{\_ : - \$ . @ /}, plus \fn{*} after the first character; may not start like a number \\
+path & a symbol containing backslashes, for Windows file names \\
+variable & \fn{?} then a letter or digit, then letters, digits, \fn{-} and \fn{\_} \\
+global & \fn{?*name*} \\
+multifield & \fn{\$?name} \\
+operators & \fn{=> <<= <- + - * / < > <= >= = == <> != eq and or not \& | \textasciitilde} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Reserved words that are tokens but appear in no production, and so are
+simply unusable as names: \fn{aggregate}, \fn{allowed-values},
+\fn{command}, \fn{describe-class}, \fn{logical}, \fn{no-loop},
+\fn{NUMBER}, \fn{send}.

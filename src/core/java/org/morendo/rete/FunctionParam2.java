@@ -114,12 +114,21 @@ public final class FunctionParam2 extends AbstractParam {
         return this.func.getReturnType();
     }
 
+    /** The function to call; a call to a name the engine does not know is an error. */
+    private Function require() {
+        if (this.func == null) {
+            throw new IllegalArgumentException("unknown function: " + this.funcName);
+        }
+        return this.func;
+    }
+
     public Object getValue() {
         if (this.params != null) {
-            if (this.facts != null) {
-                this.setFact();
+            if (this.func == null && this.engine != null) {
+                lookUpFunction();
             }
-            return this.func.executeFunction(engine, this.params);
+            this.setFact();
+            return require().executeFunction(engine, this.params);
         } else {
             return null;
         }
@@ -127,8 +136,11 @@ public final class FunctionParam2 extends AbstractParam {
 
     protected void setFact() {
         for (int idx = 0; idx < this.params.length; idx++) {
-            if (this.params[idx] instanceof BoundParam) {
-                ((BoundParam) this.params[idx]).setFact(this.facts);
+            if (this.params[idx] instanceof BoundParam bp) {
+                bp.setFact(this.facts);
+                if (bp.getFact() == null && this.engine != null) {
+                    bp.resolveBinding(this.engine);
+                }
             } else if (this.params[idx] instanceof FunctionParam) {
                 ((FunctionParam) this.params[idx]).setFacts(this.facts);
             }
@@ -144,8 +156,10 @@ public final class FunctionParam2 extends AbstractParam {
             this.engine = engine;
             lookUpFunction();
             checkParameters();
-            ReturnVector rval = this.func.executeFunction(engine, this.params);
-            if (valueType == ValueType.BIG_DECIMAL) {
+            ReturnVector rval = require().executeFunction(engine, this.params);
+            if (valueType == ValueType.OBJECT_RETURN) {
+                return rval;
+            } else if (valueType == ValueType.BIG_DECIMAL) {
                 return rval.firstReturnValue().getBigDecimalValue();
             } else if (valueType == ValueType.OBJECT || valueType == ValueType.ARRAY) {
                 return rval.firstReturnValue().getValue();
@@ -167,8 +181,14 @@ public final class FunctionParam2 extends AbstractParam {
 
     protected void checkParameters() {
         for (int idx = 0; idx < this.params.length; idx++) {
-            if (params[idx] instanceof BoundParam) {
-                ((BoundParam) params[idx]).setFact(this.facts);
+            if (params[idx] instanceof BoundParam bp) {
+                bp.setFact(this.facts);
+                if (bp.getFact() == null) {
+                    // not a pattern variable: a variable of the enclosing scope or a global
+                    bp.resolveBinding(this.engine);
+                }
+            } else if (params[idx] instanceof FunctionParam2 nested && this.facts != null) {
+                nested.setFacts(this.facts);
             }
         }
     }
@@ -189,6 +209,25 @@ public final class FunctionParam2 extends AbstractParam {
 
     public void setFacts(Fact[] facts) {
         this.facts = facts;
+        if (this.params != null) {
+            for (Parameter param : this.params) {
+                if (param instanceof FunctionParam2 nested) {
+                    nested.setFacts(facts);
+                }
+            }
+        }
+    }
+
+    /**
+     * Evaluates the call with the engine and facts it was given and returns the first value of the
+     * result, or null when the call answers nothing.
+     */
+    public Object evaluate() {
+        if (this.engine == null) {
+            return null;
+        }
+        ReturnVector rv = (ReturnVector) getValue(this.engine, ValueType.OBJECT_RETURN);
+        return rv == null || rv.size() == 0 ? null : rv.firstReturnValue().getValue();
     }
 
     public FunctionParam2 clone() {

@@ -49,6 +49,6 @@ public class UnWatchQueryFunction implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(watch-query <query name>)";
+        return "(unwatch-query <query name>)";
     }
 }

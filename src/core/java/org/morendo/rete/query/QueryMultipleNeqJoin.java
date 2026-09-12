@@ -45,8 +45,8 @@ public class QueryMultipleNeqJoin extends QueryBaseJoin {
 
     /** clear will clear the lists */
     public void clear(WorkingMemory mem) {
-        Map<?, ?> rightmem = mem.getBetaRightMemory(this);
-        Map<?, ?> leftmem = mem.getBetaRightMemory(this);
+        Map<?, ?> rightmem = mem.getQueryRightMemory(this);
+        Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         Iterator<?> itr = leftmem.keySet().iterator();
         // first we iterate over the list for each fact
         // and clear it.
@@ -68,11 +68,11 @@ public class QueryMultipleNeqJoin extends QueryBaseJoin {
      * @param engine
      */
     public void assertLeft(Index linx, Rete engine, WorkingMemory mem) throws AssertException {
-        Map<Index, Index> leftmem = mem.getBetaLeftMemory(this);
+        Map<Index, Index> leftmem = mem.getQueryBetaMemory(this);
         leftmem.put(linx, linx);
         NotEqHashIndex inx =
                 new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds, linx.getFacts()));
-        HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
+        HashedNeqAlphaMemory rightmem = mem.getQueryRightMemory(this);
         Object[] objs = rightmem.iterator(inx);
         // if the right side has 1 match, we propogate the original
         // index down the network. We don't add any facts to the index
@@ -88,21 +88,27 @@ public class QueryMultipleNeqJoin extends QueryBaseJoin {
      * @param engine
      */
     public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
-        HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
+        HashedNeqAlphaMemory rightmem = mem.getQueryRightMemory(this);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
 
-        rightmem.addPartialMatch(inx, rfact, engine);
-        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+        Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
-        int after = rightmem.count(inx);
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
-            if (this.evaluate(linx.getFacts(), rfact)) {
-                if (after > 1) {
-                    this.propogateAssert(linx, engine, mem);
-                }
+            // propagate the left tuple when rfact is its second match, i.e. the
+            // tuple's own bind values had exactly one before rfact was added
+            // (the same rule as MultipleNeqJoin)
+            if (this.evaluate(linx.getFacts(), rfact)
+                    && rightmem.matchCount(leftIndex(linx)) == 1) {
+                this.propogateAssert(linx, engine, mem);
             }
         }
+        rightmem.addPartialMatch(inx, rfact, engine);
+    }
+
+    /** The index of a left tuple's bind values, for looking up its matches in the right memory. */
+    private NotEqHashIndex leftIndex(Index linx) {
+        return new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds, linx.getFacts()));
     }
 
     /**

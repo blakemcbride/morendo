@@ -27,6 +27,7 @@ import org.morendo.rete.Operator;
 import org.morendo.rete.Rete;
 import org.morendo.rete.Scope;
 import org.morendo.rete.Template;
+import org.morendo.rete.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,6 +85,16 @@ public class Defrule implements Rule, Scope {
     protected int costValue = 0;
 
     protected Fact[] triggerFacts = null;
+
+    private TerminalNode terminalNode = null;
+
+    /** For a rule produced by expanding an or group: the name of the written rule and the index. */
+    private String orGroup = null;
+
+    private int orIndex = 0;
+
+    /** The rule as written, when the parser recorded it. */
+    private String sourceText = null;
 
     /** */
     @SuppressWarnings("this-escape") // the complexity object refers back to its rule
@@ -293,6 +304,35 @@ public class Defrule implements Rule, Scope {
         return this.joins;
     }
 
+    public TerminalNode getTerminalNode() {
+        return this.terminalNode;
+    }
+
+    public String getOrGroup() {
+        return this.orGroup;
+    }
+
+    public int getOrIndex() {
+        return this.orIndex;
+    }
+
+    public void setOrGroup(String group, int index) {
+        this.orGroup = group;
+        this.orIndex = index;
+    }
+
+    public String getSourceText() {
+        return this.sourceText;
+    }
+
+    public void setSourceText(String text) {
+        this.sourceText = text;
+    }
+
+    public void setTerminalNode(TerminalNode node) {
+        this.terminalNode = node;
+    }
+
     public BaseNode getLastNode() {
         if (this.joins.size() > 0) {
             return this.joins.get(this.joins.size() - 1);
@@ -305,6 +345,8 @@ public class Defrule implements Rule, Scope {
                 return (objectCondition).getLastNode();
             } else if (c instanceof TestCondition testCondition) {
                 return (testCondition).getTestNode();
+            } else if (c instanceof ForallCondition forall) {
+                return forall.getLastNode();
             }
             return null;
         } else {
@@ -464,6 +506,13 @@ public class Defrule implements Rule, Scope {
                 }
             } else if (cnd instanceof AndCondition andCondition) {
                 resolveConditionTemplates(engine, (andCondition).getConditions());
+            } else if (cnd instanceof ForallCondition forall) {
+                Condition[] inner = new Condition[forall.getRest().size() + 1];
+                inner[0] = forall.getFirst();
+                for (int i = 0; i < forall.getRest().size(); i++) {
+                    inner[i + 1] = forall.getRest().get(i);
+                }
+                resolveConditionTemplates(engine, inner);
             }
         }
     }
@@ -490,14 +539,34 @@ public class Defrule implements Rule, Scope {
                 this.temporalActivation = declaration.getBooleanValue();
             } else if (declaration.getName().equals(RuleProperty.HASHED_MEMORY)) {
                 this.hashedMemory = declaration.getBooleanValue();
+            } else if (declaration.getName().equals(RuleProperty.DIRECTION)) {
+                setChainingDirection(declaration.getValue());
             }
         }
+    }
+
+    /** The pattern of effective-date and expiration-date: month/day/year hour:minute. */
+    public static final String DATE_PATTERN = "MM/dd/yyyy HH:mm";
+
+    public String getChainingDirection() {
+        return this.direction == Constants.BACKWARD_CHAINING ? "backward" : "forward";
+    }
+
+    public void setChainingDirection(String value) {
+        this.direction =
+                "backward".equalsIgnoreCase(value)
+                        ? Constants.BACKWARD_CHAINING
+                        : Constants.FORWARD_CHAINING;
+    }
+
+    public static String formatDateTime(long time) {
+        return new java.text.SimpleDateFormat(DATE_PATTERN).format(new java.util.Date(time));
     }
 
     public static long getDateTime(String date) {
         if (date != null && date.length() > 0) {
             try {
-                java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("mm/dd/yyyy HH:mm");
+                java.text.SimpleDateFormat df = new java.text.SimpleDateFormat(DATE_PATTERN);
                 return df.parse(date).getTime();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -511,24 +580,30 @@ public class Defrule implements Rule, Scope {
     public String toPPString() {
         StringBuilder buf = new StringBuilder();
         buf.append("(defrule " + this.name + Constants.LINEBREAK);
-        // now print out the rule properties
+        // now print out the rule properties, in the form the parser accepts
+        buf.append("  (declare (salience " + this.salience + ")");
+        if (this.auto) {
+            buf.append(" (auto-focus true)");
+        }
+        if (this.version != null && this.version.length() > 0) {
+            buf.append(" (rule-version " + this.version + ")");
+        }
+        buf.append(" (remember-alpha " + this.rememberMatch + ")");
+        if (this.effectiveDate > 0) {
+            buf.append(" (effective-date \"" + formatDateTime(this.effectiveDate) + "\")");
+        }
+        if (this.expirationDate > 0) {
+            buf.append(" (expiration-date \"" + formatDateTime(this.expirationDate) + "\")");
+        }
         buf.append(
-                "  (declare (salience "
-                        + this.salience
-                        + ") (rule-version "
-                        + this.version
-                        + ") (remember-match "
-                        + this.rememberMatch
-                        + ") (effective-date "
-                        + this.effectiveDate
-                        + ") (expiration-date "
-                        + this.expirationDate
+                " (chaining-direction "
+                        + getChainingDirection()
+                        + ")"
+                        + Constants.LINEBREAK
+                        + "           (no-agenda "
+                        + this.noAgenda
                         + ") (temporal-activation "
                         + this.temporalActivation
-                        + ") (no-agenda "
-                        + this.noAgenda
-                        + ") (chaining-direction "
-                        + this.direction
                         + ") )"
                         + Constants.LINEBREAK);
         for (int idx = 0; idx < this.conditions.size(); idx++) {

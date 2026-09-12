@@ -1,0 +1,134 @@
+\chapter{Getting Started}
+\label{ch:getting-started}
+
+\section{Requirements}
+
+\Morendo\ needs a Java Development Kit, version 21 or later, on the
+\fn{PATH}. Nothing else has to be installed: the build downloads the few
+libraries it uses (Log4j, and for the optional modules Jackson, Jakarta
+Messaging, Jakarta Servlet and JLine) from Maven Central the first time it
+runs. Linux, macOS and Windows are all supported; the examples in this
+manual use a Unix shell.
+
+\section{Building from source}
+
+The build is driven by \fn{bld}, a small tool checked into the repository,
+whose whole build definition is the Java file \file{builder/Tasks.java}.
+From the root of a checkout:
+
+\begin{lstlisting}[style=shell]
+./bld build        # download libraries, generate the parser, compile
+./bld test         # also compile and run the test suite
+./bld dist         # target/morendo-2.1.0.zip, a self-contained distribution
+./bld list-tasks   # every task, with a one-line description
+\end{lstlisting}
+
+On Windows use \fn{bld.cmd} instead of \fn{./bld}. Everything the build
+produces goes under \file{target/}; the downloaded libraries go under
+\file{libs/}. Both directories can be deleted at any time and are recreated
+by the next build.
+
+\section{Running the shell}
+
+After \fn{./bld build}, the \fn{morendo} script at the root of the checkout
+starts the engine with the compiled classes on the class path:
+
+\begin{lstlisting}[style=shell]
+./morendo -shell   # interactive shell
+./morendo -gui     # Swing graphical interface
+\end{lstlisting}
+
+Both flags may be given together; Chapter~\ref{ch:shell-gui} describes the
+graphical interface. The shell prints a banner and a prompt;
+each expression you type is evaluated and its value printed:
+
+\begin{lstlisting}[style=shell]
+$ ./morendo -shell
+Copyright Jamocha Project http://sourceforge.net/projects/jamocha
+Morendo Version 2.1.0
+Morendo> (+ 1 2)
+3
+Morendo> (batch samples/only/only_1.clp)
+true
+Morendo> (facts)
+f-1 (_initialFact)
+f-2 (goal (emergency TRUE) (people "nil") (location "nil") )
+f-3 (hero (name "superman") (status "occupied") (long "nil") (lat "nil") )
+f-4 (hero (name "spiderman") (status "unoccupied") (long "nil") (lat "nil") )
+for a total of 4
+Morendo> (fire)
+spiderman save the day
+1
+Morendo> (exit)
+\end{lstlisting}
+
+\fn{batch} loads a file of CLIPS constructs and commands, here a small
+sample shipped with \Morendo; \fn{facts} lists working memory (fact
+\fn{f-1} is the initial fact the engine always keeps); \fn{fire} runs the
+rules that match and returns how many fired; \fn{exit} closes the engine
+and ends the shell. File names are relative to the directory you started
+\Morendo\ in, so run it from the root of the checkout to use the samples
+as written.
+
+\begin{note}
+The function that runs the agenda is \fn{fire}, not \fn{run} as in CLIPS.
+An expression that calls a function \Morendo\ does not know simply
+evaluates to \fn{false}; it is not reported as an error. If a command seems
+to do nothing, check its name in Appendix~\ref{app:functions}.
+\end{note}
+
+The shell has line editing and history (it uses JLine), and an expression
+may span several lines: input is collected until the parentheses balance.
+Press Ctrl-D at the prompt, or type \fn{(exit)}, to leave.
+
+\section{The distribution archive}
+
+\fn{./bld dist} produces \file{target/morendo-\version.zip}. Unpacked, it
+contains
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\file{libs/} & the six \Morendo\ jars and the third-party libraries \\
+\file{morendo}, \file{morendo.cmd} & launchers for Unix and Windows \\
+\file{samples/} & the example rule files used throughout this manual \\
+\file{benchmark/} & the Manners benchmark rules and data sets \\
+\file{README.md}, \file{LICENSE}, \file{licenses/} & documentation and licences \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The launcher puts every jar in \file{libs/} on the class path, so
+\fn{./morendo -shell} works the same way from an unpacked distribution as
+from a checkout. The jars are split by module so that a program embedding
+the engine takes only what it needs:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lL}
+\toprule
+\file{morendo-core} & the engine, the parser and every built-in function; needs only Log4j \\
+\file{morendo-shell} & the \fn{morendo} entry point and the interactive shell (JLine) \\
+\file{morendo-gui} & the Swing interface and the network viewer; adds the \fn{view} function \\
+\file{morendo-service} & the embedding service and servlet integration (Jackson, Jakarta Servlet) \\
+\file{morendo-messaging} & the Jakarta Messaging client and agent functions \\
+\file{morendo-examples} & the example beans used by the samples \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Optional jars register their functions with the engine automatically when
+they are on the class path. Chapter~\ref{ch:embedding} covers embedding.
+
+\section{Where things are}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lL}
+\toprule
+\file{samples/} & small, self-contained rule files: \file{only/}, \file{exists/}, \file{time/}, \file{defquery/}, \file{graphquery/}, \file{molap/}, \file{ruleset/} \\
+\file{samples/configuration/} & JSON and XML configurations for the service module \\
+\file{benchmark/manners/} & the classic Manners benchmark with 8 to 256 guests \\
+\file{doc/} & design papers on the MOLAP cube, modification logic and the temporal extension, plus the diagrams used in Chapter~\ref{ch:analysis} \\
+\file{src/core/javacc/clips.jj} & the grammar; Appendix~\ref{app:grammar} summarizes it \\
+\bottomrule
+\end{tabularx}
+\end{center}

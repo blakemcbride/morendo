@@ -1,7 +1,6 @@
 package org.morendo.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -134,7 +133,11 @@ public class JSONData<T> implements InitialData {
                     InputStream input = urlObject.openStream();
                     @SuppressWarnings("unchecked")
                     List<Object> data =
-                            (List<Object>) mapper.readValue(input, new TypeReference<List<T>>() {});
+                            (List<Object>)
+                                    mapper.readValue(
+                                            input,
+                                            mapper.getTypeFactory()
+                                                    .constructCollectionType(List.class, T));
                     return data;
                 } catch (MalformedURLException e) {
                     Logger log = LogManager.getLogger(JSONData.class);
@@ -147,13 +150,21 @@ public class JSONData<T> implements InitialData {
                 InputStream input = this.servletCtx.getResourceAsStream(url);
                 @SuppressWarnings("unchecked")
                 List<Object> data =
-                        (List<Object>) mapper.readValue(input, new TypeReference<List<T>>() {});
+                        (List<Object>)
+                                mapper.readValue(
+                                        input,
+                                        mapper.getTypeFactory()
+                                                .constructCollectionType(List.class, T));
                 return data;
             } else {
                 reader = new FileReader(url);
                 @SuppressWarnings("unchecked")
                 List<Object> data =
-                        (List<Object>) mapper.readValue(reader, new TypeReference<List<T>>() {});
+                        (List<Object>)
+                                mapper.readValue(
+                                        reader,
+                                        mapper.getTypeFactory()
+                                                .constructCollectionType(List.class, T));
                 return data;
             }
         } catch (Exception e) {

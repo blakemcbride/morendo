@@ -1,0 +1,20 @@
+== stats ==
+templates: 5
+rules: 3
+facts: 4
+next-node-id: 13
+== output ==
+truetruefalse truefalsefalse truefalse truefalsetruetruefalse
+3 -3 3.0 true true
+3 -3 11 1
+true false true false
+10 x
+5
+==> fire: Activation: not-three, id-4 AggrTime-*
+not three: 40
+==> fire: Activation: big, id-4 AggrTime-*
+big: 40
+==> fire: Activation: not-three, id-3 AggrTime-*
+not three: 4
+==> fire: Activation: is-three, id-2 AggrTime-*
+three: 3

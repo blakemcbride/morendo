@@ -171,23 +171,22 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
         Binding[] binds = getBindings(condition, rule, position);
         TemporalCondition tc = (TemporalCondition) condition;
         AbstractTemporalNode joinNode = null;
-        // deal with the CE which is not NOT CE.
-        if (!tc.getNegated()) {
-            if (binds.length > 0 && tc.getIntervalTime() > 0) {
-                joinNode =
-                        new TemporalIntervalNode(
-                                ruleCompiler.getEngine().nextNodeId(), ruleCompiler.getEngine());
-                ((TemporalIntervalNode) joinNode).setInterval(tc.getIntervalTime() * 1000);
-                // lookup the function
-                Function f = ruleCompiler.getEngine().findFunction(tc.getFunction());
-                if (f != null) {
-                    ((TemporalIntervalNode) joinNode).setFunction(f);
-                    BigDecimal count = tc.getParameters()[0].getBigDecimalValue();
-                    ((TemporalIntervalNode) joinNode).setCount(count);
-                }
-            } else if (binds.length > 0) {
-                joinNode = new TemporalEqNode(ruleCompiler.getEngine().nextNodeId());
+        // the join is built whether or not the element shares bindings with the earlier
+        // elements; without bindings it only applies the time window
+        if (tc.getIntervalTime() > 0) {
+            joinNode =
+                    new TemporalIntervalNode(
+                            ruleCompiler.getEngine().nextNodeId(), ruleCompiler.getEngine());
+            ((TemporalIntervalNode) joinNode).setInterval(tc.getIntervalTime() * 1000);
+            // lookup the function
+            Function f = ruleCompiler.getEngine().findFunction(tc.getFunction());
+            if (f != null) {
+                ((TemporalIntervalNode) joinNode).setFunction(f);
+                BigDecimal count = tc.getParameters()[0].getBigDecimalValue();
+                ((TemporalIntervalNode) joinNode).setCount(count);
             }
+        } else {
+            joinNode = new TemporalEqNode(ruleCompiler.getEngine().nextNodeId());
         }
 
         joinNode.setBindings(binds);
@@ -212,11 +211,10 @@ public class TemporalConditionCompiler extends ObjectConditionCompiler {
             LIANode lianode = ruleCompiler.findLIANode(otn);
             NotJoin njoin = new NotJoin(ruleCompiler.getEngine().nextNodeId());
             njoin.setBindings(new Binding[0]);
-            lianode.addSuccessorNode(njoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            ruleCompiler.attachJoinNode(lianode, njoin);
             // add the join to the rule object
             rule.addJoinNode(njoin);
-            oc.getLastNode()
-                    .addSuccessorNode(njoin, ruleCompiler.getEngine(), ruleCompiler.getMemory());
+            ruleCompiler.attachJoinNode(oc.getLastNode(), njoin);
         } else if (oc.getNodes().size() == 0) {
             // this means the rule has a binding, but no conditions
             ObjectTypeNode otn = ruleCompiler.findObjectTypeNode(oc.getTemplateName());

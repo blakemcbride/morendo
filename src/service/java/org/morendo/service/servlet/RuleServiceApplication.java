@@ -67,6 +67,7 @@ public class RuleServiceApplication implements RuleApplication {
 
     private int minPool;
     private int maxPool;
+    private long checkoutTimeout = 5000;
     private int initialPool;
     private int currentPoolCount;
     private URLClassLoader classloader = null;
@@ -329,6 +330,14 @@ public class RuleServiceApplication implements RuleApplication {
 
     public int getInitialPool() {
         return initialPool;
+    }
+
+    public long getCheckoutTimeout() {
+        return checkoutTimeout;
+    }
+
+    public void setCheckoutTimeout(long milliseconds) {
+        this.checkoutTimeout = milliseconds;
     }
 
     public int getMaxPool() {

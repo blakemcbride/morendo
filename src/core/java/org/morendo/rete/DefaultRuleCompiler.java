@@ -108,7 +108,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
                     // row index of the bindings are accurate. this makes it simpler
                     // for the rule compiler and compileJoins is cleaner and does
                     // less work.
-                    int counter = 0;
+                    int counter = startsWithInitialFact(conds) ? 1 : 0;
                     for (int idx = 0; idx < conds.length; idx++) {
                         Condition con = conds[idx];
                         // compile object conditions
@@ -133,6 +133,8 @@ public class DefaultRuleCompiler implements RuleCompiler {
                     attachTerminalNode(last, tnode);
                     // compile the actions
                     compileActions(rule, rule.getActions());
+                    // the rule is complete: connect it to the network and replay the facts
+                    attachPendingInputs();
                     // compile the modification actions
                     compileActions(rule, rule.getModificationActions());
                     // now we pass the bindings to the rule, so that actions can
@@ -150,6 +152,7 @@ public class DefaultRuleCompiler implements RuleCompiler {
                     ce.setMessage(Messages.getString("RuleCompiler.assert.error")); // $NON-NLS-1$
                     this.notifyListener(ce);
                     log.debug(e.toString(), e);
+                    this.pendingInputs.clear();
                     return false;
                 }
             } else if (rule.getConditions().length == 0) {
@@ -228,19 +231,22 @@ public class DefaultRuleCompiler implements RuleCompiler {
      * @return
      */
     protected TerminalNode createTerminalNode(Rule rl) {
+        TerminalNode tnode;
         if (rl.getModificationActions() != null && rl.getModificationActions().length > 0) {
-            MLTerminalNode tnode = new MLTerminalNode(engine.nextNodeId(), rl);
-            tnode.setNoAgenda(rl.getNoAgenda());
-            return tnode;
+            MLTerminalNode mlnode = new MLTerminalNode(engine.nextNodeId(), rl);
+            mlnode.setNoAgenda(rl.getNoAgenda());
+            tnode = mlnode;
         } else if (rl.getNoAgenda() && rl.getExpirationDate() == 0) {
-            return new NoAgendaTNode(engine.nextNodeId(), rl);
+            tnode = new NoAgendaTNode(engine.nextNodeId(), rl);
         } else if (rl.getNoAgenda() && rl.getExpirationDate() > 0) {
-            return new NoAgendaTNode2(engine.nextNodeId(), rl);
+            tnode = new NoAgendaTNode2(engine.nextNodeId(), rl);
         } else if (rl.getExpirationDate() > 0) {
-            return new TerminalNode3(engine.nextNodeId(), rl);
+            tnode = new TerminalNode3(engine.nextNodeId(), rl);
         } else {
-            return new TerminalNode2(engine.nextNodeId(), rl);
+            tnode = new TerminalNode2(engine.nextNodeId(), rl);
         }
+        rl.setTerminalNode(tnode);
+        return tnode;
     }
 
     /**
@@ -492,7 +498,8 @@ public class DefaultRuleCompiler implements RuleCompiler {
         // we only create an AlphaNode if the predicate isn't
         // joining 2 bindings.
         if (!cnstr.isPredicateJoin()) {
-            if (ConversionUtils.isPredicateOperatorCode(cnstr.getFunctionName())) {
+            if (ConversionUtils.isPredicateOperatorCode(cnstr.getFunctionName())
+                    && cnstr.isSimpleOperator()) {
                 BaseAlpha2 node;
                 Operator oprCode = ConversionUtils.getOperatorCode(cnstr.getFunctionName());
                 if (cnstr.reverseOperator()) {
@@ -578,15 +585,11 @@ public class DefaultRuleCompiler implements RuleCompiler {
             Template template,
             Rule rule) {
         for (int px = 0; px < parameters.length; px++) {
-            if (parameters[px] instanceof BoundParam) {
-                BoundParam bp = (BoundParam) parameters[px];
-                bp.setColumn(template.getSlot(constraint.getName()).getId());
-                bp.setRow(0);
-            } else if (parameters[px] instanceof FunctionParam2) {
-                FunctionParam2 fp = (FunctionParam2) parameters[px];
+            if (parameters[px] instanceof FunctionParam2 fp) {
                 fp.configure(engine, rule);
             }
         }
+        constraint.bindOwnVariable(parameters, template.getSlot(constraint.getName()).getId());
     }
 
     public void compileJoins(Rule rule, Condition[] conds) throws AssertException {
@@ -597,17 +600,31 @@ public class DefaultRuleCompiler implements RuleCompiler {
         // create the join nodes. A rule with just 1 condition has
         // no joins
         if (conds.length > 1) {
-            // previous Condition
-            prevCE = conds[0];
-            // this.compileFirstJoin(engine, memory); moved to the
-            // ConditionCompiler.compileFirstJoin method
-            prevCE.getCompiler(this).compileFirstJoin(prevCE, rule);
+            int start = 1;
+            if (isNegatedPattern(conds[0])) {
+                // (not ...) first: the rule starts from the initial fact, row 0 of its tuples,
+                // and the negated pattern is its first join
+                prevCE = initialFactCondition();
+                start = 0;
+            } else {
+                // previous Condition
+                prevCE = conds[0];
+                // this.compileFirstJoin(engine, memory); moved to the
+                // ConditionCompiler.compileFirstJoin method
+                prevCE.getCompiler(this).compileFirstJoin(prevCE, rule);
+            }
 
             // now compile the remaining conditions
-            for (int idx = 1; idx < conds.length; idx++) {
+            for (int idx = start; idx < conds.length; idx++) {
                 Condition cdt = conds[idx];
 
-                joinNode = cdt.getCompiler(this).compileJoin(cdt, idx, rule, prevCE);
+                if (idx == 0) {
+                    // nothing precedes the negated pattern, so it joins on nothing
+                    joinNode = new NotJoin(engine.nextNodeId());
+                    joinNode.setBindings(new Binding[0]);
+                } else {
+                    joinNode = cdt.getCompiler(this).compileJoin(cdt, idx, rule, prevCE);
+                }
                 cdt.getCompiler(this).connectJoinNode(prevCE, cdt, prevJoinNode, joinNode);
 
                 // now we set the previous node to current
@@ -618,6 +635,31 @@ public class DefaultRuleCompiler implements RuleCompiler {
         } else if (conds.length == 1) {
             conds[0].getCompiler(this).compileSingleCE(rule);
         }
+    }
+
+    /** A plain negated pattern, (not (template ...)). */
+    static boolean isNegatedPattern(Condition condition) {
+        return condition.getClass() == ObjectCondition.class
+                && ((ObjectCondition) condition).getNegated();
+    }
+
+    /**
+     * True when the rule's tuples begin with the initial fact: the rule opens with a negated
+     * pattern followed by more conditions, or with a forall.
+     */
+    static boolean startsWithInitialFact(Condition[] conds) {
+        return conds.length > 0
+                && (conds[0] instanceof ForallCondition
+                        || (conds.length > 1 && isNegatedPattern(conds[0])));
+    }
+
+    /** A condition standing for the initial fact, whose last node is its left input adapter. */
+    private ObjectCondition initialFactCondition() {
+        ObjectCondition init = new ObjectCondition();
+        init.setTemplateName(engine.getInitFact().getName());
+        init.setTemplate(engine.getInitFact());
+        init.addNode(findLIANode(this.inputnodes.get(engine.getInitFact())));
+        return init;
     }
 
     /**
@@ -659,9 +701,26 @@ public class DefaultRuleCompiler implements RuleCompiler {
      */
     public void attachJoinNode(BaseNode last, BaseJoin join) throws AssertException {
         if (last instanceof BaseAlpha baseAlphaValue) {
-            (baseAlphaValue).addSuccessorNode(join, engine, memory);
+            // attaching an alpha-side input replays the facts that node holds, so it is
+            // postponed until every join and the terminal node of the rule are in place;
+            // the facts then flow through the complete rule as if asserted afresh
+            this.pendingInputs.add(new Object[] {baseAlphaValue, join});
         } else if (last instanceof BaseJoin baseJoinValue) {
             (baseJoinValue).addSuccessorNode(join, engine, memory);
+        }
+    }
+
+    /** Alpha-side inputs recorded by {@link #attachJoinNode} for the rule being compiled. */
+    private final java.util.List<Object[]> pendingInputs = new java.util.ArrayList<>();
+
+    /** Connects the postponed inputs, in the order the conditions were compiled. */
+    protected void attachPendingInputs() throws AssertException {
+        try {
+            for (Object[] pair : this.pendingInputs) {
+                ((BaseAlpha) pair[0]).addSuccessorNode((BaseJoin) pair[1], engine, memory);
+            }
+        } finally {
+            this.pendingInputs.clear();
         }
     }
 

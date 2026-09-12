@@ -2,9 +2,7 @@ package org.morendo.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.morendo.rete.Rete;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class ServiceAdministrationImpl implements ServiceAdministration {
@@ -21,18 +19,18 @@ public class ServiceAdministrationImpl implements ServiceAdministration {
         return this.ruleService.getRuleApplicationMap().get(key);
     }
 
+    private EnginePool pool(String ruleApplication, String version) {
+        return this.ruleService.getEnginePool(ruleApplication, version);
+    }
+
     public int getEnginePoolCount(String ruleApplication, String version) {
-        String key = ruleApplication + "::" + version;
-        java.util.PriorityQueue<?> queue =
-                (java.util.PriorityQueue<?>) this.ruleService.getEngineMap().get(key);
-        return queue.size();
+        EnginePool pool = pool(ruleApplication, version);
+        return pool == null ? 0 : pool.idleCount();
     }
 
     public List<?> getEngines(String ruleApplication, String version) {
-        String key = ruleApplication + "::" + version;
-        java.util.PriorityQueue<?> queue =
-                (java.util.PriorityQueue<?>) this.ruleService.getEngineMap().get(key);
-        return new java.util.ArrayList<Object>(queue);
+        EnginePool pool = pool(ruleApplication, version);
+        return pool == null ? List.of() : pool.snapshot();
     }
 
     public List<?> getRuleApplications() {
@@ -45,25 +43,10 @@ public class ServiceAdministrationImpl implements ServiceAdministration {
 
     public void reinitialize(String ruleApplication, String version) {
         log.info("--- Start reinitializing rule application: " + ruleApplication + " " + version);
-        String key = ruleApplication + "::" + version;
-        java.util.PriorityQueue<Rete> queue = this.ruleService.getEngineMap().remove(key);
-        // first close all the engine instances.
-        Iterator<Rete> itr = queue.iterator();
-        while (itr.hasNext()) {
-            org.morendo.rete.Rete engine = itr.next();
-            engine.close();
-        }
-        queue.clear();
-
-        // Now reload the RuleApplication and recreate the engine instances
-        RuleApplicationImpl app =
-                (RuleApplicationImpl) this.ruleService.getRuleApplicationMap().get(key);
-        queue = new java.util.PriorityQueue<Rete>();
-        this.ruleService.getEngineMap().put(ruleApplication, queue);
-        for (int idx = 0; idx < app.getInitialPool(); idx++) {
-            org.morendo.rete.Rete engine = new org.morendo.rete.Rete();
-            queue.add(engine);
-            app.reinitializeEngine(engine);
+        EnginePool pool = pool(ruleApplication, version);
+        if (pool != null) {
+            pool.closeAll();
+            pool.fill();
         }
         log.info(
                 "--- Finished reinitializing rule application: " + ruleApplication + " " + version);
@@ -71,60 +54,25 @@ public class ServiceAdministrationImpl implements ServiceAdministration {
 
     public boolean reloadFunctionPackage(String ruleApplication, String version) {
         log.info("--- Start reloading Function Package: " + ruleApplication + " " + version);
-        boolean reload = false;
-        String key = ruleApplication + "::" + version;
-        RuleApplicationImpl app =
-                (RuleApplicationImpl) this.ruleService.getRuleApplicationMap().get(key);
-        java.util.PriorityQueue<?> queue =
-                (java.util.PriorityQueue<?>) this.ruleService.getEngineMap().remove(key);
-        Iterator<?> iterator = queue.iterator();
-        while (iterator.hasNext()) {
-            org.morendo.rete.Rete engine = (org.morendo.rete.Rete) iterator.next();
-            reload = app.reloadFunctionGroups(engine);
-            if (!reload) {
-                break;
-            }
-        }
+        EnginePool pool = pool(ruleApplication, version);
+        boolean reload =
+                pool != null && pool.forEachIdle(pool.getApplication()::reloadFunctionGroups);
         log.info("--- Finished reloading Function Package: " + ruleApplication + " " + version);
         return reload;
     }
 
     public boolean reloadInitialData(String ruleApplication, String version) {
         log.info("--- Start reloading Initial Data: " + ruleApplication + " " + version);
-        boolean reload = false;
-        String key = ruleApplication + "::" + version;
-        RuleApplicationImpl app =
-                (RuleApplicationImpl) this.ruleService.getRuleApplicationMap().get(key);
-        java.util.PriorityQueue<?> queue =
-                (java.util.PriorityQueue<?>) this.ruleService.getEngineMap().remove(key);
-        Iterator<?> iterator = queue.iterator();
-        while (iterator.hasNext()) {
-            org.morendo.rete.Rete engine = (org.morendo.rete.Rete) iterator.next();
-            reload = app.reloadInitialData(engine);
-            if (!reload) {
-                break;
-            }
-        }
+        EnginePool pool = pool(ruleApplication, version);
+        boolean reload = pool != null && pool.forEachIdle(pool.getApplication()::reloadInitialData);
         log.info("--- Finished reloading Initial Data: " + ruleApplication + " " + version);
         return reload;
     }
 
     public boolean reloadRuleset(String ruleApplication, String version) {
         log.info("--- Start reloading Ruleset: " + ruleApplication + " " + version);
-        boolean reload = false;
-        String key = ruleApplication + "::" + version;
-        RuleApplicationImpl app =
-                (RuleApplicationImpl) this.ruleService.getRuleApplicationMap().get(key);
-        java.util.PriorityQueue<?> queue =
-                (java.util.PriorityQueue<?>) this.ruleService.getEngineMap().remove(key);
-        Iterator<?> iterator = queue.iterator();
-        while (iterator.hasNext()) {
-            org.morendo.rete.Rete engine = (org.morendo.rete.Rete) iterator.next();
-            reload = app.reloadRulesets(engine);
-            if (!reload) {
-                break;
-            }
-        }
+        EnginePool pool = pool(ruleApplication, version);
+        boolean reload = pool != null && pool.forEachIdle(pool.getApplication()::reloadRulesets);
         log.info("--- Finished reloading Ruleset: " + ruleApplication + " " + version);
         return reload;
     }

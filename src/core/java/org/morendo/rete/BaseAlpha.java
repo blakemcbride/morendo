@@ -110,6 +110,9 @@ public abstract class BaseAlpha extends BaseNode {
      */
     public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
             throws AssertException {
+        if (node instanceof LIANode lia) {
+            lia.setParent(this);
+        }
         if (addNode(node)) {
             // if there are matches, we propogate the facts to
             // the new successor only

@@ -130,6 +130,10 @@ public class Rete implements PropertyChangeListener, CompilerListener {
     private Map<String, Query> queries = new HashMap<>();
     private Map<String, GraphQuery> graphQueries = new HashMap<>();
     private final List<Runnable> closeHooks = new ArrayList<>();
+
+    /** This engine's profiling counters; (profile) switches what is timed. */
+    private final ProfileStats profileStats = new ProfileStats();
+
     private volatile boolean closed = false;
 
     /** */
@@ -192,6 +196,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 
     protected void declareInitialFact() {
         declareTemplate(initFact);
+        assertInitialFact();
+    }
+
+    /** Asserts a fresh initial fact, the one rules without a left-hand side match. */
+    protected void assertInitialFact() {
         Deffact ifact = (Deffact) initFact.createFact(null, null, this.nextFactId());
         try {
             this.assertFact(ifact);
@@ -202,12 +211,17 @@ public class Rete implements PropertyChangeListener, CompilerListener {
     }
 
     protected void declareGraph() {
-        this.declareObject(
-                org.morendo.model.Graph.class, org.morendo.model.Graph.class.getSimpleName());
-        this.declareObject(
-                org.morendo.model.Node.class, org.morendo.model.Node.class.getSimpleName());
-        this.declareObject(
-                org.morendo.model.Edge.class, org.morendo.model.Edge.class.getSimpleName());
+        this.templates.setAnnounce(false);
+        try {
+            this.declareObject(
+                    org.morendo.model.Graph.class, org.morendo.model.Graph.class.getSimpleName());
+            this.declareObject(
+                    org.morendo.model.Node.class, org.morendo.model.Node.class.getSimpleName());
+            this.declareObject(
+                    org.morendo.model.Edge.class, org.morendo.model.Edge.class.getSimpleName());
+        } finally {
+            this.templates.setAnnounce(true);
+        }
     }
 
     // ----- methods for clearing rules and facts ----- //
@@ -257,10 +271,15 @@ public class Rete implements PropertyChangeListener, CompilerListener {
             }
         }
         for (String mod : modNames) workingMem.removeModule(mod);
+        for (Module mod : this.workingMem.getModules()) {
+            for (Deffacts dfs : new ArrayList<>(mod.getAllDeffacts())) {
+                mod.removeDeffacts(dfs.getName());
+            }
+        }
 
         // now we clear all the rules and templates
         this.clearDefclass();
-        ProfileStats.reset();
+        this.profileStats.reset();
         this.lastFactId = 1;
         this.lastNodeId = 1;
         this.clearBuiltInFunctions();
@@ -296,6 +315,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      */
     public void close() {
         this.closed = true;
+        this.output.close(null);
         this.workingMem.clear();
         this.templates.clear();
         this.workingMem.getDeffactMap().clear();
@@ -314,6 +334,46 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         this.rulesFired.put(r, null);
     }
 
+    /** Set by (halt); fire() stops after the current activation and clears it. */
+    private volatile boolean halted = false;
+
+    public void halt() {
+        this.halted = true;
+    }
+
+    public boolean isHalted() {
+        return this.halted;
+    }
+
+    /** Delivers an engine event to every registered listener. */
+    void fireEngineEvent(EngineEvent event) {
+        if (!this.listeners.isEmpty()) {
+            for (EngineEventListener listener : new ArrayList<>(this.listeners)) {
+                listener.eventOccurred(event);
+            }
+        }
+    }
+
+    /** Facts found expired while an assertion was propagating; retracted once it has finished. */
+    private final List<Fact> pendingRetracts = new ArrayList<>();
+
+    void retractLater(Fact fact) {
+        if (!this.pendingRetracts.contains(fact)) {
+            this.pendingRetracts.add(fact);
+        }
+    }
+
+    void flushPendingRetracts() {
+        while (!this.pendingRetracts.isEmpty()) {
+            Fact fact = this.pendingRetracts.remove(0);
+            try {
+                this.retractFact(fact);
+            } catch (RetractException e) {
+                log.debug(e.toString(), e);
+            }
+        }
+    }
+
     /**
      * this is useful for debugging purposes. clips allows the user to fire 1 rule at a time.
      *
@@ -325,10 +385,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         if (this.workingMem.getCurrentFocus().getActivationCount() > 0) {
             Activation actv = null;
             if (this.workingMem.profileFire()) {
-                ProfileStats.startFire();
+                this.profileStats.startFire();
             }
-            while ((actv = this.workingMem.getCurrentFocus().nextActivation(this)) != null
-                    && counter < count) {
+            // test the count first: nextActivation removes the activation it returns
+            while (counter < count
+                    && (actv = this.workingMem.getCurrentFocus().nextActivation(this)) != null) {
                 try {
                     if (this.workingMem.watchRules()) {
                         this.writeMessage("==> fire: " + actv.toPPString() + "\r\n", "t");
@@ -347,7 +408,7 @@ public class Rete implements PropertyChangeListener, CompilerListener {
                 }
             }
             if (this.workingMem.profileFire()) {
-                ProfileStats.endFire();
+                this.profileStats.endFire();
             }
         }
         return counter;
@@ -359,13 +420,21 @@ public class Rete implements PropertyChangeListener, CompilerListener {
      * @return
      */
     public int fire() {
-        if (this.workingMem.getCurrentFocus().getActivationCount() > 0) {
-            // we reset the rules fire count
-            this.firingcount = 0;
-            Activation actv = null;
-            if (this.workingMem.profileFire()) {
-                ProfileStats.startFire();
-            }
+        this.halted = false;
+        this.flushPendingRetracts();
+        if (this.workingMem.getCurrentFocus().getActivationCount() == 0
+                && !this.workingMem.popFocus()) {
+            return 0;
+        }
+        // we reset the rules fire count
+        this.firingcount = 0;
+        Activation actv = null;
+        if (this.workingMem.profileFire()) {
+            this.profileStats.startFire();
+        }
+        // drain the module in focus; when an auto-focus rule pushed a module, fall back to
+        // the previous focus once that module's agenda is empty
+        do {
             while ((actv = this.workingMem.getCurrentFocus().nextActivation(this)) != null) {
                 try {
                     if (this.workingMem.watchRules()) {
@@ -373,22 +442,24 @@ public class Rete implements PropertyChangeListener, CompilerListener {
                     }
                     // we push the rule into the scope
                     this.pushScope(actv.getRule());
+                    this.addRuleFired(actv.getRule());
                     actv.executeActivation(this);
                     actv.clear();
                     this.popScope();
                     this.firingcount++;
-                    this.addRuleFired(actv.getRule());
                 } catch (ExecuteException e) {
                     log.debug(e.toString(), e);
                 }
+                this.flushPendingRetracts();
+                if (this.halted) {
+                    break;
+                }
             }
-            if (this.workingMem.profileFire()) {
-                ProfileStats.endFire();
-            }
-            return this.firingcount;
-        } else {
-            return 0;
+        } while (!this.halted && this.workingMem.popFocus());
+        if (this.workingMem.profileFire()) {
+            this.profileStats.endFire();
         }
+        return this.firingcount;
     }
 
     /**
@@ -403,11 +474,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
             }
             try {
                 this.pushScope(act.getRule());
+                this.addRuleFired(act.getRule());
                 act.executeActivation(this);
                 act.clear();
                 this.popScope();
                 this.firingcount++;
-                this.addRuleFired(act.getRule());
             } catch (ExecuteException e) {
                 log.debug(e.toString(), e);
             }
@@ -770,8 +841,8 @@ public class Rete implements PropertyChangeListener, CompilerListener {
     }
 
     public @Nullable Query getDefquery(String name) {
-        Defquery query = (Defquery) this.queries.get(name);
-        return query == null ? null : query.clone(this);
+        // the query runs on its own network, which is reset before every run
+        return this.queries.get(name);
     }
 
     public @Nullable Query removeDefquery(String name) {
@@ -1111,6 +1182,34 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         return this.output.removePrintWriter(name);
     }
 
+    /**
+     * Opens a file as a named router (the CLIPS open): mode "r" to read, "w" to write, "a" to
+     * append. Output sent to the name goes to the file alone.
+     */
+    public void openRouter(String router, String file, String mode) throws java.io.IOException {
+        this.output.open(router, file, mode);
+    }
+
+    /** Registers a writer as a named router; output sent to the name goes to it alone. */
+    public void openRouter(String router, Writer writer) {
+        this.output.open(router, writer);
+    }
+
+    /** Closes one router, or all of them when the name is null. */
+    public boolean closeRouter(@Nullable String router) {
+        return this.output.close(router);
+    }
+
+    /** The next line from a reader router, or from the terminal for "t"; null at the end. */
+    public @Nullable String readLine(String router) {
+        return this.output.readLine(router);
+    }
+
+    /** Where reading from "t" gets its lines; the interactive shell installs itself here. */
+    public void setInputSupplier(java.util.function.@Nullable Supplier<String> supplier) {
+        this.output.setInputSupplier(supplier);
+    }
+
     // ----- method for writing messages out ----- //
     /**
      * The method is called by classes to write watch, profiling and other messages to the output
@@ -1276,11 +1375,53 @@ public class Rete implements PropertyChangeListener, CompilerListener {
 
     // -------------- method for reseting the rule engine ----------------- //
 
-    /** Method will call resetObjects first, followed by resetFacts. */
+    /**
+     * The CLIPS reset: retracts every fact, asserts the initial fact again, then the facts of every
+     * deffacts of every module in definition order, and finally re-asserts the Java objects that
+     * were asserted. Fact numbering restarts at 1 when no objects are asserted.
+     */
     public void resetAll() {
-        ProfileStats.reset();
+        this.profileStats.reset();
+        try {
+            for (Fact fact : new ArrayList<>(this.workingMem.getDeffacts())) {
+                this.workingMem.retractFact(fact);
+            }
+        } catch (RetractException e) {
+            log.debug(e.toString(), e);
+        }
+        if (this.workingMem.getStaticFacts().isEmpty()
+                && this.workingMem.getDynamicFacts().isEmpty()) {
+            this.lastFactId = 1;
+        }
+        assertInitialFact();
+        try {
+            assertDeffacts();
+        } catch (AssertException e) {
+            this.writeMessage(e.getMessage() + Constants.LINEBREAK, Constants.DEFAULT_OUTPUT);
+        }
         resetObjects();
-        resetFacts();
+    }
+
+    /** Asserts the facts of every deffacts, module by module, and returns how many. */
+    public int assertDeffacts() throws AssertException {
+        int count = 0;
+        for (Module mod : this.workingMem.getModules()) {
+            for (Deffacts dfs : mod.getAllDeffacts()) {
+                count += dfs.assertFacts(this);
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Puts a rule back on the agenda for every match that already fired (the CLIPS refresh) and
+     * returns the number of activations added; rules without an agenda answer 0.
+     */
+    public int refreshRule(Rule rule) {
+        if (rule.getTerminalNode() instanceof TerminalNode2 tnode) {
+            return tnode.refresh(this, this.workingMem);
+        }
+        return 0;
     }
 
     /** Method will retract the objects and re-assert them. It does not reset the deffacts. */
@@ -1394,6 +1535,11 @@ public class Rete implements PropertyChangeListener, CompilerListener {
         return this.graphQueryCompiler;
     }
 
+    /** The profiling counters of this engine alone. */
+    public ProfileStats getProfileStats() {
+        return this.profileStats;
+    }
+
     public WorkingMemory getWorkingMemory() {
         return this.workingMem;
     }
@@ -1419,16 +1565,19 @@ public class Rete implements PropertyChangeListener, CompilerListener {
     }
 
     /// Map methods
+    // The node memories are keyed by facts and indexes whose hash codes are identity based,
+    // so the maps keep insertion order: iteration, and with it the order in which matches
+    // reach the agenda, is then the same from one run to the next.
     public <K, V> Map<K, V> newMap() {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 
     public <K, V> Map<K, V> newLocalMap() {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 
     public <K, V> Map<K, V> newAlphaMemoryMap(String name) {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 
     public <K, V> Map<K, V> newLinkedHashmap(String name) {
@@ -1436,15 +1585,15 @@ public class Rete implements PropertyChangeListener, CompilerListener {
     }
 
     public <K, V> Map<K, V> newBetaMemoryMap(String name) {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 
     public <K, V> Map<K, V> newTerminalMap() {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 
     public <K, V> Map<K, V> newClusterableMap(String name) {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 
     /**

@@ -335,9 +335,12 @@ public class Deftemplate implements Template, Serializable {
                         if (s.value == null) {
                             values[idx].value = Constants.NIL_SYMBOL;
                         } else if (values[idx].getValueType() == ValueType.STRING
-                                && !(s.value instanceof BoundParam)) {
+                                && !(s.value instanceof BoundParam)
+                                && !(s.value instanceof FunctionParam2)) {
                             values[idx].value = s.value.toString();
-                        } else if (s.value instanceof BoundParam) {
+                        } else if (s.value instanceof BoundParam
+                                || s.value instanceof FunctionParam2) {
+                            // a variable or a nested call: resolved when the fact is asserted
                             values[idx].value = s.value;
                             bslots.add((Slot) s.clone());
                             hasbinding = true;

@@ -71,7 +71,7 @@ public class ClipsInitialData implements InitialData {
             LoadFactsFunction load =
                     (LoadFactsFunction) engine.findFunction(LoadFactsFunction.LOAD);
             Parameter[] parameters = new Parameter[1];
-            parameters[0] = new ValueParam(ValueType.STRING, cacheFile);
+            parameters[0] = new ValueParam(ValueType.STRING, cacheFile != null ? cacheFile : url);
             load.executeFunction(engine, parameters);
         } catch (Exception e) {
             loaded = false;

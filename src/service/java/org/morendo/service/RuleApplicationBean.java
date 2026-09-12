@@ -15,7 +15,9 @@ public class RuleApplicationBean implements Configuration {
     private int initialPool = 1;
     private int maxPool = 10;
     private int minPool = 1;
+    private long checkoutTimeout = 5000;
     private String name;
+    private String version;
     private List<ObjectModel> models;
     private List<FunctionPackage> functionGroups = new ArrayList<>();
     private List<ClipsRuleset> rulesets = new ArrayList<>();
@@ -31,6 +33,14 @@ public class RuleApplicationBean implements Configuration {
 
     public void setInitialPool(int initialPool) {
         this.initialPool = initialPool;
+    }
+
+    public long getCheckoutTimeout() {
+        return checkoutTimeout;
+    }
+
+    public void setCheckoutTimeout(long checkoutTimeout) {
+        this.checkoutTimeout = checkoutTimeout;
     }
 
     public int getMaxPool() {
@@ -51,6 +61,14 @@ public class RuleApplicationBean implements Configuration {
 
     public String getName() {
         return name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public void setName(String name) {

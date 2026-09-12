@@ -30,7 +30,6 @@ import org.morendo.rete.query.QueryMultipleNeqJoin;
 import org.morendo.rete.query.QueryOnlyJoin;
 import org.morendo.rete.query.QueryOnlyNeqJoin;
 import org.morendo.rete.strategies.Strategies;
-import org.morendo.rete.util.ProfileStats;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
@@ -91,7 +90,7 @@ public class DefaultWM implements WorkingMemory {
 
     protected Map<String, Cube> cubes = null;
     protected HashMap<Object, Object> contexts = new HashMap<>();
-    protected ArrayList<?> focusStack = new ArrayList<>();
+    protected ArrayList<Module> focusStack = new ArrayList<>();
     private Module main = null;
     private Module currentModule = null;
     private Strategy theStrat = null;
@@ -137,8 +136,9 @@ public class DefaultWM implements WorkingMemory {
         Module mod = findModule(name);
         if (mod == null) {
             mod = new Defmodule(name, engine);
+            // a new module orders its agenda the way the engine currently does
+            mod.setStrategy(this.theStrat);
             this.modules.put(mod.getModuleName(), mod);
-            this.setCurrentModule(mod);
         }
         return mod;
     }
@@ -185,6 +185,9 @@ public class DefaultWM implements WorkingMemory {
                 }
                 this.root.assertObject(f, engine, this);
             }
+            engine.fireEngineEvent(
+                    new EngineEvent(this, EngineEvent.Kind.ASSERT, null, new Fact[] {f}));
+            engine.flushPendingRetracts();
         } else {
             f.resetID((Fact) this.deffactMap.get(fact.equalityIndex()));
         }
@@ -673,32 +676,19 @@ public class DefaultWM implements WorkingMemory {
     }
 
     public Fact getFactById(long id) {
-        Fact df = null;
-        Iterator<?> itr = this.getDeffactMap().values().iterator();
-        while (itr.hasNext()) {
-            df = (Deffact) itr.next();
-            if (df.getFactId() == id) {
-                return df;
+        for (Object fact : this.getDeffactMap().values()) {
+            if (((Fact) fact).getFactId() == id) {
+                return (Fact) fact;
             }
         }
-        // now search the object facts
-        if (df == null) {
-            // check dynamic facts
-            Iterator<?> itr2 = this.getDynamicFacts().values().iterator();
-            while (itr2.hasNext()) {
-                df = (Fact) itr2.next();
-                if (df.getFactId() == id) {
-                    return df;
-                }
+        for (Object fact : this.getDynamicFacts().values()) {
+            if (((Fact) fact).getFactId() == id) {
+                return (Fact) fact;
             }
-            if (df == null) {
-                itr2 = this.getStaticFacts().values().iterator();
-                while (itr2.hasNext()) {
-                    df = (Fact) itr2.next();
-                    if (df.getFactId() == id) {
-                        return df;
-                    }
-                }
+        }
+        for (Object fact : this.getStaticFacts().values()) {
+            if (((Fact) fact).getFactId() == id) {
+                return (Fact) fact;
             }
         }
         return null;
@@ -833,6 +823,8 @@ public class DefaultWM implements WorkingMemory {
             }
             this.root.retractObject(fact, engine, this);
         }
+        engine.fireEngineEvent(
+                new EngineEvent(this, EngineEvent.Kind.RETRACT, null, new Fact[] {fact}));
     }
 
     /**
@@ -870,6 +862,29 @@ public class DefaultWM implements WorkingMemory {
         this.currentModule = mod;
     }
 
+    public void pushFocus(Module mod) {
+        if (mod != null && mod != this.currentModule) {
+            this.focusStack.add(this.currentModule);
+            this.currentModule = mod;
+        }
+    }
+
+    public void clearQueryMemories(java.util.Collection<?> nodes) {
+        // query alpha nodes keep no memory; only the joins do, in the two query maps
+        for (Object node : nodes) {
+            this.queryLeftMemories.remove(node);
+            this.queryRightMemories.remove(node);
+        }
+    }
+
+    public boolean popFocus() {
+        if (this.focusStack.isEmpty()) {
+            return false;
+        }
+        this.currentModule = this.focusStack.remove(this.focusStack.size() - 1);
+        return true;
+    }
+
     public void setProfileAssert(boolean profileAssert) {
         this.profileAssert = profileAssert;
     }
@@ -902,9 +917,9 @@ public class DefaultWM implements WorkingMemory {
     /// ----- helper methods that are not defined in WorkingMemory interface ----- ///
 
     protected void assertFactWProfile(Fact fact) throws AssertException {
-        ProfileStats.startAssert();
+        engine.getProfileStats().startAssert();
         this.root.assertObject(fact, engine, this);
-        ProfileStats.endAssert();
+        engine.getProfileStats().endAssert();
     }
 
     public boolean containsFact(Fact fact) {
@@ -916,8 +931,8 @@ public class DefaultWM implements WorkingMemory {
      * @throws RetractException
      */
     protected void retractFactWProfile(Fact fact) throws RetractException {
-        ProfileStats.startRetract();
+        engine.getProfileStats().startRetract();
         this.root.retractObject(fact, engine, this);
-        ProfileStats.endRetract();
+        engine.getProfileStats().endRetract();
     }
 }

@@ -72,6 +72,11 @@ public class TimeFunctions implements FunctionGroup {
         funcs.add(eqyr);
         MillisecondTime mstime = new MillisecondTime();
         engine.declareFunction(mstime);
+        try {
+            engine.declareFunction("time", mstime);
+        } catch (org.morendo.rete.exception.FunctionException e) {
+            throw new IllegalStateException(e);
+        }
         funcs.add(mstime);
         NowFunction now = new NowFunction();
         engine.declareFunction(now);

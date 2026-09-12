@@ -82,7 +82,7 @@ public class TokenizeFunction implements Function {
             StringBuilder buf = new StringBuilder();
             return buf.toString();
         } else {
-            return "(stop-word <string>)";
+            return "(tokenize <string>)";
         }
     }
 }

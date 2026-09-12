@@ -22,13 +22,9 @@ import org.morendo.rete.Rete;
 import org.morendo.rete.WorkingMemory;
 import org.morendo.rete.exception.AssertException;
 import org.morendo.rete.query.QueryBaseAlpha;
-import org.morendo.rete.query.QueryBaseAlphaCondition;
 import org.morendo.rete.query.QueryBaseJoin;
-import org.morendo.rete.query.QueryFuncAlphaNode;
-import org.morendo.rete.query.QueryParameterNode;
 import org.morendo.rete.query.QueryResultNode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,17 +75,13 @@ public class GraphQuery extends Defquery {
         if (watch) {
             startTime = System.currentTimeMillis();
         }
+        // a query runs on its own network every time: start from empty memories
+        this.queryRoot.clearMemories(memory);
+        if (this.resultNode != null) {
+            this.resultNode.clear();
+        }
         try {
-            ArrayList<QueryBaseAlphaCondition> params =
-                    new ArrayList<>(this.queryParameterNodeMap.values());
-            for (int i = 0; i < parameters.length; i++) {
-                Object node = params.get(i);
-                if (node instanceof QueryParameterNode pnode) {
-                    pnode.setQueryParameterValue(parameters[i].getValue());
-                } else if (node instanceof QueryFuncAlphaNode pnode) {
-                    pnode.setQueryParameterValue(parameters[i].getValue());
-                }
-            }
+            setParameterValues(parameters);
             // first assert the facts
             for (int i = 0; i < this.graphData.length; i++) {
                 Fact f = this.graphData[i];

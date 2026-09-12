@@ -36,8 +36,9 @@ public final class ShellBoundParam extends AbstractParam {
         super();
     }
 
+    /** Sets the variable name; a leading {@code ?} is dropped, as {@link BoundParam} does. */
     public void setDefglobalName(String name) {
-        this.globalVarName = name;
+        this.globalVarName = name.startsWith("?") ? name.substring(1) : name;
     }
 
     public String getDefglobalName() {
@@ -54,7 +55,7 @@ public final class ShellBoundParam extends AbstractParam {
      * @param engine
      */
     public void resolveBinding(Rete engine) {
-        this.value = engine.getDefglobalValue(this.globalVarName);
+        this.value = engine.getBinding(this.globalVarName);
     }
 
     /** The method returns the bound object */
@@ -64,7 +65,7 @@ public final class ShellBoundParam extends AbstractParam {
 
     /** the class will resolve the variable with the engine */
     public Object getValue(Rete engine, ValueType valueType) {
-        return this.value = engine.getDefglobalValue(this.globalVarName);
+        return this.value = engine.getBinding(this.globalVarName);
     }
 
     /** if the value was null, the method returns a message "defglobal not found". */
@@ -72,11 +73,13 @@ public final class ShellBoundParam extends AbstractParam {
         if (getValue() != null) {
             if (getValue() instanceof String) {
                 return (String) getValue();
+            } else if (getValue() instanceof Object[] list) {
+                return java.util.Arrays.deepToString(list);
             } else {
                 return getValue().toString();
             }
         } else {
-            return "defglobal not found";
+            return "variable not bound";
         }
     }
 

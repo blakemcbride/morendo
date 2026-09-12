@@ -20,6 +20,7 @@ import org.morendo.rete.BoundParam;
 import org.morendo.rete.DefaultReturnValue;
 import org.morendo.rete.DefaultReturnVector;
 import org.morendo.rete.Function;
+import org.morendo.rete.FunctionParam2;
 import org.morendo.rete.Parameter;
 import org.morendo.rete.Rete;
 import org.morendo.rete.ReturnVector;
@@ -68,16 +69,27 @@ public class InterpretedFunction implements Function, Scope {
         if (params.length == this.inputParams.length) {
             for (int idx = 0; idx < this.inputParams.length; idx++) {
                 BoundParam bp = (BoundParam) this.inputParams[idx];
-                this.bindings.put(bp.getVariableName(), params[idx].getValue());
+                // the argument's value, evaluated in the caller's scope: a nested call yields
+                // its result, a variable its binding, a literal itself
+                this.bindings.put(
+                        bp.getVariableName(), params[idx].getValue(engine, ValueType.OBJECT));
             }
             engine.pushScope(this);
-            for (int idx = 0; idx < functionParams.length; idx++) {
-                ret =
-                        (DefaultReturnVector)
-                                this.internalFunction[idx].executeFunction(
-                                        engine, this.functionParams[idx]);
+            try {
+                for (int idx = 0; idx < functionParams.length; idx++) {
+                    prepare(engine, this.functionParams[idx]);
+                    ret =
+                            (DefaultReturnVector)
+                                    this.internalFunction[idx].executeFunction(
+                                            engine, this.functionParams[idx]);
+                }
+            } catch (org.morendo.rete.functions.control.ControlFlow flow) {
+                // (return <value>) leaves the body with the value; (break) leaves it with nothing
+                ret = new DefaultReturnVector();
+                ret.addReturnValue(new DefaultReturnValue(ValueType.OBJECT, flow.getValue()));
+            } finally {
+                engine.popScope();
             }
-            engine.popScope();
             return ret;
         } else {
             DefaultReturnValue rv = new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE);
@@ -86,6 +98,20 @@ public class InterpretedFunction implements Function, Scope {
                     new DefaultReturnValue(ValueType.STRING, "incorrect number of parameters");
             ret.addReturnValue(rv2);
             return ret;
+        }
+    }
+
+    /** Resolves the variables of a body statement against this function's scope. */
+    private static void prepare(Rete engine, Parameter[] params) {
+        if (params == null) {
+            return;
+        }
+        for (Parameter param : params) {
+            if (param instanceof BoundParam bp) {
+                bp.resolveBinding(engine);
+            } else if (param instanceof FunctionParam2 call) {
+                call.setEngine(engine);
+            }
         }
     }
 

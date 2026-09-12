@@ -23,7 +23,6 @@ import org.morendo.rete.Parameter;
 import org.morendo.rete.Rete;
 import org.morendo.rete.ReturnVector;
 import org.morendo.rete.ValueType;
-import org.morendo.rete.util.ProfileStats;
 
 /**
  * @author Peter Lin
@@ -44,23 +43,34 @@ public class PrintProfileFunction implements Function {
     }
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-        engine.writeMessage("fire ET=" + ProfileStats.fireTime + " ms" + Constants.LINEBREAK, "t");
         engine.writeMessage(
-                "assert ET=" + ProfileStats.assertTime + " ms" + Constants.LINEBREAK, "t");
+                "fire ET=" + engine.getProfileStats().fireTime + " ms" + Constants.LINEBREAK, "t");
         engine.writeMessage(
-                "retract ET=" + ProfileStats.retractTime + " ms" + Constants.LINEBREAK, "t");
-        engine.writeMessage(
-                "add Activation ET=" + ProfileStats.addActivation + " ms" + Constants.LINEBREAK,
+                "assert ET=" + engine.getProfileStats().assertTime + " ms" + Constants.LINEBREAK,
                 "t");
         engine.writeMessage(
-                "remove Activation ET=" + ProfileStats.rmActivation + " ms" + Constants.LINEBREAK,
+                "retract ET=" + engine.getProfileStats().retractTime + " ms" + Constants.LINEBREAK,
                 "t");
-        engine.writeMessage("Activation added=" + ProfileStats.addcount + Constants.LINEBREAK, "t");
         engine.writeMessage(
-                "Activation removed=" + ProfileStats.rmcount + Constants.LINEBREAK, "t");
+                "add Activation ET="
+                        + engine.getProfileStats().addActivation
+                        + " ms"
+                        + Constants.LINEBREAK,
+                "t");
+        engine.writeMessage(
+                "remove Activation ET="
+                        + engine.getProfileStats().rmActivation
+                        + " ms"
+                        + Constants.LINEBREAK,
+                "t");
+        engine.writeMessage(
+                "Activation added=" + engine.getProfileStats().addcount + Constants.LINEBREAK, "t");
+        engine.writeMessage(
+                "Activation removed=" + engine.getProfileStats().rmcount + Constants.LINEBREAK,
+                "t");
         engine.writeMessage(
                 "Average cube query="
-                        + ProfileStats.averageCubeQueryTime
+                        + engine.getProfileStats().averageCubeQueryTime
                         + " ms"
                         + Constants.LINEBREAK,
                 "t");

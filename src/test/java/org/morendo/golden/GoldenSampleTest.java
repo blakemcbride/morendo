@@ -90,6 +90,25 @@ public class GoldenSampleTest {
         list.add(files("graphquery", SCENARIO_DIR.resolve("graphquery.clp").toString()));
         list.add(files("molap", SCENARIO_DIR.resolve("molap.clp").toString()));
         list.add(files("manners16", SCENARIO_DIR.resolve("manners16.clp").toString()));
+        for (String name :
+                new String[] {
+                    "slot_calls",
+                    "loops",
+                    "deffunction",
+                    "halt",
+                    "deffacts",
+                    "fact_access",
+                    "agenda",
+                    "strings",
+                    "routers",
+                    "types",
+                    "lists",
+                    "or_ce",
+                    "forall",
+                    "return_value"
+                }) {
+            list.add(files(name, SCENARIO_DIR.resolve(name + ".clp").toString()));
+        }
         list.add(
                 new Scenario(
                         "ruleset_sample1",

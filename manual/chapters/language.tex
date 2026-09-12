@@ -1,0 +1,805 @@
+\chapter{The Rule Language}
+\label{ch:language}
+
+This chapter describes the CLIPS dialect \Morendo\ accepts, construct by
+construct. It is complete for the core language; the extensions (Java
+objects, rule properties, queries, cubes and temporal facts) each have a
+chapter of their own in Part~II, and Appendix~\ref{app:grammar}
+summarizes the grammar formally.
+
+\section{Lexical conventions}
+
+\begin{itemize}
+\item \textbf{Comments} start with two semicolons and run to the end of the
+  line: \fn{;; like this}. A single \fn{;} is a token in this grammar and
+  causes a syntax error.
+\item \textbf{Numbers} are integers (\fn{42}, \fn{-7}) or floating point
+  (\fn{3.14}, \fn{1e10}, \fn{.5}). Integers are exact; arithmetic returns
+  \fn{BigDecimal} values, printed without a trailing \fn{.0} when integral.
+\item \textbf{Strings} are enclosed in double quotes, or in single quotes.
+  The only escapes are \fn{\textbackslash\textbackslash} and an escaped
+  quote; \fn{\textbackslash n} is a lexical error.
+\item \textbf{Symbols} are bare words: \fn{person}, \fn{first-name},
+  \fn{org.example.Order}, \fn{MAIN::person}. A symbol may contain letters,
+  digits and \fn{\_ : - \$ . @ / \textasciitilde}.
+\item \textbf{Variables} are \fn{?name}: a letter or digit, then letters,
+  digits, hyphens and underscores (\fn{?x}, \fn{?first-name},
+  \fn{?e-index}). Global variables are \fn{?*name*}; multifield
+  variables are \fn{\$?name}.
+\item \textbf{Booleans} are \fn{TRUE}/\fn{FALSE} or \fn{true}/\fn{false};
+  the null value is \fn{nil} (lower case).
+\item \textbf{Reserved words} include the construct names and the words
+  used inside them (\fn{slot}, \fn{declare}, \fn{salience}, \fn{not},
+  \fn{exists}, \fn{test}, \fn{only}, \fn{multiple}, \fn{temporal},
+  \fn{cubequery}, \fn{type}, \fn{default}, the type names, \fn{eq},
+  \fn{and}, \fn{or}); they cannot name a template, slot or rule.
+\end{itemize}
+
+\section{Templates}
+\label{sec:templates}
+
+\begin{lstlisting}
+(deftemplate <name>
+  (slot <name> [(type <TYPE>)] [(default <literal>)])
+  (multislot <name>)
+  ...)
+\end{lstlisting}
+
+A template needs at least one slot. \fn{type} is one of \fn{INTEGER},
+\fn{SHORT}, \fn{LONG}, \fn{FLOAT}, \fn{DOUBLE}, \fn{STRING}, \fn{BOOLEAN},
+\fn{symbol} or \fn{DATE}; any other word means an untyped \fn{OBJECT}
+slot, which is also what an untyped slot is. The type is used when
+comparing values (Section~\ref{sec:comparison}) and when a slot holds a
+time (Chapter~\ref{ch:temporal}). \fn{default} takes a number or a string
+and must come after \fn{type}. A \fn{multislot} holds a list of values and
+takes neither type nor default.
+
+\begin{lstlisting}
+(deftemplate order
+  (slot id (type INTEGER))
+  (slot customer (type STRING))
+  (slot total (type DOUBLE) (default 0.0))
+  (multislot items))
+\end{lstlisting}
+
+A template name may be qualified with a module, \fn{(deftemplate
+ACCT::order ...)}; see Section~\ref{sec:modules} before relying on it.
+\fn{(undeftemplate name)} removes a template, \fn{(templates)} lists them
+and \fn{(ppdeftemplate name)} prints one. There is no template
+inheritance in the language; Java classes declared as templates can name
+a parent (Chapter~\ref{ch:java-objects}).
+
+\section{Facts}
+\label{sec:facts}
+
+\begin{lstlisting}
+(assert (<template> (<slot> <value>)+))
+(retract ?<fact> | <id>)
+(modify ?<fact> (<slot> <value>)+)
+(duplicate ?<fact> (<slot> <value>)+)
+\end{lstlisting}
+
+\fn{assert} creates a fact and returns its id; at least one slot must be
+given, and slots left out take their default. Asserting a fact equal in
+every slot to one already present does nothing. \fn{retract} takes a fact
+bound with \fn{?f <- (...)} in a rule, a variable bound to the result of
+\fn{assert}, or a literal id. \fn{modify} retracts the fact and asserts
+the changed one under the same id, so every rule that depends on it is
+re-evaluated; \fn{duplicate} asserts a changed copy and leaves the
+original. \fn{(facts)} lists working memory, \fn{(fact-count)} counts it,
+\fn{(fact-id n)} prints one fact, and \fn{(clear)} removes everything,
+rules and templates included.
+
+A slot value is a literal, a variable or a function call in parentheses,
+evaluated when the fact is built; a multislot takes several values in a
+row, or one variable or call that yields a list:
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate item (slot name) (slot price) (slot total))
+true
+Morendo> (bind ?f (assert (item (name (str-cat "part-" 7)) (price (* 2 3)) (total 0))))
+true
+Morendo> (modify ?f (total (* 6 4)))
+true
+Morendo> (facts)
+f-1 (_initialFact)
+f-2 (item (name "part-7") (price 6) (total 24) )
+for a total of 2
+\end{lstlisting}
+
+Files of facts, one \fn{(template (slot value)...)} form per fact and
+no \fn{assert} around them, are loaded with \fn{(load-facts file)};
+\fn{load-stream} does the same one fact at a time, which matters only for
+very large files. \file{samples/defquery/log\_data.dat} and
+\file{benchmark/manners/16guest.dat} are examples.
+
+There are no ordered facts: every fact has a template.
+
+\subsection{Reading a bound fact}
+\label{sec:fact-access}
+
+A variable bound to a fact, by \fn{?f <- (...)} in a rule or by binding
+the id \fn{assert} returned, can be examined with four functions:
+\fn{fact-slot-value} reads a slot, \fn{fact-relation} gives the
+template name, \fn{fact-index} the id, and \fn{fact-existp} tells
+whether the fact is still in working memory. Each also accepts a
+literal id. They work on the shadow facts of Java objects as well.
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate person (slot name) (slot age))
+true
+Morendo> (bind ?f (assert (person (name "ann") (age 30))))
+true
+Morendo> (fact-slot-value ?f age)
+30
+Morendo> (fact-relation ?f)
+person
+Morendo> (fact-index ?f)
+2
+Morendo> (fact-existp ?f)
+true
+Morendo> (defrule birthday ?p <- (person (name ?n))
+  => (printout t ?n " turns " (+ (fact-slot-value ?p age) 1) crlf) (retract ?p))
+true
+Morendo> (fire)
+ann turns 31
+1
+Morendo> (fact-existp 2)
+false
+\end{lstlisting}
+
+\section{Initial facts}
+\label{sec:deffacts}
+
+\begin{lstlisting}
+(deffacts <name> ["comment"]
+  (<template> (<slot> <value>)+)
+  ...)
+(reset)
+\end{lstlisting}
+
+A \fn{deffacts} names a list of facts that \fn{(reset)} asserts. Defining
+it asserts nothing; \fn{reset} retracts every fact, asserts the initial
+fact again, then the facts of every \fn{deffacts} in the order they were
+defined, module by module, and finally re-asserts the Java objects that
+were asserted (Chapter~\ref{ch:java-objects}). Fact numbering restarts
+at~1 when no objects are asserted. Every rule matches the new facts
+afresh, including rules without a left-hand side, so a rule file that
+ends with \fn{(reset)} and \fn{(fire)} runs the same way each time it is
+loaded. Slot values may be literals, global variables or calls, evaluated
+at each reset.
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate person (slot name) (slot age))
+true
+Morendo> (deffacts people "the starting facts"
+  (person (name "ann") (age 30))
+  (person (name "bob") (age 40)))
+true
+Morendo> (facts)
+f-1 (_initialFact)
+for a total of 1
+Morendo> (reset)
+Morendo> (facts)
+f-1 (_initialFact)
+f-2 (person (name "ann") (age 30) )
+f-3 (person (name "bob") (age 40) )
+for a total of 3
+Morendo> (list-deffacts)
+people "the starting facts"
+for a total of 1
+Morendo> (ppdeffacts people)
+(deffacts people "the starting facts"
+  (person (name "ann") (age 30))
+  (person (name "bob") (age 40)))
+true
+Morendo> (undeffacts people)
+true
+Morendo> (reset)
+Morendo> (facts)
+f-1 (_initialFact)
+for a total of 1
+\end{lstlisting}
+
+\fn{(list-deffacts)} lists them, \fn{(ppdeffacts name)} prints one and
+\fn{(undeffacts name)} removes one; the facts it asserted stay until the
+next \fn{reset}. \fn{(clear)} removes the deffacts along with everything
+else. A \fn{deffacts} belongs to the module in focus when it is defined,
+and \fn{reset} asserts the deffacts of every module.
+
+\section{Rules}
+\label{sec:rules}
+
+\begin{lstlisting}
+(defrule <name> ["comment"]
+  [(declare <property>...)]
+  <conditional element>*
+=>
+  <action>*
+  [<<= <action>*])
+\end{lstlisting}
+
+The comment is a plain string after the name; \fn{(rules)} prints it. The
+\fn{declare} block sets the rule properties described in
+Chapter~\ref{ch:rule-properties}; salience is the one used most:
+
+\begin{lstlisting}
+(defrule urgent (declare (salience 200))
+  (order (total ?t&:(> ?t 10000)))
+=>
+  (printout t "large order" crlf))
+\end{lstlisting}
+
+Everything between the declaration and \fn{=>} is the left-hand side
+(LHS), a sequence of conditional elements that must all hold for the rule
+to activate. Everything after \fn{=>} is the right-hand side (RHS), the
+actions run when the rule fires. The optional \fn{<<=} block introduces
+\emph{modification actions}, described in
+Section~\ref{sec:modification-logic}. A rule may have no conditions (it
+then matches the initial fact and fires once) and may have no actions.
+
+A rule is compiled when it is defined. If a template it names does not
+exist the rule is rejected with a message and \fn{false}; the templates
+must therefore be defined first. \fn{(undefrule name)} removes a rule,
+\fn{(ppdefrule name)} pretty-prints it.
+
+\section{Patterns and constraints}
+\label{sec:patterns}
+
+The basic conditional element is a \emph{pattern}: a template name
+followed by slot constraints. Slots not mentioned are unconstrained.
+
+\begin{lstlisting}
+(order (customer "acme") (total ?t) (id ?id&:(> ?id 1000)))
+\end{lstlisting}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lL}
+\toprule
+\fn{(slot "x")}, \fn{(slot 5)}, \fn{(slot TRUE)} & literal: the slot must equal the value \\
+\fn{(slot nil)}, \fn{(slot \textasciitilde nil)} & the slot is, or is not, null \\
+\fn{(slot ?x)} & variable: binds \fn{?x} on first use; later uses of \fn{?x} in the rule must hold the same value, which is how patterns are joined \\
+\fn{(slot \$?list)} & binds a multislot \\
+\fn{(slot ?x\&:(expr))} & predicate: binds \fn{?x} and requires the expression, which may use any variable bound so far, to be true \\
+\fn{(slot \textasciitilde ?x)} & the slot differs from \fn{?x} (bound earlier) \\
+\fn{(slot \textasciitilde "x")} & the slot differs from the string \\
+\fn{(slot 5\&\textasciitilde 3)}, \fn{(slot ?x\&?y)}, \fn{(slot ?x\&\textasciitilde ?y)} & conjunction of constraints \\
+\fn{(slot "a"|"b")} & disjunction of literals (see below) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+A predicate constraint calls a function; the function may be any
+registered function or one of the operators \fn{+ - * / < > <= >= = ==
+<> != eq neq and or not}. Its arguments may be literals, the slot's
+variable, global variables and nested calls, so
+\fn{(age ?a\&:(and (> ?a 18) (< ?a ?*limit*)))} is a single
+predicate. Only one predicate per slot is allowed; combine tests with
+\fn{and}. Predicates that compare with an earlier binding, such as
+\fn{(age ?b\&:(> ?b ?a))}, are evaluated in the join and are the usual
+way to express relations between two facts. A \fn{test} element (below)
+does the same outside a slot.
+
+The negation \fn{\textasciitilde} works before a literal of any kind, a
+symbol, a variable and \fn{nil}. A chained binding such as
+\fn{(name ?n2\&\textasciitilde ?n1)} binds \fn{?n2} and requires it to
+differ from \fn{?n1}: when \fn{?n1} was bound by an earlier pattern this
+is a join, and when it is another slot of the same pattern it is a
+comparison within the fact.
+
+A return-value constraint \fn{(slot =(expr))} requires the slot to equal
+the value of the call, which may use variables of earlier patterns; it
+is the same as \fn{(slot ?v\&:(eq ?v (expr)))} with a variable the
+engine names for you:
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate a (slot x))
+true
+Morendo> (deftemplate b (slot x))
+true
+Morendo> (defrule next (a (x ?x)) (b (x =(+ ?x 1))) => (printout t "b follows a " ?x crlf))
+true
+Morendo> (assert (a (x 1)))
+2
+Morendo> (assert (b (x 2)))
+3
+Morendo> (assert (b (x 3)))
+4
+Morendo> (fire)
+b follows a 1
+1
+\end{lstlisting}
+
+\section{Conditional elements}
+\label{sec:ces}
+
+\begin{description}[style=nextline]
+\item[\fn{?f <- (pattern)}] Binds the matching fact to \fn{?f} so the
+  actions can \fn{modify} or \fn{retract} it.
+\item[\fn{(not (pattern))}] Holds when no fact matches the pattern. The
+  pattern may use variables bound by earlier elements. \fn{(not (expr))}
+  with a function call instead of a pattern is a negated test: it holds
+  for the facts bound so far when the call is false.
+\item[\fn{(test (expr))}] Holds when the function call is true. Variables
+  used in it must be bound by earlier patterns.
+\item[\fn{(exists (pattern)...)}] Holds when at least one combination of
+  facts matches the inner patterns, and activates the rule once however
+  many there are. \file{samples/exists/} has fifteen variations.
+\item[\fn{(only (pattern)...)}] Holds when \emph{exactly one} combination
+  matches, and binds its variables. In the first sample of
+  \file{samples/only/} the rule fires because Spiderman is the only
+  unoccupied hero; in the second, with two unoccupied heroes, it does
+  not fire.
+\item[\fn{(multiple (pattern)...)}] Holds when \emph{more than one}
+  combination matches.
+\item[\fn{(and ...)}] Groups patterns and tests; every element must hold.
+\item[\fn{(or ...)}] Holds when any alternative holds; see below.
+\item[\fn{(forall (pattern) (pattern)...)}] Holds when every fact matching
+  the first pattern has facts matching the others; see below.
+\item[\fn{(temporal ...)}] A pattern whose facts must be fresh; Chapter~\ref{ch:temporal}.
+\item[\fn{(cubequery ...)}] A slice of a MOLAP cube; Chapter~\ref{ch:molap}.
+\end{description}
+
+\fn{only} and \fn{multiple} are what make the second-order rules of
+\file{samples/only/} possible. \file{only\_4.clp} finds cars that have
+exactly one unresolved violation of a kind, and \file{only\_5.clp} the one
+person older than a given person, using a predicate inside the
+\fn{only} to relate the inner pattern to the outer one:
+
+\begin{lstlisting}
+(defrule oldest_player
+  (person (first ?younger) (age ?age))
+  (only (person (first ?fname) (last ?lname) (age ?age2&:(> ?age2 ?age))))
+=>
+  (printout t ?fname " " ?lname " is the only person older than " ?younger crlf))
+\end{lstlisting}
+
+The order of conditional elements matters for performance: put the most
+selective patterns first, and put \fn{not}, \fn{exists}, \fn{only} and
+\fn{test} after the patterns that bind the variables they use.
+
+\subsection{The or element}
+\label{sec:or-ce}
+
+\fn{(or CE+)} holds when any of its alternatives holds. As in CLIPS, a
+rule with an \fn{or} is compiled into one rule per combination of
+alternatives, named \fn{name\&1}, \fn{name\&2} and so on, sharing the
+actions. Each combination activates on its own, so a rule whose
+alternatives both match fires more than once. The expansion is a detail
+of the engine: \fn{(rules)} lists the rule once, marked \fn{(or)},
+\fn{(ppdefrule name)} prints it as written, and \fn{(undefrule name)}
+and \fn{(refresh name)} act on every member; only \fn{(agenda)} and the
+\fn{watch} traces show the member names.
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate visitor (slot name))
+true
+Morendo> (defrule greet (or (person (name ?n)) (visitor (name ?n)))
+  => (printout t "hello " ?n crlf))
+true
+Morendo> (assert (person (name "ann") (age 30)))
+2
+Morendo> (assert (visitor (name "vic")))
+3
+Morendo> (agenda)
+100 greet&2: f-3
+100 greet&1: f-2
+for a total of 2
+Morendo> (fire)
+hello vic
+hello ann
+2
+Morendo> (rules)
+greet (or) "" salience:100 version: no-agenda:false temporal-activation:false cost-value:0
+for a total of 1
+\end{lstlisting}
+
+An \fn{or} may appear at the top level of the conditions or inside a
+top-level \fn{and}, and an alternative may itself hold an \fn{and} or
+another \fn{or}. A variable must be bound in every alternative if the
+rest of the rule uses it.
+
+\subsection{The forall element}
+\label{sec:forall}
+
+\fn{(forall (A) (B)...)} holds when every fact matching \fn{A} has facts
+matching each \fn{B}; it is true when nothing matches \fn{A}. The
+patterns are plain template patterns, and a variable first bound inside
+the \fn{forall} is local to it. The engine keeps the element current:
+a new \fn{A} without its \fn{B}s takes the rule off the agenda, and
+retracting that fact, or asserting the missing \fn{B}, puts it back.
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate student (slot name))
+true
+Morendo> (deftemplate passed (slot name) (slot course))
+true
+Morendo> (defrule all-passed
+  (forall (student (name ?n)) (passed (name ?n) (course math)))
+=>
+  (printout t "everyone passed math" crlf))
+true
+Morendo> (assert (student (name ann)))
+2
+Morendo> (assert (student (name bob)))
+3
+Morendo> (assert (passed (name ann) (course math)))
+4
+Morendo> (agenda)
+for a total of 0
+Morendo> (assert (passed (name bob) (course math)))
+5
+Morendo> (agenda)
+100 all-passed: f-1
+for a total of 1
+Morendo> (fire)
+everyone passed math
+1
+Morendo> (assert (student (name cy)))
+6
+Morendo> (agenda)
+for a total of 0
+\end{lstlisting}
+
+A \fn{forall} that opens a rule matches against the initial fact, so
+its activation names \fn{f-1}; after other patterns it is evaluated once
+per combination of their facts. \fn{forall} is a rule element only;
+queries do not accept it.
+
+\section{Actions}
+\label{sec:actions}
+
+An action is any function call. The ones used in almost every rule are
+\fn{assert}, \fn{modify}, \fn{retract}, \fn{bind} and \fn{printout};
+the Manners benchmark's second rule shows them together:
+
+\begin{lstlisting}
+(defrule find_seating "find seating for guest"
+   ?context <- (context (name "assign_seats"))
+   (seating (seat2 ?s2) (name2 ?n2) (id ?id) (path_done TRUE))
+   (guest (name ?n2) (sex ?sex1) (hobby ?h1))
+   (guest (name ?g2) (sex ~?sex1) (hobby ?h1))
+   ?count <- (count (c ?cnt))
+   (not (path (id ?id) (name ?g2)))
+   (not (chosen (id ?id) (name ?g2) (hobby ?h1)))
+=>
+   (bind ?s2plus1 (+ ?s2 1))
+   (assert (seating (seat1 ?s2) (name1 ?n2) (name2 ?g2) (seat2 ?s2plus1)
+                    (id ?cnt) (pid ?id) (path_done FALSE)))
+   (assert (path (id ?cnt) (name ?g2) (seat ?s2plus1)))
+   (assert (chosen (id ?id) (name ?g2) (hobby ?h1)))
+   (bind ?cntPlus1 (+ ?cnt 1))
+   (modify ?count (c ?cntPlus1))
+   (modify ?context (name "make_path")))
+\end{lstlisting}
+
+\fn{bind} creates a variable local to the firing. A slot value may be a
+literal, a variable or a nested call such as \fn{(seat2 (+ ?s2 1))}; the
+rule binds \fn{?s2plus1} only because it uses the value twice. A
+multislot takes several values in a row, \fn{(items "a" "b")}, or one
+variable or call yielding a list. \fn{printout} takes an output name, normally
+\fn{t}, then any number of values; \fn{crlf} is a line break. Java programs can direct \fn{t} to any
+\fn{Writer} (Chapter~\ref{ch:embedding}).
+
+\fn{if} chooses between two groups of actions:
+
+\begin{lstlisting}
+(if (> ?total 1000) then
+    (printout t "large" crlf)
+  else
+    (printout t "small" crlf))
+\end{lstlisting}
+
+\fn{(return)} ends the actions of the firing early; the remaining
+actions are skipped and the next activation fires. There is no
+\fn{switch}. Before writing a loop, consider whether a rule that fires
+once per matching fact says the same thing more directly.
+
+\subsection{Loops}
+\label{sec:loops}
+
+\begin{lstlisting}
+(while <test> [do] <action>*)
+(loop-for-count (<var> [<start>] <end>) [do] <action>*)
+(loop-for-count <count> [do] <action>*)
+(foreach <var> <list> <action>*)
+(progn$ (<var> <list>) <action>*)
+(progn <action>*)
+(break)
+(return [<value>])
+\end{lstlisting}
+
+\fn{while} evaluates its test before every turn and runs the actions
+while it is true. \fn{loop-for-count} binds a counter from \fn{start},
+1 by default, to \fn{end} inclusive, or runs \fn{count} times without
+a variable. \fn{foreach} and \fn{progn\$} bind the variable to each
+element of a list in turn, and \fn{?var-index} to its position counted
+from 1. \fn{break} leaves the innermost loop; \fn{return} leaves the
+loop and the function or rule actions around it. The three loops return
+\fn{false}; \fn{progn} and \fn{progn\$} return the value of their last
+action, which is how several actions go where one expression is
+expected, for instance in a branch of \fn{if}. The loops work at the
+shell, in rule actions and in \fn{deffunction} bodies alike:
+
+\begin{lstlisting}[style=shell]
+Morendo> (bind ?i 0)
+true
+Morendo> (while (< ?i 3) do (printout t "i=" ?i crlf) (bind ?i (+ ?i 1)))
+i=0
+i=1
+i=2
+false
+Morendo> (loop-for-count (?k 1 3) (printout t "k=" ?k crlf))
+k=1
+k=2
+k=3
+false
+Morendo> (foreach ?e (create$ a b c) (printout t ?e-index ":" ?e crlf))
+1:a
+2:b
+3:c
+false
+Morendo> (bind ?n 0)
+true
+Morendo> (while TRUE do (bind ?n (+ ?n 1)) (if (>= ?n 10) then (break)))
+false
+Morendo> ?n
+10
+Morendo> (progn$ (?e (create$ x y)) (str-cat ?e-index ":" ?e))
+2:y
+\end{lstlisting}
+
+A loop that never ends can be stopped only by ending the JVM, so for
+shell work the option \fn{-Dmorendo.loop.limit=<n>} caps the turns of
+any loop; a loop that exceeds the cap stops with an error.
+
+\section{Functions and globals}
+\label{sec:deffunction}
+
+\begin{lstlisting}
+(deffunction <name> (<parameter>*) <expression>*)
+(defglobal ?*<name>* [= <value>] ...)
+\end{lstlisting}
+
+A \fn{deffunction} body is any number of expressions, run in order; the
+value of the last one is the function's value, and it may be a bare
+literal or variable. \fn{return} leaves the body early with the value
+given. Variables bound inside the body are local to the call, parameters
+are \fn{?x}, \fn{?*x*} or \fn{\$?x}, and a function may call itself.
+Once defined, the function is called like any other, at the shell or
+from rule actions, and appears in \fn{(list-deffunctions)} under
+\fn{DeffunctionGroup}.
+
+\begin{lstlisting}[style=shell]
+Morendo> (deffunction size (?a ?b)
+  (bind ?c (+ ?a ?b))
+  (if (> ?c 10) then (return "big"))
+  "small")
+true
+Morendo> (size 1 2)
+small
+Morendo> (size 8 9)
+big
+Morendo> (deffunction sum-list (?list)
+  (bind ?sum 0)
+  (foreach ?v ?list (bind ?sum (+ ?sum ?v)))
+  ?sum)
+true
+Morendo> (sum-list (create$ 1 2 3))
+6
+\end{lstlisting}
+
+\fn{defglobal} takes the name and an optional initial value, in the
+CLIPS form with \fn{=} or without it, and may declare several globals
+at once; \fn{(bind ?*name* value)} changes one, and \fn{?*name*} reads
+it anywhere, in rule conditions included:
+
+\begin{lstlisting}[style=shell]
+Morendo> (defglobal ?*limit* = 18)
+18
+Morendo> (defrule adult (person (name ?n) (age ?a&:(>= ?a ?*limit*)))
+  => (printout t ?n " is an adult" crlf))
+true
+Morendo> (assert (person (name "ann") (age 17)))
+2
+Morendo> (assert (person (name "bob") (age 40)))
+3
+Morendo> (fire)
+bob is an adult
+1
+\end{lstlisting}
+
+Functions written in Java implement \fn{org.morendo.rete.Function} and
+are added with \fn{(load-function classname)} or, in groups, with
+\fn{(load-function-group classname)}; Chapter~\ref{ch:embedding} shows
+how to write one.
+
+\section{Input, output and files}
+\label{sec:routers}
+
+Output goes to a \emph{router} named by the first argument of
+\fn{printout} and \fn{format}. \fn{t} is the terminal: the shell, the
+GUI console, or whatever writers a Java program registered
+(Chapter~\ref{ch:embedding}). Any other name is a file opened with
+\fn{open}, which takes the file, the router name and a mode, \fn{"r"} to
+read (the default), \fn{"w"} to write or \fn{"a"} to append. \fn{close}
+closes one router or all of them. \fn{readline} returns the next line of
+a reader router, \fn{read} the first field of the next line, converted
+as the parser would read it; both answer the symbol \fn{EOF} at the end.
+\fn{format} takes a router, a C-style format string and the values, writes
+the text unless the router is \fn{nil}, and returns it either way
+(Appendix~\ref{app:functions} lists the directives).
+
+\begin{lstlisting}[style=shell]
+Morendo> (open "target/notes.txt" out "w")
+true
+Morendo> (printout out "first line" crlf)
+Morendo> (format out "%s has %d items%n" "order" 3)
+order has 3 items
+Morendo> (close out)
+true
+Morendo> (open "target/notes.txt" in)
+true
+Morendo> (readline in)
+first line
+Morendo> (read in)
+order
+Morendo> (readline in)
+EOF
+Morendo> (close in)
+true
+Morendo> (format t "%-8s|%6.2f|%03d%n" "total" 12.5 7)
+total   | 12.50|007
+total   | 12.50|007
+Morendo> (bind ?s (format nil "%s-%d" "id" 42))
+true
+Morendo> ?s
+id-42
+\end{lstlisting}
+
+The shell prints the value of every expression, which is why the
+\fn{format} to \fn{t} appears twice: once as output, once as the string
+it returned. With \fn{t} as the router, \fn{readline} and \fn{read}
+take the next line the user types at the shell, or from standard input
+when no shell is attached, so a rule can ask a question:
+
+\begin{lstlisting}[style=shell]
+Morendo> (bind ?name (readline t))
+Blake
+true
+Morendo> (printout t "hello " ?name crlf)
+hello Blake
+\end{lstlisting}
+
+\section{Comparison of values}
+\label{sec:comparison}
+
+The engine compares slot values by their runtime type. Numbers compare
+numerically: \fn{(eq 1 1.0)} is true, as is \fn{(= 1 1.0)}; the two
+functions are the same, and so are \fn{neq}, \fn{<>} and \fn{!=}.
+Integer values are compared exactly as longs, floating point values as
+doubles. Strings and symbols
+compare by their text, booleans by value, times by their instant
+(Chapter~\ref{ch:temporal}) and anything else with \fn{equals}. A slot
+declared \fn{INTEGER} still holds whatever value is asserted into it;
+the declaration does not convert.
+
+\section{The agenda and strategies}
+\label{sec:agenda}
+
+Activations wait on the agenda of the module in focus. \fn{(fire)}
+repeatedly removes the first activation and runs its rule until the agenda
+is empty; \fn{(fire n)} stops after \fn{n}. Ordering is by salience
+first, then by the \emph{strategy}:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\fn{depth} & the most recent activation first (the default) \\
+\fn{breadth} & the oldest activation first \\
+\fn{recency} & the activation whose facts were asserted most recently first \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\fn{(set-strategy name)} switches and returns the previous name;
+\fn{(get-strategy)} reports it. A class implementing
+\fn{org.morendo.rete.Strategy} can be registered with
+\fn{(defstrategy classname)}. \fn{(lazy-agenda true)} sorts activations
+when they are taken off the agenda rather than when they are added, which
+is faster when many activations are withdrawn before they fire.
+
+\fn{(halt)} in a rule's actions ends the current \fn{fire} as soon as
+those actions finish. The remaining activations stay on the agenda, and
+the next \fn{fire} carries on with them:
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate n (slot v))
+true
+Morendo> (defrule one-at-a-time (n (v ?v)) => (printout t "fired " ?v crlf) (halt))
+true
+Morendo> (assert (n (v 1)))
+2
+Morendo> (assert (n (v 2)))
+3
+Morendo> (fire)
+fired 2
+1
+Morendo> (fire)
+fired 1
+1
+Morendo> (fire)
+0
+\end{lstlisting}
+
+A rule declared \fn{no-agenda} skips the agenda entirely and fires the
+moment it matches (Chapter~\ref{ch:rule-properties}).
+
+\subsection{Looking at the agenda}
+\label{sec:agenda-listing}
+
+\fn{(agenda)} prints the activations of the module in focus in the order
+they will fire, one per line with the salience, the rule and the facts of
+the match; \fn{(agenda name)} does the same for another module. A rule
+fires once per match: after it has fired for a combination of facts it
+stays silent until one of them changes. \fn{(refresh rule)} puts the
+rule back on the agenda for every match that has already fired and
+returns how many it added, which is how a rule is made to run again over
+facts it has seen.
+
+\begin{lstlisting}[style=shell]
+Morendo> (defrule greet (person (name ?n)) => (printout t "hello " ?n crlf))
+true
+Morendo> (defrule low (declare (salience 50)) (person (name ?n)) => (printout t "hi " ?n crlf))
+true
+Morendo> (assert (person (name "ed") (age 1)))
+2
+Morendo> (assert (person (name "flo") (age 2)))
+3
+Morendo> (agenda)
+100 greet: f-3
+100 greet: f-2
+50 low: f-3
+50 low: f-2
+for a total of 4
+Morendo> (fire 1)
+hello flo
+1
+Morendo> (agenda)
+100 greet: f-2
+50 low: f-3
+50 low: f-2
+for a total of 3
+Morendo> (fire)
+hello ed
+hi flo
+hi ed
+3
+Morendo> (refresh greet)
+2
+Morendo> (agenda)
+100 greet: f-3
+100 greet: f-2
+for a total of 2
+\end{lstlisting}
+
+\fn{(reset)} empties the agenda as a side effect of retracting every
+fact, and refills it from the deffacts (Section~\ref{sec:deffacts}).
+
+\section{Modules}
+\label{sec:modules}
+
+\fn{(defmodule name)} creates a module; \fn{MAIN} always exists.
+\fn{(modules)} lists them, \fn{(focus)} and \fn{(get-current-module)}
+name the one in focus, and \fn{(set-focus name)} changes it. Rules,
+templates and deffacts belong to the module in focus when they are
+defined, and \fn{fire} runs the agenda of the module in focus.
+
+Templates are found in the module in focus first, then in \fn{MAIN},
+then in every other module, so a rule may use a template of another
+module by its plain name or as \fn{ACCT::order}; \fn{assert} accepts the
+qualified form as well. \fn{defmodule} makes the new module current, as
+in CLIPS; \fn{(set-focus MAIN)} goes back. A rule declared
+\fn{auto-focus} pulls its module into focus when it activates, and
+\fn{fire} returns to the previous focus when that module's agenda is
+empty (Chapter~\ref{ch:rule-properties}).

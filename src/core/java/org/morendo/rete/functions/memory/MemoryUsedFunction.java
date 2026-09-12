@@ -65,6 +65,6 @@ public class MemoryUsedFunction implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(mem-free)";
+        return "(mem-used)";
     }
 }

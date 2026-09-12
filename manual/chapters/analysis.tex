@@ -1,0 +1,141 @@
+\chapter{Analysing Rules}
+\label{ch:analysis}
+
+RETE trades memory for speed: every partial match a rule can make is kept
+in the network. Two rules that mean the same thing can differ several-fold
+in the memory they use, depending on how their patterns are ordered and
+how many facts each pattern lets through. This chapter describes the tools
+\Morendo\ offers for comparing rules before the data arrives, and for
+measuring the engine once it has.
+
+\section{The topology cost}
+
+\fn{topology-cost} assigns a rule a number that reflects the size of its
+part of the network. The count is a static property of the rule and the
+templates it uses; no facts are needed. It is computed as follows.
+
+\begin{itemize}
+\item Each pattern contributes 1 for its \emph{object type node} plus the
+  cost of that node's successors: 1 for every alpha node and 4 for every
+  join hanging directly off it. A template that many rules test in
+  different ways therefore makes each of those rules look more expensive.
+\item Each alpha node of the rule (a literal or predicate constraint)
+  contributes 1.
+\item Each join contributes 4, and a join on a not-equal binding
+  (\fn{~?x}) contributes 5.
+\end{itemize}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.85\textwidth]{duck_rete_cost_function_1}
+\caption{Two rules over the \fn{duck} template compiled without sharing.
+Each node has cost 1; the join-free rule \fn{middle\_age\_football\_fan}
+costs 9 once its share of the type node's successors is counted.}
+\label{fig:cost1}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.85\textwidth]{duck_rete_sharing_1}
+\caption{The same two rules with alpha-node sharing: \fn{gender is "m"}
+and \fn{age > 50} are tested once for both.}
+\label{fig:sharing1}
+\end{figure}
+
+Figures~\ref{fig:cost1} and \ref{fig:sharing1} (from \file{doc/}) show why
+the number is only relative: the engine shares equal alpha nodes between
+rules, so the node count of a rule depends on what else is loaded. Use the
+cost to compare alternatives for the same rule in the same rule set, not
+as an absolute.
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate person (slot name) (slot age))
+true
+Morendo> (defrule adult (person (name ?n) (age ?a&:(>= ?a 18)))
+  => (printout t ?n crlf))
+true
+Morendo> (defrule pair (person (name ?n) (age ?a))
+  (person (name ?m) (age ?b&:(> ?b ?a)))
+  => (printout t ?m " older than " ?n crlf))
+true
+Morendo> (topology-cost adult)
+Morendo> (topology-cost pair)
+Morendo> (rules)
+adult "" salience:100 version: no-agenda:false temporal-activation:false cost-value:10
+pair "" salience:100 version: no-agenda:false temporal-activation:false cost-value:24
+for a total of 2
+Morendo> (average-cost)
+17
+\end{lstlisting}
+
+\fn{pair} joins the \fn{person} template with itself: two object
+conditions, a join and a predicate that must be evaluated on every
+combination. \fn{adult} tests one alpha constraint. The
+\fn{cost-value} column of \fn{(rules)} and the \fn{;; topology-cost}
+line printed by \fn{ppdefrule} show the last value computed;
+\fn{topology-cost-all} computes it for every rule and
+\fn{average-cost} averages the current module. \fn{topology-cost}
+accepts several rule names at once.
+
+\fn{partial-match-cost} estimates the run-time side: how many partial
+matches a rule will keep, given the number of distinct values each slot
+has. Tell the engine those counts first with
+\fn{(set-distinct-count template slot n)}.
+
+\section{Generating test facts}
+
+\fn{(generate-facts rule)} constructs a set of facts that satisfies a
+rule's patterns, from the literal constraints in the rule and default
+values for the rest; \fn{(test-rule rule)} generates them, asserts them and
+fires, which is a quick way to check that a freshly written rule can
+activate at all.
+
+\section{Profiling the engine}
+
+Profiling counts and times the engine's own operations. Switch it on
+before loading data:
+
+\begin{lstlisting}[style=shell]
+Morendo> (profile all)
+Morendo> (assert (person (name "ann") (age 34)))
+2
+Morendo> (assert (person (name "bob") (age 40)))
+3
+Morendo> (fire)
+bob older than ann
+bob
+ann
+3
+Morendo> (print-profile)
+fire ET=0 ms
+assert ET=6 ms
+retract ET=0 ms
+add Activation ET=0 ms
+remove Activation ET=0 ms
+Activation added=3
+Activation removed=0
+Average cube query=0 ms
+\end{lstlisting}
+
+\fn{profile} and \fn{unprofile} accept \fn{all}, \fn{assert-fact},
+\fn{retract-fact}, \fn{fire}, \fn{add-activation} and
+\fn{remove-activation}, and several may be given at once. Cubes have their
+own profiling functions (Chapter~\ref{ch:molap}). The counters belong to
+the engine: two engines profiling in one JVM keep separate numbers, and
+from Java they are read through \fn{engine.getProfileStats()}.
+\fn{(reset)} and \fn{(clear)} zero them.
+
+\section{Looking inside the network}
+
+\fn{(rule-matches name)} prints, node by node, the facts a rule's alpha
+and join nodes currently hold; \fn{(right-matches)} prints the right-hand
+memories of every join, and \fn{(matches)} every memory in the network.
+These are the tools for answering ``why did this rule not fire'': if a
+fact is missing from an alpha memory it failed a constraint, and if it is
+in both inputs of a join but not in the join's output the bindings did not
+agree.
+
+\fn{(mem-used)}, \fn{(mem-free)} and \fn{(mem-total)} print the JVM's
+memory figures, and \fn{(gc)} asks for a collection; together with
+\fn{(fact-count)} they give a rough memory cost per fact when loading a
+large data set.

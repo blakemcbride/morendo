@@ -1,0 +1,159 @@
+% Morendo User Manual and Tutorial
+% Build with: make            (pdflatex, three passes)
+\documentclass[11pt,letterpaper,openany]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{microtype}
+\DisableLigatures[<,>]{encoding = *, family = tt*}   % keep << and >> literal in monospace
+\usepackage{xcolor}
+\usepackage{graphicx}
+\graphicspath{{../doc/}{figures/}}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{upquote}
+\usepackage{listings}
+\usepackage{framed}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+
+\setlist{nosep}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+
+% ---------------------------------------------------------------- listings
+\definecolor{kw}{rgb}{0.10,0.25,0.60}
+\definecolor{cm}{rgb}{0.35,0.45,0.35}
+\definecolor{st}{rgb}{0.50,0.20,0.10}
+\definecolor{bg}{gray}{0.96}
+
+\lstdefinelanguage{CLIPS}{
+  morekeywords={deftemplate,defrule,defquery,defgraphquery,defcube,deffunction,
+    defglobal,deffacts,defmodule,declare,slot,multislot,type,default,salience,
+    not,exists,test,and,only,multiple,temporal,cubequery,dimension,variables,
+    assert,retract,modify,duplicate,bind,printout,if,then,else,while,loop-for-count,
+    foreach,progn,do,break,return,halt,fire,batch,load-facts,watch,unwatch,facts,rules,exit},
+  sensitive=true,
+  morecomment=[l]{;;},
+  morestring=[b]",
+  alsoletter={-},
+}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{kw}\bfseries,
+  commentstyle=\color{cm}\itshape,
+  stringstyle=\color{st},
+  backgroundcolor=\color{bg},
+  columns=flexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+  framerule=0pt,
+  xleftmargin=0.6em,
+  framexleftmargin=0.6em,
+  aboveskip=0.8em,
+  belowskip=0.8em,
+  tabsize=4,
+  language=CLIPS,
+}
+
+% Transcripts of shell sessions: no keyword colouring.
+\lstdefinestyle{shell}{language={},keywordstyle=,commentstyle=,stringstyle=,
+  identifierstyle=}
+% Java snippets.
+\lstdefinestyle{java}{language=Java,morekeywords={var,record,sealed,permits}}
+
+% ---------------------------------------------------------------- helpers
+\newcommand{\fn}[1]{\texttt{#1}}
+\newcommand{\br}{\discretionary{}{}{}}   % break point without a hyphen
+\newcommand{\file}[1]{\texttt{#1}}
+\newcommand{\Morendo}{Morendo}
+\newcommand{\version}{2.1.0}
+
+\newenvironment{note}
+  {\begin{framed}\noindent\textbf{Note.}\ }
+  {\end{framed}}
+\newenvironment{caution}
+  {\begin{framed}\noindent\textbf{Caution.}\ }
+  {\end{framed}}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+% ---------------------------------------------------------------- document
+\title{\Morendo\ \version\\[0.5em]\large User Manual and Tutorial}
+\author{}
+\date{September 2026}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\chapter*{About this manual}
+\addcontentsline{toc}{chapter}{About this manual}
+
+\Morendo\ is a RETE inference engine written in Java. It reads rules in the
+CLIPS language, matches them against facts and Java objects, and fires the
+rules whose conditions hold. This manual is both a tutorial and a reference
+for version \version.
+
+Part~I is the tutorial: it installs the engine, walks through a first
+session in the interactive shell and then introduces the language one
+construct at a time, the CLIPS constructs and functions \Morendo\ reads
+included. Part~II covers the features \Morendo\ adds to plain CLIPS:
+Java objects as facts, rule properties, queries, MOLAP cubes, temporal
+facts, the \fn{only} and \fn{multiple} conditional elements, and rule
+cost analysis. Part~III describes the shell, the graphical interface and
+how to embed the engine in a Java program, alone or as a pool of engines
+serving many threads. The appendices list every built-in function,
+summarize the grammar and list the differences from CLIPS.
+
+\paragraph{Conventions.} Code, file names and function names are set in
+\fn{monospace}. Shell sessions are shown as they appear on the terminal,
+with the \fn{Morendo>} prompt in front of each input line. Variables in
+CLIPS begin with a question mark, as in \fn{?name}. Comments in rule files
+are introduced by two semicolons, \fn{;;}. File paths are given relative to
+the root of a \Morendo\ checkout or unpacked distribution.
+
+Every example in Part~I and Part~II was run against \Morendo\ \version; the
+transcripts are real output, except that timestamps and profiling times
+vary from run to run. The tutorial's transcripts are one continuous
+session, so the fact ids follow on from one section to the next.
+
+\tableofcontents
+
+\mainmatter
+
+\part{Tutorial}
+\input{chapters/introduction}
+\input{chapters/getting-started}
+\input{chapters/tutorial}
+\input{chapters/language}
+
+\part{Beyond CLIPS}
+\input{chapters/java-objects}
+\input{chapters/rule-properties}
+\input{chapters/queries}
+\input{chapters/molap}
+\input{chapters/temporal}
+\input{chapters/analysis}
+
+\part{Tools and Embedding}
+\input{chapters/shell-gui}
+\input{chapters/embedding}
+
+\appendix
+\part{Reference}
+\input{chapters/functions}
+\input{chapters/grammar}
+\input{chapters/differences}
+
+\end{document}

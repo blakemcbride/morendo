@@ -16,7 +16,7 @@
  */
 package org.morendo.rete;
 
-import org.morendo.rete.util.ProfileStats;
+import org.morendo.rule.Rule;
 
 import java.util.Map;
 
@@ -95,6 +95,18 @@ public class Agenda {
                 }
                 actv.getRule().getModule().addActivation(actv);
             }
+            autoFocus(actv);
+        }
+    }
+
+    /** A rule declared auto-focus brings its module into focus when it activates. */
+    private void autoFocus(Activation actv) {
+        Rule rule = actv.getRule();
+        if (rule.getAutoFocus() && rule.getModule() != null) {
+            WorkingMemory wm = engine.getWorkingMemory();
+            if (wm.getCurrentFocus() != rule.getModule()) {
+                wm.pushFocus(rule.getModule());
+            }
         }
     }
 
@@ -104,9 +116,9 @@ public class Agenda {
      * @param actv
      */
     public void addActivationWProfile(Activation actv) {
-        ProfileStats.startAddActivation();
+        engine.getProfileStats().startAddActivation();
         actv.getRule().getModule().addActivation(actv);
-        ProfileStats.endAddActivation();
+        engine.getProfileStats().endAddActivation();
     }
 
     /**
@@ -131,9 +143,9 @@ public class Agenda {
      * @param actv
      */
     public void removeActivationWProfile(Activation actv) {
-        ProfileStats.startRemoveActivation();
+        engine.getProfileStats().startRemoveActivation();
         actv.getRule().getModule().removeActivation(actv);
-        ProfileStats.endRemoveActivation();
+        engine.getProfileStats().endRemoveActivation();
     }
 
     /** Clear will clear all the modules and remove all activations */

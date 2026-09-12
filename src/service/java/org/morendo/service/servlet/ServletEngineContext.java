@@ -37,6 +37,11 @@ public class ServletEngineContext implements EngineContext {
     private String version = null;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean keepFacts = false;
+
+    /** The highest fact id when the request began; facts above it belong to the request. */
+    private long mark = 0;
+
     private List<Object> objectList = new ArrayList<>();
     private ServletContext servletContext = null;
 
@@ -55,6 +60,9 @@ public class ServletEngineContext implements EngineContext {
         this.servletContext = servletContext;
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
+        }
+        for (Fact fact : engine.getAllFacts()) {
+            this.mark = Math.max(this.mark, fact.getFactId());
         }
     }
 
@@ -100,8 +108,28 @@ public class ServletEngineContext implements EngineContext {
                 servletContext.log("Error closing ServletEngineContext", e);
             }
         }
+        if (!this.keepFacts) {
+            // undo what the request asserted; the application's initial data stays
+            for (Fact fact : new ArrayList<>(this.engine.getAllFacts())) {
+                if (fact.getFactId() > this.mark) {
+                    try {
+                        if (fact.getObjectInstance() != null) {
+                            this.engine.retractObject(fact.getObjectInstance());
+                        } else {
+                            this.engine.retractFact(fact);
+                        }
+                    } catch (Exception e) {
+                        // a fact a rule already retracted
+                    }
+                }
+            }
+        }
         this.ruleService.queueEngine(this.applicationName, this.version, this.engine);
         this.engine = null;
+    }
+
+    public void keepFacts() {
+        this.keepFacts = true;
     }
 
     public void executeRules() {

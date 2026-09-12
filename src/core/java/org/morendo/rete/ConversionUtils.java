@@ -222,7 +222,17 @@ public class ConversionUtils {
      * @return
      */
     public static BaseNode[] remove(BaseNode[] list, Object nobj) {
-        BaseNode[] newlist = new BaseNode[list.length - 1];
+        int found = 0;
+        for (BaseNode node : list) {
+            if (node == nobj) {
+                found++;
+            }
+        }
+        if (found == 0) {
+            // not a member: the list is unchanged
+            return list;
+        }
+        BaseNode[] newlist = new BaseNode[list.length - found];
         int pos = 0;
         for (int idx = 0; idx < list.length; idx++) {
             if (list[idx] != nobj) {

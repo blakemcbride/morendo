@@ -1,0 +1,17 @@
+;; Golden scenario: the or conditional element. A rule with an or group is expanded into one
+;; rule per alternative; rules, ppdefrule and undefrule treat the group as the written rule.
+(deftemplate a (slot x))
+(deftemplate b (slot x))
+(deftemplate c (slot y))
+(defrule either "a or b" (or (a (x ?x)) (b (x ?x))) (c (y ?y)) => (printout t "either " ?x " " ?y crlf))
+(defrule two (or (a (x ?x)) (b (x ?x))) (or (c (y 9)) (c (y 8))) => (printout t "two " ?x crlf))
+(rules)
+(ppdefrule either)
+(assert (a (x 1)))
+(assert (b (x 2)))
+(assert (c (y 9)))
+(agenda)
+(fire)
+(undefrule two)
+(rules)
+(assert (c (y 8)))

@@ -121,6 +121,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
                 compileJoins(query, conds);
                 BaseNode last = query.getLastNode();
                 QueryResultNode resultNode = new QueryResultNode(engine.nextNodeId());
+                resultNode.setQuery(currentQuery);
                 last.addSuccessorNode(resultNode, engine, null);
                 currentQuery.setQueryResultNode(resultNode);
                 engine.declareDefquery(query);
@@ -333,7 +334,7 @@ public class DefaultQueryCompiler implements QueryCompiler {
      */
     public QueryBaseAlpha compileConstraint(
             BoundConstraint cnstr, Template templ, Query query, int position) {
-        QueryBaseAlphaCondition current = new QueryParameterNode(engine.nextNodeId());
+        QueryBaseAlphaCondition current = null;
         if (query.getBinding(cnstr.getVariableName()) == null) {
             // if the HashMap doesn't already contain the binding, we create
             // a new one
@@ -370,12 +371,16 @@ public class DefaultQueryCompiler implements QueryCompiler {
                 ifnode.setOperator(Operator.EQUAL);
             }
             current = ifnode;
-        } else {
-            QueryParameterNode qpn = (QueryParameterNode) current;
+        } else if (((Defquery) query).isQueryParameter(cnstr.getVariableName())) {
+            // a declared parameter: the node filters on the value given to run-query.
+            // Any other variable is a plain binding, resolved by the joins as in a rule.
+            QueryParameterNode qpn = new QueryParameterNode(engine.nextNodeId());
             qpn.setParameterName(cnstr.getVariableName());
-            Slot slot = (Slot) templ.getSlot(cnstr.getName());
+            // a copy: setting the parameter value must not change the template's default
+            Slot slot = (Slot) templ.getSlot(cnstr.getName()).clone();
             qpn.setSlot(slot);
             ((Defquery) query).addQueryParameterNode(qpn);
+            current = qpn;
         }
         return current;
     }
@@ -387,13 +392,46 @@ public class DefaultQueryCompiler implements QueryCompiler {
      * @param position
      * @return
      */
+    /**
+     * True when the predicate refers to a variable that an earlier pattern bound and that is not a
+     * query parameter; such a predicate compares two facts and belongs in the join.
+     */
+    private boolean joinsEarlierPattern(PredicateConstraint cnstr, Query query) {
+        for (Object param : cnstr.getParameters()) {
+            if (param instanceof BoundParam bp) {
+                String var = bp.getVariableName();
+                if (!var.equals(cnstr.getVariableName())
+                        && !((Defquery) query).isQueryParameter(var)
+                        && query.getBinding(var) != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public QueryBaseAlpha compileConstraint(
             PredicateConstraint cnstr, Template templ, Query query, int position) {
         QueryBaseAlphaCondition current = null;
+
+        if (joinsEarlierPattern(cnstr, query)) {
+            // the predicate relates this pattern to an earlier one: it is evaluated by the
+            // join (see getBindings), not by an alpha node
+            Binding bind = new Binding();
+            bind.setVarName(cnstr.getVariableName());
+            bind.setLeftRow(position);
+            bind.setLeftIndex(templ.getSlot(cnstr.getName()).getId());
+            bind.setRowDeclared(position);
+            if (query.getBinding(cnstr.getVariableName()) == null) {
+                query.addBinding(cnstr.getVariableName(), bind);
+            }
+            return null;
+        }
         // Queries are different than rules in that the value will be
         // set when the query is executed.
 
-        if (ConversionUtils.isPredicateOperatorCode(cnstr.getFunctionName())) {
+        if (ConversionUtils.isPredicateOperatorCode(cnstr.getFunctionName())
+                && cnstr.isSimpleOperator()) {
             Operator oprCode = ConversionUtils.getOperatorCode(cnstr.getFunctionName());
             if (cnstr.reverseOperator()) {
                 oprCode = ConversionUtils.getOppositeOperatorCode(oprCode);
@@ -470,15 +508,11 @@ public class DefaultQueryCompiler implements QueryCompiler {
             Template template,
             Query query) {
         for (int px = 0; px < parameters.length; px++) {
-            if (parameters[px] instanceof BoundParam) {
-                BoundParam bp = (BoundParam) parameters[px];
-                bp.setColumn(template.getSlot(constraint.getName()).getId());
-                bp.setRow(0);
-            } else if (parameters[px] instanceof FunctionParam2) {
-                FunctionParam2 fp = (FunctionParam2) parameters[px];
+            if (parameters[px] instanceof FunctionParam2 fp) {
                 fp.configure(engine, query);
             }
         }
+        constraint.bindOwnVariable(parameters, template.getSlot(constraint.getName()).getId());
     }
 
     public void compileJoins(Query query, Condition[] conds) throws AssertException {
@@ -529,10 +563,15 @@ public class DefaultQueryCompiler implements QueryCompiler {
     }
 
     public void attachJoinNode(BaseNode last, QueryBaseJoin join) throws AssertException {
-        if (last instanceof BaseAlpha baseAlphaValue) {
-            (baseAlphaValue).addSuccessorNode(join, engine, null);
-        } else if (last instanceof BaseJoin baseJoinValue) {
-            (baseJoinValue).addSuccessorNode(join, engine, null);
+        // query nodes descend from BaseNode, not from the rule network's BaseAlpha/BaseJoin
+        if (last instanceof org.morendo.rete.query.QueryBaseAlpha queryAlpha) {
+            queryAlpha.addSuccessorNode(join, engine, null);
+        } else if (last instanceof QueryBaseJoin queryJoin) {
+            queryJoin.addSuccessorNode(join, engine, null);
+        } else if (last instanceof BaseAlpha baseAlpha) {
+            baseAlpha.addSuccessorNode(join, engine, null);
+        } else if (last instanceof BaseJoin baseJoin) {
+            baseJoin.addSuccessorNode(join, engine, null);
         }
     }
 

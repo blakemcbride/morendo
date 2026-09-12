@@ -31,6 +31,7 @@
       "minPool": 1,
       "maxPool": 10,
       "initialPool": 1,
+      "checkoutTimeout": 5000,
       "name": "test"
     }
   ],

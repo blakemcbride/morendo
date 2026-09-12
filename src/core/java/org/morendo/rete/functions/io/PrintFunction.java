@@ -80,16 +80,18 @@ public class PrintFunction implements Function {
                         rv.addReturnValue(
                                 new DefaultReturnValue(ValueType.BOOLEAN_OBJECT, Boolean.FALSE));
                     }
-                } else if (params[idx].getValue(engine, ValueType.OBJECT) != null
-                        && params[idx].getValue(engine, ValueType.OBJECT).equals(Constants.CRLF)) {
-                    engine.writeMessage(Constants.LINEBREAK, output);
                 } else {
+                    // evaluate once: a nested call may have side effects
                     Object val = params[idx].getValue(engine, ValueType.OBJECT);
-                    if (val instanceof String string) {
+                    if (val == null) {
+                        engine.writeMessage("nil", output);
+                    } else if (val.equals(Constants.CRLF)) {
+                        engine.writeMessage(Constants.LINEBREAK, output);
+                    } else if (val instanceof String string) {
                         engine.writeMessage(string, output);
                     } else if (val.getClass().isArray()) {
                         Object[] ary = (Object[]) val;
-                        writeArray(ary, engine, output, true);
+                        writeArray(ary, engine, output, false);
                     } else {
                         engine.writeMessage(val.toString(), output);
                     }
@@ -146,24 +148,31 @@ public class PrintFunction implements Function {
         return new Class<?>[] {ValueParam[].class};
     }
 
-    /** Note: need to handle crlf correctly, for now leave it as is. */
+    /** The call as written: strings quoted, crlf and numbers bare, nested calls printed. */
     public String toPPString(Parameter[] params, int indents) {
         if (params != null && params.length > 0) {
             StringBuilder buf = new StringBuilder();
-            buf.append("(print ");
+            buf.append("(printout ");
             buf.append(params[0].getStringValue());
             for (int idx = 1; idx < params.length; idx++) {
-                if (params[idx] instanceof BoundParam) {
-                    BoundParam bp = (BoundParam) params[idx];
-                    buf.append(" ?" + bp.getVariableName());
+                buf.append(' ');
+                if (params[idx] instanceof BoundParam bp) {
+                    buf.append('?').append(bp.getVariableName());
+                } else if (params[idx] instanceof org.morendo.rete.FunctionParam2 fp) {
+                    buf.append(fp.toPPString());
                 } else {
-                    buf.append(" \"" + params[idx].getStringValue() + "\"");
+                    Object value = params[idx].getValue();
+                    if (value instanceof String text && !Constants.CRLF.equals(text)) {
+                        buf.append('"').append(text).append('"');
+                    } else {
+                        buf.append(value);
+                    }
                 }
             }
-            buf.append(" )");
+            buf.append(')');
             return buf.toString();
         } else {
-            return "(print)";
+            return "(printout <router> <value>+)";
         }
     }
 }

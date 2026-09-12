@@ -29,9 +29,20 @@ import java.util.Iterator;
  */
 public class LIANode extends BaseAlpha {
 
+    /** The node this adapter hangs off; its alpha memory holds the facts that reach us. */
+    private BaseAlpha parent = null;
+
     /** */
     public LIANode(int id) {
         super(id);
+    }
+
+    public void setParent(BaseAlpha parent) {
+        this.parent = parent;
+    }
+
+    public BaseAlpha getParent() {
+        return this.parent;
     }
 
     /** the implementation just propogates the assert down the network */
@@ -94,17 +105,19 @@ public class LIANode extends BaseAlpha {
     public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
             throws AssertException {
         if (addNode(node)) {
-            // if there are matches, we propogate the facts to
-            // the new successor only
-            AlphaMemory alpha = mem.getAlphaMemory(this);
+            // the adapter keeps no memory: replay the facts held by the node it hangs off,
+            // so that a rule defined after the facts still sees them
+            AlphaMemory alpha = mem.getAlphaMemory(this.parent != null ? this.parent : this);
             if (alpha.size() > 0) {
                 Iterator<?> itr = alpha.iterator();
                 while (itr.hasNext()) {
+                    Fact fact = (Fact) itr.next();
                     if (node instanceof BaseAlpha next) {
-                        next.assertFact((Fact) itr.next(), engine, mem);
+                        next.assertFact(fact, engine, mem);
                     } else if (node instanceof BaseJoin next) {
-                        Index inx = new Index(new Fact[] {(Fact) itr.next()});
-                        next.assertLeft(inx, engine, mem);
+                        next.assertLeft(new Index(new Fact[] {fact}), engine, mem);
+                    } else if (node instanceof TerminalNode next) {
+                        next.assertFacts(new Index(new Fact[] {fact}), engine, mem);
                     }
                 }
             }

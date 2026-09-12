@@ -108,15 +108,15 @@ public abstract class BaseJoin extends BaseNode {
         if (addNode(node)) {
             // first, we get the memory for this node
             Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-            // now we iterate over the entry set
-            Iterator<?> itr = leftmem.entrySet().iterator();
-            while (itr.hasNext()) {
-                BetaMemory bmem = (BetaMemory) itr.next();
+            // replay every existing match into the new join
+            for (Object omem : leftmem.values()) {
+                if (!(omem instanceof BetaMemory bmem)) {
+                    continue;
+                }
                 Index left = bmem.getIndex();
-                // iterate over the matches
-                Map<?, ?> rightmem = mem.getBetaRightMemory(this);
-                Iterator<?> ritr = rightmem.keySet().iterator();
-                while (ritr.hasNext()) {
+                // replay the right facts this tuple matched
+                Iterator<?> ritr = bmem.iterateRightFacts();
+                while (ritr != null && ritr.hasNext()) {
                     Fact rfcts = (Fact) ritr.next();
                     // now assert in the new join node
                     node.assertLeft(left.add(rfcts), engine, mem);
@@ -144,10 +144,9 @@ public abstract class BaseJoin extends BaseNode {
             for (Object omem : leftmem.values()) {
                 if (omem instanceof BetaMemory bmem) {
                     Index left = bmem.getIndex();
-                    // iterate over the matches
-                    Map<?, ?> rightmem = mem.getBetaRightMemory(this);
-                    Iterator<?> ritr = rightmem.keySet().iterator();
-                    while (ritr.hasNext()) {
+                    // replay the right facts this tuple matched
+                    Iterator<?> ritr = bmem.iterateRightFacts();
+                    while (ritr != null && ritr.hasNext()) {
                         Fact rfcts = (Fact) ritr.next();
                         // merge the left and right fact into a new Array
                         node.assertFacts(left.add(rfcts), engine, mem);

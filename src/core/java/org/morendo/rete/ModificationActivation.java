@@ -52,6 +52,8 @@ public class ModificationActivation extends LinkedActivation {
                     throw new ExecuteException(ExecuteException.NULL_ACTION);
                 }
             }
+        } catch (org.morendo.rete.functions.control.ControlFlow flow) {
+            // (return) ends the modification actions of this firing
         } catch (ExecuteException e) {
             throw e;
         }

@@ -42,13 +42,10 @@ public class SetFocusFunction implements Function {
     }
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-        String focus = null;
+        // answers the module that was in focus before the change
+        String focus = engine.getCurrentFocus().getModuleName();
         if (params != null && params.length == 1) {
-            focus = params[0].getStringValue();
-            engine.setFocus(focus);
-            focus = engine.getCurrentFocus().getModuleName();
-        } else {
-            focus = engine.getCurrentFocus().getModuleName();
+            engine.setFocus(params[0].getStringValue());
         }
         DefaultReturnVector ret = new DefaultReturnVector();
         DefaultReturnValue rv = new DefaultReturnValue(ValueType.STRING, focus);
@@ -65,6 +62,6 @@ public class SetFocusFunction implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(set-focus)";
+        return "(set-focus <module>)";
     }
 }

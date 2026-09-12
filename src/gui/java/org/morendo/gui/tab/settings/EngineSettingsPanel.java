@@ -29,8 +29,6 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial") // Swing components are never serialized here
 public final class EngineSettingsPanel extends AbstractSettingsPanel implements ActionListener {
 
-    private JCheckBox evaluationCheckBox;
-
     private JCheckBox profileAssertCheckBox;
 
     private JCheckBox profileRetractCheckBox;
@@ -53,16 +51,6 @@ public final class EngineSettingsPanel extends AbstractSettingsPanel implements 
         GridBagConstraints c = new GridBagConstraints();
         c.weightx = 1.0;
         setLayout(gridbag);
-
-        // Evaluation
-        addLabel(this, new JLabel("Evaluation"), gridbag, c, 0);
-        JPanel evaluationPanel = new JPanel(new BorderLayout());
-
-        evaluationCheckBox = new JCheckBox();
-        evaluationCheckBox.setEnabled(true);
-        evaluationCheckBox.addActionListener(this);
-        evaluationPanel.add(evaluationCheckBox, BorderLayout.WEST);
-        addInputComponent(this, evaluationPanel, gridbag, c, 0);
 
         // Profile Assert
         addLabel(this, new JLabel("Profile Assert:"), gridbag, c, 1);
@@ -147,33 +135,44 @@ public final class EngineSettingsPanel extends AbstractSettingsPanel implements 
 
     @Override
     public void save() {
-        gui.getPreferences().put("engine.evaluation", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.profileAssert", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.profileRetract", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.profileFire", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.profileAddActivation", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.profileRemoveActivation", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.watchActivations", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.watchFacts", Boolean.FALSE.toString());
-        gui.getPreferences().put("engine.watchRules", Boolean.FALSE.toString());
+        gui.getPreferences()
+                .put("engine.profileAssert", Boolean.toString(profileAssertCheckBox.isSelected()));
+        gui.getPreferences()
+                .put(
+                        "engine.profileRetract",
+                        Boolean.toString(profileRetractCheckBox.isSelected()));
+        gui.getPreferences()
+                .put("engine.profileFire", Boolean.toString(profileFireCheckBox.isSelected()));
+        gui.getPreferences()
+                .put(
+                        "engine.profileAddActivation",
+                        Boolean.toString(profileAddActivationCheckBox.isSelected()));
+        gui.getPreferences()
+                .put(
+                        "engine.profileRemoveActivation",
+                        Boolean.toString(profileRemoveActivationCheckBox.isSelected()));
+        gui.getPreferences()
+                .put(
+                        "engine.watchActivations",
+                        Boolean.toString(watchActivationsCheckBox.isSelected()));
+        gui.getPreferences()
+                .put("engine.watchFacts", Boolean.toString(watchFactsCheckBox.isSelected()));
+        gui.getPreferences()
+                .put("engine.watchRules", Boolean.toString(watchRulesCheckBox.isSelected()));
     }
 
     public void actionPerformed(ActionEvent event) {
 
         StringChannel guiStringChannel = gui.getStringChannel();
 
-        if (event.getSource() == evaluationCheckBox) {
-            if (evaluationCheckBox.isSelected())
-                guiStringChannel.executeCommand("(watch evaluation)");
-            else guiStringChannel.executeCommand("(unwatch evaluation)");
-        } else if (event.getSource() == profileAssertCheckBox) {
+        if (event.getSource() == profileAssertCheckBox) {
             if (profileAssertCheckBox.isSelected())
-                guiStringChannel.executeCommand("(profile assert)");
-            else guiStringChannel.executeCommand("(unprofile assert)");
+                guiStringChannel.executeCommand("(profile assert-fact)");
+            else guiStringChannel.executeCommand("(unprofile assert-fact)");
         } else if (event.getSource() == profileRetractCheckBox) {
             if (profileRetractCheckBox.isSelected())
-                guiStringChannel.executeCommand("(profile retract)");
-            else guiStringChannel.executeCommand("(unprofile retract)");
+                guiStringChannel.executeCommand("(profile retract-fact)");
+            else guiStringChannel.executeCommand("(unprofile retract-fact)");
         } else if (event.getSource() == profileFireCheckBox) {
             if (profileFireCheckBox.isSelected()) guiStringChannel.executeCommand("(profile fire)");
             else guiStringChannel.executeCommand("(unprofile fire)");
@@ -186,16 +185,14 @@ public final class EngineSettingsPanel extends AbstractSettingsPanel implements 
                 guiStringChannel.executeCommand("(profile remove-activation)");
             else guiStringChannel.executeCommand("(unprofile remove-activation)");
         } else if (event.getSource() == watchActivationsCheckBox) {
-            if (profileRemoveActivationCheckBox.isSelected())
+            if (watchActivationsCheckBox.isSelected())
                 guiStringChannel.executeCommand("(watch activations)");
             else guiStringChannel.executeCommand("(unwatch activations)");
         } else if (event.getSource() == watchFactsCheckBox) {
-            if (profileRemoveActivationCheckBox.isSelected())
-                guiStringChannel.executeCommand("(watch facts)");
+            if (watchFactsCheckBox.isSelected()) guiStringChannel.executeCommand("(watch facts)");
             else guiStringChannel.executeCommand("(unwatch facts)");
         } else if (event.getSource() == watchRulesCheckBox) {
-            if (profileRemoveActivationCheckBox.isSelected())
-                guiStringChannel.executeCommand("(watch rules)");
+            if (watchRulesCheckBox.isSelected()) guiStringChannel.executeCommand("(watch rules)");
             else guiStringChannel.executeCommand("(unwatch rules)");
         }
     }

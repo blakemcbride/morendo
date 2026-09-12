@@ -75,7 +75,7 @@ public class Constants {
     public static final String SHELL_PROMPT = "Morendo> ";
     public static final String DEFAULT_OUTPUT = "t";
     public static final String VERSION =
-            "2.0.0"; // the single source of the version; builder/Tasks.java reads it
+            "2.1.0"; // the single source of the version; builder/Tasks.java reads it
     public static final String INITIAL_FACT = "_initialFact";
     public static final String COUNT_FACT = "_countFact";
     public static final String COUNT_SLOT = "count";
@@ -85,5 +85,9 @@ public class Constants {
     public static final String SHELL_MESSAGE = "Morendo Version " + VERSION;
 
     /// --------------- working directory ----------------- ///
-    public static final String WORKING_DIRECTORY = "./working_directory";
+    /**
+     * The JVM property naming where modules keep generated files (compiled macros); the default is
+     * a "morendo" directory under the JVM's temporary directory.
+     */
+    public static final String WORKING_DIRECTORY_PROPERTY = "morendo.workdir";
 }

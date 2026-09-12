@@ -66,24 +66,24 @@ public class EqHashIndex implements HashIndex {
     }
 
     /**
-     * Returns true if all values are not equal
+     * Returns true if all values are not equal, by the rules of Evaluate.evaluateNotEqual (so "nil"
+     * differs from any value except nil, and numbers compare numerically), with this index as the
+     * left side and the given one as the right side, as in Binding.evaluate.
      *
      * @param val
      * @return
      */
     public boolean notEquals(Object val) {
         if (this == val) {
-            return true;
+            return false;
         }
         EqHashIndex eval = (EqHashIndex) val;
-        boolean eq = true;
         for (int idx = 0; idx < values.length; idx++) {
-            if (eval.values[idx].equals(this.values[idx])) {
-                eq = false;
-                break;
+            if (!Evaluate.evaluateNotEqual(this.values[idx], eval.values[idx])) {
+                return false;
             }
         }
-        return eq;
+        return true;
     }
 
     /** Method simply returns the cached hashCode. */

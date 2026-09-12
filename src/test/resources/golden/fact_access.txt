@@ -1,0 +1,12 @@
+== stats ==
+templates: 5
+rules: 1
+facts: 1
+next-node-id: 9
+== output ==
+a 5 x y 
+item 2 true false
+a false
+==> fire: Activation: show, id-2 AggrTime-*
+rule item 2 5
+exists after retract false

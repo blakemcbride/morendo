@@ -74,7 +74,11 @@ public class NotEqHashIndex implements HashIndex {
         return negindex;
     }
 
-    /** The implementation is similar to the index class. */
+    /**
+     * Two indexes are equal when all their non-negated (equal-to) values are equal; the negated
+     * values are the second level of the index (see getSubIndex) and take no part in the bucket
+     * key, just as they take no part in hashCode().
+     */
     public boolean equals(Object val) {
         if (this == val) {
             return true;
@@ -85,7 +89,7 @@ public class NotEqHashIndex implements HashIndex {
         NotEqHashIndex eval = (NotEqHashIndex) val;
         boolean eq = true;
         for (int idx = 0; idx < values.length; idx++) {
-            if (values[idx].negated()
+            if (!values[idx].negated()
                     && !eval.values[idx].getValue().equals(this.values[idx].getValue())) {
                 eq = false;
                 break;

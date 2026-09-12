@@ -1,0 +1,139 @@
+\chapter{The Shell and the Graphical Interface}
+\label{ch:shell-gui}
+
+\section{The shell}
+
+\fn{./morendo -shell} starts the interactive shell on the calling
+thread. It reads a line at a time with JLine, so the usual line editing
+keys work, Up and Down walk the history, and the history is kept in
+\file{\textasciitilde/.morendo\_history} between sessions. When the input
+is a pipe rather than a terminal the shell falls back to a plain reader,
+which is how the transcripts in this manual were produced:
+
+\begin{lstlisting}[style=shell]
+$ ./morendo -shell <<'EOF'
+(batch samples/only/only_1.clp)
+(fire)
+(exit)
+EOF
+\end{lstlisting}
+
+Input is collected until the parentheses balance, ignoring parentheses
+inside strings and after \fn{;;}; the prompt changes to \fn{...} while an
+expression is incomplete. Each complete expression is sent to the engine
+and everything the engine prints in response, followed by the
+expression's value, is written to the terminal. Errors print the
+exception with a short stack trace and the shell continues. Ctrl-C
+discards a half-typed expression; Ctrl-D, the end of piped input, or
+\fn{(exit)} ends the session. Nothing calls \fn{System.exit}: \fn{exit}
+closes the engine, and the shell stops when it notices.
+
+The shell does not talk to the engine directly. It opens a
+\emph{channel} on the engine's message router and posts each expression
+to the router's command thread, which parses and executes it and posts
+the output and the result back. The GUI uses the same mechanism, and a
+Java program can too (Chapter~\ref{ch:embedding}).
+
+\subsection{Useful commands}
+
+Beyond the constructs of Chapter~\ref{ch:language}, these are the shell
+commands to know. All are ordinary functions and can be used in rule
+files as well.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lL}
+\toprule
+\fn{(batch file)} & load a rule file; paths are relative to the working directory, or URLs, or \fn{classpath:} resources \\
+\fn{(load-facts file)} & load a data file of facts \\
+\fn{(facts)}, \fn{(agenda)}, \fn{(rules)} & list working memory, the agenda and the rules \\
+\fn{(templates)}, \fn{(list-deffacts)}, \fn{(modules)}, \fn{(cubes)} & list the other constructs \\
+\fn{(functions [group])} & list the functions, all or one group \\
+\fn{(usage name)} & a function's usage string \\
+\fn{(ppdefrule name)}, \fn{(ppdeffacts name)} & pretty-print a rule or a deffacts \\
+\fn{(ppdeftemplate name)}, \fn{(ppdefcube name)} & pretty-print a template or a cube \\
+\fn{(watch facts|rules|activations|all)} & trace engine activity; \fn{unwatch} stops it \\
+\fn{(profile ...)}, \fn{(print-profile)} & time the engine (Chapter~\ref{ch:analysis}) \\
+\fn{(spool name file)}, \fn{(spool off name)} & copy everything printed to a file \\
+\fn{(fire [n])} & run the agenda \\
+\fn{(reset)} & retract every fact, assert the deffacts and the objects again \\
+\fn{(reset-facts)}, \fn{(reset-objects)} & retract and re-assert the current facts or objects \\
+\fn{(clear)} & empty the engine \\
+\fn{(version)}, \fn{(mem-used)}, \fn{(gc)} & housekeeping \\
+\fn{(exit)} & leave \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Output}
+
+Everything a rule prints with \fn{printout t} goes to the shell's
+channel; output to any other router name goes to the file opened under
+that name with \fn{open}, and to nothing else
+(Section~\ref{sec:routers}). \fn{readline t} and \fn{read t} inside a
+command take the next line typed at the shell. With \fn{(watch facts)} on, every assertion is echoed as
+\fn{==> f-n (...)} and every retraction as \fn{<== f-n (...)}; with
+\fn{(watch rules)} each firing prints
+\fn{==> fire: Activation: rule, id-n, ...} naming the facts that made the
+match; \fn{(watch activations)} prints \fn{=> Activation: ...} as
+activations reach the agenda. Log messages from the engine's Log4j
+loggers go to standard error, at level WARN unless
+\fn{-Dmorendo.log.level=DEBUG} is passed to the JVM; add
+\fn{-Dlog4j2.configurationFile=classpath:log4j2-file.xml} to also write
+\file{logs/morendo.log}. To pass JVM options, edit the \fn{morendo}
+script or run \fn{java -cp "libs/*" org.morendo.Morendo -shell} yourself.
+
+\section{The graphical interface}
+
+\fn{./morendo -gui} opens a Swing window with seven tabs. With
+\fn{-gui} alone, closing the window closes the engine and exits the JVM;
+with \fn{-gui -shell} the window and the shell share one engine and the
+JVM exits when both are gone. Window size and position are remembered
+between runs.
+
+\begin{description}[style=nextline]
+\item[Shell] A console with the same behaviour as the terminal shell:
+  the \fn{Morendo>} prompt, a hundred lines of history on Up and Down,
+  copy and paste, and a Clear button. Font and colours are set on the
+  Settings tab.
+\item[Facts] A sortable table of every fact with its id. Reload refreshes
+  it; Assert Fact opens an editor that lists the templates and builds an
+  \fn{assert} from the values you enter; right-clicking a row retracts
+  the fact.
+\item[Templates] A table of the templates in every module. Create new
+  Template opens an editor with a slot list and a live preview of the
+  \fn{deftemplate} it will send; right-clicking a row removes a
+  template.
+\item[Functions] Every function the engine knows, with its usage text.
+\item[Rete] The network viewer, described below.
+\item[Log] Every message that passes through the message router, from
+  every channel, with its time, channel and type: commands, engine
+  output, results and errors. This is where to look when a command
+  typed elsewhere seems to do nothing.
+\item[Settings] Two panes. \emph{Engine} has check boxes for the profile
+  and watch switches, each of which sends the corresponding command;
+  \emph{Shell} sets the console font, size and colours. Save Changes
+  writes the preferences.
+\end{description}
+
+The File menu has \emph{Batch File}, which opens a file chooser and
+sends \fn{(batch path)} for the file you pick, \emph{Close Gui} and
+\emph{Quit}.
+
+\section{The network viewer}
+
+The Rete tab, and the \fn{(view)} function typed at any prompt, draw the
+whole RETE network as a graph. Object type nodes are orange, left input
+adapters cyan, joins green, alpha nodes red and terminal nodes black;
+lines out of a join are red, all others blue. The view zooms and pans, a
+small radar panel shows which part of the network is visible, and
+clicking a node prints its description (the constraint it tests or the
+bindings it joins on, and its use count) in the text area below.
+\emph{Reload View} redraws the network; \emph{Automatic Reload} redraws
+it by itself whenever a rule is added or removed or working memory
+changes, a few times a second at most.
+
+Read the diagram top down: each template's node at the top, the alpha
+tests of every rule that uses it below, the joins where patterns meet,
+and one terminal per rule. Shared alpha nodes appear once with several
+outgoing lines, which is the cheapest way to see whether two rules are
+sharing work (Chapter~\ref{ch:analysis}).

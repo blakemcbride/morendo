@@ -74,6 +74,6 @@ public class ProfileFunction implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(profile assert|all|retract|fire|add-activation|remove-activation)";
+        return "(profile all|assert-fact|retract-fact|fire|add-activation|remove-activation)";
     }
 }

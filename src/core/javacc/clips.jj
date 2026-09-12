@@ -33,6 +33,7 @@ import org.morendo.rete.Parameter;
 import org.morendo.rete.ParameterUtils;
 import org.morendo.rete.Rete;
 import org.morendo.rete.ShellBoundParam;
+import org.morendo.rete.Deffacts;
 import org.morendo.rete.Slot;
 import org.morendo.rete.ValueParam;
 import org.morendo.rete.functions.ShellFunction;
@@ -46,6 +47,8 @@ import org.morendo.rule.Defrule;
 import org.morendo.rule.Defquery;
 import org.morendo.rule.GraphQuery;
 import org.morendo.rule.ExistCondition;
+import org.morendo.rule.ForallCondition;
+import org.morendo.rule.OrCondition;
 import org.morendo.rule.FunctionAction;
 import org.morendo.rule.LiteralConstraint;
 import org.morendo.rule.MultiValue;
@@ -63,6 +66,16 @@ import org.morendo.rete.functions.DeffunctionFunction;
 public class CLIPSParser {
 
     protected Rete engine = null;
+
+    /** Numbers the variables generated for return-value constraints, =(expr). */
+    private int returnValueCounter = 0;
+
+    /** A pattern as forall accepts it: a plain, non-negated template pattern. */
+    private static boolean isPlainPattern(Object ce) {
+        return ce != null
+                && ce.getClass() == ObjectCondition.class
+                && !((ObjectCondition) ce).getNegated();
+    }
 
     public CLIPSParser(Rete eng, Reader stream) {
         this(stream);
@@ -136,11 +149,10 @@ TOKEN :
       ("\"" ((~["\"","\\"]) | ("\\" ( ["\\","\""] )))* "\"") |
       ("\'" ((~["\'","\\"]) | ("\\" ( ["\\","\'"] )))* "\'")
   >
-| < BIND: ("?"(<LETTER>|<DIGIT>)+) >
-| < BIND2: ("?"(<LETTER>|<DIGIT>)+"&:") >
-| < BIND3: ("?*"(<LETTER>|<DIGIT>)+"*") >
-| < BIND4: ("$?"(<LETTER>|<DIGIT>)+) >
-| < BIND5: ("?"(<LETTER>|<DIGIT>)+"&~") >
+| < BIND: ("?"(<LETTER>|<DIGIT>)(<LETTER>|<DIGIT>|"-"|"_")*) >
+| < BIND2: ("?"(<LETTER>|<DIGIT>)(<LETTER>|<DIGIT>|"-"|"_")*"&:") >
+| < BIND3: ("?*"(<LETTER>|<DIGIT>)(<LETTER>|<DIGIT>|"-"|"_")*"*") >
+| < BIND4: ("$?"(<LETTER>|<DIGIT>)(<LETTER>|<DIGIT>|"-"|"_")*) >
 | < BINDING: "bind" >
 | < BOOLEAN: "BOOLEAN" >
 | < AGGREGATE: "aggregate" >
@@ -154,7 +166,8 @@ TOKEN :
 | < DECLARE: "declare" >
 | < DEFCLASS: "defclass" >
 | < DEFCUBE: "defcube" >
-| < DEFFACT: "deffact" >
+| < DEFFACTS: "deffacts" >
+| < DEFGLOBAL: "defglobal" >
 | < DEFFUNCTION: "deffunction" >
 | < DEFMODULE: "defmodule" >
 | < DEFRULE: "defrule" >
@@ -165,9 +178,9 @@ TOKEN :
 | < DEFAULTVALUE: "default" >
 | < DOUBLE: "DOUBLE" >
 | < EXISTS: "exists" >
+| < FORALL: "forall" >
 | < EFFECTIVE: "effective-date" >
 | < EXPIRATION: "expiration-date" >
-| < FACTINDEX: "fact-index" >
 | < FLOAT: "FLOAT" >
 | < HASHEDMEMORY: "hashed-memory" >
 | < INTEGER: "INTEGER" >
@@ -175,6 +188,7 @@ TOKEN :
 | < LOGICAL: "logical" >
 | < LONG: "LONG" >
 | < MODIFY: "modify" >
+| < DUPLICATE: "duplicate" >
 | < MULTISLOT: "multislot" >
 | < MULTIPLECE: "multiple" >
 | < NOAGENDA: "no-agenda" >
@@ -212,6 +226,7 @@ TOKEN :
 | < GT1: ">" >
 | < LT1: "<" >
 | < EQ1: "==" >
+| < EQ3: "=" >
 | < EQ2: "eq" >
 | < LE1: "<=" >
 | < GE1: ">=" >
@@ -222,7 +237,7 @@ TOKEN :
 | < OR1: "or" >
 | < OR2: "|" >
 | < TILDA: "~" >
-| < IDENTIFIER: (<LETTER>|<DIGIT>|<TYPEDEF>|<TILDA>|["_",":","-","$",".","@","/"])+ >
+| < IDENTIFIER: (<LETTER>|<DIGIT>|<TYPEDEF>|["_",":","-","$",".","@","/"])(<LETTER>|<DIGIT>|<TYPEDEF>|["_",":","-","$",".","@","/","*"])* >
 | 
   < LETTER:
       [
@@ -407,6 +422,9 @@ Object expr() :
   ArrayList<Object> list = new ArrayList<Object>();
   ValueParam[] pms;
   List<Object> infunc = new ArrayList<Object>();
+  Token dfcomment = null;
+  ValueParam[] dffact = null;
+  List<ValueParam[]> dffacts = new ArrayList<ValueParam[]>();
 }
 {
   exp = <ASSERT> <LBRACE> exp2 = <IDENTIFIER>
@@ -418,8 +436,6 @@ Object expr() :
     pms[0] = new ValueParam(ValueType.STRING,exp2.image);
     pms[1] = new ValueParam(ValueType.OBJECT,list.toArray());
     func.setParameters(pms);
-    exp.next = null;
-	exp.specialToken = null;
     exp = null;
     return func;
   }
@@ -433,8 +449,6 @@ Object expr() :
     pms[0] = new ValueParam(ValueType.STRING,exp2.image);
     pms[1] = new ValueParam(ValueType.OBJECT,list.toArray());
     func.setParameters(pms);
-    exp.next = null;
-	exp.specialToken = null;
     exp = null;
     return func;
   }
@@ -453,16 +467,12 @@ Object expr() :
       rpms[0] = vp;
     }
     func.setParameters(rpms);
-    exp.next = null;
-	exp.specialToken = null;
     exp = null;
-    exp2.next = null;
-	exp2.specialToken = null;
     exp2 = null;
     return func;
   }
 |
-  exp = <MODIFY> exp2 = <BIND> (assertContents(list))+
+  (exp = <MODIFY> | exp = <DUPLICATE>) exp2 = <BIND> (assertContents(list))+
   {
     func = new ShellFunction();
     func.setName(exp.image);
@@ -470,8 +480,6 @@ Object expr() :
     bp.setVariableName(exp2.image);
     list.add(0,bp);
     func.setParameters(ParameterUtils.slotToParameters(list));
-    exp.next = null;
-	exp.specialToken = null;
     exp = null;
     return func;
   }
@@ -509,13 +517,51 @@ Object expr() :
     return func;
   }
 |
+  // (defglobal ?*x* = 1 ?*y* = 2): the CLIPS form; the "=" is optional
+  exp = <DEFGLOBAL>
+  ( exp2 = <BIND3> (<EQ3>)?
+    {
+      BoundParam gbp = new BoundParam();
+      gbp.setVariableName(exp2.image);
+      list.add(gbp);
+    }
+    (LOOKAHEAD(2) valueParams(list))?
+  )*
+  {
+    func = new ShellFunction();
+    func.setName(exp.image);
+    func.setParameters(ParameterUtils.convertParameters(list));
+    list.clear();
+    return func;
+  }
+|
+  // (deffacts name ["comment"] (template (slot value)...)+): asserted by (reset)
+  exp = <DEFFACTS> exp2 = <IDENTIFIER>
+  (LOOKAHEAD(<STRING_LITERAL>) dfcomment = <STRING_LITERAL>)?
+  (dffact = assertBody() { dffacts.add(dffact); })+
+  {
+    String dfc = dfcomment == null ? "" : ParserUtils.getStringLiteral(dfcomment.image);
+    func = new ShellFunction();
+    func.setName(exp.image);
+    pms = new ValueParam[1];
+    pms[0] = new ValueParam(ValueType.OBJECT, new Deffacts(exp2.image, dfc, dffacts));
+    func.setParameters(pms);
+    return func;
+  }
+|
   exp = <DEFRULE>
   rule = ruleBody() 
   {
     func = new ShellFunction();
     func.setName(exp.image);
     pms = new ValueParam[1];
-    pms[0] = new ValueParam(ValueType.OBJECT,rule);
+    if (OrExpansion.hasOrGroup(rule)) {
+      // one rule per combination of the or alternatives, parsed from the rule's own text
+      pms[0] = new ValueParam(ValueType.OBJECT, OrExpansion.expand(engine, exp, token, rule));
+    } else {
+      rule.setSourceText(OrExpansion.sourceText(exp, token));
+      pms[0] = new ValueParam(ValueType.OBJECT, rule);
+    }
     func.setParameters(pms);
     return func;
   }
@@ -553,8 +599,8 @@ Object expr() :
 |
   exp = <DEFFUNCTION>
   exp2 = <IDENTIFIER> <LBRACE>
-  ((bindingParams(list))+)? <RBRACE> <LBRACE>
-  (ruleAction(infunc))? <RBRACE>
+  ((bindingParams(list))+)? <RBRACE>
+  (<LBRACE> ruleAction(infunc) <RBRACE> | deffunctionValue(infunc))*
   {
     dffunc = new DeffunctionFunction();
     dffunc.setName(exp2.image);
@@ -582,10 +628,12 @@ Object expr() :
    exp = <GT1>|
    exp = <LT1>|
    exp = <EQ1>|
+   exp = <EQ3>|
    exp = <EQ2>|
    exp = <LE1>|
    exp = <GE1>|
    exp = <NE1>|
+   exp = <NE2>|
    exp = <OR1> |
    exp = <AND1> |
    exp = <NOTCE> )(valueParams(list))+
@@ -612,8 +660,20 @@ void valueParams(List<Object> list) :
   Object exp;
   Token tok;
   ValueParam vp = null;
+  List<Object> spec = new ArrayList<Object>();
 }
 {
+  // a loop specification such as (?i 1 10) or (?x <list>): handed on as a "bind" call
+  LOOKAHEAD(<LBRACE><BIND>) <LBRACE> tok = <BIND> (valueParams(spec))* <RBRACE>
+  {
+    FunctionParam2 fp2 = new FunctionParam2();
+    fp2.setFunctionName("bind");
+    fp2.setEngine(engine);
+    spec.add(0, new ValueParam(ValueType.STRING, tok.image.substring(1)));
+    fp2.setParameters(ParameterUtils.convertParameters(spec));
+    list.add(fp2);
+  }
+|
   LOOKAHEAD(<LBRACE>)<LBRACE>exp = expr()<RBRACE>
   {
     ShellFunction subfunc = (ShellFunction)exp;
@@ -645,6 +705,14 @@ void valueParams(List<Object> list) :
     } else {
       vp.setValue(exp);
     }
+    list.add(vp);
+  }
+|
+  exp = <NIL>
+  {
+    vp = new ValueParam();
+    vp.setValueType(ValueType.OBJECT);
+    vp.setValue(null);
     list.add(vp);
   }
 |
@@ -786,8 +854,6 @@ void assertContents(List<Object> tokens) :
         tokens.add(s);
       }
     }
-    exp.next = null;
-	exp.specialToken = null;
     exp = null;
     body = null;
   }
@@ -842,6 +908,20 @@ Object slotValueType() :
   boolean boolval;
 }
 {
+  // a nested call: (slot (+ ?a 1)); evaluated when the fact is built
+  LOOKAHEAD(<LBRACE>) <LBRACE> body = expr() <RBRACE>
+  {
+    if (body instanceof ShellFunction) {
+      ShellFunction subfunc = (ShellFunction) body;
+      FunctionParam2 fp2 = new FunctionParam2();
+      fp2.setFunctionName(subfunc.getName());
+      fp2.setEngine(engine);
+      fp2.setParameters(subfunc.getParameters());
+      return fp2;
+    }
+    return body;
+  }
+|
   btoken = getBindType()
   {
     // probably should refactor this later, instead of looking up the value directly
@@ -922,8 +1002,6 @@ Deftemplate templateExpr() :
     slots.toArray(s);
     tmplate = new Deftemplate(exp.image,null,s);
     slots.clear();
-    exp.next = null;
-	exp.specialToken = null;
     exp = null;
     return tmplate;
   }
@@ -1130,62 +1208,36 @@ void ruleProperty(List<Object> list) :
   boolean agenda = false;
   String direction = null;
   String date = null;
-  RuleProperty rmem;
 }
 {
-  (LOOKAHEAD(<LBRACE><SALIENCE>)exp = salience())?
-  {
-    if (exp != null) {
-      Long intsal = Long.valueOf(((Token)exp).image);
-      RuleProperty sal = new RuleProperty(RuleProperty.SALIENCE,intsal.intValue());
-      list.add(sal);
+  // the properties may be written in any order; only the ones present are recorded
+  (
+    LOOKAHEAD(<LBRACE><SALIENCE>) exp = salience()
+    {
+      if (exp != null) {
+        Long intsal = Long.valueOf(((Token)exp).image);
+        list.add(new RuleProperty(RuleProperty.SALIENCE, intsal.intValue()));
+      }
     }
-  }
-  (LOOKAHEAD(<LBRACE><AUTOFOCUS>)tf = autoFocus())?
-  {
-    RuleProperty auto = new RuleProperty(RuleProperty.AUTO_FOCUS,tf);
-    list.add(auto);
-  }
-  (LOOKAHEAD(<LBRACE><RULEVERSION>) ver = ruleVersion())?
-  {
-    RuleProperty rp = new RuleProperty(RuleProperty.VERSION,ver);
-    list.add(rp);
-  }
-  (LOOKAHEAD(<LBRACE><REMEMBERALPHA>) remember = remember())?
-  {
-    rmem = new RuleProperty(RuleProperty.REMEMBER_ALPHA,remember);
-    list.add(rmem);
-  }
-  (LOOKAHEAD(<LBRACE><HASHEDMEMORY>) remember = remember())?
-  {
-    rmem = new RuleProperty(RuleProperty.HASHED_MEMORY,remember);
-    list.add(rmem);
-  }
-  (LOOKAHEAD(<LBRACE><EFFECTIVE>) date = effectiveDate())?
-  {
-    RuleProperty eff = new RuleProperty(RuleProperty.EFFECTIVE_DATE,date);
-    list.add(eff);
-  }
-  (LOOKAHEAD(<LBRACE><EXPIRATION>) date = expirationDate())?
-  {
-    RuleProperty expr = new RuleProperty(RuleProperty.EXPIRATION_DATE,date);
-    list.add(expr);
-  }
-  (LOOKAHEAD(<LBRACE><CHAININGDIRECTION>) direction = direction())?
-  {
-    RuleProperty dir = new RuleProperty(RuleProperty.DIRECTION,direction);
-    list.add(dir);
-  }
-  (LOOKAHEAD(<LBRACE><NOAGENDA>) agenda = noAgenda())?
-  {
-    RuleProperty noagenda = new RuleProperty(RuleProperty.NO_AGENDA,agenda);
-    list.add(noagenda);
-  }
-  (LOOKAHEAD(<LBRACE><TEMPORALACTIVATION>) temporal = temporalAct())?
-  {
-    RuleProperty tempprop = new RuleProperty(RuleProperty.TEMPORAL_ACTIVATION,temporal);
-    list.add(tempprop);
-  }
+  | LOOKAHEAD(<LBRACE><AUTOFOCUS>) tf = autoFocus()
+    { list.add(new RuleProperty(RuleProperty.AUTO_FOCUS, tf)); }
+  | LOOKAHEAD(<LBRACE><RULEVERSION>) ver = ruleVersion()
+    { list.add(new RuleProperty(RuleProperty.VERSION, ver)); }
+  | LOOKAHEAD(<LBRACE><REMEMBERALPHA>) remember = remember()
+    { list.add(new RuleProperty(RuleProperty.REMEMBER_ALPHA, remember)); }
+  | LOOKAHEAD(<LBRACE><HASHEDMEMORY>) remember = hashedMemory()
+    { list.add(new RuleProperty(RuleProperty.HASHED_MEMORY, remember)); }
+  | LOOKAHEAD(<LBRACE><EFFECTIVE>) date = effectiveDate()
+    { list.add(new RuleProperty(RuleProperty.EFFECTIVE_DATE, date)); }
+  | LOOKAHEAD(<LBRACE><EXPIRATION>) date = expirationDate()
+    { list.add(new RuleProperty(RuleProperty.EXPIRATION_DATE, date)); }
+  | LOOKAHEAD(<LBRACE><CHAININGDIRECTION>) direction = direction()
+    { list.add(new RuleProperty(RuleProperty.DIRECTION, direction)); }
+  | LOOKAHEAD(<LBRACE><NOAGENDA>) agenda = noAgenda()
+    { list.add(new RuleProperty(RuleProperty.NO_AGENDA, agenda)); }
+  | LOOKAHEAD(<LBRACE><TEMPORALACTIVATION>) temporal = temporalAct()
+    { list.add(new RuleProperty(RuleProperty.TEMPORAL_ACTIVATION, temporal)); }
+  )*
 }
 
 Object salience() :
@@ -1236,6 +1288,18 @@ boolean remember() :
 }
 {
   <LBRACE> exp = <REMEMBERALPHA> tf = trueFalse() <RBRACE>
+  {
+    return tf;
+  }
+}
+
+boolean hashedMemory() :
+{
+  Token exp;
+  boolean tf = false;
+}
+{
+  <LBRACE> exp = <HASHEDMEMORY> tf = trueFalse() <RBRACE>
   {
     return tf;
   }
@@ -1364,8 +1428,57 @@ void CEType(List<Object> list) :
   // TemporalCondition tmpc = null;
   // List<Object> params = new ArrayList<Object>();
   AndCondition andcond = new AndCondition();
+  Token orTok = null;
+  Token altStart = null;
+  Token altEnd = null;
+  List<Object> alt = new ArrayList<Object>();
+  OrCondition orc = null;
+  List<Object> fafirst = new ArrayList<Object>();
+  List<Object> farest = new ArrayList<Object>();
 }
 {
+  // (or (a) (b)): the parser expands the rule into one rule per alternative
+  orTok = <OR1>
+  ( altStart = <LBRACE> CEType(alt) altEnd = <RBRACE>
+    {
+      if (orc == null) {
+        orc = new OrCondition();
+        orc.setOrToken(orTok);
+      }
+      Condition altce;
+      if (alt.size() == 1) {
+        altce = (Condition) alt.get(0);
+      } else {
+        AndCondition altand = new AndCondition();
+        altand.addAll(alt);
+        altce = altand;
+      }
+      orc.addAlternative(altce, altStart, altEnd);
+      alt.clear();
+    }
+  )+
+  {
+    list.add(orc);
+  }
+|
+  // (forall (a) (b) ...): every a has its b's
+  <FORALL> <LBRACE> CEType(fafirst) <RBRACE> (<LBRACE> CEType(farest) <RBRACE>)+
+  {
+    if (fafirst.size() != 1 || !isPlainPattern(fafirst.get(0))) {
+      throw new ParseException("forall takes plain patterns: (forall (a ...) (b ...)+)");
+    }
+    List<ObjectCondition> fbs = new ArrayList<ObjectCondition>();
+    for (Object fo : farest) {
+      if (!isPlainPattern(fo)) {
+        throw new ParseException("forall takes plain patterns: (forall (a ...) (b ...)+)");
+      }
+      fbs.add((ObjectCondition) fo);
+    }
+    list.add(new ForallCondition((ObjectCondition) fafirst.get(0), fbs));
+    fafirst.clear();
+    farest.clear();
+  }
+|
   // (not (path (id ?seatID) (name ?g2) ) )
   LOOKAHEAD(<NOTCE><LBRACE><IDENTIFIER><LBRACE>)
   <NOTCE> <LBRACE> exp = <IDENTIFIER> ((templatePatterns(alpha))+)? <RBRACE>
@@ -1590,6 +1703,31 @@ void propertyType(List<Object> list, Token identifier) :
     // do nothing
   }
 |
+  // (slot =(expr)): the slot must equal the value of the call
+  LOOKAHEAD(<EQ3><LBRACE>) <EQ3> <LBRACE> body = expr() <RBRACE>
+  {
+    if (body instanceof ShellFunction) {
+      String rvname = "_rv" + (++returnValueCounter);
+      PredicateConstraint rvc = new PredicateConstraint();
+      rvc.setName(identifier.image);
+      rvc.setVariableName(rvname);
+      rvc.setFunctionName("eq");
+      BoundParam rvb = new BoundParam();
+      rvb.setVariableName(rvname);
+      ShellFunction rvsf = (ShellFunction) body;
+      FunctionParam2 rvf = new FunctionParam2();
+      rvf.setFunctionName(rvsf.getName());
+      rvf.setEngine(engine);
+      rvf.setParameters(rvsf.getParameters());
+      List<Object> rvp = new ArrayList<Object>();
+      rvp.add(rvb);
+      rvp.add(rvf);
+      rvc.addParameters(rvp);
+      list.add(rvc);
+    }
+    body = null;
+  }
+|
   // multislot bind
   LOOKAHEAD(<BIND4>) body2 = <BIND4>
   {
@@ -1745,6 +1883,15 @@ void propertyType(List<Object> list, Token identifier) :
       list.add(vc);
   }
 |
+  LOOKAHEAD(<TILDA><NIL>) <TILDA> <NIL>
+  {
+      vc = new LiteralConstraint();
+      vc.setName(identifier.image);
+      vc.setValue(null);
+      vc.setNegated(true);
+      list.add(vc);
+  }
+|
   <NIL>
   {
       vc = new LiteralConstraint();
@@ -1893,9 +2040,12 @@ String functionName() :
    fname = <GT1>|
    fname = <LT1>|
    fname = <EQ1>|
+   fname = <EQ3>|
    fname = <EQ2>|
    fname = <LE1>|
    fname = <GE1>|
+   fname = <NE1>|
+   fname = <NE2>|
    fname = <AND1>|
    fname = <OR1>)
   {
@@ -1942,6 +2092,23 @@ void ruleAction(List<Object> list) :
   exp = expr()
   {
     list.add(exp);
+  }
+}
+
+// a bare value in a deffunction body, such as the "small" in
+// (deffunction g (?n) (if (> ?n 5) then (return "big")) "small"): a progn of one value
+void deffunctionValue(List<Object> list) :
+{
+  List<Object> value = new ArrayList<Object>();
+  ShellFunction func;
+}
+{
+  valueParams(value)
+  {
+    func = new ShellFunction();
+    func.setName("progn");
+    func.setParameters(ParameterUtils.convertParameters(value));
+    list.add(func);
   }
 }
 

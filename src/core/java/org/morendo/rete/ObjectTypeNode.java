@@ -195,6 +195,9 @@ public class ObjectTypeNode extends BaseAlpha {
                     ((BaseAlpha) node).retractFact(fact, engine, mem);
                 } else if (node instanceof BaseJoin) {
                     ((BaseJoin) node).retractRight(fact, engine, mem);
+                } else if (node instanceof TerminalNode terminal) {
+                    // a rule without a left-hand side hangs directly off the initial fact's node
+                    terminal.retractFacts(new Index(new Fact[] {fact}), engine, mem);
                 }
             }
         }
@@ -247,14 +250,16 @@ public class ObjectTypeNode extends BaseAlpha {
     /** Add a successor node */
     public void addSuccessorNode(BaseNode node, Rete engine, WorkingMemory mem)
             throws AssertException {
-        if (node instanceof AlphaNode alphaNode) {
-            if (alphaNode.getOperator() == Operator.EQUAL) {
-                nodeHashMap.put(alphaNode.getHashIndex(), alphaNode);
-                // increment the slot use count
-                this.deftemplate.getSlot(alphaNode.slot.getId()).incrementNodeCount();
-            }
+        if (node instanceof LIANode lia) {
+            lia.setParent(this);
+        }
+        if (node instanceof AlphaNode alphaNode && alphaNode.getOperator() == Operator.EQUAL) {
+            // an equality test is found by hashing the slot value
+            nodeHashMap.put(alphaNode.getHashIndex(), alphaNode);
+            // increment the slot use count
+            this.deftemplate.getSlot(alphaNode.slot.getId()).incrementNodeCount();
         } else {
-            // in all other cases, we add it to the second list of child nodes
+            // every other successor, negated literal tests included, is evaluated one by one
             if (!containsNode(this.nonHashNodes, node)) {
                 this.nonHashNodes = ConversionUtils.add(this.nonHashNodes, node);
             }
@@ -287,7 +292,7 @@ public class ObjectTypeNode extends BaseAlpha {
 
     public boolean removeNode(BaseNode n) {
         boolean rem = super.removeNode(n);
-        ConversionUtils.remove(this.nonHashNodes, n);
+        this.nonHashNodes = ConversionUtils.remove(this.nonHashNodes, n);
         if (n instanceof AlphaNode alphaNodeValue) {
             this.nodeHashMap.remove((alphaNodeValue).getHashIndex());
         }

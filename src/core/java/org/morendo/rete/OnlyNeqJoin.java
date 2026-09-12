@@ -84,34 +84,31 @@ public class OnlyNeqJoin extends BaseJoin {
     public void assertRight(Fact rfact, Rete engine, WorkingMemory mem) throws AssertException {
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
-        rightmem.addPartialMatch(inx, rfact, engine);
-        int after = rightmem.count(inx);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-        if (after == 1) {
-            Iterator<?> itr = leftmem.values().iterator();
-            while (itr.hasNext()) {
-                BetaMemory bmem = (BetaMemory) itr.next();
-                if (this.evaluate(bmem.getIndex().getFacts(), rfact)) {
+        Iterator<?> itr = leftmem.values().iterator();
+        while (itr.hasNext()) {
+            BetaMemory bmem = (BetaMemory) itr.next();
+            if (this.evaluate(bmem.getLeftFacts(), rfact)) {
+                // the matches the left tuple had before rfact, counted for the
+                // tuple's own bind values (rfact's say nothing about that)
+                int before = rightmem.matchCount(leftIndex(bmem.getIndex()));
+                if (before == 0) {
+                    // rfact is the single match
                     bmem.addMatch(rfact);
                     this.propagateAssert(bmem.getIndex().add(rfact), engine, mem);
-                }
-            }
-        } else if (after == 2) {
-            Iterator<?> itr = leftmem.values().iterator();
-            while (itr.hasNext()) {
-                BetaMemory bmem = (BetaMemory) itr.next();
-                if (this.evaluate(bmem.getIndex().getFacts(), rfact)) {
+                } else if (before == 1 && bmem.matchCount() == 1) {
+                    // rfact is a second match: withdraw the single one
+                    Fact matchedFact = (Fact) bmem.iterateRightFacts().next();
+                    bmem.removeMatch(matchedFact);
                     try {
-                        // we need to get the one right fact that matched
-                        Iterator<?> matchedItr = bmem.iterateRightFacts();
-                        Fact matchedFact = (Fact) matchedItr.next();
-                        bmem.removeMatch(matchedFact);
                         this.propagateRetract(bmem.getIndex().add(matchedFact), engine, mem);
                     } catch (RetractException e) {
+                        throw new AssertException("OnlyNeqJoin - " + e.getMessage());
                     }
                 }
             }
         }
+        rightmem.addPartialMatch(inx, rfact, engine);
     }
 
     /**
@@ -146,32 +143,35 @@ public class OnlyNeqJoin extends BaseJoin {
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         // remove the fact from the right
-        int after = rightmem.removePartialMatch(inx, rfact);
+        rightmem.removePartialMatch(inx, rfact);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-        // first we check to see if the fact is the single match for any partial matches on the left
-        Iterator<?> leftItr = leftmem.values().iterator();
-        while (leftItr.hasNext()) {
-            BetaMemory bmem = (BetaMemory) leftItr.next();
+        Iterator<?> itr = leftmem.values().iterator();
+        while (itr.hasNext()) {
+            BetaMemory bmem = (BetaMemory) itr.next();
             if (bmem.matched(rfact)) {
+                // rfact was the single match of the left tuple
+                bmem.removeMatch(rfact);
                 this.propagateRetract(bmem.getIndex().add(rfact), engine, mem);
-            }
-        }
-        if (after == 1) {
-            // there's only 1 match, so we have to propagate it down the network
-            Object[] factArray = rightmem.iterator(inx);
-            Fact f = (Fact) factArray[0];
-            Iterator<?> valueItr = leftmem.values().iterator();
-            while (valueItr.hasNext()) {
-                BetaMemory bmem = (BetaMemory) valueItr.next();
-                if (this.evaluate(bmem.getLeftFacts(), f)) {
+            } else if (this.evaluate(bmem.getLeftFacts(), rfact) && bmem.matchCount() == 0) {
+                // rfact was one of several matches; the one left, if it is
+                // exactly one, becomes the single match
+                NotEqHashIndex leftInx = leftIndex(bmem.getIndex());
+                if (rightmem.matchCount(leftInx) == 1) {
+                    Fact f = (Fact) rightmem.iterator(leftInx)[0];
+                    bmem.addMatch(f);
                     try {
-                        bmem.addMatch(f);
                         this.propagateAssert(bmem.getIndex().add(f), engine, mem);
                     } catch (AssertException e) {
+                        throw new RetractException("OnlyNeqJoin - " + e.getMessage());
                     }
                 }
             }
         }
+    }
+
+    /** The index of a left tuple's bind values, for looking up its matches in the right memory. */
+    private NotEqHashIndex leftIndex(Index linx) {
+        return new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds, linx.getFacts()));
     }
 
     /**

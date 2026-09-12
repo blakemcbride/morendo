@@ -46,11 +46,14 @@ public class Evaluate {
     }
 
     public static boolean evaluateEqual(Object left, Object right) {
+        if (Constants.NIL_SYMBOL.equals(right)) {
+            right = null;
+        }
         if (Constants.NIL_SYMBOL.equals(left)) {
             return right == null;
         }
         return switch (left) {
-            case null -> false;
+            case null -> right == null;
             case String s -> evaluateStringEqual(s, right);
             case Boolean b -> evaluateBooleanEqual(b, right);
             case Number n ->
@@ -63,11 +66,14 @@ public class Evaluate {
     }
 
     public static boolean evaluateNotEqual(Object left, Object right) {
+        if (Constants.NIL_SYMBOL.equals(right)) {
+            right = null;
+        }
         if (Constants.NIL_SYMBOL.equals(left)) {
             return right != null;
         }
         return switch (left) {
-            case null -> false;
+            case null -> right != null;
             case String s -> !s.equals(right);
             case Boolean b -> evaluateBooleanNotEqual(b, right);
             case Number n ->

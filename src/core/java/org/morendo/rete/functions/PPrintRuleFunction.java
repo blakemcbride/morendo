@@ -47,8 +47,15 @@ public class PPrintRuleFunction implements Function {
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         if (params != null && params.length > 0) {
             for (int idx = 0; idx < params.length; idx++) {
-                Rule rls = engine.getCurrentFocus().findRule(params[idx].getStringValue());
-                engine.writeMessage(rls.toPPString(), "t");
+                for (Rule rls : engine.getCurrentFocus().findRules(params[idx].getStringValue())) {
+                    if (rls instanceof org.morendo.rule.Defrule d && d.getOrGroup() != null) {
+                        // the rules of an or group print as the rule that was written
+                        engine.writeMessage(
+                                d.getSourceText() + org.morendo.rete.Constants.LINEBREAK, "t");
+                        break;
+                    }
+                    engine.writeMessage(rls.toPPString(), "t");
+                }
             }
         }
         DefaultReturnVector rv = new DefaultReturnVector();

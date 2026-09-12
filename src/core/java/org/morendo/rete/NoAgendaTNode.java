@@ -50,6 +50,9 @@ public class NoAgendaTNode extends TerminalNode2 {
      * @param engine
      */
     public void assertFacts(Index inx, Rete engine, WorkingMemory mem) {
+        if (expired(inx, engine)) {
+            return;
+        }
         LinkedActivation act = new LinkedActivation(this.theRule, inx);
         act.setTerminalNode(this);
         // fire the activation immediately

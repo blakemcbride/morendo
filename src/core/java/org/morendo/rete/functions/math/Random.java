@@ -1,11 +1,11 @@
 /*
- * Copyright 2006-2008 Jamocha
+ * Copyright 2026 Blake McBride
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://ruleml-dev.sourceforge.net/
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,29 +16,29 @@
  */
 package org.morendo.rete.functions.math;
 
-import org.morendo.rete.BoundParam;
 import org.morendo.rete.DefaultReturnValue;
 import org.morendo.rete.DefaultReturnVector;
 import org.morendo.rete.Function;
 import org.morendo.rete.Parameter;
 import org.morendo.rete.Rete;
 import org.morendo.rete.ReturnVector;
-import org.morendo.rete.ValueParam;
 import org.morendo.rete.ValueType;
 
+import java.math.BigDecimal;
+
 /**
- * @author Christian Ebert
- *     <p>Returns a double value with a positive sign, greater than or equal to 0.0 and less than
- *     1.0. Returned values are chosen pseudorandomly with (approximately) uniform distribution from
- *     that range.
+ * {@code (random)} is a pseudo-random double in [0, 1); {@code (random <start> <end>)} a
+ * pseudo-random integer between the bounds inclusive. The generator belongs to the engine and
+ * {@code seed} restarts it.
  */
 public class Random implements Function {
 
-    /** */
     public static final String RANDOM = "random";
 
-    public Random() {
-        super();
+    private java.util.Random generator = new java.util.Random();
+
+    public void seed(long seed) {
+        this.generator = new java.util.Random(seed);
     }
 
     public ValueType getReturnType() {
@@ -46,10 +46,20 @@ public class Random implements Function {
     }
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
-        double dval = java.lang.Math.random();
         DefaultReturnVector ret = new DefaultReturnVector();
-        DefaultReturnValue rv = new DefaultReturnValue(ValueType.DOUBLE_PRIM, dval);
-        ret.addReturnValue(rv);
+        if (params != null && params.length == 2) {
+            long start = Div.number(engine, params[0]).longValue();
+            long end = Div.number(engine, params[1]).longValue();
+            long low = Math.min(start, end);
+            long high = Math.max(start, end);
+            long value = low + (long) (this.generator.nextDouble() * (high - low + 1));
+            ret.addReturnValue(
+                    new DefaultReturnValue(
+                            ValueType.BIG_DECIMAL, BigDecimal.valueOf(Math.min(value, high))));
+        } else {
+            ret.addReturnValue(
+                    new DefaultReturnValue(ValueType.DOUBLE_PRIM, this.generator.nextDouble()));
+        }
         return ret;
     }
 
@@ -58,28 +68,11 @@ public class Random implements Function {
     }
 
     public Class<?>[] getParameter() {
-        return new Class<?>[] {};
+        return new Class<?>[] {BigDecimal.class, BigDecimal.class};
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        if (params != null && params.length >= 0) {
-            StringBuilder buf = new StringBuilder();
-            buf.append("(random");
-            int idx = 0;
-            if (params[idx] instanceof BoundParam) {
-                BoundParam bp = (BoundParam) params[idx];
-                buf.append(" ?" + bp.getVariableName());
-            } else if (params[idx] instanceof ValueParam) {
-                buf.append(" " + params[idx].getStringValue());
-            } else {
-                buf.append(" " + params[idx].getStringValue());
-            }
-            buf.append(")");
-            return buf.toString();
-        } else {
-            return "(random)\n"
-                    + "Function description:\n"
-                    + "\tReturns a random value between 0.0 and 1.0.";
-        }
+        return "(random [<start> <end>])\n a pseudo-random double in [0,1), or an integer between"
+                + " start and end inclusive.";
     }
 }

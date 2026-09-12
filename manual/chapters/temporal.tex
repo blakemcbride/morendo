@@ -1,0 +1,146 @@
+\chapter{Time and Temporal Facts}
+\label{ch:temporal}
+
+\Morendo\ has three levels of support for time: functions that compare
+and shift instants, facts that carry effective and expiration times, and
+a conditional element that only matches fresh facts. This chapter covers
+them in that order; rule-level dates were covered in
+Section~\ref{sec:rule-dates}.
+
+\section{Time values and functions}
+
+A time is a \fn{java.time.Instant}. \fn{(now)} returns one, and a slot
+declared \fn{(type DATE)} is meant to hold one; the time functions also
+accept a \fn{java.util.Date} or \fn{Calendar} coming from a Java bean and
+a plain number of epoch milliseconds, so log data with numeric
+timestamps works without conversion. Times print in ISO-8601 form.
+
+\begin{lstlisting}[style=shell]
+Morendo> (bind ?t1 (now))
+true
+Morendo> (bind ?t2 (add-hours 2 ?t1))
+true
+Morendo> (before ?t1 ?t2)
+true
+Morendo> (within-minutes 30 ?t1 ?t2)
+false
+Morendo> (eq-day ?t1 ?t2)
+true
+\end{lstlisting}
+
+The full set is in Appendix~\ref{app:functions}: \fn{add-seconds},
+\fn{add-minutes}, \fn{add-hours}; \fn{before}, \fn{after},
+\fn{between}; \fn{eq-second} through \fn{eq-year}, which compare after
+truncation; and \fn{within-seconds} through \fn{within-days}, which
+test the distance between two times. In a rule they appear in predicate
+constraints, which is how the MOLAP sample joins two logs that happened
+within a few minutes of each other:
+
+\begin{lstlisting}
+(DatabaseQueryLog
+  (endTime ?dbEndTime&:(within-minutes 4 ?dbEndTime ?endTime))
+  (timestamp ?dbTimestamp&:(within-minutes 2 ?timestamp ?dbTimestamp)))
+\end{lstlisting}
+
+\file{samples/time/} has three one-line examples.
+
+\section{Temporal facts}
+\label{sec:temporal-facts}
+
+A temporal fact is a fact with a validity interval. It is asserted with
+\fn{assert-temporal}, which accepts, besides the template's own slots,
+the pseudo-slots \fn{effective-time} and \fn{expiration-time} (epoch
+milliseconds), \fn{source}, \fn{service-type} and \fn{validity}:
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate evt (slot a))
+true
+Morendo> (assert-temporal (evt (effective-time 0) (expiration-time 4102444800000) (a "valid")))
+2
+Morendo> (facts)
+f-1 (_initialFact)
+f-2 (evt (a "valid") (effective-time 0)(expiration-time 4102444800000)(service-type )(source )(validity 0))
+for a total of 2
+\end{lstlisting}
+
+From Java, \fn{assertTemporalObject} and the temporal \fn{assertFact}
+take \fn{Instant}s (Chapter~\ref{ch:embedding}). Temporal facts match
+patterns like any other fact. A rule declared
+\fn{(temporal-activation TRUE)} checks the facts of each match when it
+reaches the rule's terminal node: if one of them is a temporal fact whose
+expiration time has passed, the activation is not added and the expired
+facts are retracted as soon as the current assertion has finished
+propagating.
+
+\begin{lstlisting}[style=shell]
+Morendo> (reset)
+Morendo> (defrule ta (declare (temporal-activation TRUE)) (evt (a ?x))
+  => (printout t "ta fired " ?x crlf))
+true
+Morendo> (assert-temporal (evt (effective-time 0) (expiration-time 1) (a "expired")))
+2
+Morendo> (assert-temporal (evt (effective-time 0) (expiration-time 4102444800000) (a "valid")))
+3
+Morendo> (facts)
+f-1 (_initialFact)
+f-3 (evt (a "valid") (effective-time 0)(expiration-time 4102444800000)(service-type )(source )(validity 0))
+for a total of 2
+Morendo> (fire)
+ta fired valid
+1
+\end{lstlisting}
+
+Rules without the property see expired facts like any other, so a rule
+set that mixes both kinds decides per rule whether expiry matters.
+
+\section{The temporal conditional element}
+
+\begin{lstlisting}
+(temporal (declare ?tv (relative-time <seconds>) [(interval-time <seconds>)])
+          (<template> (<slot> <constraint>)...))
+\end{lstlisting}
+
+A \fn{temporal} element is a pattern with a freshness window. It is
+compiled into a temporal join: when a fact reaches it, the join compares
+the assertion timestamp of the facts matched by the \emph{preceding}
+elements with the current time, and only combines them if that timestamp
+is newer than \fn{relative-time} seconds ago. Older combinations are
+treated as no longer matching. \fn{interval-time} selects an interval
+variant of the join and may carry a function call to evaluate on it.
+
+\begin{lstlisting}
+(defrule pair
+  (evt (a ?x) (k ?k))
+  (temporal (declare ?tv (relative-time 10)) (evt (a ?y) (k ?k)))
+=>
+  (printout t "pair " ?x " " ?y crlf))
+\end{lstlisting}
+
+The window is measured from the time a fact was asserted, not from a
+slot value. The join is keyed by the variables the temporal pattern
+shares with the earlier patterns (\fn{?k} above); with no shared
+variable every combination within the window qualifies, including a
+fact with itself. Predicate constraints inside a temporal pattern take
+part in that key rather than being evaluated, so put conditions that
+relate the two facts, such as \fn{(neq ?y ?x)}, in a \fn{test} element
+after the temporal one. There is no sample using the element in the
+repository.
+
+\section{Temporal distance of templates}
+
+\fn{(set-temporal-distance template seconds)} records for a template how
+long its facts remain relevant, and \fn{(calculate-temporal-distance file
+out)} derives the distance of every template used by the rules of the
+current module from their \fn{temporal} elements and writes a report.
+These are bookkeeping for temporal rule sets and have no effect on
+matching.
+
+\section{Practical advice}
+
+For event streams the combination that works today is: a
+\fn{no-agenda} rule that reacts to each event as it arrives
+(Section~\ref{sec:no-agenda}), time functions in its predicates to
+relate events, and a housekeeping rule or a Java timer that retracts old
+facts by their timestamp slot. Keep timestamps as instants or epoch
+milliseconds in ordinary slots so that they can be compared with
+\fn{before}, \fn{within-seconds} and friends.

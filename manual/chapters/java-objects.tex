@@ -1,0 +1,141 @@
+\chapter{Java Objects as Facts}
+\label{ch:java-objects}
+
+Most \Morendo\ applications reason over Java objects rather than over
+\fn{deftemplate} facts. A Java class is declared to the engine, which
+turns its bean properties into the slots of a template; instances of the
+class are then asserted and matched like any fact. This chapter covers the
+CLIPS side and the rules involved. Chapter~\ref{ch:embedding} gives the
+Java calls.
+
+\section{Declaring a class}
+
+From Java the call is \fn{engine.declareObject(Account.class)}; from CLIPS
+the equivalent is
+
+\begin{lstlisting}
+(defclass <classname> [<template-name>] [<parent-template>])
+\end{lstlisting}
+
+The engine introspects the class with \fn{java.beans.Introspector}: every
+readable property except \fn{class} becomes a slot with the property's
+name, typed from the property's Java type, and an array-valued property
+becomes a multislot. The template is named after the \emph{fully
+qualified class name} unless a template name is given, so a rule over
+\fn{woolfel.examples.model.Account} reads
+
+\begin{lstlisting}
+(defrule Over_30
+    (woolfel.examples.model.Account
+        (first ?first)
+        (last ?last)
+        (age ?age&:(> ?age 30)))
+=>
+    (printout t ?first " " ?last " is over 30" crlf))
+\end{lstlisting}
+
+The example beans live in the \fn{examples} module, in the package
+\fn{woolfel.examples.model}; the rule files \file{sample1.clp} and
+\file{join\_sample1.clp} under \file{samples/} use them. Declaring a class prints its
+template name, which is why transcripts that load these samples begin
+with a few class names.
+
+A parent template makes the new template share the parent's slot layout,
+so a rule written against the parent also sees instances of the child.
+Declaring the same class twice is harmless.
+
+\section{Asserting objects}
+
+Objects are asserted from Java, or from CLIPS with
+
+\begin{lstlisting}
+(definstance <object> <template-name>)
+\end{lstlisting}
+
+where the object is a bound variable, usually one created with
+\fn{(new classname args...)} or returned by a Java function. When an
+object is asserted the engine creates a \emph{shadow fact}: a copy of the
+property values, given a fact id like any other fact. \fn{(facts)} shows
+shadow facts in the template's slot order, and rules match them without
+knowing where they came from. Asserting the same object instance twice
+does nothing.
+
+\section{Keeping the shadow fact current}
+
+A shadow fact is a snapshot. When the Java object changes, the engine has
+to be told, in one of two ways:
+
+\begin{itemize}
+\item \textbf{Property change events.} If the class has public
+  \fn{addPropertyChangeListener} and \fn{removePropertyChangeListener}
+  methods taking a \fn{PropertyChangeListener}, the engine registers
+  itself as a listener when the object is asserted. Each
+  \fn{PropertyChangeEvent} the object fires makes the engine retract and
+  re-assert the shadow fact, so rules see the change at once. The class
+  does not have to extend \fn{PropertyChangeSupport}; it only has to fire
+  the events, as the \fn{Account} example does in every setter.
+\item \textbf{Explicit modification.} Otherwise, after changing the
+  object, call \fn{engine.modifyObject(obj)} from Java. Nothing happens
+  until then, and a rule that already fired for the old values does not
+  fire again by itself.
+\end{itemize}
+
+\fn{engine.retractObject(obj)} removes the shadow fact. Objects asserted
+as \emph{static} (a flag on the Java \fn{assertObject} call) get no
+listener and ignore \fn{modifyObject}; they are meant for reference data
+that never changes while the engine runs.
+
+\section{Working with objects in rules}
+
+Inside a rule the slots of a shadow fact are read with the usual pattern
+syntax. To call into the object itself, bind the fact and use the Java
+functions:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lL}
+\toprule
+\fn{(get-member ?f property)} & read a property through its getter \\
+\fn{(set-member ?f property value)} & write a property through its setter \\
+\fn{(call ?f method arg...)}, \fn{(member ...)} & invoke a method by reflection \\
+\fn{(new classname arg...)} & construct an object \\
+\fn{(instanceof ?f classname)} & class test \\
+\fn{(load-package prefix)} & let later calls use short class names \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Setting a property from a rule with \fn{set-member} on a bean that fires
+change events causes the shadow fact to be modified while the rule is
+firing, which is the intended way to update an object from the RHS.
+The fact functions of Section~\ref{sec:fact-access} accept a bound
+object as well: \fn{(fact-slot-value ?f age)} reads the shadow fact's
+slot, \fn{(fact-index ?f)} its id and \fn{(fact-existp ?f)} tells
+whether the object is still asserted.
+
+\section{Macros instead of reflection}
+
+Reading properties by reflection costs time on every match. The
+\fn{Macro Functions} group generates and loads small compiled accessor
+classes for a declared class:
+
+\begin{lstlisting}
+(generate-macro woolfel.examples.model.Account)
+(use-macro woolfel.examples.model.Account)
+\end{lstlisting}
+
+After \fn{use-macro} the engine reads that class's properties through the
+generated code. The service module (Chapter~\ref{ch:embedding}) does this
+automatically for every class listed in its configuration. The generated
+sources and classes go to a directory per module under the one named by
+the JVM property \fn{morendo.workdir}, or by default under a
+\fn{morendo} directory in the JVM's temporary directory; nothing is
+written there until a macro is generated.
+
+\section{Objects that are not beans}
+
+A class with no getters is declared, but its template has no slots to
+match. Wrap such objects in a bean, or assert ordinary facts built from
+them. The engine also accepts a non-shadow mode in which the fact reads
+the live object on every access instead of copying it; it is selected by
+the Java \fn{assertObject} call and described in
+Chapter~\ref{ch:embedding}.

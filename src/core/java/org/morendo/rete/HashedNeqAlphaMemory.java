@@ -140,10 +140,10 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
             Iterator<?> itr = matches.keySet().iterator();
             while (itr.hasNext()) {
                 Object key = itr.next();
-                // if the key doesn't match the subindex, we
-                // add it to the list. If it matches, we exclude
-                // it.
-                if (!index.getSubIndex().equals(key)) {
+                // a sub-bucket qualifies only when every negated value differs
+                // from the sub-index (~?x on several slots means all of them
+                // must be different, not merely "not all equal")
+                if (index.getSubIndex().notEquals(key)) {
                     Map<?, ?> submatch = (Map<?, ?>) matches.get(key);
                     Iterator<?> itr2 = submatch.keySet().iterator();
                     while (itr2.hasNext()) {
@@ -151,14 +151,35 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
                         idz++;
                     }
                 }
-                trim = new Object[idz];
-                System.arraycopy(list, 0, trim, 0, idz);
             }
+            trim = new Object[idz];
+            System.arraycopy(list, 0, trim, 0, idz);
             list = null;
             return trim;
         } else {
             return null;
         }
+    }
+
+    /**
+     * The number of facts that match the index: those in the bucket of its equal-to values whose
+     * negated values all differ from its sub-index (the same rule as iterator). For an index built
+     * from a left tuple's bind values this is the number of right facts joining with that tuple.
+     *
+     * @param index
+     * @return
+     */
+    public int matchCount(NotEqHashIndex index) {
+        Map<Object, Object> matches = this.memory.get(index);
+        int count = 0;
+        if (matches != null) {
+            for (Map.Entry<Object, Object> entry : matches.entrySet()) {
+                if (index.getSubIndex().notEquals(entry.getKey())) {
+                    count += ((Map<?, ?>) entry.getValue()).size();
+                }
+            }
+        }
+        return count;
     }
 
     /**
@@ -169,26 +190,7 @@ public class HashedNeqAlphaMemory extends HashedAlphaMemoryImpl {
      * @return
      */
     public boolean zeroMatch(NotEqHashIndex index) {
-        Map<Object, Object> matches = this.memory.get(index);
-        int idz = 0;
-        if (matches != null) {
-            Iterator<?> itr = matches.keySet().iterator();
-            while (itr.hasNext()) {
-                Object key = itr.next();
-                // if the key doesn't match the subindex, add it to the
-                // counter.
-                if (!index.getSubIndex().equals(key)) {
-                    Map<?, ?> submatch = (Map<?, ?>) matches.get(key);
-                    idz += submatch.size();
-                }
-                if (idz > 0) {
-                    break;
-                }
-            }
-            return false;
-        } else {
-            return true;
-        }
+        return matchCount(index) == 0;
     }
 
     /**

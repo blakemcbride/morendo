@@ -50,6 +50,6 @@ public class SetDistinctCount implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(set-distinct-coount <template> <slot> <distinct-count>)";
+        return "(set-distinct-count <template> <slot> <distinct-count>)";
     }
 }

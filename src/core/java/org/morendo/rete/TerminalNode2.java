@@ -19,6 +19,8 @@ package org.morendo.rete;
 import org.morendo.rete.exception.AssertException;
 import org.morendo.rule.Rule;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,24 +53,56 @@ public class TerminalNode2 extends TerminalNode {
      * @param engine
      */
     public void assertFacts(Index inx, Rete engine, WorkingMemory mem) {
+        if (expired(inx, engine)) {
+            return;
+        }
+        activate(inx, engine, mem);
+    }
+
+    /**
+     * Creates the activation for a match, records it in the terminal memory and adds it to the
+     * agenda.
+     */
+    protected LinkedActivation activate(Index inx, Rete engine, WorkingMemory mem) {
         LinkedActivation act = new LinkedActivation(this.theRule, inx);
         act.setTerminalNode(this);
         Map<Index, Activation> tmem = mem.getTerminalMemory(this);
         tmem.put(inx, act);
         // add the activation to the current module's activation list.
         engine.getAgenda().addActivation(act);
+        return act;
     }
 
     /**
+     * The match is gone: forget it, and take its activation off the agenda if it has not fired.
+     *
      * @param facts
      * @param engine
      */
     public void retractFacts(Index inx, Rete engine, WorkingMemory mem) {
         Map<?, ?> tmem = (Map<?, ?>) mem.getTerminalMemory(this);
         LinkedActivation act = (LinkedActivation) tmem.remove(inx);
-        if (act != null) {
+        if (act != null && !act.isFired()) {
             engine.getAgenda().removeActivation(act);
         }
+    }
+
+    /**
+     * Puts the rule back on the agenda for every match that has already fired, the CLIPS refresh
+     * command, and returns how many activations were added.
+     */
+    public int refresh(Rete engine, WorkingMemory mem) {
+        Map<Index, Activation> tmem = mem.getTerminalMemory(this);
+        List<Index> fired = new ArrayList<>();
+        for (Map.Entry<Index, Activation> entry : tmem.entrySet()) {
+            if (entry.getValue() instanceof LinkedActivation act && act.isFired()) {
+                fired.add(entry.getKey());
+            }
+        }
+        for (Index inx : fired) {
+            activate(inx, engine, mem);
+        }
+        return fired.size();
     }
 
     /**
@@ -81,14 +115,13 @@ public class TerminalNode2 extends TerminalNode {
     }
 
     /**
-     * Remove the LinkedActivation from TerminalNode2. This is necessary when the activation is
-     * fired and the actions executed.
+     * Called when the activation fires. The match stays in the terminal memory, marked as fired, so
+     * that {@link #refresh} can activate it again; it leaves when its facts are retracted.
      *
      * @param LinkedActivation
      */
     public void removeActivation(WorkingMemory mem, LinkedActivation activation) {
-        Map<?, ?> tmem = (Map<?, ?>) mem.getTerminalMemory(this);
-        tmem.remove(activation.getIndex());
+        activation.setFired(true);
     }
 
     /** method does not apply to termial nodes. therefore it's not implemented */

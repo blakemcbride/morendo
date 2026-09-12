@@ -46,7 +46,7 @@ public class UnDeftemplateFunction implements Function {
         Boolean removed = Boolean.TRUE;
         if (params.length == 1) {
             String template = params[0].getStringValue();
-            Template t = engine.getCurrentFocus().getTemplate(template);
+            Template t = engine.findTemplate(template);
             if (!t.inUse()) {
                 engine.getCurrentFocus().removeTemplate(t, engine, engine.getWorkingMemory());
             } else {

@@ -16,6 +16,7 @@
  */
 package org.morendo.rete.query;
 
+import org.morendo.rete.BaseNode;
 import org.morendo.rete.Constants;
 import org.morendo.rete.Fact;
 import org.morendo.rete.Rete;
@@ -92,6 +93,32 @@ public class QueryRootNode {
      *
      * @return
      */
+    /** Every node of the query network, found by walking the successors of the type nodes. */
+    public java.util.List<BaseNode> getAllNodes() {
+        java.util.List<BaseNode> nodes = new java.util.ArrayList<>();
+        java.util.Set<BaseNode> seen =
+                java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+        java.util.ArrayDeque<BaseNode> todo =
+                new java.util.ArrayDeque<>(this.queryObjTypeNodeMap.values());
+        while (!todo.isEmpty()) {
+            BaseNode node = todo.pop();
+            if (seen.add(node)) {
+                nodes.add(node);
+                for (Object next : node.getSuccessorNodes()) {
+                    if (next instanceof BaseNode child) {
+                        todo.push(child);
+                    }
+                }
+            }
+        }
+        return nodes;
+    }
+
+    /** Forgets the matches of the previous run, so the network can be executed again. */
+    public void clearMemories(WorkingMemory mem) {
+        mem.clearQueryMemories(getAllNodes());
+    }
+
     public Map<Template, QueryObjTypeNode> getQueryObjTypeNodes() {
         return this.queryObjTypeNodeMap;
     }

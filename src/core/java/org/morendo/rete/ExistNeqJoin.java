@@ -85,18 +85,20 @@ public class ExistNeqJoin extends BaseJoin {
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
 
-        rightmem.addPartialMatch(inx, rfact, engine);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
-        int after = rightmem.count(inx);
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
             if (this.evaluate(linx.getFacts(), rfact)) {
-                if (after == 1) {
+                // propagate the left tuple when rfact is its first match, i.e.
+                // when the tuple's own bind values had no match before rfact
+                // was added (rfact's bind values say nothing about that)
+                if (rightmem.zeroMatch(leftIndex(linx))) {
                     this.propagateAssert(linx, engine, mem);
                 }
             }
         }
+        rightmem.addPartialMatch(inx, rfact, engine);
     }
 
     /**
@@ -127,20 +129,24 @@ public class ExistNeqJoin extends BaseJoin {
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         // first we remove the fact from the right
-        int after = rightmem.removePartialMatch(inx, rfact);
-
-        if (after == 0) {
-            // now we see the left memory matched and remove it also
-            Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
-            Iterator<?> itr = leftmem.values().iterator();
-            while (itr.hasNext()) {
-                Index linx = (Index) itr.next();
-                if (this.evaluate(linx.getFacts(), rfact)) {
+        rightmem.removePartialMatch(inx, rfact);
+        // a left tuple that rfact matched is retracted when rfact was its last
+        // match; facts in other sub-buckets may still match it
+        Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
+        Iterator<?> itr = leftmem.values().iterator();
+        while (itr.hasNext()) {
+            Index linx = (Index) itr.next();
+            if (this.evaluate(linx.getFacts(), rfact)) {
+                if (rightmem.zeroMatch(leftIndex(linx))) {
                     propagateRetract(linx, engine, mem);
                 }
             }
-            inx = null;
         }
+    }
+
+    /** The index of a left tuple's bind values, for looking up its matches in the right memory. */
+    private NotEqHashIndex leftIndex(Index linx) {
+        return new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds, linx.getFacts()));
     }
 
     /**

@@ -45,18 +45,22 @@ public class DefglobalFunction implements Function {
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         DefaultReturnVector ret = new DefaultReturnVector();
-        Object value = Constants.NIL_SYMBOL;
+        Object value = "false";
         if (params != null && params.length > 0) {
-            String varname = ((BoundParam) params[0]).getVariableName();
-            if (params.length == 2) {
-                value = params[1].getValue();
+            // ?*a* [= value] ?*b* [= value] ...: a variable followed by anything but a variable
+            // takes that as its value, otherwise it is declared as nil
+            for (int idx = 0; idx < params.length; idx++) {
+                if (params[idx] instanceof BoundParam name) {
+                    value = Constants.NIL_SYMBOL;
+                    if (idx + 1 < params.length && !(params[idx + 1] instanceof BoundParam)) {
+                        value = params[idx + 1].getValue(engine, ValueType.OBJECT);
+                        idx++;
+                    }
+                    engine.declareDefglobal(name.getVariableName(), value);
+                }
             }
-            engine.declareDefglobal(varname, value);
-        } else {
-            value = "false";
         }
-        DefaultReturnValue rval = new DefaultReturnValue(ValueType.OBJECT, value);
-        ret.addReturnValue(rval);
+        ret.addReturnValue(new DefaultReturnValue(ValueType.OBJECT, value));
         return ret;
     }
 

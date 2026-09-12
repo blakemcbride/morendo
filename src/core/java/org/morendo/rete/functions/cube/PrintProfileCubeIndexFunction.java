@@ -23,7 +23,6 @@ import org.morendo.rete.Parameter;
 import org.morendo.rete.Rete;
 import org.morendo.rete.ReturnVector;
 import org.morendo.rete.ValueType;
-import org.morendo.rete.util.ProfileStats;
 
 public class PrintProfileCubeIndexFunction implements Function {
 
@@ -36,7 +35,8 @@ public class PrintProfileCubeIndexFunction implements Function {
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         engine.writeMessage(
-                "index Cube ET=" + ProfileStats.indexTime + " ms" + Constants.LINEBREAK, "t");
+                "index Cube ET=" + engine.getProfileStats().indexTime + " ms" + Constants.LINEBREAK,
+                "t");
         DefaultReturnVector ret = new DefaultReturnVector();
         return ret;
     }

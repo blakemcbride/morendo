@@ -90,7 +90,7 @@ public class SubsetpFunction implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(aubsetp <multifield> <multifield>)\n"
+        return "(subsetp <multifield> <multifield>)\n"
                 + " checks that first multifield is a subset of the second";
     }
 }

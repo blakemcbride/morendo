@@ -1,0 +1,35 @@
+== stats ==
+templates: 5
+rules: 2
+facts: 2
+next-node-id: 11
+== output ==
+200 high: f-3
+200 high: f-2
+100 low: f-3
+100 low: f-2
+for a total of 4
+==> fire: Activation: high, id-3 AggrTime-*
+high 2
+200 high: f-2
+100 low: f-3
+100 low: f-2
+for a total of 3
+==> fire: Activation: high, id-2 AggrTime-*
+high 1
+==> fire: Activation: low, id-3 AggrTime-*
+low 2
+==> fire: Activation: low, id-2 AggrTime-*
+low 1
+for a total of 0
+100 low: f-3
+100 low: f-2
+for a total of 2
+==> fire: Activation: low, id-3 AggrTime-*
+low 2
+==> fire: Activation: low, id-2 AggrTime-*
+low 1
+100 low: f-3
+for a total of 1
+==> fire: Activation: low, id-3 AggrTime-*
+low 2

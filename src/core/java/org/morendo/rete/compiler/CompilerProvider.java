@@ -48,6 +48,7 @@ public class CompilerProvider {
     public final ConditionCompiler cubeQueryConditionCompiler;
     public final ConditionCompiler onlyConditionCompiler;
     public final ConditionCompiler multipleConditionCompiler;
+    public final ConditionCompiler forallConditionCompiler;
 
     private CompilerProvider(Rete engine) {
         DefaultRuleCompiler rc = (DefaultRuleCompiler) engine.getRuleCompiler();
@@ -64,6 +65,8 @@ public class CompilerProvider {
                 wire(new OnlyConditionCompiler(objectConditionCompiler), rc, qc, gc);
         multipleConditionCompiler =
                 wire(new MultipleConditionCompiler(objectConditionCompiler), rc, qc, gc);
+        forallConditionCompiler =
+                wire(new ForallConditionCompiler(objectConditionCompiler), rc, qc, gc);
     }
 
     private static ConditionCompiler wire(
@@ -79,6 +82,10 @@ public class CompilerProvider {
             tcc.ruleCompiler = rc;
             tcc.queryCompiler = qc;
             tcc.graphCompiler = gc;
+        } else if (compiler instanceof ForallConditionCompiler fcc) {
+            fcc.ruleCompiler = rc;
+            fcc.queryCompiler = qc;
+            fcc.graphCompiler = gc;
         } else {
             throw new IllegalStateException("cannot wire " + compiler.getClass().getName());
         }

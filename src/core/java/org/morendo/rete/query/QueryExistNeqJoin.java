@@ -93,18 +93,23 @@ public class QueryExistNeqJoin extends QueryBaseJoin {
         HashedNeqAlphaMemory rightmem = mem.getQueryRightMemory(this);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
 
-        rightmem.addPartialMatch(inx, rfact, engine);
         Map<?, ?> leftmem = mem.getQueryBetaMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
-        int after = rightmem.count(inx);
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
-            if (this.evaluate(linx.getFacts(), rfact)) {
-                if (after == 1) {
-                    this.propogateAssert(linx, engine, mem);
-                }
+            // propagate the left tuple when rfact is its first match, i.e. the
+            // tuple's own bind values had none before rfact was added (the
+            // same rule as ExistNeqJoin)
+            if (this.evaluate(linx.getFacts(), rfact) && rightmem.zeroMatch(leftIndex(linx))) {
+                this.propogateAssert(linx, engine, mem);
             }
         }
+        rightmem.addPartialMatch(inx, rfact, engine);
+    }
+
+    /** The index of a left tuple's bind values, for looking up its matches in the right memory. */
+    private NotEqHashIndex leftIndex(Index linx) {
+        return new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds, linx.getFacts()));
     }
 
     /**

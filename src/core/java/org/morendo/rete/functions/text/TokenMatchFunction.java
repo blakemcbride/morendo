@@ -94,7 +94,7 @@ public class TokenMatchFunction implements Function {
             StringBuilder buf = new StringBuilder();
             return buf.toString();
         } else {
-            return "(stop-word <set> <string>)";
+            return "(token-match <set> <string>)";
         }
     }
 }

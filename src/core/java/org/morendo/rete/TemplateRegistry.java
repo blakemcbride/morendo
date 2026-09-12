@@ -50,17 +50,27 @@ public class TemplateRegistry {
     /** Finds a template by name in any module, the main module last. */
     public Template findTemplate(String name) {
         WorkingMemory memory = engine.getWorkingMemory();
-        Template tmpl = null;
-        for (Object val : memory.getAgenda().modules.values()) {
-            if (val != memory.getMain()) {
-                tmpl = ((Defmodule) val).getTemplate(name);
-            }
-            if (tmpl != null) {
-                break;
-            }
+        String moduleName = null;
+        if (name.indexOf("::") > 0) {
+            String[] parts = name.split("::");
+            moduleName = parts[0].toUpperCase();
+            name = parts[1];
         }
+        if (moduleName != null) {
+            Module mod = memory.findModule(moduleName);
+            return mod == null ? null : mod.getTemplate(name);
+        }
+        Template tmpl = memory.getCurrentFocus().getTemplate(name);
         if (tmpl == null) {
             tmpl = memory.getMain().getTemplate(name);
+        }
+        if (tmpl == null) {
+            for (Module mod : memory.getModules()) {
+                tmpl = mod.getTemplate(name);
+                if (tmpl != null) {
+                    break;
+                }
+            }
         }
         return tmpl;
     }
@@ -104,8 +114,17 @@ public class TemplateRegistry {
             }
             this.classToTemplate.put(obj, dtemp);
             focus.addTemplate(dtemp, engine, engine.getWorkingMemory());
-            engine.writeMessage(dtemp.getName() + Constants.LINEBREAK, "t");
+            if (this.announce) {
+                engine.writeMessage(dtemp.getName() + Constants.LINEBREAK, "t");
+            }
         }
+    }
+
+    private boolean announce = true;
+
+    /** Whether declaring a class prints the template's name; the built-in graph classes do not. */
+    public void setAnnounce(boolean announce) {
+        this.announce = announce;
     }
 
     /** Removes a declared class if no rule uses its template; false otherwise. */

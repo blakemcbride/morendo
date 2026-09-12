@@ -67,6 +67,6 @@ public class ModulesFunction implements Function {
     }
 
     public String toPPString(Parameter[] params, int indents) {
-        return "(set-focus)";
+        return "(modules)";
     }
 }

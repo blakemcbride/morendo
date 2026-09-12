@@ -20,7 +20,7 @@ public class BitNotFunction implements Function {
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         DefaultReturnVector returnVector = new DefaultReturnVector();
         int value = 0;
-        if (params != null && params.length == 2) {
+        if (params != null && params.length >= 1) {
             if (params[0] instanceof ValueParam) {
                 value = ((ValueParam) params[0]).getIntValue();
             } else if (params[0] instanceof BoundParam) {

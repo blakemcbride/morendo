@@ -1,0 +1,29 @@
+== stats ==
+templates: 5
+rules: 2
+facts: 3
+next-node-id: 11
+== output ==
+progn 2
+while stopped at 3
+tick
+tick
+k=1
+k=2
+k=3
+k2=1
+k2=2
+1:a 2:b 3:c 
+1:x 2:y 
+sum 10
+n 10
+==> fire: Activation: stop-early, id-3 AggrTime-*
+rule 2
+==> fire: Activation: count-down, id-3 AggrTime-*
+count 1
+count 2
+==> fire: Activation: stop-early, id-2 AggrTime-*
+rule 1
+after 1
+==> fire: Activation: count-down, id-2 AggrTime-*
+count 1

@@ -46,6 +46,9 @@ public class MLTerminalNode extends TerminalNode2 {
      * @param engine
      */
     public void assertFacts(Index inx, Rete engine, WorkingMemory mem) {
+        if (expired(inx, engine)) {
+            return;
+        }
         long time = System.currentTimeMillis();
         boolean add = true;
         // if the time is less than effective date or greater than expiration date
@@ -92,6 +95,14 @@ public class MLTerminalNode extends TerminalNode2 {
             tmem.put(modact.getIndex(), modact);
             engine.getAgenda().addActivation(modact);
         }
+    }
+
+    /**
+     * A fired match must leave the memory here: retractFacts reads a missing entry as "already
+     * fired" and queues the modification actions.
+     */
+    public void removeActivation(WorkingMemory mem, LinkedActivation activation) {
+        mem.getTerminalMemory(this).remove(activation.getIndex());
     }
 
     public void setNoAgenda(boolean noAgenda) {

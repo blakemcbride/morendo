@@ -84,14 +84,16 @@ public class HashedNotEqNJoin extends BaseJoin {
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         NotEqHashIndex inx = new NotEqHashIndex(NodeUtils.getRightBindValues(this.binds, rfact));
 
-        rightmem.addPartialMatch(inx, rfact, engine);
-        boolean zm = rightmem.zeroMatch(inx);
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
             if (this.evaluate(linx.getFacts(), rfact)) {
-                if (!zm) {
+                // rfact matches this left tuple, which was propagated only while
+                // it had no match: retract it when rfact is its first one, i.e.
+                // when the tuple's own bind values had no match before rfact
+                // was added (rfact's bind values say nothing about that).
+                if (rightmem.zeroMatch(leftIndex(linx))) {
                     try {
                         this.propagateRetract(linx, engine, mem);
                     } catch (RetractException e) {
@@ -100,6 +102,7 @@ public class HashedNotEqNJoin extends BaseJoin {
                 }
             }
         }
+        rightmem.addPartialMatch(inx, rfact, engine);
     }
 
     /**
@@ -126,14 +129,14 @@ public class HashedNotEqNJoin extends BaseJoin {
         HashedNeqAlphaMemory rightmem = mem.getBetaRightMemory(this);
         // first we remove the fact from the right
         rightmem.removePartialMatch(inx, rfact);
-        boolean zm = rightmem.zeroMatch(inx);
-        // now we see the left memory matched and remove it also
+        // a left tuple that rfact matched is propagated when rfact was its last
+        // match; facts in other sub-buckets may still match it
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
         while (itr.hasNext()) {
             Index linx = (Index) itr.next();
             if (this.evaluate(linx.getFacts(), rfact)) {
-                if (zm) {
+                if (rightmem.zeroMatch(leftIndex(linx))) {
                     try {
                         propagateAssert(linx, engine, mem);
                     } catch (AssertException e) {
@@ -142,6 +145,11 @@ public class HashedNotEqNJoin extends BaseJoin {
                 }
             }
         }
+    }
+
+    /** The index of a left tuple's bind values, for looking up its matches in the right memory. */
+    private NotEqHashIndex leftIndex(Index linx) {
+        return new NotEqHashIndex(NodeUtils.getLeftBindValues(this.binds, linx.getFacts()));
     }
 
     /**

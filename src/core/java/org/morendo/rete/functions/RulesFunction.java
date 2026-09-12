@@ -52,12 +52,21 @@ public class RulesFunction implements Function {
 
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         Collection<?> rules = engine.getCurrentFocus().getAllRules();
-        int count = rules.size();
+        int count = 0;
         Iterator<?> itr = rules.iterator();
         while (itr.hasNext()) {
             Rule r = (Rule) itr.next();
+            String name = r.getName();
+            if (r instanceof org.morendo.rule.Defrule d && d.getOrGroup() != null) {
+                // the rules an or group expanded into are listed once, under the written name
+                if (d.getOrIndex() > 1) {
+                    continue;
+                }
+                name = d.getOrGroup() + " (or)";
+            }
+            count++;
             engine.writeMessage(
-                    r.getName()
+                    name
                             + " \""
                             + r.getComment()
                             + "\" salience:"

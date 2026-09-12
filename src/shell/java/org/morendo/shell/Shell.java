@@ -75,6 +75,15 @@ public class Shell {
                                     LineReader.HISTORY_FILE,
                                     Paths.get(System.getProperty("user.home"), ".morendo_history"))
                             .build();
+            // (readline t) and (read t) inside a command take the next line typed here
+            engine.setInputSupplier(
+                    () -> {
+                        try {
+                            return reader.readLine("");
+                        } catch (UserInterruptException | EndOfFileException e) {
+                            return null;
+                        }
+                    });
             StringBuilder pending = new StringBuilder();
             while (true) {
                 String line;
@@ -131,7 +140,10 @@ public class Shell {
                 ReturnValue rval = rv.getItems().get(0);
                 if (rval.getValueType() == ValueType.ARRAY
                         || rval.getValueType() == ValueType.LIST) {
-                    System.out.println(Arrays.toString((Object[]) rval.getValue()));
+                    System.out.println(Arrays.deepToString((Object[]) rval.getValue()));
+                } else if (rval.getValue() instanceof java.util.List<?> list) {
+                    // query results: a list of fact tuples
+                    System.out.println(formatTuples(list));
                 } else {
                     System.out.print(message.toString());
                 }
@@ -139,6 +151,32 @@ public class Shell {
         } else if (message != null && !message.toString().isEmpty()) {
             System.out.print(message.toString());
         }
+    }
+
+    /** Prints a list of fact tuples one tuple per line, facts in their (facts) form. */
+    private static String formatTuples(java.util.List<?> tuples) {
+        StringBuilder buf = new StringBuilder();
+        for (Object tuple : tuples) {
+            if (buf.length() > 0) {
+                buf.append(System.lineSeparator());
+            }
+            if (tuple instanceof Object[] facts) {
+                for (int i = 0; i < facts.length; i++) {
+                    if (i > 0) {
+                        buf.append(' ');
+                    }
+                    buf.append(
+                            facts[i] instanceof org.morendo.rete.Fact fact
+                                    ? fact.toFactString()
+                                    : String.valueOf(facts[i]));
+                }
+            } else if (tuple instanceof org.morendo.rete.Fact fact) {
+                buf.append(fact.toFactString());
+            } else {
+                buf.append(tuple);
+            }
+        }
+        return buf.toString();
     }
 
     /**

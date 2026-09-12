@@ -18,8 +18,6 @@ package org.morendo.rete;
 
 import org.morendo.rule.Rule;
 
-import java.util.Map;
-
 /**
  * @author Peter Lin
  *     <p>TerminalNode3 is for rules that have an effective and expiration date. When rules do not
@@ -47,16 +45,14 @@ public class TerminalNode3 extends TerminalNode2 {
      * @param engine
      */
     public void assertFacts(Index inx, Rete engine, WorkingMemory mem) {
+        if (expired(inx, engine)) {
+            return;
+        }
         long time = System.currentTimeMillis();
         if (this.theRule.getExpirationDate() > 0
                 && time > this.theRule.getEffectiveDate()
                 && time < this.theRule.getExpirationDate()) {
-            LinkedActivation act = new LinkedActivation(this.theRule, inx);
-            act.setTerminalNode(this);
-            Map<Index, Activation> tmem = mem.getTerminalMemory(this);
-            tmem.put(act.getIndex(), act);
-            // add the activation to the current module's activation list.
-            engine.getAgenda().addActivation(act);
+            activate(inx, engine, mem);
         }
     }
 
@@ -69,10 +65,6 @@ public class TerminalNode3 extends TerminalNode2 {
      * @param engine
      */
     public void retractFacts(Index inx, Rete engine, WorkingMemory mem) {
-        Map<?, ?> tmem = (Map<?, ?>) mem.getTerminalMemory(this);
-        LinkedActivation act = (LinkedActivation) tmem.remove(inx);
-        if (act != null) {
-            engine.getAgenda().removeActivation(act);
-        }
+        super.retractFacts(inx, engine, mem);
     }
 }

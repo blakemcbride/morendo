@@ -91,10 +91,7 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler {
         if (oc.getNodes().size() > 0) {
             ruleCompiler.attachJoinNode(oc.getLastNode(), joinNode);
         } else {
-            otn.addSuccessorNode(
-                    joinNode,
-                    ruleCompiler.getEngine(),
-                    ruleCompiler.getEngine().getWorkingMemory());
+            ruleCompiler.attachJoinNode(otn, joinNode);
         }
     }
 
@@ -247,6 +244,13 @@ public abstract class AbstractConditionCompiler implements ConditionCompiler {
                                     (FunctionParam2) params[px], ruleCompiler.getEngine(), rule);
                         }
                     }
+                    // the join evaluates with the right fact appended to the left tuple, so
+                    // the slot's own variable reads that row
+                    int rinx = tmpl.getColumnIndex(pc.getName());
+                    tmpl.incrementColumnUseCount(pc.getName());
+                    pc.bindOwnVariable(params, position, rinx);
+                    bind2.setRightIndex(rinx);
+                    bind2.setRightVariable(pc.getVariableName());
                 }
             }
         }

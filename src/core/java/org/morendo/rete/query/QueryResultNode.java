@@ -53,6 +53,11 @@ public class QueryResultNode extends BaseNode {
         return this.results;
     }
 
+    /** Forgets the results of the previous run. */
+    public void clear() {
+        this.results.clear();
+    }
+
     /**
      * Method is not implemented, since QueryResultNode is the end of the discrimination network.
      */

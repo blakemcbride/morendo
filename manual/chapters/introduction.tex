@@ -1,0 +1,103 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+\section{What \Morendo\ is}
+
+\Morendo\ is a production rule engine: you describe the \emph{facts} of a
+situation and write \emph{rules} of the form ``if these facts are present,
+do this''. The engine keeps every fact in a working memory, keeps track of
+which rules currently match, and when asked to \emph{fire} runs the actions
+of the matching rules. It is an implementation of the RETE algorithm, the
+same family as CLIPS, Jess and Drools, and it speaks the CLIPS language, so
+most rule files written for CLIPS or Jess load with little or no change.
+
+\Morendo\ began as the ``morendo'' branch of the Jamocha project by Peter
+Lin (itself descended from Sumatra), and it is meant for research, learning
+and experimentation. Version \version\ is a modernized engine: Java~21, a
+one-command build, current libraries, and the package root
+\fn{org.morendo}.
+
+\section{The CLIPS language in \Morendo}
+
+\Morendo\ reads the constructs and functions a CLIPS programmer expects:
+\fn{deftemplate}, \fn{defrule} with the \fn{not}, \fn{exists},
+\fn{and}, \fn{or}, \fn{forall} and \fn{test} conditional elements,
+predicate and return-value constraints, \fn{deffacts} with a CLIPS
+\fn{reset}, \fn{deffunction} bodies of any length, \fn{defglobal},
+\fn{defmodule} with focus and auto-focus, and an agenda with salience,
+strategies, \fn{agenda}, \fn{refresh} and \fn{halt}. The action side has
+\fn{if}, \fn{while}, \fn{loop-for-count}, \fn{foreach}, \fn{progn},
+\fn{break} and \fn{return}, nested calls as slot values in \fn{assert},
+\fn{modify} and \fn{duplicate}, the fact functions \fn{fact-slot-value}
+and friends, \fn{format}, file routers with \fn{open}, \fn{close},
+\fn{printout}, \fn{readline} and \fn{read}, the string, list, math and
+type functions, \fn{gensym} and \fn{system}. What it does not read is
+listed in Appendix~\ref{app:differences}.
+
+\section{Features beyond plain CLIPS}
+
+\begin{itemize}
+\item \textbf{Java objects as facts.} Any Java bean can be declared as a
+  template; its instances are asserted as \emph{shadow facts} and rules match
+  their properties directly. Chapter~\ref{ch:java-objects}.
+\item \textbf{Rule properties.} Rules can bypass the agenda
+  (\fn{no-agenda}), carry effective and expiration dates, check the
+  expiry of the facts they match (\fn{temporal-activation}), and carry a
+  version and a chaining direction. A rule may also have
+  \emph{modification actions}, run when a fact it matched is retracted.
+  Chapter~\ref{ch:rule-properties}.
+\item \textbf{Queries.} \fn{defquery} runs a parameterized query over
+  working memory; \fn{defgraphquery} does the same over a graph of nodes and
+  edges. Chapter~\ref{ch:queries}.
+\item \textbf{MOLAP cubes.} \fn{defcube} declares a multidimensional cube
+  fed by the facts that match its schema; rules query it with the
+  \fn{cubequery} conditional element and react when its measures change.
+  Chapter~\ref{ch:molap}.
+\item \textbf{Temporal facts.} Facts and objects can carry effective and
+  expiration times, and the time functions compare instants.
+  Chapter~\ref{ch:temporal}.
+\item \textbf{\fn{only} and \fn{multiple}.} Two conditional elements from
+  Haley Enterprise that match when exactly one, or more than one, fact
+  satisfies a pattern. Chapter~\ref{ch:language}.
+\item \textbf{Rule cost analysis and profiling.} The engine counts the
+  network nodes a rule needs and reports a relative cost, and times its
+  own operations per engine. Chapter~\ref{ch:analysis}.
+\item \textbf{Engines for servers.} The service module keeps a pool of
+  engines per rule application, initialized from a JSON configuration,
+  and hands one to each request thread. Chapter~\ref{ch:embedding}.
+\end{itemize}
+
+\section{What \Morendo\ leaves out}
+
+\Morendo\ deliberately does not support \emph{ordered facts}, the
+\fn{(color red)} style of fact without a template. Every fact belongs to a
+template, either a \fn{deftemplate} or a declared Java class. Ordered facts
+are convenient for quick prototypes, but rule sets built on them tend to
+need rewriting once the data model settles; \Morendo\ makes you design the
+model first. Appendix~\ref{app:differences} lists the other differences
+from CLIPS.
+
+\section{How the engine works, in one page}
+
+A rule set is compiled into a network. Each template gets an
+\emph{object type node}; each literal or predicate constraint in a rule
+pattern gets an \emph{alpha node} hanging off it; each pair of patterns that
+share a variable gets a \emph{join node}; and each rule ends in a
+\emph{terminal node}. Alpha nodes that test the same thing are shared
+between rules.
+
+When a fact is asserted it enters the network at its template's node,
+passes the alpha tests it satisfies, and is joined with the facts that
+already passed the other patterns of each rule. When a complete match
+reaches a terminal node an \emph{activation} is placed on the
+\emph{agenda}. Retracting a fact withdraws the activations it took part in.
+\fn{(fire)} takes activations off the agenda in strategy order (depth by
+default, with rule salience taking precedence) and runs their actions, which
+usually assert, modify or retract further facts and so create or withdraw
+more activations, until the agenda is empty.
+
+The important consequence for the user is that matching happens
+\emph{incrementally, at assertion time}, not when \fn{fire} is called.
+That is what makes RETE fast. A rule defined after its facts is matched
+against them when it is compiled (Section~\ref{sec:rules-before-facts}),
+so the order of rules and data is a matter of style, not correctness.
