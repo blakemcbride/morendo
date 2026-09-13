@@ -180,9 +180,8 @@ public class Defmodule implements Module {
     }
 
     public void removeAllRules(Rete engine, WorkingMemory mem) {
-        Iterator<Rule> itr = this.rules.values().iterator();
-        while (itr.hasNext()) {
-            Defrule rl = (Defrule) itr.next();
+        // removeRule takes the rule out of the map, so iterate over a copy
+        for (Rule rl : new java.util.ArrayList<>(this.rules.values())) {
             this.removeRule(rl, engine, mem);
         }
     }
@@ -215,6 +214,19 @@ public class Defmodule implements Module {
                 Deftemplate temp = (Deftemplate) this.deftemplates.get(templ);
                 ObjectTypeNode otn = mem.getRuleCompiler().getObjectTypeNode(temp);
                 otn.removeNode(bjoin);
+            }
+        }
+        // the rule's tuples may reach its terminal node without passing a node removed above:
+        // from the initial fact, or through the sub-network of a forall or (not (and ...)).
+        // Detach the terminal node itself so that nothing activates the rule any more.
+        BaseNode last = rl.getLastNode();
+        if (last != null && rl.getTerminalNode() != null) {
+            last.removeNode(rl.getTerminalNode());
+        }
+        // and the activations it already has would still fire
+        for (Activation act : this.activations.activations()) {
+            if (act.getRule() == rl) {
+                this.activations.removeActivation(act);
             }
         }
     }

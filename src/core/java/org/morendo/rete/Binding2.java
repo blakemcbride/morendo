@@ -116,11 +116,12 @@ public class Binding2 extends Binding {
                     FunctionParam2 fp = new FunctionParam2();
                     newparams[i] = fp;
                     fp.setEngine(engine);
-                    fp.facts = facts;
                     fp.func = ((FunctionParam2) params[i]).func;
                     fp.funcName = ((FunctionParam2) params[i]).funcName;
                     fp.objBinding = ((FunctionParam2) params[i]).objBinding;
                     fp.setParameters(((FunctionParam2) params[i]).getParameters());
+                    // after the parameters, so that calls nested deeper get the facts too
+                    fp.setFacts(facts);
                 } else if (params[i] instanceof ValueParam) {
                     ValueParam vp = (ValueParam) params[i];
                     newparams[i] = vp.cloneParameter();

@@ -106,6 +106,8 @@ public class NTestNode extends BaseJoin {
                 ((BoundParam) params[idx]).setFact(facts);
             } else if (params[idx] instanceof FunctionParam) {
                 ((FunctionParam) params[idx]).setFacts(facts);
+            } else if (params[idx] instanceof FunctionParam2) {
+                ((FunctionParam2) params[idx]).setFacts(facts);
             }
         }
     }

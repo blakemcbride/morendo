@@ -26,16 +26,29 @@ import java.util.Map;
  * A not-join whose right input is a stream of tuples rather than facts: the output of a sub-network
  * that starts from this node's own left input. A left tuple passes while no right tuple begins with
  * it. This is what {@code forall} compiles to: {@code (forall A B)} is "no A without B", a
- * TupleNotJoin whose right side is the tuples (left, A) that found no B.
+ * TupleNotJoin whose right side is the tuples (left, A) that found no B. {@code (not (and A B))} is
+ * one TupleNotJoin whose right side is the tuples (left, A, B).
  */
 public class TupleNotJoin extends BaseJoin {
 
     /** The number of facts in a left tuple; right tuples repeat them as a prefix. */
     private final int prefixWidth;
 
+    /** What the node was compiled from, for printing: forall or not/and. */
+    private final String label;
+
     public TupleNotJoin(int id, int prefixWidth) {
+        this(id, prefixWidth, "forall");
+    }
+
+    public TupleNotJoin(int id, int prefixWidth, String label) {
         super(id);
         this.prefixWidth = prefixWidth;
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return this.label;
     }
 
     private Index prefix(Index right) {
@@ -81,7 +94,7 @@ public class TupleNotJoin extends BaseJoin {
             try {
                 propagateRetract(key, engine, mem);
             } catch (RetractException e) {
-                throw new AssertException("forall - " + e.getMessage());
+                throw new AssertException(this.label + " - " + e.getMessage());
             }
         }
     }
@@ -104,7 +117,7 @@ public class TupleNotJoin extends BaseJoin {
             try {
                 propagateAssert(key, engine, mem);
             } catch (AssertException e) {
-                throw new RetractException("forall - " + e.getMessage());
+                throw new RetractException(this.label + " - " + e.getMessage());
             }
         }
     }
@@ -150,10 +163,10 @@ public class TupleNotJoin extends BaseJoin {
     }
 
     public String toString() {
-        return "forall (" + this.prefixWidth + " outer facts)";
+        return this.label + " (" + this.prefixWidth + " outer facts)";
     }
 
     public String toPPString() {
-        return "forall node " + this.nodeID;
+        return this.label + " node " + this.nodeID;
     }
 }

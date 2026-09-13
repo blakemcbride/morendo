@@ -87,12 +87,12 @@ public class Agenda {
         if (!this.startReset) {
             // the implementation should get the current focus from Rete
             // and then add the activation to the Module.
+            if (watch) {
+                engine.writeMessage("=> " + actv.toPPString() + Constants.LINEBREAK, "t");
+            }
             if (profAdd) {
                 addActivationWProfile(actv);
             } else {
-                if (watch) {
-                    engine.writeMessage("=> " + actv.toPPString() + Constants.LINEBREAK, "t");
-                }
                 actv.getRule().getModule().addActivation(actv);
             }
             autoFocus(actv);
@@ -127,12 +127,12 @@ public class Agenda {
      * @param actv
      */
     public void removeActivation(Activation actv) {
+        if (watch) {
+            engine.writeMessage("<= " + actv.toPPString() + Constants.LINEBREAK, "t");
+        }
         if (profRm) {
             removeActivationWProfile(actv);
         } else {
-            if (watch) {
-                engine.writeMessage("<= " + actv.toPPString() + Constants.LINEBREAK, "t");
-            }
             actv.getRule().getModule().removeActivation(actv);
         }
     }

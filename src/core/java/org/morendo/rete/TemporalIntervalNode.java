@@ -86,7 +86,7 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
                 this.partialMatches.put(newindx, newindx);
             } else {
                 removeFromPartialMatches(linx);
-                leftmem.remove(linx);
+                itr.remove();
             }
         }
         this.propogateAssert(engine, mem);
@@ -96,6 +96,8 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
     public void retractLeft(Index linx, Rete engine, WorkingMemory mem) throws RetractException {
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         leftmem.remove(linx);
+        // a match not yet released must not be released later
+        removeFromPartialMatches(linx);
         EqHashIndex eqinx = new EqHashIndex(NodeUtils.getLeftValues(this.binds, linx.getFacts()));
         TemporalHashedAlphaMem rightmem = mem.getBetaRightMemory(this);
 
@@ -117,6 +119,8 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
         TemporalHashedAlphaMem rightmem = mem.getBetaRightMemory(this);
         // first we remove the fact from the right
         rightmem.removePartialMatch(inx, rfact);
+        // a match not yet released must not be released later
+        removeFromPartialMatches(rfact);
         // now we see the left memory matched and remove it also
         Map<?, ?> leftmem = mem.getBetaLeftMemory(this);
         Iterator<?> itr = leftmem.values().iterator();
@@ -150,13 +154,16 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
         // if we have partial matches and the current time is greater than
         // the last time + interval
         if (now > nextTime) {
-            List<?> proplist = new ArrayList<>();
-            // if the function is not null, we do additional filter
+            List<?> proplist;
             if (this.function != null) {
+                // the function chooses which of the collected matches to pass on
                 ((ValueParam) params[1])
                         .setValue(new ArrayList<Object>(this.partialMatches.values()));
                 ReturnVector rv = this.function.executeFunction(engine, params);
                 proplist = (List<?>) rv.firstReturnValue().getValue();
+            } else {
+                // without a function every collected match is passed on
+                proplist = new ArrayList<Object>(this.partialMatches.values());
             }
             if (proplist.size() > 0) {
                 for (int idx = 0; idx < proplist.size(); idx++) {
@@ -182,7 +189,7 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
         while (itr.hasNext()) {
             Index pindex = (Index) itr.next();
             if (pindex.partialMatch(index)) {
-                this.partialMatches.remove(pindex);
+                itr.remove();
             }
         }
     }
@@ -193,7 +200,7 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
         while (itr.hasNext()) {
             Index pindex = (Index) itr.next();
             if (pindex.partialMatch(fact)) {
-                this.partialMatches.remove(pindex);
+                itr.remove();
             }
         }
     }
@@ -254,6 +261,8 @@ public class TemporalIntervalNode extends AbstractTemporalNode {
 
     public void setInterval(int interval) {
         this.interval = interval;
+        // the first batch waits for a whole interval too
+        this.nextTime = this.lastTime + interval;
     }
 
     public BigDecimal getCount() {

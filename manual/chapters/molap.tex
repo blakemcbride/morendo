@@ -10,6 +10,16 @@ go, and lets rules query the cube as if it were a fact. The design is
 described in \file{doc/molap\_for\_production\_system.pdf}; this chapter
 covers how to use it.
 
+OLAP (online analytical processing) tools organize data the same way for
+reporting: \emph{dimensions} are the attributes the data is grouped by,
+such as region or product, and \emph{measures} are the numbers computed
+for each group, such as a sum or an average. A conventional OLAP server
+answers queries on demand, so an application that must react to a
+changed figure has to poll it. A \Morendo\ cube is \emph{reactive}
+instead: it lives in memory beside working memory, the engine updates it
+as its source facts change, and the rules that read it are re-evaluated
+when it changes, so the rules themselves decide which figures matter.
+
 \section{Declaring a cube}
 
 A cube has three parts, in this order: the \emph{sources}, one or more
@@ -58,7 +68,10 @@ Each source begins with \fn{<-} followed by an ordinary pattern. Variables
 shared between sources join them, exactly as in a rule: here the two logs
 are joined on \fn{?transactionId}, and predicate constraints keep only
 database queries that ran within the request's time window. A source may
-use any constraint a rule pattern may.
+use any constraint a rule pattern may. Several sources joined this way
+form a star or snowflake schema: a portfolio cube, for instance, can join
+positions to their accounts, to the stocks they hold and to the stocks'
+ratings, and offer dimensions taken from all four.
 
 A dimension is \fn{(dimension name ?variable)}: the name is what rules
 will query by, the variable says where the value comes from. A measure is
@@ -68,7 +81,10 @@ built-in measures are \fn{sum}, \fn{average}, \fn{median}, \fn{min},
 \fn{max}, \fn{stdev} and the \fn{70-}, \fn{80-} and \fn{90-percentile};
 \fn{(measures)} lists them, and \fn{load-measure} or
 \fn{load-measure-group} add Java classes implementing
-\fn{org.morendo.rete.measures.Measure}.
+\fn{org.morendo.rete.measures.Measure}. Load such a measure before
+defining any cube that uses it: \fn{defcube} rejects an unknown measure
+with the message \fn{Measure \dots\ does not exist} and answers
+\fn{false}.
 
 \section{What the engine does with it}
 

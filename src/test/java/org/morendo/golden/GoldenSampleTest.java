@@ -105,6 +105,7 @@ public class GoldenSampleTest {
                     "lists",
                     "or_ce",
                     "forall",
+                    "not_and",
                     "return_value"
                 }) {
             list.add(files(name, SCENARIO_DIR.resolve(name + ".clp").toString()));

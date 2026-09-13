@@ -49,6 +49,7 @@ public class CompilerProvider {
     public final ConditionCompiler onlyConditionCompiler;
     public final ConditionCompiler multipleConditionCompiler;
     public final ConditionCompiler forallConditionCompiler;
+    public final ConditionCompiler notAndConditionCompiler;
 
     private CompilerProvider(Rete engine) {
         DefaultRuleCompiler rc = (DefaultRuleCompiler) engine.getRuleCompiler();
@@ -67,6 +68,12 @@ public class CompilerProvider {
                 wire(new MultipleConditionCompiler(objectConditionCompiler), rc, qc, gc);
         forallConditionCompiler =
                 wire(new ForallConditionCompiler(objectConditionCompiler), rc, qc, gc);
+        notAndConditionCompiler =
+                wire(
+                        new NotAndConditionCompiler(objectConditionCompiler, testConditionCompiler),
+                        rc,
+                        qc,
+                        gc);
     }
 
     private static ConditionCompiler wire(
@@ -86,6 +93,10 @@ public class CompilerProvider {
             fcc.ruleCompiler = rc;
             fcc.queryCompiler = qc;
             fcc.graphCompiler = gc;
+        } else if (compiler instanceof NotAndConditionCompiler ncc) {
+            ncc.ruleCompiler = rc;
+            ncc.queryCompiler = qc;
+            ncc.graphCompiler = gc;
         } else {
             throw new IllegalStateException("cannot wire " + compiler.getClass().getName());
         }

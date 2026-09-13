@@ -7,6 +7,14 @@ a conditional element that only matches fresh facts. This chapter covers
 them in that order; rule-level dates were covered in
 Section~\ref{sec:rule-dates}.
 
+Temporal logic in general reasons with words such as \emph{always},
+\emph{never}, \emph{sometimes} and \emph{eventually}, and an engine for
+it would need an agreed vocabulary of such terms, from \emph{weekly} and
+\emph{quarterly} to \emph{immediately}. \Morendo\ does not attempt that.
+It supplies the practical pieces below and defines no vocabulary of its
+own; an application that needs a term such as ``business day'' defines
+it with functions.
+
 \section{Time values and functions}
 
 A time is a \fn{java.time.Instant}. \fn{(now)} returns one, and a slot
@@ -95,18 +103,42 @@ set that mixes both kinds decides per rule whether expiry matters.
 
 \section{The temporal conditional element}
 
+Some conditions hold only for a while. ``If the customer is in Boston,
+send a coupon'' is true while a driver from Rhode Island to Maine passes
+through Boston, and false before and after; a rule written with ordinary
+patterns would go on matching the old position until something
+retracted it. The \fn{temporal} element is a pattern with a freshness
+window for such cases:
+
 \begin{lstlisting}
-(temporal (declare ?tv (relative-time <seconds>) [(interval-time <seconds>)])
+(temporal (declare ?tv (relative-time <seconds>)
+                   [(interval-time <seconds> [(<function> <number>)])])
           (<template> (<slot> <constraint>)...))
 \end{lstlisting}
 
-A \fn{temporal} element is a pattern with a freshness window. It is
-compiled into a temporal join: when a fact reaches it, the join compares
-the assertion timestamp of the facts matched by the \emph{preceding}
-elements with the current time, and only combines them if that timestamp
-is newer than \fn{relative-time} seconds ago. Older combinations are
-treated as no longer matching. \fn{interval-time} selects an interval
-variant of the join and may carry a function call to evaluate on it.
+It is compiled into a temporal join, and the window applies to the facts
+of the temporal pattern itself. When a combination of facts from the
+preceding elements reaches the join, it is combined only with facts of
+the temporal pattern asserted less than \fn{relative-time} seconds ago;
+older ones no longer match, and the join drops them from its memory as it
+meets them. A fact of the temporal pattern that arrives later is combined
+at once with the waiting facts of the preceding elements, however old
+they are, unless the element before it is temporal too, in which case
+that element's window applies to them. Either way the facts stay in
+working memory until something retracts them.
+
+\begin{lstlisting}
+(defrule match_order
+  (transaction (txType "sell") (shares ?shares) (sym ?sym))
+  (temporal (declare ?tx (relative-time 300))
+    (transaction (exchange "NYSE") (txType "buy") (shares ?shares) (sym ?sym)))
+=>
+  (printout t "sell of " ?shares " " ?sym " matches a recent buy" crlf))
+\end{lstlisting}
+
+Here a new sell order is paired with buy orders for the same stock and
+number of shares asserted in the last five minutes; a buy order older
+than that is not considered.
 
 \begin{lstlisting}
 (defrule pair
@@ -125,6 +157,15 @@ part in that key rather than being evaluated, so put conditions that
 relate the two facts, such as \fn{(neq ?y ?x)}, in a \fn{test} element
 after the temporal one. There is no sample using the element in the
 repository.
+
+With \fn{interval-time} the join does not pass combinations on as they
+form. It collects them and releases them in a batch once the interval,
+in seconds, has elapsed; there is no timer, so a batch goes out when the
+next fact reaches the join after the interval is over. The call inside
+the declaration names a Java function that receives the number and the
+list of collected matches, and returns the matches to pass on; without
+it every collected match is passed on. A match whose facts are retracted
+while it waits is dropped.
 
 \section{Temporal distance of templates}
 

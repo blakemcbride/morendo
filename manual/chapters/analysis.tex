@@ -139,3 +139,89 @@ agree.
 memory figures, and \fn{(gc)} asks for a collection; together with
 \fn{(fact-count)} they give a rough memory cost per fact when loading a
 large data set.
+
+\section{Following facts through the network}
+\label{sec:network-walkthrough}
+
+The rule below matches a small transaction from the United States
+against an account holding more than a million:
+
+\begin{lstlisting}
+(deftemplate transaction (slot accountId) (slot countryCode) (slot total))
+(deftemplate account (slot accountId) (slot cash))
+(defrule joinrule1
+  (transaction (accountId ?accid) (countryCode "US") (total ?tl&:(< ?tl 10000.00)))
+  (account (accountId ?accid) (cash ?c&:(> ?c 1000000)))
+=>
+  (printout t "joinrule1 fired for " ?accid crlf))
+\end{lstlisting}
+
+It compiles to this part of the network:
+
+\begin{lstlisting}[style=shell]
+root
+ +- transaction (object type node)
+ |    +- countryCode equal to "US" (alpha node)
+ |         +- total less than 10000.00 (alpha node)
+ |              +- left input adapter
+ |                   +- left input of the join on ?accid
+ +- account (object type node)
+      +- cash greater than 1000000 (alpha node)
+           +- right input of the join on ?accid
+
+join on ?accid
+ +- joinrule1 (terminal node)
+\end{lstlisting}
+
+Each template has one \emph{object type node}, which receives every fact
+of that template. Below it hang the \emph{alpha nodes}, each testing one
+slot of one fact, in the order the pattern lists them. The shared
+variable \fn{?accid} is not a test on one fact, so it produces no alpha
+node; it becomes the \emph{join}, a node with two inputs. The \emph{left
+input adapter} turns each transaction that passed its tests into a
+partial match of one fact for the join's left input, and accounts arrive
+on the right. The join keeps both sides in memories hashed by the value
+of \fn{?accid}, so finding partners is a lookup rather than a scan, and
+sends each complete match to the rule's \emph{terminal node}, which puts
+an activation on the agenda. The network viewer
+(Chapter~\ref{ch:shell-gui}) draws the same structure. Now assert two
+transactions and an account:
+
+\begin{lstlisting}[style=shell]
+Morendo> (assert (transaction (accountId "acc1") (countryCode "US") (total 1298.00)))
+4
+Morendo> (assert (transaction (accountId "acc1") (countryCode "GR") (total 1098.00)))
+5
+Morendo> (agenda)
+for a total of 0
+Morendo> (assert (account (accountId "acc1") (cash 1200000)))
+6
+Morendo> (agenda)
+100 joinrule1: f-4,f-6
+for a total of 1
+Morendo> (fire)
+joinrule1 fired for acc1
+1
+\end{lstlisting}
+
+\begin{enumerate}
+\item Fact 4 enters at the \fn{transaction} node, passes both alpha
+  nodes and reaches the join's left input. The join stores it under
+  \fn{"acc1"} and looks in its right memory for accounts under the same
+  key. There are none, so it stops.
+\item Fact 5 fails the \fn{countryCode} test at the first alpha node and
+  goes no further.
+\item Fact 6 enters at the \fn{account} node, passes the \fn{cash} test
+  and reaches the join's right input. The join stores it, looks up
+  \fn{"acc1"} in its left memory, finds fact 4 and sends the pair to the
+  terminal node, which puts the activation on the agenda.
+\end{enumerate}
+
+\fn{(rule-matches joinrule1)} at this point shows fact 4 in the join's
+left memory and \fn{f-6} in its right memory. By the time \fn{fire} is
+called all the matching has been done; it only runs the actions.
+Retracting fact 4 or 6 walks the same path and removes the pair from the
+join and the activation from the agenda. That is the bargain RETE makes:
+the memories cost space, and in return each change costs work in
+proportion to the part of the network it touches, not to the number of
+facts and rules.

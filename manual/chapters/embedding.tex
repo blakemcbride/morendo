@@ -276,11 +276,46 @@ engine.declareFunction(new Shout());
 (load-function com.acme.Shout)
 \end{lstlisting}
 
-Or bundle several functions in a \fn{FunctionGroup} and list the group
-in the jar's service file (\file{META-INF/services/}, file
-\file{org.morendo.rete.FunctionGroup}) so that every engine picks it up
-from the class path. The example beans' module shows a
-\fn{HelloFunction} written this way.
+Several functions are bundled in a \fn{FunctionGroup}: \fn{getName()}
+names the group, \fn{loadFunctions(Rete)} declares each function and
+records it, and \fn{listFunctions()} returns that list, which is what
+\fn{(functions AcmeFunctions)} prints.
+
+\begin{lstlisting}[style=java]
+public final class AcmeFunctions implements FunctionGroup {
+    private final List<Function> functions = new ArrayList<>();
+
+    public String getName() { return "AcmeFunctions"; }
+
+    public void loadFunctions(Rete engine) {
+        for (Function f : List.of(new Shout())) {
+            engine.declareFunction(f);
+            functions.add(f);
+        }
+    }
+
+    public List<Function> listFunctions() { return functions; }
+}
+\end{lstlisting}
+
+\fn{(load-function-group com.acme.AcmeFunctions)} loads the group from
+CLIPS. To have every engine pick it up from the class path instead, list
+the class in the jar's service file (\file{META-INF/services/}, file
+\file{org.morendo.rete.FunctionGroup}). The example beans' module has
+another small function, \fn{HelloFunction}.
+
+A few habits of the built-in functions are worth copying. Name a function
+with lower-case words separated by hyphens, \fn{str-trim} rather than
+\fn{strTrim}. Check the number and kind of the arguments before using
+them, and throw an \fn{IllegalArgumentException} with a clear message
+when they are wrong; the shell prints it, and a rule that passes the wrong
+thing is then easy to find. Keep each function to one task and keep no
+state in it: a value that must survive between calls belongs in a
+\fn{defglobal}, which each engine keeps separately, and state shared by
+several engines needs a thread-safe class of its own
+(Section~\ref{sec:threads}). A common way to work is to prototype a
+function as a \fn{deffunction} at the shell, and rewrite it in Java once
+it is settled and known to matter for speed.
 
 \subsection{Driving the engine through the message router}
 \label{sec:router}
@@ -339,6 +374,12 @@ try {
 }
 \end{lstlisting}
 
+The point of the pool is that creating a \fn{Rete} is quick, but
+declaring the model classes, compiling the rules and asserting the
+initial data can take far longer, and none of it should be repeated for
+each request. The pool does that work once per engine; the request code
+only asserts its data, fires and reads the results.
+
 Each application has an \fn{EnginePool}, safe to use from any number of
 threads. \fn{getEngine} hands out an idle engine, creates one while the
 pool is below \fn{maxPool}, and otherwise waits up to the application's
@@ -356,16 +397,49 @@ names, per application, the model classes to declare, the function
 groups to load, the rule files, and the initial data as fact files, JSON
 or serialized objects; the pool sizes \fn{initialPool} and
 \fn{maxPool} and the \fn{checkoutTimeout}; and a service name. In a servlet
-container, \fn{org.morendo.service.servlet.RuleStartupService} is
-registered as a listener in \file{web.xml}, reads
-\file{/WEB-INF/Ruleconfig.json}, builds the pools and publishes the
-service as a servlet-context attribute under the service name.
+container, register \fn{org.morendo.service.servlet.RuleStartupService}
+as a listener in \file{web.xml}, as \file{samples/configuration/web.xml}
+does:
+
+\begin{lstlisting}[style=shell]
+<listener>
+  <listener-class>org.morendo.service.servlet.RuleStartupService</listener-class>
+</listener>
+\end{lstlisting}
+
+Put the configuration in \file{/WEB-INF/Ruleconfig.json}, with a capital
+R, and the \Morendo\ core and service jars, Log4j and Jackson in
+\file{/WEB-INF/lib}. When the web application starts, the listener reads
+the configuration, builds the pools and stores itself, a
+\fn{RuleService}, as a servlet-context attribute named after the
+configuration's \fn{serviceName}. A servlet looks it up by that name:
+
+\begin{lstlisting}[style=java]
+RuleService service = (RuleService) getServletContext().getAttribute("sample");
+EngineContext ctx = service.getEngine("test", null);
+try {
+    ...                     // assert the request's data
+    ctx.executeRules();
+} finally {
+    ctx.close();
+}
+\end{lstlisting}
+
+The service keeps simple statistics over all its engines, updated each
+time a context is closed: \fn{getRequests()},
+\fn{getAverageResponseTime()}, \fn{getAverageRulesFired()} and
+\fn{getTotalRulesFired()}.
 
 Outside a container, \fn{RuleServiceImpl.createInstance(file)} reads
 the same configuration, builds the applications and returns the service;
 call \fn{initialize()} to create the engine pools. An application may
 carry a \fn{version} in the configuration, and \fn{getEngine} takes the
-name and version (null when none was given). Initial data of the
+name and version (null when none was given). Several versions of one
+application can therefore run side by side in one service. That matters
+where old rules stay in force for old business: an insurer rating a
+back-dated change to a policy must use the rules in effect on that date,
+and may want to compare the result with the current version's, without a
+second server. Initial data of the
 \fn{jsonData} kind is deserialized into the class named by its
 \fn{name} field; \fn{clipsData} is loaded from its URL with
 \fn{load-facts}.

@@ -81,6 +81,7 @@ in \fn{<declare>} may appear in any order; each is optional.
 \begin{lstlisting}[style=shell]
 <ce>          ::= [ ?var <- ] <pattern>
                 | ( not <pattern> )
+                | ( not ( and <group-element>+ ) )
                 | ( test ( <call> ) )
                 | ( and <ce>+ )
                 | ( or <ce>+ )
@@ -93,6 +94,10 @@ in \fn{<declare>} may appear in any order; each is optional.
 
 <temporal-declare> ::= ( declare ?var ( relative-time <number> )
                          [ ( interval-time <number> [ ( <call> ) ] ) ] )
+
+<group-element> ::= <pattern> | ( not <pattern> ) | ( test ( <call> ) )
+                  | ( and <group-element>+ ) | ( not ( and <group-element>+ ) )
+                  | ( <call> )
 
 <pattern>     ::= ( <template-name> <slot-constraint>* )
 <slot-constraint> ::= ( <slot-name> <constraint> )
@@ -109,11 +114,13 @@ in \fn{<declare>} may appear in any order; each is optional.
 \end{lstlisting}
 
 The predicate function name may be a symbol or one of \fn{+ - * / < >
-<= >= = == <> != eq and or}. \fn{\textasciitilde} before a number or an
+<= >= = == <> != eq and or not}. \fn{\textasciitilde} before a number or an
 unquoted symbol is part of the symbol, not a negation. An \fn{or}
 element is expanded by the parser into one rule per combination of
 alternatives (Section~\ref{sec:or-ce}); \fn{forall} is accepted in
-rules only.
+rules only. Every \fn{(not (and (} begins a group
+(Section~\ref{sec:not-and}), in which a call is taken as a test; groups
+too are accepted in rules only.
 
 \section{Special forms}
 

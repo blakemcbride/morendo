@@ -645,11 +645,12 @@ public class DefaultRuleCompiler implements RuleCompiler {
 
     /**
      * True when the rule's tuples begin with the initial fact: the rule opens with a negated
-     * pattern followed by more conditions, or with a forall.
+     * pattern followed by more conditions, with a forall, or with a (not (and ...)) group.
      */
     static boolean startsWithInitialFact(Condition[] conds) {
         return conds.length > 0
                 && (conds[0] instanceof ForallCondition
+                        || conds[0] instanceof NotAndCondition
                         || (conds.length > 1 && isNegatedPattern(conds[0])));
     }
 

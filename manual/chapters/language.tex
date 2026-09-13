@@ -247,7 +247,9 @@ must therefore be defined first. \fn{(undefrule name)} removes a rule,
 \label{sec:patterns}
 
 The basic conditional element is a \emph{pattern}: a template name
-followed by slot constraints. Slots not mentioned are unconstrained.
+followed by slot constraints. Slots not mentioned are unconstrained, and
+a pattern with no slot constraints at all, \fn{(person)}, matches every
+fact of the template.
 
 \begin{lstlisting}
 (order (customer "acme") (total ?t) (id ?id&:(> ?id 1000)))
@@ -264,6 +266,7 @@ followed by slot constraints. Slots not mentioned are unconstrained.
 \fn{(slot \textasciitilde ?x)} & the slot differs from \fn{?x} (bound earlier) \\
 \fn{(slot \textasciitilde "x")} & the slot differs from the string \\
 \fn{(slot 5\&\textasciitilde 3)}, \fn{(slot ?x\&?y)}, \fn{(slot ?x\&\textasciitilde ?y)} & conjunction of constraints \\
+\fn{(slot \textasciitilde "a"\&\textasciitilde "b")} & the slot is neither value \\
 \fn{(slot "a"|"b")} & disjunction of literals (see below) \\
 \bottomrule
 \end{tabularx}
@@ -319,23 +322,33 @@ b follows a 1
 \item[\fn{(not (pattern))}] Holds when no fact matches the pattern. The
   pattern may use variables bound by earlier elements. \fn{(not (expr))}
   with a function call instead of a pattern is a negated test: it holds
-  for the facts bound so far when the call is false.
+  for the facts bound so far when the call is false. To negate several
+  elements together, use \fn{(not (and ...))}.
 \item[\fn{(test (expr))}] Holds when the function call is true. Variables
-  used in it must be bound by earlier patterns.
+  used in it must be bound by earlier patterns. When a test grows into
+  deeply nested calls, a \fn{deffunction} with a descriptive name reads
+  better, and a function written in Java (Chapter~\ref{ch:embedding})
+  runs faster.
 \item[\fn{(exists (pattern)...)}] Holds when at least one combination of
   facts matches the inner patterns, and activates the rule once however
-  many there are. \file{samples/exists/} has fifteen variations.
+  many there are. A variable first bound inside it has no single value,
+  since any of the matching facts could supply one, so the actions should
+  not use it. \file{samples/exists/} has fifteen variations.
 \item[\fn{(only (pattern)...)}] Holds when \emph{exactly one} combination
-  matches, and binds its variables. In the first sample of
+  matches, and binds its variables for the elements after it and the
+  actions. In the first sample of
   \file{samples/only/} the rule fires because Spiderman is the only
   unoccupied hero; in the second, with two unoccupied heroes, it does
   not fire.
 \item[\fn{(multiple (pattern)...)}] Holds when \emph{more than one}
-  combination matches.
+  combination matches. As with \fn{exists}, the actions cannot use a
+  variable first bound inside it; doing so fails when the rule fires.
 \item[\fn{(and ...)}] Groups patterns and tests; every element must hold.
 \item[\fn{(or ...)}] Holds when any alternative holds; see below.
 \item[\fn{(forall (pattern) (pattern)...)}] Holds when every fact matching
   the first pattern has facts matching the others; see below.
+\item[\fn{(not (and CE+))}] Holds when no combination of facts matches
+  all the elements together; see below.
 \item[\fn{(temporal ...)}] A pattern whose facts must be fresh; Chapter~\ref{ch:temporal}.
 \item[\fn{(cubequery ...)}] A slice of a MOLAP cube; Chapter~\ref{ch:molap}.
 \end{description}
@@ -445,6 +458,55 @@ A \fn{forall} that opens a rule matches against the initial fact, so
 its activation names \fn{f-1}; after other patterns it is evaluated once
 per combination of their facts. \fn{forall} is a rule element only;
 queries do not accept it.
+
+\subsection{The not/and element}
+\label{sec:not-and}
+
+\fn{(not (and CE+))} holds when no combination of facts matches every
+element of the group together. The elements are patterns, negated
+patterns, \fn{test} elements, calls (taken as tests) and nested groups,
+and they may use the variables bound before the group. A variable first
+bound inside the group is local to it: the rest of the rule does not see
+it, and a later pattern that uses the same name binds it afresh. The
+engine keeps the element current, so a change inside the group takes the
+rule off the agenda or puts it back:
+
+\begin{lstlisting}[style=shell]
+Morendo> (deftemplate parcel (slot id) (slot customer))
+true
+Morendo> (deftemplate hold (slot customer) (slot reason))
+true
+Morendo> (defrule ship
+  (parcel (id ?p) (customer ?c))
+  (not (and (hold (customer ?c) (reason ?r))
+            (test (neq ?r paid))))
+=>
+  (printout t "ship parcel " ?p crlf))
+true
+Morendo> (assert (parcel (id 1) (customer acme)))
+2
+Morendo> (agenda)
+100 ship: f-2
+for a total of 1
+Morendo> (bind ?h (assert (hold (customer acme) (reason credit))))
+true
+Morendo> (agenda)
+for a total of 0
+Morendo> (modify ?h (reason paid))
+true
+Morendo> (agenda)
+100 ship: f-2
+for a total of 1
+Morendo> (fire)
+ship parcel 1
+1
+\end{lstlisting}
+
+The unpaid hold blocks the parcel until its reason becomes \fn{paid};
+retracting the hold would release it too. A group may open a rule, or be
+its only condition, in which case the rule matches against the initial
+fact. Like \fn{forall}, the element compiles to a sub-network of its own
+and is accepted in rules, not in queries.
 
 \section{Actions}
 \label{sec:actions}

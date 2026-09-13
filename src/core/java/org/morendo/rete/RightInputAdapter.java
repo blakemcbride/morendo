@@ -47,7 +47,7 @@ public class RightInputAdapter extends BaseJoin {
     public void clear(WorkingMemory mem) {}
 
     public String toString() {
-        return "forall input of node " + this.target.getNodeId();
+        return this.target.getLabel() + " input of node " + this.target.getNodeId();
     }
 
     public String toPPString() {

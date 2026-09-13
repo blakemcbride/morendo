@@ -17,6 +17,34 @@ and experimentation. Version \version\ is a modernized engine: Java~21, a
 one-command build, current libraries, and the package root
 \fn{org.morendo}.
 
+Rule programming is declarative. A procedural program fixes the order of
+its steps; a rule base states conditions and their consequences, and the
+engine decides what runs next from the facts present and its
+conflict-resolution strategy. Rules of this kind read much the same in
+English as in CLIPS: \emph{if a policy is a bundle, its auto coverage is
+full and the home is worth more than 250,000, give a 10\% bundling
+discount}; \emph{if a product's stock is below 50 and its unfilled orders
+exceed half the stock, raise a purchase order}. The engine is also a
+programming environment of its own: templates, rules and functions can
+be written and tried at the shell prompt without a Java IDE.
+
+\section{Where it comes from}
+
+Production rule engines are older than Java. Charles Forgy devised the
+RETE algorithm at Carnegie Mellon University in the late 1970s and
+published it in 1982; the OPS languages developed there, OPS5 above all,
+were its first home. Inference Corporation's ART carried the ideas into
+commercial expert systems in the 1980s. CLIPS, developed at NASA's
+Johnson Space Center from 1985 with a syntax modelled on ART's and
+maintained for decades by Gary Riley, made them freely available. Jess,
+written by Ernest Friedman-Hill at Sandia National Laboratories, brought
+the CLIPS language to Java. Paul Haley, one of ART's developers and
+later the founder of Haley Enterprise, contributed ideas such as the
+\fn{only} and \fn{multiple} conditional elements. \Morendo\ owes
+something to each of them: rules written for CLIPS or Jess usually load
+with little change, and the network at its core is the one Forgy
+described.
+
 \section{The CLIPS language in \Morendo}
 
 \Morendo\ reads the constructs and functions a CLIPS programmer expects:
@@ -101,3 +129,14 @@ The important consequence for the user is that matching happens
 That is what makes RETE fast. A rule defined after its facts is matched
 against them when it is compiled (Section~\ref{sec:rules-before-facts}),
 so the order of rules and data is a matter of style, not correctness.
+
+What RETE improved on was systems that tested every rule against every
+fact on each cycle. RETE remembers instead: the join nodes keep the
+partial matches found so far, so a change costs work in proportion to the
+part of the network it touches, and adding rules does not multiply the
+work the way re-testing everything would. The price is memory, and the
+cost of a rule set depends more on the shape of its network than on the
+number of rules; rules that test the same things share nodes. Later
+algorithms such as TREAT and LEAPS trade some of that memory for lazier
+evaluation. Section~\ref{sec:network-walkthrough} follows three facts
+through a compiled rule, and Chapter~\ref{ch:analysis} measures networks.

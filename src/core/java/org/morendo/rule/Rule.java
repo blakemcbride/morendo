@@ -340,6 +340,15 @@ public interface Rule extends Scope {
     Binding getBinding(String varName);
 
     /**
+     * Remove the Binding for the given variable; used to keep the variables of a (not (and ...))
+     * group local to it
+     *
+     * @param varName
+     * @return the removed Binding, or null
+     */
+    Binding removeBinding(String varName);
+
+    /**
      * utility method for copying bindings
      *
      * @param varName

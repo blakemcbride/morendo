@@ -1,0 +1,83 @@
+== stats ==
+templates: 8
+rules: 6
+facts: 7
+next-node-id: 49
+== output ==
+no embargo, no holds:
+100 local: f-5,f-3
+100 local: f-4,f-3
+100 local: f-5,f-2
+100 local: f-4,f-2
+100 ship: f-5
+100 ship: f-4
+100 outside-range: f-4
+100 all-clear: f-1
+100 quiet: f-1
+for a total of 9
+==> fire: Activation: local, id-5, id-3 AggrTime-*
+order 150 with customer bolt in south
+==> fire: Activation: local, id-4, id-3 AggrTime-*
+order 1 with customer bolt in south
+==> fire: Activation: local, id-5, id-2 AggrTime-*
+order 150 with customer acme in north
+==> fire: Activation: local, id-4, id-2 AggrTime-*
+order 1 with customer acme in north
+==> fire: Activation: ship, id-5 AggrTime-*
+ship order 150
+==> fire: Activation: ship, id-4 AggrTime-*
+ship order 1
+==> fire: Activation: outside-range, id-4 AggrTime-*
+order 1 is outside 100-200
+==> fire: Activation: all-clear, id-1 AggrTime-*
+no unpaid hold on a customer with orders
+==> fire: Activation: quiet, id-1 AggrTime-*
+every held customer is under embargo
+south under embargo:
+for a total of 0
+acme on hold for credit:
+for a total of 0
+late rule defined while an order is held:
+for a total of 0
+north under embargo too:
+100 quiet: f-1
+for a total of 1
+acme's hold paid:
+100 all-clear: f-1
+100 quiet: f-1
+for a total of 2
+hold removed:
+100 late: f-1,f-3
+100 late: f-1,f-2
+100 all-clear: f-1
+100 quiet: f-1
+for a total of 4
+==> fire: Activation: late, id-1, id-3 AggrTime-*
+late: bolt
+==> fire: Activation: late, id-1, id-2 AggrTime-*
+late: acme
+==> fire: Activation: all-clear, id-1 AggrTime-*
+no unpaid hold on a customer with orders
+==> fire: Activation: quiet, id-1 AggrTime-*
+every held customer is under embargo
+(defrule quiet
+  (declare (salience 100) (remember-alpha true) (chaining-direction forward)
+           (no-agenda false) (temporal-activation false) )
+  (not (and
+    (hold
+      (customer ?c)
+    )
+    (not (and
+      (customer
+        (name ?c)
+        (region ?r)
+      )
+      (embargo
+        (region ?r)
+      )
+    ))
+  ))
+=>
+  (printout t "every held customer is under embargo" crlf)
+)
+;; topology-cost: 0

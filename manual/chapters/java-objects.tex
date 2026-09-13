@@ -8,6 +8,13 @@ class are then asserted and matched like any fact. This chapter covers the
 CLIPS side and the rules involved. Chapter~\ref{ch:embedding} gives the
 Java calls.
 
+Which to use is a design choice. A \fn{deftemplate} needs no Java code
+and can be written at the shell. A Java class is the better choice when
+the data comes from the application or has to go back to it, to be saved
+in a database for instance, because the rules then work on the
+application's own objects and nothing has to be copied out of working
+memory afterwards.
+
 \section{Declaring a class}
 
 From Java the call is \fn{engine.declareObject(Account.class)}; from CLIPS
@@ -80,6 +87,49 @@ to be told, in one of two ways:
   fire again by itself.
 \end{itemize}
 
+A bean that notifies the engine needs only the two listener methods and
+setters that fire an event after changing the field:
+
+\begin{lstlisting}[style=java]
+public class Person {
+    private final PropertyChangeSupport changes = new PropertyChangeSupport(this);
+    private String name;
+    private int age;
+
+    public String getName() { return name; }
+    public void setName(String name) {
+        String old = this.name;
+        this.name = name;
+        changes.firePropertyChange("name", old, name);
+    }
+
+    public int getAge() { return age; }
+    public void setAge(int age) {
+        int old = this.age;
+        this.age = age;
+        changes.firePropertyChange("age", old, age);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+        changes.addPropertyChangeListener(l);
+    }
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        changes.removePropertyChangeListener(l);
+    }
+}
+\end{lstlisting}
+
+The engine does not compare values: each event it receives retracts and
+re-asserts the whole shadow fact. \fn{PropertyChangeSupport} already
+drops an event whose old and new values are equal and not null, so
+\fn{setAge(30)} on a person who is 30 costs nothing. A class that keeps
+its own listener list should make the same check in each setter. Decide
+also what a change to or from null means for the rules: a setter that
+ignores null arguments hides such a change, while one that fires the
+event lets rules see the slot become \fn{nil}. A class used only for
+reference data, asserted as static, needs neither the listener methods
+nor the events.
+
 \fn{engine.retractObject(obj)} removes the shadow fact. Objects asserted
 as \emph{static} (a flag on the Java \fn{assertObject} call) get no
 listener and ignore \fn{modifyObject}; they are meant for reference data
@@ -107,6 +157,9 @@ functions:
 Setting a property from a rule with \fn{set-member} on a bean that fires
 change events causes the shadow fact to be modified while the rule is
 firing, which is the intended way to update an object from the RHS.
+The value may be a literal, a variable or a call; a number is converted
+to the property's numeric type, and any value to a string for a
+\fn{String} property.
 The fact functions of Section~\ref{sec:fact-access} accept a bound
 object as well: \fn{(fact-slot-value ?f age)} reads the shadow fact's
 slot, \fn{(fact-index ?f)} its id and \fn{(fact-existp ?f)} tells
@@ -114,22 +167,52 @@ whether the object is still asserted.
 
 \section{Macros instead of reflection}
 
-Reading properties by reflection costs time on every match. The
-\fn{Macro Functions} group generates and loads small compiled accessor
-classes for a declared class:
+The engine reaches a bean's properties by reflection. The \fn{Macro
+Functions} group is meant to replace that with small generated accessor
+classes, one \fn{ReadMacro} and one \fn{WriteMacro} per property:
 
-\begin{lstlisting}
-(generate-macro woolfel.examples.model.Account)
-(use-macro woolfel.examples.model.Account)
+\begin{lstlisting}[style=java]
+public interface ReadMacro  { Object getProperty(Object instance); }
+public interface WriteMacro { void setProperty(Object instance, Object value); }
 \end{lstlisting}
 
-After \fn{use-macro} the engine reads that class's properties through the
-generated code. The service module (Chapter~\ref{ch:embedding}) does this
-automatically for every class listed in its configuration. The generated
-sources and classes go to a directory per module under the one named by
-the JVM property \fn{morendo.workdir}, or by default under a
-\fn{morendo} directory in the JVM's temporary directory; nothing is
-written there until a macro is generated.
+\fn{(generate-macro classname)} writes the Java sources of these classes
+for a declared class; it does not compile them. They go to the module's
+working directory, a directory per module under the one named by the JVM
+property \fn{morendo.workdir} (by default a \fn{morendo} directory in the
+JVM's temporary directory), in a package named after the class in lower
+case. For \fn{woolfel.examples.model.Account} in module \fn{MAIN} that
+gives \file{MAIN/\br{}woolfel/\br{}examples/\br{}model/\br{}account/\br{}ReadAge.java},
+\file{WriteAge.java} and so on:
+
+\begin{lstlisting}[style=java]
+package woolfel.examples.model.account;
+
+import org.morendo.rete.macro.ReadMacro;
+
+public class ReadFirst implements ReadMacro {
+    public ReadFirst() {}
+
+    public Object getProperty(Object instance) {
+        return ((woolfel.examples.model.Account)instance).getFirst();
+    }
+}
+\end{lstlisting}
+
+\fn{(use-macro classname)} loads the compiled classes from the module's
+working directory or the class path, so compile the sources first,
+against the \Morendo\ core jar and the class, into that directory or into
+the application's own jar. \fn{use-macro} relies on the names the
+generator chooses, so generate the classes rather than writing them by
+hand. The service module (Chapter~\ref{ch:embedding}) loads macros this
+way for every class listed in its configuration.
+
+\begin{caution}
+In this version loaded macros make no difference to matching: shadow
+facts, and objects asserted without a shadow copy, are still read by
+reflection. \fn{use-macro} also answers \fn{true} when the classes are
+missing.
+\end{caution}
 
 \section{Objects that are not beans}
 

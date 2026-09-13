@@ -22,7 +22,7 @@ or behaves differently. It is written against \Morendo\ \version.
   new module current.
 \item The \fn{logical} conditional element is not supported.
   \fn{forall} is supported in rules, over plain patterns, and not in
-  queries.
+  queries; \fn{(not (and ...))} is likewise a rule element only.
 \item Wildcards \fn{?} and \fn{\$?} without a name are not accepted, nor
   is a standalone predicate constraint \fn{:(expr)}. A slot takes one
   predicate; combine tests with \fn{and} inside it.
@@ -87,10 +87,13 @@ functions (Appendix~\ref{app:functions}).
 \item Predicate constraints inside a \fn{temporal} pattern are used as
   join keys rather than evaluated; relate the facts in a \fn{test}
   element after the temporal one (Chapter~\ref{ch:temporal}).
+\item \fn{generate-macro} writes sources that must be compiled before
+  \fn{use-macro} can load them, and loaded macros do not yet replace
+  reflection when facts are read (Chapter~\ref{ch:java-objects}).
 \item \fn{chaining-direction} is recorded but the engine always chains
   forward.
-\item A variable first bound inside a \fn{forall} is local to it; the
-  rest of the rule cannot use it.
+\item A variable first bound inside a \fn{forall} or a
+  \fn{(not (and ...))} is local to it; the rest of the rule cannot use it.
 \item The administration reloads of the service module reach the engines
   that are idle at the time; an engine checked out by a request keeps
   its old rules until it is reinitialized.

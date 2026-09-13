@@ -48,6 +48,7 @@ import org.morendo.rule.Defquery;
 import org.morendo.rule.GraphQuery;
 import org.morendo.rule.ExistCondition;
 import org.morendo.rule.ForallCondition;
+import org.morendo.rule.NotAndCondition;
 import org.morendo.rule.OrCondition;
 import org.morendo.rule.FunctionAction;
 import org.morendo.rule.LiteralConstraint;
@@ -75,6 +76,52 @@ public class CLIPSParser {
         return ce != null
                 && ce.getClass() == ObjectCondition.class
                 && !((ObjectCondition) ce).getNegated();
+    }
+
+    /**
+     * True when the tokens from position i, just after an opening parenthesis, begin a conditional
+     * element: a pattern (a template name followed by a slot or by the closing parenthesis, unless
+     * it names a function), a not or or over one, or a construct keyword such as test.
+     */
+    private boolean startsConditionalElement(int i) {
+        Token t = getToken(i);
+        switch (t.kind) {
+            case IDENTIFIER:
+                int next = getToken(i + 1).kind;
+                return next == LBRACE
+                        || (next == RBRACE && (engine == null || engine.findFunction(t.image) == null));
+            case NOTCE:
+                return getToken(i + 1).kind == LBRACE
+                        && (getToken(i + 2).kind == AND1 || startsConditionalElement(i + 2));
+            case OR1:
+                return getToken(i + 1).kind == LBRACE && startsConditionalElement(i + 2);
+            case TEST:
+            case EXISTS:
+            case FORALL:
+            case ONLYCE:
+            case MULTIPLECE:
+            case TEMPORAL:
+            case CUBEQUERY:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /** A (not (and ...)) group from its parsed elements: patterns, tests and nested groups. */
+    private static NotAndCondition notAndCondition(List<Object> elements) throws ParseException {
+        List<Condition> conditions = new ArrayList<Condition>();
+        for (Object ce : elements) {
+            if ((ce != null && ce.getClass() == ObjectCondition.class)
+                    || ce instanceof TestCondition
+                    || ce instanceof NotAndCondition) {
+                conditions.add((Condition) ce);
+            } else {
+                throw new ParseException("(not (and ...)) takes patterns, (not ...), (test ...)"
+                        + " and nested (not (and ...))");
+            }
+        }
+        return new NotAndCondition(conditions);
     }
 
     public CLIPSParser(Rete eng, Reader stream) {
@@ -1435,6 +1482,7 @@ void CEType(List<Object> list) :
   OrCondition orc = null;
   List<Object> fafirst = new ArrayList<Object>();
   List<Object> farest = new ArrayList<Object>();
+  List<Object> group = new ArrayList<Object>();
 }
 {
   // (or (a) (b)): the parser expands the rule into one rule per alternative
@@ -1493,6 +1541,15 @@ void CEType(List<Object> list) :
     list.add(oc);
     alpha.clear();
     exp = null;
+  }
+|
+  // (not (and (customer (name ?c) (region ?r)) (embargo (region ?r)))): no combination matches;
+  // a call among the elements is a test, so (not (and (> ?x 1) (< ?x 5))) means what it says
+  LOOKAHEAD(<NOTCE> <LBRACE> <AND1> <LBRACE>)
+  <NOTCE> <LBRACE> <AND1> (<LBRACE> groupElement(group) <RBRACE>)+ <RBRACE>
+  {
+    list.add(notAndCondition(group));
+    group.clear();
   }
 |
   // (not (test (> 3 2) ) )
@@ -1618,6 +1675,26 @@ void nestedCE(AndCondition andcond) :
       tc.setFunction((Function)nested);
     }
     andcond.addNestedConditionElement(tc);
+  }
+}
+
+// an element of (not (and ...)): a nested and, a conditional element, or a call taken as a test
+void groupElement(List<Object> list) :
+{
+  Object nested = null;
+}
+{
+  LOOKAHEAD(<AND1> <LBRACE>) <AND1> (<LBRACE> groupElement(list) <RBRACE>)+
+|
+  LOOKAHEAD({ startsConditionalElement(1) }) CEType(list)
+|
+  nested = expr()
+  {
+    TestCondition tc = new TestCondition();
+    if (nested instanceof Function) {
+      tc.setFunction((Function)nested);
+    }
+    list.add(tc);
   }
 }
 
@@ -2047,7 +2124,8 @@ String functionName() :
    fname = <NE1>|
    fname = <NE2>|
    fname = <AND1>|
-   fname = <OR1>)
+   fname = <OR1>|
+   fname = <NOTCE>)
   {
     return fname.image;
   }

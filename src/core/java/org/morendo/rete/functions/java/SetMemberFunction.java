@@ -29,6 +29,8 @@ import org.morendo.rete.ValueType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * @author Peter Lin
@@ -59,16 +61,24 @@ public class SetMemberFunction implements Function {
      */
     public ReturnVector executeFunction(Rete engine, Parameter[] params) {
         if (engine != null && params != null && params.length == 3) {
-            BoundParam bp = (BoundParam) params[0];
-            ValueParam slot = (ValueParam) params[1];
-            ValueParam val = (ValueParam) params[2];
-            Object instance = bp.getValue(engine, ValueType.OBJECT);
+            // every argument may be a literal, a variable or a call
+            Object instance = params[0].getValue(engine, ValueType.OBJECT);
+            String property = String.valueOf(params[1].getValue(engine, ValueType.OBJECT));
+            Object value = params[2].getValue(engine, ValueType.OBJECT);
             Defclass dc = engine.findDefclass(instance);
             // we check to make sure the Defclass exists
             if (dc != null) {
-                Method setm = dc.getWriteMethod(slot.getStringValue());
+                Method setm = dc.getWriteMethod(property);
+                if (setm == null) {
+                    throw new IllegalArgumentException(
+                            "set-member: "
+                                    + dc.getClassObject().getName()
+                                    + " has no writable property "
+                                    + property);
+                }
                 try {
-                    setm.invoke(instance, new Object[] {val.getValue()});
+                    setm.invoke(
+                            instance, new Object[] {toType(value, setm.getParameterTypes()[0])});
                 } catch (IllegalAccessException e) {
                     engine.writeMessage(e.getMessage());
                 } catch (InvocationTargetException e) {
@@ -77,6 +87,43 @@ public class SetMemberFunction implements Function {
             }
         }
         return new DefaultReturnVector();
+    }
+
+    /**
+     * The value in the type the setter takes: a number is narrowed or widened to the numeric type,
+     * anything becomes a String for a String property, and a text becomes a boolean for a boolean
+     * one. Other values are passed as they are.
+     */
+    static Object toType(Object value, Class<?> type) {
+        if (value == null || type.isInstance(value)) {
+            return value;
+        }
+        if (value instanceof Number n) {
+            if (type == int.class || type == Integer.class) {
+                return n.intValue();
+            } else if (type == long.class || type == Long.class) {
+                return n.longValue();
+            } else if (type == double.class || type == Double.class) {
+                return n.doubleValue();
+            } else if (type == float.class || type == Float.class) {
+                return n.floatValue();
+            } else if (type == short.class || type == Short.class) {
+                return n.shortValue();
+            } else if (type == byte.class || type == Byte.class) {
+                return n.byteValue();
+            } else if (type == BigDecimal.class) {
+                return new BigDecimal(n.toString());
+            } else if (type == BigInteger.class) {
+                return new BigDecimal(n.toString()).toBigInteger();
+            }
+        }
+        if (type == String.class) {
+            return String.valueOf(value);
+        }
+        if ((type == boolean.class || type == Boolean.class) && value instanceof String s) {
+            return Boolean.valueOf(s);
+        }
+        return value;
     }
 
     /* (non-Javadoc)

@@ -66,12 +66,24 @@ public class TemplateValidation implements Analysis {
         return this.warning;
     }
 
+    /** The conditions, followed by the members of every (not (and ...)) group among them. */
+    private static Condition[] withGroupMembers(Condition[] cnds) {
+        java.util.List<Condition> all = new java.util.ArrayList<>();
+        for (Condition cnd : cnds) {
+            all.add(cnd);
+            if (cnd instanceof NotAndCondition group) {
+                all.addAll(java.util.List.of(withGroupMembers(group.getConditions())));
+            }
+        }
+        return all.toArray(new Condition[0]);
+    }
+
     public int analyze(Rule rule) {
         int result = Analysis.VALIDATION_PASSED;
         this.error = new ErrorSummary();
         this.warning = new WarningSummary();
         this.checkForModule(rule);
-        Condition[] cnds = rule.getConditions();
+        Condition[] cnds = withGroupMembers(rule.getConditions());
         for (int idx = 0; idx < cnds.length; idx++) {
             Condition cnd = cnds[idx];
             if (cnd instanceof ObjectCondition oc) {

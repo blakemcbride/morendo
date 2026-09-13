@@ -65,6 +65,9 @@ public final class FunctionParam2 extends AbstractParam {
                         bp.setObjectBinding(true);
                     }
                 }
+            } else if (this.params[idx] instanceof FunctionParam2 nested) {
+                // a call nested deeper: its variables need their rows as well
+                nested.configure(engine, util);
             }
         }
     }
@@ -85,6 +88,9 @@ public final class FunctionParam2 extends AbstractParam {
                         bp.setObjectBinding(true);
                     }
                 }
+            } else if (this.params[idx] instanceof FunctionParam2 nested) {
+                // a call nested deeper: its variables need their rows as well
+                nested.configure(engine, util);
             }
         }
     }
@@ -143,6 +149,8 @@ public final class FunctionParam2 extends AbstractParam {
                 }
             } else if (this.params[idx] instanceof FunctionParam) {
                 ((FunctionParam) this.params[idx]).setFacts(this.facts);
+            } else if (this.params[idx] instanceof FunctionParam2 nested && this.facts != null) {
+                nested.setFacts(this.facts);
             }
         }
     }

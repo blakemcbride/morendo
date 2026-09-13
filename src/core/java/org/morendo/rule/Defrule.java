@@ -347,6 +347,8 @@ public class Defrule implements Rule, Scope {
                 return (testCondition).getTestNode();
             } else if (c instanceof ForallCondition forall) {
                 return forall.getLastNode();
+            } else if (c instanceof NotAndCondition group) {
+                return group.getLastNode();
             }
             return null;
         } else {
@@ -420,6 +422,11 @@ public class Defrule implements Rule, Scope {
      */
     public Binding getBinding(String varName) {
         return this.bindings.get(varName);
+    }
+
+    /** Removes the Binding of a variable and returns it, or null when there is none. */
+    public Binding removeBinding(String varName) {
+        return this.bindings.remove(varName);
     }
 
     /**
@@ -513,6 +520,8 @@ public class Defrule implements Rule, Scope {
                     inner[i + 1] = forall.getRest().get(i);
                 }
                 resolveConditionTemplates(engine, inner);
+            } else if (cnd instanceof NotAndCondition group) {
+                resolveConditionTemplates(engine, group.getConditions());
             }
         }
     }

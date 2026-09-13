@@ -91,7 +91,7 @@ files are relative to the repo root. The two JMS sample tests are `@Disabled` wi
 `org.morendo.golden.GoldenSampleTest` runs every self-contained sample under `samples/` plus the
 scenario scripts in `src/test/resources/scenarios/` (Manners 16 guests, MOLAP, graph query, and
 the language scenarios `slot_calls`, `loops`, `deffunction`, `halt`, `deffacts`, `fact_access`,
-`agenda`, `strings`, `routers`, `types`, `lists`, `or_ce`, `forall`, `return_value`) with
+`agenda`, `strings`, `routers`, `types`, `lists`, `or_ce`, `forall`, `not_and`, `return_value`) with
 `(watch rules)` on, and compares the printed output, the firing trace and template/rule/fact/node
 counts with `src/test/resources/golden/<name>.txt`. This is the safety net for engine changes:
 any engine change must keep it green, or the golden diff must be reviewed
@@ -285,8 +285,8 @@ query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`,
   occurrence of the slot's variable at row 0 of the fact. A running `Defquery` pushes itself as
   the binding `Scope`, which is how a predicate reads a query parameter.
 - Grammar: `nil` is an argument, symbols may contain `*` after the first character (`gensym*`),
-  `defglobal` has its own production accepting `?*x* = 1` pairs, and `!=`/`<>` are function
-  names in predicates.
+  `defglobal` has its own production accepting `?*x* = 1` pairs, and `!=`/`<>` and `not` are
+  function names in predicates.
 - `(or ...)`: the parser expands a rule with an or group into one rule per combination
   (`OrExpansion`, rebuilding the text from the tokens kept by `OrCondition`, then re-parsing).
   Members are `name&n` with `Defrule.getOrGroup()` set and the written text in
@@ -297,6 +297,20 @@ query), join node classes in `rete/` *and* their `Query*` twins in `rete/query`,
   outer tuples joined with A and the Bs, and two `TupleNotJoin`s, a not-join whose right input is
   tuples (through `RightInputAdapter`) matched by prefix; the outer one emits the entering tuples
   unchanged. Inner patterns take the rows after the outer tuple, so their variables are local.
+- `(not (and CE+))`: `NotAndCondition` compiles (`NotAndConditionCompiler`) to a forall-style
+  sub-network: the entering tuples joined with the group's elements in order (patterns, negated
+  patterns, tests, nested groups) and one `TupleNotJoin` (labelled not/and) that blocks every
+  entering tuple some complete chain extends. Positive patterns take the rows after the entering
+  tuple. The group's own variables are local: `compile` takes their bindings off the rule
+  (`Rule.removeBinding`) and `build` puts them back only while the group's joins are made. Every
+  `(not (and (` parses as a group (a call among its elements is a `TestCondition`); other CEs
+  inside it are a parse error. Rules only.
+- `Defmodule.removeRule` also detaches the rule's terminal node, which is what stops a rule whose
+  tuples come from the initial fact or a sub-network, and takes the rule's activations off the
+  agenda.
+- A test element's parameters get the tuple's facts from `TestNode`/`NTestNode.setParameters`,
+  which hand them down to nested calls (`FunctionParam2.setFacts`); `FunctionParam2.configure`
+  gives the variables of calls at every depth their row and column.
 - A rule that opens with `(not ...)` and has more conditions starts from the initial fact
   (`DefaultRuleCompiler.startsWithInitialFact`): row 0 is the initial fact and the negated
   pattern is a `NotJoin` with no bindings. It used to be compiled as a positive pattern.

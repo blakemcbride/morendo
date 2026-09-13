@@ -150,7 +150,7 @@ public final class BoundParam extends AbstractParam {
      * @param facts
      */
     public void setFact(Fact[] facts) {
-        if (rowId > -1 && facts[rowId] != null) {
+        if (facts != null && rowId > -1 && rowId < facts.length && facts[rowId] != null) {
             this.fact = facts[rowId];
         }
     }
