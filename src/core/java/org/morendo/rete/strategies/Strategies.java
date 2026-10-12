@@ -18,7 +18,8 @@ package org.morendo.rete.strategies;
 
 import org.morendo.rete.Strategy;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Strategy is where new strategies are registered and where the functions find the strategy class
@@ -30,7 +31,7 @@ public class Strategies {
     public static final Strategy DEPTH = new DepthStrategy();
     public static final Strategy BREADTH = new BreadthStrategy();
     public static final Strategy RECENCY = new RecencyStrategy();
-    private static HashMap<String, Strategy> registry = new HashMap<>();
+    private static final Map<String, Strategy> registry = new ConcurrentHashMap<>();
 
     static {
         registry.put(DEPTH.getName(), DEPTH);

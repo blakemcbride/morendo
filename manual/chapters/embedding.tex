@@ -95,22 +95,51 @@ boolean done = engine.isClosed();
 
 Creating an engine starts a daemon thread for its message router;
 \fn{close()} clears everything, stops that thread and runs the close
-hooks. An engine is \emph{not thread-safe}: drive it from one thread, or
-post commands through the message router (below). The \fn{(exit)}
+hooks. A single engine is \emph{not thread-safe}: drive it from one
+thread, or post commands through the message router (below). Separate
+engines, however, are fully independent, and any number of threads may
+each run their own engine at the same time
+(Section~\ref{sec:threads}). The \fn{(exit)}
 function is \fn{close()}; nothing in the engine calls \fn{System.exit}.
 
 \subsection{Serving many threads}
 \label{sec:threads}
 
-Nothing inside an engine is synchronized: its working memory, agenda,
-scopes and profiling counters belong to the thread that uses it, and
-two threads asserting into one engine corrupt it. A program that serves
-requests from many threads therefore gives each thread its own engine,
-or keeps a pool and hands an engine to one thread at a time. What is
-shared between engines in a JVM is small: the strategy registry of
-\fn{defstrategy}, and in the messaging module the content-handler and
-agent registries; templates, rules, facts, functions and the network
-are per engine. The cost of an engine is its compiled network and one
+Morendo fully supports multithreaded programs, under one rule:
+\emph{one engine per thread at a time}. Every thread may create and run
+its own \fn{Rete} engine, and those engines run concurrently with no
+locking and no interference, because each owns all of its state:
+templates, rules, facts, functions, globals, the network and its
+memories, the agenda and the profiling counters. The few registries
+that are shared JVM-wide (the strategy registry of \fn{defstrategy}, and
+in the messaging module the content-handler and agent registries) are
+thread-safe.
+
+What is not allowed is two threads using the \emph{same} engine at
+once. Nothing inside an engine is synchronized, and two threads
+asserting into one engine corrupt it. So a program that serves requests
+from many threads either gives each thread its own engine, or keeps a
+pool and hands an engine to one thread at a time; an engine may move
+from one thread to another as long as only one uses it at any moment.
+
+\begin{lstlisting}[style=java]
+Runnable work = () -> {
+    Rete engine = new Rete();          // this thread's own engine
+    try {
+        engine.loadRuleset("rules.clp");
+        engine.assertObject(new Account(), null, false, true);
+        engine.fire();
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        engine.close();
+    }
+};
+for (int i = 0; i < 8; i++)
+    new Thread(work).start();          // eight engines running at once
+\end{lstlisting}
+
+The cost of an engine is its compiled network and one
 daemon thread for its message router, plus whatever facts it holds, so
 a pool of a dozen engines is unremarkable.
 
@@ -123,7 +152,78 @@ engine completely when a request should leave nothing behind, rules
 and templates included in neither. The message router is the other way
 in: several threads may post commands to one engine through their own
 channels, and the router's command thread runs them one at a time
-(Section~\ref{sec:router}).
+(Section~\ref{sec:router}). When each thread or request should instead
+get a fresh engine of its own, start it from a rule base (next).
+
+\subsection{Starting engines from a rule base}
+\label{sec:rulebase}
+
+Often every engine needs the same starting point: the application's
+templates, rules, functions and reference facts. A \fn{RuleBase}
+(package \fn{org.morendo.rete}) defines that base set once, and each
+thread then asks it for an engine of its own that begins with
+everything in the base. From that moment the engine is independent: it
+may assert, retract, fire, and even define or remove rules and
+templates, without affecting the base or any other engine.
+
+\begin{lstlisting}[style=java]
+// once, at start-up
+RuleBase base = new RuleBase()
+        .declareObject(Account.class)          // Java classes as templates
+        .load("rules/pricing.clp")             // file, URL or classpath: resource
+        .eval("(deffacts rates (rate (pct 5))) (reset)")
+        .configure(engine ->                    // any other Java setup
+                engine.declareFunctionGroup(new PricingFunctions()));
+
+// on any thread, as often as needed
+Rete engine = base.newEngine();
+try {
+    engine.assertObject(order, null, false, true);
+    engine.fire();
+    ...
+} finally {
+    engine.close();
+}
+\end{lstlisting}
+
+The base is a recorded list of steps, and \fn{newEngine()} creates a
+new engine and runs every step in it, in the order they were added:
+
+\begin{itemize}
+\item \fn{load(location)} and \fn{load(InputStream)} read CLIPS source
+  \emph{when the step is recorded} and keep it in memory, so a new
+  engine does no file or network I/O. A missing file is reported at that
+  point with an \fn{UncheckedIOException}.
+\item \fn{eval(text)} records CLIPS text: any number of constructs and
+  calls, as in a batch file.
+\item \fn{declareObject(Class)} and \fn{declareObject(Class, name)}
+  declare a Java class as a template.
+\item \fn{configure(step)} records any other setup as a
+  \fn{Consumer<Rete>}, run once for each new engine on the thread that
+  calls \fn{newEngine()}: declaring Java functions or function groups,
+  setting defglobals, attaching listeners or output writers.
+\end{itemize}
+
+A step that fails makes \fn{newEngine()} close the half-built engine
+and throw; CLIPS that does not parse throws an
+\fn{IllegalArgumentException} naming the source, rather than printing
+the error as \fn{batch} does. Call \fn{newEngine()} once at start-up to
+check the base.
+
+A \fn{RuleBase} is safe to share between threads, and any number of
+threads may call \fn{newEngine()} at the same time; adding a step later
+affects only engines created after it. Rebuilding an engine this way is
+fast because the parsing and compiling are the only work: a base of 500
+rules and 1{,}000 facts produces a new engine in about 6 ms once the JVM
+has warmed up. Only the first engine in a JVM is noticeably slower.
+
+Two cautions. Facts written in CLIPS (in \fn{deffacts} followed by
+\fn{(reset)}, or with \fn{assert}) are created anew in every engine, but
+a Java object asserted in a \fn{configure} step is the \emph{same}
+object in every engine unless the step creates it, so either create the
+object inside the step or keep shared objects read-only. And a step that
+runs \fn{(fire)} fires again in every new engine, which is usually what
+is wanted when the base's own rules settle its facts.
 
 \subsection{Loading rules}
 

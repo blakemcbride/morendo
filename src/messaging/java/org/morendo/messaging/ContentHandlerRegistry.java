@@ -17,8 +17,9 @@
 
 package org.morendo.messaging;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ContentHandler registry is used to register content handler to jms message types.
@@ -27,7 +28,7 @@ import java.util.Iterator;
  */
 public class ContentHandlerRegistry {
 
-    private static HashMap<String, Object> REGISTRY = new HashMap<>();
+    private static final Map<String, Object> REGISTRY = new ConcurrentHashMap<>();
 
     /**
      * Method will register an instance of content handler using the jmsType as the key.
@@ -37,9 +38,7 @@ public class ContentHandlerRegistry {
      */
     public static void registerHandler(String jmsType, Object instance) {
         if (jmsType != null && instance != null) {
-            if (!REGISTRY.containsKey(jmsType)) {
-                REGISTRY.put(jmsType, instance);
-            }
+            REGISTRY.putIfAbsent(jmsType, instance);
         }
     }
 

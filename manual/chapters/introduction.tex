@@ -92,7 +92,9 @@ listed in Appendix~\ref{app:differences}.
   own operations per engine. Chapter~\ref{ch:analysis}.
 \item \textbf{Engines for servers.} The service module keeps a pool of
   engines per rule application, initialized from a JSON configuration,
-  and hands one to each request thread. Chapter~\ref{ch:embedding}.
+  and hands one to each request thread; a \fn{RuleBase} defines a base
+  set of rules and facts once and gives each thread an independent
+  engine that starts from it. Chapter~\ref{ch:embedding}.
 \end{itemize}
 
 \section{What \Morendo\ leaves out}

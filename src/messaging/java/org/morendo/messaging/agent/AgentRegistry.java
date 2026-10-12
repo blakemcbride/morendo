@@ -24,10 +24,11 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
- * For now the AgentRegistry is a static Map of the agents. The key is defined by AgentEntry and
- * AgentPerformanceSummary classes. Since AgentEntry is specific to the AgentApplications, a single
- * webapp could have multiple entries. In contrast, the performance summary is at the Agent
- * AdminService level, which means per webapp or ejb, there's only 1 instance.
+ * For now the AgentRegistry is a static Map of the agents, shared by every engine in the JVM and
+ * guarded by the class lock. The key is defined by AgentEntry and AgentPerformanceSummary classes.
+ * Since AgentEntry is specific to the AgentApplications, a single webapp could have multiple
+ * entries. In contrast, the performance summary is at the Agent AdminService level, which means per
+ * webapp or ejb, there's only 1 instance.
  *
  * @author Peter Lin
  */
@@ -41,25 +42,25 @@ public class AgentRegistry {
      *
      * @param agent
      */
-    public static void registerAgent(AgentEntry agent) {
+    public static synchronized void registerAgent(AgentEntry agent) {
         if (!agentRegistry.containsKey(agent.getKey())) {
             agentRegistry.put(agent.getKey(), agent);
         }
     }
 
-    public static AgentEntry getAgent(String key) {
+    public static synchronized AgentEntry getAgent(String key) {
         return agentRegistry.get(key);
     }
 
-    public static List<AgentEntry> getAgents() {
+    public static synchronized List<AgentEntry> getAgents() {
         return new ArrayList<>(agentRegistry.values());
     }
 
-    public static AgentEntry removeAgent(AgentEntry agent) {
+    public static synchronized AgentEntry removeAgent(AgentEntry agent) {
         return agentRegistry.remove(agent.getKey());
     }
 
-    public static void addSummary(AgentPerformanceSummary summary) {
+    public static synchronized void addSummary(AgentPerformanceSummary summary) {
         @SuppressWarnings("unchecked")
         Queue<AgentPerformanceSummary> queue =
                 (Queue<AgentPerformanceSummary>) agentSummaries.get(summary.getKey());
@@ -74,12 +75,10 @@ public class AgentRegistry {
     }
 
     public Queue<?> getSummary(AgentPerformanceSummary summary) {
-        Queue<?> queue = agentSummaries.get(summary.getKey());
-        if (queue == null) {
-            queue = new PriorityQueue<>(50);
-            agentSummaries.put(summary.getKey(), queue);
+        synchronized (AgentRegistry.class) {
+            return agentSummaries.computeIfAbsent(
+                    summary.getKey(), k -> new PriorityQueue<AgentPerformanceSummary>(50));
         }
-        return queue;
     }
 
     /**
@@ -88,7 +87,7 @@ public class AgentRegistry {
      *
      * @return
      */
-    public static List<Queue<?>> getPerformanceSummaries() {
+    public static synchronized List<Queue<?>> getPerformanceSummaries() {
         return new ArrayList<>(agentSummaries.values());
     }
 }

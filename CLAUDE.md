@@ -145,9 +145,11 @@ and templates), `FunctionRegistry` (functions, function groups, measures; also l
 `EngineOutput`
 (print writers and the message router). A `Rete` instance is not thread-safe: drive it from one
 thread, or through the `MessageRouter` command thread as the shell and GUI do. Serving many
-threads means one engine per thread or a pool (the service module's `EnginePool`); the only
+threads means one engine per thread or a pool (the service module's `EnginePool`);
+`rete/RuleBase` records a base set (CLIPS read into memory, `declareObject`, `Consumer<Rete>`
+steps) and `newEngine()` replays it into a fresh, independent engine, from any thread. The only
 JVM-wide state shared between engines is the `Strategies` registry and, in the messaging module,
-the content-handler and agent registries. Profiling counters are per engine
+the content-handler and agent registries, all three thread-safe. Profiling counters are per engine
 (`Rete.getProfileStats()`, a `ProfileStats` instance; nothing static is left). A module's
 working directory (generated macro classes) is created lazily under `-Dmorendo.workdir`, default
 the JVM temp directory, so an engine writes nothing to the current directory. `Rete.close()`
