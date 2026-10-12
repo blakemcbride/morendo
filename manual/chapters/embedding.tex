@@ -274,6 +274,56 @@ engine.assertFact(f);
 engine.retractFact(f);             // or engine.retractById(f.getFactId())
 \end{lstlisting}
 
+\subsection{Records from a database}
+\label{sec:records}
+
+\Morendo\ has no database layer of its own and needs none: a record
+read through JDBC, an ORM such as Hibernate or JPA, or any other data
+layer is a Java object, and any Java object can be a fact. The link
+is one call in the application's own code, placed where its data layer
+hands back a record:
+
+\begin{lstlisting}[style=java]
+// once per engine, e.g. as a RuleBase step
+engine.declareObject(Customer.class);
+
+// wherever the data layer returns records
+for (Customer c : customerDao.findByRegion(region))
+    engine.assertObject(c, null, false, true);
+\end{lstlisting}
+
+Every property with a getter becomes a slot, so rules match the record
+under its class name, \fn{(com.acme.Customer (name ?n) (balance ?b))},
+or under a shorter template name given as
+\fn{declareObject(Customer.class, "Customer")}. The call can go anywhere the data layer offers a
+hook: in a data-access method as above, or in a post-load callback
+(JPA's \fn{@PostLoad}, Hibernate's \fn{PostLoadEventListener}) to make
+every record of a type a fact as soon as it is read. Those annotations
+and interfaces are in the application, so \Morendo\ takes on no
+dependency.
+
+Four points make the pattern work:
+
+\begin{itemize}
+\item \emph{Declare the class first.} \fn{declareObject} must run before
+  the first record of the class is asserted; an object of an undeclared
+  class becomes no fact. A \fn{RuleBase} step is the natural place
+  (Section~\ref{sec:rulebase}).
+\item \emph{Choose how changes reach the fact.} A record class that
+  fires \fn{PropertyChangeEvent}s updates its fact by itself. Otherwise
+  call \fn{modifyObject} after changing the object, or
+  \fn{retractObject} and assert it again. Records the rules only read
+  can be asserted with the \fn{static} flag true, which skips the
+  listener entirely (Chapter~\ref{ch:java-objects}).
+\item \emph{Assert into the right engine.} A post-load hook runs on the
+  thread that reads the record, so it must assert into the engine that
+  thread owns, for instance one held in a \fn{ThreadLocal}, never into
+  an engine another thread is using (Section~\ref{sec:threads}).
+\item \emph{Retract what is no longer wanted.} A fact stays until it is
+  retracted or the engine is closed; a long-lived engine that keeps
+  reading records should retract the ones it is done with.
+\end{itemize}
+
 \subsection{Running and inspecting}
 
 \begin{lstlisting}[style=java]
